@@ -1,42 +1,75 @@
 # Coveo (coveo)
-Coveo is a cloud-based platform that specializes in delivering personalized and relevant search results to improve customer experiences. By utilizing intelligent AI-powered search technology, Coveo can provide users with highly relevant information from various sources such as websites, databases, and CRM systems. This enables businesses to easily connect with their customers and provide them with the most accurate and helpful information, ultimately driving better user engagement and satisfaction. Coveo's innovative technology helps organizations optimize their digital experiences and drive business growth through advanced search capabilities.
+
+Coveo is a cloud-based AI-relevance platform that delivers personalized search, recommendations, and discovery experiences across digital workplaces, customer service portals, websites, and commerce storefronts. The Coveo platform exposes a family of REST APIs covering search, content indexing (Push and Stream), usage analytics, machine learning, commerce, and platform administration.
 
 **URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/coveo/refs/heads/main/apis.yml)
 
 ## Scope
 
-- **Type:** Index 
-- **Position:** Consumer 
-- **Access:** 3rd-Party 
+- **Type:** Index
+- **Position:** Consuming
+- **Access:** 3rd-Party
+- **x-type:** company
 
-## Tags:
+## Tags
 
- - Personalization, Experiences, Customers
+- AI, Analytics, Catalog, Commerce, Customers, Experiences, Machine Learning, Personalization, Recommendations, Search
 
 ## Timestamps
 
-- **Created:** 2025-02-08 
-- **Modified:** 2025-03-01 
+- **Created:** 2025-02-08
+- **Modified:** 2026-04-28
 
 ## APIs
 
-### Coveo
-Coveo is a leading provider of enterprise search and artificial intelligence solutions that help organizations deliver personalized and relevant experiences to their customers and employees. By harnessing the power of data, Coveo is able to deliver real-time insights, recommendations, and predictions that drive better decision-making and outcomes. Their technology enables businesses to unify and personalize content from multiple sources, including websites, databases, and applications, to create a seamless and intuitive search experience. Coveo's advanced AI capabilities allow companies to optimize customer support, e-commerce, and employee productivity through personalized search results and recommendations. In essence, Coveo helps organizations leverage the power of data to create more engaging and efficient digital experiences for their stakeholders.
+### Coveo Search API
 
-**Human URL:** [ https://docs.coveo.com/en/0/coveo-documentation]( https://docs.coveo.com/en/0/coveo-documentation)
+RESTful interface for issuing queries against the Coveo unified index, with relevance ranking, facets, highlights, query pipelines, and personalization.
 
+**Base URL:** `https://platform.cloud.coveo.com/rest/search/v2`
 
-#### Tags:
+### Coveo Push API
 
- - Personalization, Experiences, Customers
+Programmatic indexing into Coveo Push sources with individual document push, batch push via secure cloud storage, and source state management.
 
-#### Properties
+**Base URL:** `https://api.cloud.coveo.com/push/v1`
 
-- [Documentation]( https://docs.coveo.com/en/0/coveo-documentation)
+### Coveo Stream API
+
+High-throughput indexing for Catalog sources used by Coveo for Commerce.
+
+### Coveo Commerce API
+
+Endpoints for product search results, product listing pages (PLPs), recommendations, and product discovery.
+
+### Coveo Usage Analytics API
+
+Read and Write APIs for recording search and click events and exposing reporting endpoints used by dashboards and Coveo Machine Learning.
+
+**Base URL:** `https://analytics.cloud.coveo.com/rest/ua/v15`
+
+### Coveo Machine Learning API
+
+Manage ML models including Automatic Relevance Tuning (ART), Query Suggestions (QS), Recommendations (PR), and Dynamic Navigation Experience (DNE).
+
+### Coveo Platform API
+
+Administrative endpoints for organizations, sources, security identities, query pipelines, fields, and tokens.
+
+**Base URL:** `https://platform.cloud.coveo.com/rest`
+
+## Common Properties
+
+- [Website](https://www.coveo.com)
+- [Documentation](https://docs.coveo.com/)
+- [API Overview](https://docs.coveo.com/en/143/)
+- [Developer Blog](https://blog.coveo.com/)
+- [GitHub](https://github.com/coveo)
+- [Support](https://connect.coveo.com/s/)
+- [LinkedIn](https://www.linkedin.com/company/coveo)
 
 ## Maintainers
 
 **FN:** Kin Lane
 
-**Email:** info@apievangelist.com
-
+**Email:** kin@apievangelist.com
