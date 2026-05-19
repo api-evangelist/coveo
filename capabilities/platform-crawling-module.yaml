@@ -225,3 +225,273 @@ capability:
           type: string
           description: The unique identifier of the target crawling module.</br>**Example:** mycoveocloudv2organization76kcam-1e7c13e2-afe7-4510-bd00-cd5fd8ba9b0d
           required: true
+  exposes:
+  - type: rest
+    namespace: platform-crawling-module-rest
+    port: 8080
+    description: REST adapter for Coveo Platform API — Crawling Module. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/crawlingmodule/upgradechannels/{upgradechannel}/version
+      name: rest-crawlingmodule-upgradechannels-upgradechannel-version
+      description: REST surface for rest-crawlingmodule-upgradechannels-upgradeChannel-version.
+      operations:
+      - method: GET
+        name: getcrawlingmoduleupgradechannelversion
+        description: Gets the Crawling Module Version for an Upgrade Channel
+        call: platform-crawling-module.getcrawlingmoduleupgradechannelversion
+        with:
+          upgradeChannel: rest.upgradeChannel
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/crawlingmodule/upgradechannels/{upgradechannel}/version/{version}
+      name: rest-crawlingmodule-upgradechannels-upgradechannel-version-version
+      description: REST surface for rest-crawlingmodule-upgradechannels-upgradeChannel-version-version.
+      operations:
+      - method: PUT
+        name: setcrawlingmoduleupgradechannelversion
+        description: Sets the Crawling Module Version for an Upgrade Channel
+        call: platform-crawling-module.setcrawlingmoduleupgradechannelversion
+        with:
+          upgradeChannel: rest.upgradeChannel
+          version: rest.version
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/crawlingmodule
+      name: rest-organizations-organizationid-crawlingmodule
+      description: REST surface for rest-organizations-organizationId-crawlingmodule.
+      operations:
+      - method: GET
+        name: getcrawlingmodulesfororganization
+        description: List Crawling Modules
+        call: platform-crawling-module.getcrawlingmodulesfororganization
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: getcrawlingmodulesbyidsfororganization
+        description: List Crawling Modules by Ids
+        call: platform-crawling-module.getcrawlingmodulesbyidsfororganization
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/crawlingmodule/download
+      name: rest-organizations-organizationid-crawlingmodule-download
+      description: REST surface for rest-organizations-organizationId-crawlingmodule-download.
+      operations:
+      - method: GET
+        name: getcrawlingmoduledownloadurl
+        description: Get the Download URL Prefix for Crawling Module Binaries.
+        call: platform-crawling-module.getcrawlingmoduledownloadurl
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/crawlingmodule/projectid
+      name: rest-organizations-organizationid-crawlingmodule-projectid
+      description: REST surface for rest-organizations-organizationId-crawlingmodule-projectid.
+      operations:
+      - method: GET
+        name: getcrawlingmodulesbyprojectidfororganization
+        description: List Crawling Modules by Project ID
+        call: platform-crawling-module.getcrawlingmodulesbyprojectidfororganization
+        with:
+          organizationId: rest.organizationId
+          projectId: rest.projectId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/crawlingmodule/versions/latest
+      name: rest-organizations-organizationid-crawlingmodule-versions-latest
+      description: REST surface for rest-organizations-organizationId-crawlingmodule-versions-latest.
+      operations:
+      - method: GET
+        name: getlatestmaestroversion
+        description: Gets the Latest Maestro Version
+        call: platform-crawling-module.getlatestmaestroversion
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/crawlingmodule/{crawlingmoduleid}
+      name: rest-organizations-organizationid-crawlingmodule-crawlingmoduleid
+      description: REST surface for rest-organizations-organizationId-crawlingmodule-crawlingModuleId.
+      operations:
+      - method: PUT
+        name: reportcrawlingmodule
+        description: Report Crawling Module Deployment
+        call: platform-crawling-module.reportcrawlingmodule
+        with:
+          organizationId: rest.organizationId
+          crawlingModuleId: rest.crawlingModuleId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: removecrawlingmodule
+        description: Remove a Crawling Module Deployment
+        call: platform-crawling-module.removecrawlingmodule
+        with:
+          organizationId: rest.organizationId
+          crawlingModuleId: rest.crawlingModuleId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/crawlingmodule/{crawlingmoduleid}/update
+      name: rest-organizations-organizationid-crawlingmodule-crawlingmoduleid-update
+      description: REST surface for rest-organizations-organizationId-crawlingmodule-crawlingModuleId-update.
+      operations:
+      - method: GET
+        name: getupdatestatus
+        description: Get the Update Status
+        call: platform-crawling-module.getupdatestatus
+        with:
+          organizationId: rest.organizationId
+          crawlingModuleId: rest.crawlingModuleId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: platform-crawling-module-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Platform API — Crawling Module. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: gets-crawling-module-version-upgrade
+      description: Gets the Crawling Module Version for an Upgrade Channel
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-crawling-module.getcrawlingmoduleupgradechannelversion
+      with:
+        upgradeChannel: tools.upgradeChannel
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: sets-crawling-module-version-upgrade
+      description: Sets the Crawling Module Version for an Upgrade Channel
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: platform-crawling-module.setcrawlingmoduleupgradechannelversion
+      with:
+        upgradeChannel: tools.upgradeChannel
+        version: tools.version
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-crawling-modules
+      description: List Crawling Modules
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-crawling-module.getcrawlingmodulesfororganization
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-crawling-modules-ids
+      description: List Crawling Modules by Ids
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: platform-crawling-module.getcrawlingmodulesbyidsfororganization
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-download-url-prefix-crawling
+      description: Get the Download URL Prefix for Crawling Module Binaries.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-crawling-module.getcrawlingmoduledownloadurl
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-crawling-modules-project-id
+      description: List Crawling Modules by Project ID
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-crawling-module.getcrawlingmodulesbyprojectidfororganization
+      with:
+        organizationId: tools.organizationId
+        projectId: tools.projectId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: gets-latest-maestro-version
+      description: Gets the Latest Maestro Version
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-crawling-module.getlatestmaestroversion
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: report-crawling-module-deployment
+      description: Report Crawling Module Deployment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: platform-crawling-module.reportcrawlingmodule
+      with:
+        organizationId: tools.organizationId
+        crawlingModuleId: tools.crawlingModuleId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: remove-crawling-module-deployment
+      description: Remove a Crawling Module Deployment
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: platform-crawling-module.removecrawlingmodule
+      with:
+        organizationId: tools.organizationId
+        crawlingModuleId: tools.crawlingModuleId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-update-status
+      description: Get the Update Status
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-crawling-module.getupdatestatus
+      with:
+        organizationId: tools.organizationId
+        crawlingModuleId: tools.crawlingModuleId
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -187,3 +187,166 @@ capability:
           type: string
           description: A UUID identifying the synonym rule.
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-synonym-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Synonym. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/search/synonyms
+      name: rest-organizations-organizationid-commerce-v2-search-synonyms
+      description: REST surface for rest-organizations-organizationId-commerce-v2-search-synonyms.
+      operations:
+      - method: GET
+        name: listsynonyms
+        description: List Synonym Rules
+        call: commerce-synonym.listsynonyms
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          language: rest.language
+          country: rest.country
+          currency: rest.currency
+          query: rest.query
+          action: rest.action
+          sort: rest.sort
+          page: rest.page
+          perPage: rest.perPage
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createsynonym
+        description: Create a Synonym Rule
+        call: commerce-synonym.createsynonym
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/search/synonyms/{synonymid}
+      name: rest-organizations-organizationid-commerce-v2-search-synonyms-synonymid
+      description: REST surface for rest-organizations-organizationId-commerce-v2-search-synonyms-synonymId.
+      operations:
+      - method: GET
+        name: getsynonym
+        description: Get a Synonym Rule.
+        call: commerce-synonym.getsynonym
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          synonymId: rest.synonymId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: editsynonym
+        description: Edit Synonym Rule
+        call: commerce-synonym.editsynonym
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          synonymId: rest.synonymId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletesynonym
+        description: Delete Synonym Rule.
+        call: commerce-synonym.deletesynonym
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          synonymId: rest.synonymId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-synonym-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Synonym. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: list-synonym-rules
+      description: List Synonym Rules
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-synonym.listsynonyms
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        language: tools.language
+        country: tools.country
+        currency: tools.currency
+        query: tools.query
+        action: tools.action
+        sort: tools.sort
+        page: tools.page
+        perPage: tools.perPage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-synonym-rule
+      description: Create a Synonym Rule
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-synonym.createsynonym
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-synonym-rule
+      description: Get a Synonym Rule.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-synonym.getsynonym
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        synonymId: tools.synonymId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: edit-synonym-rule
+      description: Edit Synonym Rule
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: commerce-synonym.editsynonym
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        synonymId: tools.synonymId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-synonym-rule
+      description: Delete Synonym Rule.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: commerce-synonym.deletesynonym
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        synonymId: tools.synonymId
+      outputParameters:
+      - type: object
+        mapping: $.

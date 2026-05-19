@@ -111,3 +111,115 @@ capability:
           type: string
           description: Tracking ID of the product suggest configuration
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-product-suggest-configurations-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Product Suggest Configurations. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/configurations/productsuggest
+      name: rest-organizations-organizationid-commerce-v2-configurations-productsuggest
+      description: REST surface for rest-organizations-organizationId-commerce-v2-configurations-productSuggest.
+      operations:
+      - method: GET
+        name: get2
+        description: Retrieves a Product Suggest Configuration
+        call: commerce-product-suggest-configurations.get2
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: update2
+        description: Update a Product Suggest Configuration
+        call: commerce-product-suggest-configurations.update2
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: create1
+        description: Create a Product Suggest Configuration
+        call: commerce-product-suggest-configurations.create1
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: delete2
+        description: Deletes a Product Suggest Configuration
+        call: commerce-product-suggest-configurations.delete2
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-product-suggest-configurations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Product Suggest Configurations. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: retrieves-product-suggest-configuration
+      description: Retrieves a Product Suggest Configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-product-suggest-configurations.get2
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-product-suggest-configuration
+      description: Update a Product Suggest Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: commerce-product-suggest-configurations.update2
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-product-suggest-configuration
+      description: Create a Product Suggest Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-product-suggest-configurations.create1
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deletes-product-suggest-configuration
+      description: Deletes a Product Suggest Configuration
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: commerce-product-suggest-configurations.delete2
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -50,3 +50,46 @@ capability:
           type: string
           description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
           required: true
+  exposes:
+  - type: rest
+    namespace: push-source-status-rest
+    port: 8080
+    description: REST adapter for Coveo Push API — Source Status. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/sources/{sourceid}/status
+      name: organizations-organizationid-sources-sourceid-status
+      description: REST surface for organizations-organizationId-sources-sourceId-status.
+      operations:
+      - method: POST
+        name: post
+        description: Set the Status of a Push Source
+        call: push-source-status.post
+        with:
+          statusType: rest.statusType
+          sourceId: rest.sourceId
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: push-source-status-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Push API — Source Status. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: set-status-push-source
+      description: Set the Status of a Push Source
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: push-source-status.post
+      with:
+        statusType: tools.statusType
+        sourceId: tools.sourceId
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.

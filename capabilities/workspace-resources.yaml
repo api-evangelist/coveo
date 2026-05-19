@@ -59,3 +59,50 @@ capability:
           in: query
           type: integer
           description: The number of results to fetch per page.<br/>**Default:** `50`
+  exposes:
+  - type: rest
+    namespace: workspace-resources-rest
+    port: 8080
+    description: REST adapter for Coveo Workspace API — Resources. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/resources/{resourcetype}
+      name: rest-organizations-organizationid-resources-resourcetype
+      description: REST surface for rest-organizations-organizationId-resources-resourceType.
+      operations:
+      - method: GET
+        name: getallresourcesdetailsbyresourcetype
+        description: Get Resources
+        call: workspace-resources.getallresourcesdetailsbyresourcetype
+        with:
+          organizationId: rest.organizationId
+          resourceType: rest.resourceType
+          filter: rest.filter
+          page: rest.page
+          perPage: rest.perPage
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: workspace-resources-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Workspace API — Resources. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: get-resources
+      description: Get Resources
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: workspace-resources.getallresourcesdetailsbyresourcetype
+      with:
+        organizationId: tools.organizationId
+        resourceType: tools.resourceType
+        filter: tools.filter
+        page: tools.page
+        perPage: tools.perPage
+      outputParameters:
+      - type: object
+        mapping: $.

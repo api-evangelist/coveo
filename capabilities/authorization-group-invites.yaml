@@ -155,3 +155,158 @@ capability:
           type: string
           description: The username or email of the invited user.</br>**Example:** `jsmith@email.com-google`
           required: true
+  exposes:
+  - type: rest
+    namespace: authorization-group-invites-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Group Invites. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/groups/{groupid}/invites
+      name: rest-organizations-organizationid-groups-groupid-invites
+      description: REST surface for rest-organizations-organizationId-groups-groupId-invites.
+      operations:
+      - method: GET
+        name: getinvites
+        description: List Invites
+        call: authorization-group-invites.getinvites
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: invitemember
+        description: Invite User to Group
+        call: authorization-group-invites.invitemember
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+          sendEmail: rest.sendEmail
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/groups/{groupid}/invites/accept
+      name: rest-organizations-organizationid-groups-groupid-invites-accept
+      description: REST surface for rest-organizations-organizationId-groups-groupId-invites-accept.
+      operations:
+      - method: POST
+        name: acceptinvite
+        description: Accept Invite to Group
+        call: authorization-group-invites.acceptinvite
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+          invite_code: rest.invite_code
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/groups/{groupid}/invites/decline
+      name: rest-organizations-organizationid-groups-groupid-invites-decline
+      description: REST surface for rest-organizations-organizationId-groups-groupId-invites-decline.
+      operations:
+      - method: POST
+        name: declineinvite
+        description: Decline Invite to Group
+        call: authorization-group-invites.declineinvite
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+          invite_code: rest.invite_code
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/groups/{groupid}/invites/{usernameoremail}
+      name: rest-organizations-organizationid-groups-groupid-invites-usernameoremail
+      description: REST surface for rest-organizations-organizationId-groups-groupId-invites-usernameOrEmail.
+      operations:
+      - method: DELETE
+        name: deleteinvite
+        description: Delete Invite to Group
+        call: authorization-group-invites.deleteinvite
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+          usernameOrEmail: rest.usernameOrEmail
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-group-invites-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Group Invites. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: list-invites
+      description: List Invites
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-group-invites.getinvites
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: invite-user-group
+      description: Invite User to Group
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: authorization-group-invites.invitemember
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+        sendEmail: tools.sendEmail
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: accept-invite-group
+      description: Accept Invite to Group
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: authorization-group-invites.acceptinvite
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+        invite_code: tools.invite_code
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: decline-invite-group
+      description: Decline Invite to Group
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: authorization-group-invites.declineinvite
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+        invite_code: tools.invite_code
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-invite-group
+      description: Delete Invite to Group
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: authorization-group-invites.deleteinvite
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+        usernameOrEmail: tools.usernameOrEmail
+      outputParameters:
+      - type: object
+        mapping: $.

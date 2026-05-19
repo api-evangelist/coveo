@@ -329,3 +329,339 @@ capability:
           type: string
           description: The unique identifier of the [slot configuration](https://docs.coveo.com/en/o9b80563/glossary/recommendation-slot/).
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-recommendations-configuration-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Recommendations Configuration. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/recommendations/slots
+      name: rest-organizations-organizationid-commerce-v2-recommendations-slots
+      description: REST surface for rest-organizations-organizationId-commerce-v2-recommendations-slots.
+      operations:
+      - method: GET
+        name: getslotconfigurations
+        description: Retrieves All Slot Configurations of an Organization
+        call: commerce-recommendations-configuration.getslotconfigurations
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          page: rest.page
+          perPage: rest.perPage
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createslotconfiguration
+        description: Create a Slot Configuration
+        call: commerce-recommendations-configuration.createslotconfiguration
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/recommendations/slots/global/query-configuration
+      name: rest-organizations-organizationid-commerce-v2-recommendations-slots-global-query
+      description: REST surface for rest-organizations-organizationId-commerce-v2-recommendations-slots-global-query.
+      operations:
+      - method: GET
+        name: getglobalqueryconfiguration
+        description: Retrieves a Global Query Configuration
+        call: commerce-recommendations-configuration.getglobalqueryconfiguration
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateglobalqueryconfiguration
+        description: Update a Global Query Configuration
+        call: commerce-recommendations-configuration.updateglobalqueryconfiguration
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/recommendations/slots/names
+      name: rest-organizations-organizationid-commerce-v2-recommendations-slots-names
+      description: REST surface for rest-organizations-organizationId-commerce-v2-recommendations-slots-names.
+      operations:
+      - method: GET
+        name: getslotconfigurationnames
+        description: Retrieves All Slot Configuration Ids & Names of an Organization
+        call: commerce-recommendations-configuration.getslotconfigurationnames
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          query: rest.query
+          page: rest.page
+          perPage: rest.perPage
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/recommendations/slots/strategies
+      name: rest-organizations-organizationid-commerce-v2-recommendations-slots-strategies
+      description: REST surface for rest-organizations-organizationId-commerce-v2-recommendations-slots-strategies.
+      operations:
+      - method: GET
+        name: getslotstrategies1
+        description: Retrieves Available Slot Strategies
+        call: commerce-recommendations-configuration.getslotstrategies1
+        with:
+          organizationId: rest.organizationId
+          slotType: rest.slotType
+          seedType: rest.seedType
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/recommendations/slots/{configurationid}
+      name: rest-organizations-organizationid-commerce-v2-recommendations-slots-configuratio
+      description: REST surface for rest-organizations-organizationId-commerce-v2-recommendations-slots-configuratio.
+      operations:
+      - method: GET
+        name: getslotconfiguration
+        description: Retrieves a Slot Configuration
+        call: commerce-recommendations-configuration.getslotconfiguration
+        with:
+          organizationId: rest.organizationId
+          configurationId: rest.configurationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateslotconfiguration
+        description: Update a Slot Configuration
+        call: commerce-recommendations-configuration.updateslotconfiguration
+        with:
+          organizationId: rest.organizationId
+          configurationId: rest.configurationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteslotconfiguration
+        description: Deletes a Slot Configuration
+        call: commerce-recommendations-configuration.deleteslotconfiguration
+        with:
+          organizationId: rest.organizationId
+          configurationId: rest.configurationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/recommendations/slots/{configurationid}/settings
+      name: rest-organizations-organizationid-commerce-v2-recommendations-slots-configuratio
+      description: REST surface for rest-organizations-organizationId-commerce-v2-recommendations-slots-configuratio.
+      operations:
+      - method: GET
+        name: getslotsettings
+        description: Retrieves Slot Settings
+        call: commerce-recommendations-configuration.getslotsettings
+        with:
+          organizationId: rest.organizationId
+          configurationId: rest.configurationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateslotsettings
+        description: Update Slot Settings
+        call: commerce-recommendations-configuration.updateslotsettings
+        with:
+          organizationId: rest.organizationId
+          configurationId: rest.configurationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/recommendations/slots/{configurationid}/strategies
+      name: rest-organizations-organizationid-commerce-v2-recommendations-slots-configuratio
+      description: REST surface for rest-organizations-organizationId-commerce-v2-recommendations-slots-configuratio.
+      operations:
+      - method: GET
+        name: getslotstrategies
+        description: Retrieves Available Slot Strategies
+        call: commerce-recommendations-configuration.getslotstrategies
+        with:
+          organizationId: rest.organizationId
+          configurationId: rest.configurationId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-recommendations-configuration-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Recommendations Configuration. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: retrieves-all-slot-configurations-organization
+      description: Retrieves All Slot Configurations of an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-recommendations-configuration.getslotconfigurations
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        page: tools.page
+        perPage: tools.perPage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-slot-configuration
+      description: Create a Slot Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-recommendations-configuration.createslotconfiguration
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieves-global-query-configuration
+      description: Retrieves a Global Query Configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-recommendations-configuration.getglobalqueryconfiguration
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-global-query-configuration
+      description: Update a Global Query Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: commerce-recommendations-configuration.updateglobalqueryconfiguration
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieves-all-slot-configuration-ids
+      description: Retrieves All Slot Configuration Ids & Names of an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-recommendations-configuration.getslotconfigurationnames
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        query: tools.query
+        page: tools.page
+        perPage: tools.perPage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieves-available-slot-strategies
+      description: Retrieves Available Slot Strategies
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-recommendations-configuration.getslotstrategies1
+      with:
+        organizationId: tools.organizationId
+        slotType: tools.slotType
+        seedType: tools.seedType
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieves-slot-configuration
+      description: Retrieves a Slot Configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-recommendations-configuration.getslotconfiguration
+      with:
+        organizationId: tools.organizationId
+        configurationId: tools.configurationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-slot-configuration
+      description: Update a Slot Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: commerce-recommendations-configuration.updateslotconfiguration
+      with:
+        organizationId: tools.organizationId
+        configurationId: tools.configurationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deletes-slot-configuration
+      description: Deletes a Slot Configuration
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: commerce-recommendations-configuration.deleteslotconfiguration
+      with:
+        organizationId: tools.organizationId
+        configurationId: tools.configurationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieves-slot-settings
+      description: Retrieves Slot Settings
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-recommendations-configuration.getslotsettings
+      with:
+        organizationId: tools.organizationId
+        configurationId: tools.configurationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-slot-settings
+      description: Update Slot Settings
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: commerce-recommendations-configuration.updateslotsettings
+      with:
+        organizationId: tools.organizationId
+        configurationId: tools.configurationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieves-available-slot-strategies-2
+      description: Retrieves Available Slot Strategies
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-recommendations-configuration.getslotstrategies
+      with:
+        organizationId: tools.organizationId
+        configurationId: tools.configurationId
+      outputParameters:
+      - type: object
+        mapping: $.

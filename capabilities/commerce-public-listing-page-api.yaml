@@ -130,3 +130,131 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-public-listing-page-api-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Public Listing Page API. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/listings/pages
+      name: rest-organizations-organizationid-commerce-v2-listings-pages
+      description: REST surface for rest-organizations-organizationId-commerce-v2-listings-pages.
+      operations:
+      - method: GET
+        name: getall2
+        description: Retrieves All Listing Pages and Their Page Rules for a Tracking ID Within an Organization
+        call: commerce-public-listing-page-api.getall2
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          page: rest.page
+          perPage: rest.perPage
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/listings/pages/bulk-create
+      name: rest-organizations-organizationid-commerce-v2-listings-pages-bulk-create
+      description: REST surface for rest-organizations-organizationId-commerce-v2-listings-pages-bulk-create.
+      operations:
+      - method: POST
+        name: bulkcreate1
+        description: Create Multiple Listing Pages
+        call: commerce-public-listing-page-api.bulkcreate1
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/listings/pages/bulk-delete
+      name: rest-organizations-organizationid-commerce-v2-listings-pages-bulk-delete
+      description: REST surface for rest-organizations-organizationId-commerce-v2-listings-pages-bulk-delete.
+      operations:
+      - method: POST
+        name: bulkdelete
+        description: Delete Multiple Listing Pages
+        call: commerce-public-listing-page-api.bulkdelete
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/listings/pages/bulk-update
+      name: rest-organizations-organizationid-commerce-v2-listings-pages-bulk-update
+      description: REST surface for rest-organizations-organizationId-commerce-v2-listings-pages-bulk-update.
+      operations:
+      - method: PUT
+        name: bulkupdate1
+        description: Update Multiple Listing Pages
+        call: commerce-public-listing-page-api.bulkupdate1
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-public-listing-page-api-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Public Listing Page API. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: retrieves-all-listing-pages-and
+      description: Retrieves All Listing Pages and Their Page Rules for a Tracking ID Within an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-public-listing-page-api.getall2
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        page: tools.page
+        perPage: tools.perPage
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-multiple-listing-pages
+      description: Create Multiple Listing Pages
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-public-listing-page-api.bulkcreate1
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-multiple-listing-pages
+      description: Delete Multiple Listing Pages
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-public-listing-page-api.bulkdelete
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-multiple-listing-pages
+      description: Update Multiple Listing Pages
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: commerce-public-listing-page-api.bulkupdate1
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

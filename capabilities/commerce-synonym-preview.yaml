@@ -55,3 +55,48 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-synonym-preview-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Synonym Preview. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/search/preview/synonyms/new
+      name: rest-organizations-organizationid-commerce-v2-search-preview-synonyms-new
+      description: REST surface for rest-organizations-organizationId-commerce-v2-search-preview-synonyms-new.
+      operations:
+      - method: POST
+        name: previewsynonym
+        description: Preview the Impact of a Synonym Rule
+        call: commerce-synonym-preview.previewsynonym
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-synonym-preview-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Synonym Preview. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: preview-impact-synonym-rule
+      description: Preview the Impact of a Synonym Rule
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-synonym-preview.previewsynonym
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

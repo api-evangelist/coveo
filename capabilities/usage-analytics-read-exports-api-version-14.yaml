@@ -276,3 +276,278 @@ capability:
           type: string
           description: The export's unique identifier.
           required: true
+  exposes:
+  - type: rest
+    namespace: usage-analytics-read-exports-api-version-14-rest
+    port: 8080
+    description: REST adapter for Coveo Usage Analytics Read API — Exports API - Version 14. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v14/exports
+      name: v14-exports
+      description: REST surface for v14-exports.
+      operations:
+      - method: GET
+        name: getv14exports
+        description: Lists All Exports
+        call: usage-analytics-read-exports-api-version-14.getv14exports
+        with:
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: postv14exports
+        description: Generate an Export
+        call: usage-analytics-read-exports-api-version-14.postv14exports
+        with:
+          org: rest.org
+          from: rest.from
+          to: rest.to
+          f: rest.f
+          fs: rest.fs
+          fc: rest.fc
+          filename: rest.filename
+          format: rest.format
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/exports/estimate
+      name: v14-exports-estimate
+      description: REST surface for v14-exports-estimate.
+      operations:
+      - method: GET
+        name: getv14exportsestimate
+        description: Estimate the Number of Rows in an Export
+        call: usage-analytics-read-exports-api-version-14.getv14exportsestimate
+        with:
+          org: rest.org
+          from: rest.from
+          to: rest.to
+          f: rest.f
+          fs: rest.fs
+          fc: rest.fc
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/exports/monitoring/health
+      name: v14-exports-monitoring-health
+      description: REST surface for v14-exports-monitoring-health.
+      operations:
+      - method: GET
+        name: getv14exportsmonitoringhealth
+        description: Health Check for the Exports Service
+        call: usage-analytics-read-exports-api-version-14.getv14exportsmonitoringhealth
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/exports/status
+      name: v14-exports-status
+      description: REST surface for v14-exports-status.
+      operations:
+      - method: GET
+        name: getv14exportsstatus
+        description: Get the Exports Service Status
+        call: usage-analytics-read-exports-api-version-14.getv14exportsstatus
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/exports/visits
+      name: v14-exports-visits
+      description: REST surface for v14-exports-visits.
+      operations:
+      - method: POST
+        name: postv14exportsvisits
+        description: Generate a Visit Export
+        call: usage-analytics-read-exports-api-version-14.postv14exportsvisits
+        with:
+          org: rest.org
+          from: rest.from
+          to: rest.to
+          f: rest.f
+          fn: rest.fn
+          filename: rest.filename
+          d: rest.d
+          format: rest.format
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/exports/visits/estimate
+      name: v14-exports-visits-estimate
+      description: REST surface for v14-exports-visits-estimate.
+      operations:
+      - method: GET
+        name: getv14exportsvisitsestimate
+        description: Estimate the Number of Rows in a Visit Export
+        call: usage-analytics-read-exports-api-version-14.getv14exportsvisitsestimate
+        with:
+          org: rest.org
+          from: rest.from
+          to: rest.to
+          f: rest.f
+          fn: rest.fn
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/exports/{exportid}
+      name: v14-exports-exportid
+      description: REST surface for v14-exports-exportId.
+      operations:
+      - method: GET
+        name: getv14exportsexportid
+        description: Get Information on an Export
+        call: usage-analytics-read-exports-api-version-14.getv14exportsexportid
+        with:
+          org: rest.org
+          exportId: rest.exportId
+          redirect: rest.redirect
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletev14exportsexportid
+        description: Delete an Export
+        call: usage-analytics-read-exports-api-version-14.deletev14exportsexportid
+        with:
+          org: rest.org
+          exportId: rest.exportId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: usage-analytics-read-exports-api-version-14-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Usage Analytics Read API — Exports API - Version 14. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: lists-all-exports
+      description: Lists All Exports
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-exports-api-version-14.getv14exports
+      with:
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: generate-export
+      description: Generate an Export
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: usage-analytics-read-exports-api-version-14.postv14exports
+      with:
+        org: tools.org
+        from: tools.from
+        to: tools.to
+        f: tools.f
+        fs: tools.fs
+        fc: tools.fc
+        filename: tools.filename
+        format: tools.format
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: estimate-number-rows-export
+      description: Estimate the Number of Rows in an Export
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-exports-api-version-14.getv14exportsestimate
+      with:
+        org: tools.org
+        from: tools.from
+        to: tools.to
+        f: tools.f
+        fs: tools.fs
+        fc: tools.fc
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: health-check-exports-service
+      description: Health Check for the Exports Service
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-exports-api-version-14.getv14exportsmonitoringhealth
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-exports-service-status
+      description: Get the Exports Service Status
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-exports-api-version-14.getv14exportsstatus
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: generate-visit-export
+      description: Generate a Visit Export
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: usage-analytics-read-exports-api-version-14.postv14exportsvisits
+      with:
+        org: tools.org
+        from: tools.from
+        to: tools.to
+        f: tools.f
+        fn: tools.fn
+        filename: tools.filename
+        d: tools.d
+        format: tools.format
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: estimate-number-rows-visit-export
+      description: Estimate the Number of Rows in a Visit Export
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-exports-api-version-14.getv14exportsvisitsestimate
+      with:
+        org: tools.org
+        from: tools.from
+        to: tools.to
+        f: tools.f
+        fn: tools.fn
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-information-export
+      description: Get Information on an Export
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-exports-api-version-14.getv14exportsexportid
+      with:
+        org: tools.org
+        exportId: tools.exportId
+        redirect: tools.redirect
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-export
+      description: Delete an Export
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: usage-analytics-read-exports-api-version-14.deletev14exportsexportid
+      with:
+        org: tools.org
+        exportId: tools.exportId
+      outputParameters:
+      - type: object
+        mapping: $.

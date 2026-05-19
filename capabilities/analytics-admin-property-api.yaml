@@ -152,3 +152,175 @@ capability:
           in: path
           type: string
           required: true
+  exposes:
+  - type: rest
+    namespace: analytics-admin-property-api-rest
+    port: 8080
+    description: REST adapter for Coveo Analytics Admin API — Property API. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/analyticsadmin/v1/properties
+      name: rest-organizations-organizationid-analyticsadmin-v1-properties
+      description: REST surface for rest-organizations-organizationId-analyticsadmin-v1-properties.
+      operations:
+      - method: GET
+        name: listproperties
+        description: Get All Properties for an Organization.
+        call: analytics-admin-property-api.listproperties
+        with:
+          organizationId: rest.organizationId
+          params: rest.params
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: queryproperties
+        description: Query Properties for an Organization.
+        call: analytics-admin-property-api.queryproperties
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/analyticsadmin/v1/properties/{trackingid}
+      name: rest-organizations-organizationid-analyticsadmin-v1-properties-trackingid
+      description: REST surface for rest-organizations-organizationId-analyticsadmin-v1-properties-trackingId.
+      operations:
+      - method: GET
+        name: getproperty
+        description: Get a Specific Property.
+        call: analytics-admin-property-api.getproperty
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateproperty
+        description: Update All Values of a Property.
+        call: analytics-admin-property-api.updateproperty
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          displayName: rest.displayName
+          defaultTimeZone: rest.defaultTimeZone
+          defaultCurrency: rest.defaultCurrency
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createproperty
+        description: Create a New Property.
+        call: analytics-admin-property-api.createproperty
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          displayName: rest.displayName
+          defaultTimeZone: rest.defaultTimeZone
+          defaultCurrency: rest.defaultCurrency
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteproperty
+        description: Delete a Property.
+        call: analytics-admin-property-api.deleteproperty
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: analytics-admin-property-api-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Analytics Admin API — Property API. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: get-all-properties-organization
+      description: Get All Properties for an Organization.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: analytics-admin-property-api.listproperties
+      with:
+        organizationId: tools.organizationId
+        params: tools.params
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: query-properties-organization
+      description: Query Properties for an Organization.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: analytics-admin-property-api.queryproperties
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-specific-property
+      description: Get a Specific Property.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: analytics-admin-property-api.getproperty
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-all-values-property
+      description: Update All Values of a Property.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: analytics-admin-property-api.updateproperty
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        displayName: tools.displayName
+        defaultTimeZone: tools.defaultTimeZone
+        defaultCurrency: tools.defaultCurrency
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-new-property
+      description: Create a New Property.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: analytics-admin-property-api.createproperty
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        displayName: tools.displayName
+        defaultTimeZone: tools.defaultTimeZone
+        defaultCurrency: tools.defaultCurrency
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-property
+      description: Delete a Property.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: analytics-admin-property-api.deleteproperty
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+      outputParameters:
+      - type: object
+        mapping: $.

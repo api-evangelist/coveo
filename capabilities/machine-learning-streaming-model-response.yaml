@@ -46,3 +46,44 @@ capability:
           description: Unique Identifier for the response stream. For details on how to obtain the streamId for this response,
             refer to [Streaming model responses](https://docs.coveo.
           required: true
+  exposes:
+  - type: rest
+    namespace: machine-learning-streaming-model-response-rest
+    port: 8080
+    description: REST adapter for Coveo Machine Learning API — Streaming Model Response. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/machinelearning/streaming/{streamid}
+      name: rest-organizations-organizationid-machinelearning-streaming-streamid
+      description: REST surface for rest-organizations-organizationId-machinelearning-streaming-streamId.
+      operations:
+      - method: GET
+        name: getquerystreamevents
+        description: Get Model Response Events for a Query Stream
+        call: machine-learning-streaming-model-response.getquerystreamevents
+        with:
+          organizationId: rest.organizationId
+          streamId: rest.streamId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: machine-learning-streaming-model-response-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Machine Learning API — Streaming Model Response. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: get-model-response-events-query
+      description: Get Model Response Events for a Query Stream
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: machine-learning-streaming-model-response.getquerystreamevents
+      with:
+        organizationId: tools.organizationId
+        streamId: tools.streamId
+      outputParameters:
+      - type: object
+        mapping: $.

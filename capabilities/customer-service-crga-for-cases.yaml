@@ -70,3 +70,97 @@ capability:
         - name: result
           type: object
           value: $.
+  exposes:
+  - type: rest
+    namespace: customer-service-crga-for-cases-rest
+    port: 8080
+    description: REST adapter for Coveo Customer Service API — CRGA For Cases. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/answer/cases/v1/configs/{configid}
+      name: rest-organizations-organizationid-answer-cases-v1-configs-configid
+      description: REST surface for rest-organizations-organizationId-answer-cases-v1-configs-configId.
+      operations:
+      - method: POST
+        name: createlfcaconfiguration
+        description: Create CRGA for Cases Configuration
+        call: customer-service-crga-for-cases.createlfcaconfiguration
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: getlfcaconfiguration
+        description: Get CRGA for Cases Configuration
+        call: customer-service-crga-for-cases.getlfcaconfiguration
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PATCH
+        name: patchlfcaconfiguration
+        description: Update CRGA for Cases Configuration Attributes
+        call: customer-service-crga-for-cases.patchlfcaconfiguration
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletelfcaconfiguration
+        description: Delete CRGA for Cases Configuration
+        call: customer-service-crga-for-cases.deletelfcaconfiguration
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: customer-service-crga-for-cases-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Customer Service API — CRGA For Cases. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: create-crga-cases-configuration
+      description: Create CRGA for Cases Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: customer-service-crga-for-cases.createlfcaconfiguration
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-crga-cases-configuration
+      description: Get CRGA for Cases Configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: customer-service-crga-for-cases.getlfcaconfiguration
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-crga-cases-configuration-attributes
+      description: Update CRGA for Cases Configuration Attributes
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: customer-service-crga-for-cases.patchlfcaconfiguration
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-crga-cases-configuration
+      description: Delete CRGA for Cases Configuration
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: customer-service-crga-for-cases.deletelfcaconfiguration
+      outputParameters:
+      - type: object
+        mapping: $.

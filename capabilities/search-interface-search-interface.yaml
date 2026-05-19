@@ -51,3 +51,63 @@ capability:
           type: object
           description: Request body (JSON).
           required: false
+  exposes:
+  - type: rest
+    namespace: search-interface-search-interface-rest
+    port: 8080
+    description: REST adapter for Coveo Search Interface Service API — Search Interface. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/searchinterfaces/{interfaceid}/html
+      name: rest-organizations-organizationid-searchinterfaces-interfaceid-html
+      description: REST surface for rest-organizations-organizationId-searchinterfaces-interfaceId-html.
+      operations:
+      - method: GET
+        name: getinterfacehtml
+        description: Retrieve Search Interface
+        call: search-interface-search-interface.getinterfacehtml
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchinterfaces/{interfaceid}/manifest/v1
+      name: rest-organizations-organizationid-searchinterfaces-interfaceid-manifest-v1
+      description: REST surface for rest-organizations-organizationId-searchinterfaces-interfaceId-manifest-v1.
+      operations:
+      - method: POST
+        name: postmanifest
+        description: Retrieve Search Interface Manifest
+        call: search-interface-search-interface.postmanifest
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-interface-search-interface-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search Interface Service API — Search Interface. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: retrieve-search-interface
+      description: Retrieve Search Interface
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-search-interface.getinterfacehtml
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-search-interface-manifest
+      description: Retrieve Search Interface Manifest
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-interface-search-interface.postmanifest
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

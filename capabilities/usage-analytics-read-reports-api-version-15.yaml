@@ -292,3 +292,350 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: usage-analytics-read-reports-api-version-15-rest
+    port: 8080
+    description: REST adapter for Coveo Usage Analytics Read API — Reports API - Version 15. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v15/reports
+      name: v15-reports
+      description: REST surface for v15-reports.
+      operations:
+      - method: GET
+        name: getv15reports
+        description: Get the Persisted Reports of One or All Types
+        call: usage-analytics-read-reports-api-version-15.getv15reports
+        with:
+          type: rest.type
+          org: rest.org
+          includeConfig: rest.includeConfig
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: postv15reports
+        description: Create a Report
+        call: usage-analytics-read-reports-api-version-15.postv15reports
+        with:
+          org: rest.org
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v15/reports/monitoring/health
+      name: v15-reports-monitoring-health
+      description: REST surface for v15-reports-monitoring-health.
+      operations:
+      - method: GET
+        name: getv15reportsmonitoringhealth
+        description: Health Check for the Reports Service
+        call: usage-analytics-read-reports-api-version-15.getv15reportsmonitoringhealth
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v15/reports/status
+      name: v15-reports-status
+      description: REST surface for v15-reports-status.
+      operations:
+      - method: GET
+        name: getv15reportsstatus
+        description: Get the Reports Service Status
+        call: usage-analytics-read-reports-api-version-15.getv15reportsstatus
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v15/reports/templates
+      name: v15-reports-templates
+      description: REST surface for v15-reports-templates.
+      operations:
+      - method: GET
+        name: getv15reportstemplates
+        description: Get Metadata About Available Report Templates
+        call: usage-analytics-read-reports-api-version-15.getv15reportstemplates
+        with:
+          type: rest.type
+          includeMetadata: rest.includeMetadata
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v15/reports/templates/{templateid}
+      name: v15-reports-templates-templateid
+      description: REST surface for v15-reports-templates-templateId.
+      operations:
+      - method: GET
+        name: getv15reportstemplatestemplateid
+        description: Get a Report Template
+        call: usage-analytics-read-reports-api-version-15.getv15reportstemplatestemplateid
+        with:
+          templateId: rest.templateId
+          includeMetadata: rest.includeMetadata
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v15/reports/{reportid}
+      name: v15-reports-reportid
+      description: REST surface for v15-reports-reportId.
+      operations:
+      - method: GET
+        name: getv15reportsreportid
+        description: Get a Report
+        call: usage-analytics-read-reports-api-version-15.getv15reportsreportid
+        with:
+          reportId: rest.reportId
+          org: rest.org
+          tz: rest.tz
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: putv15reportsreportid
+        description: Update a Report
+        call: usage-analytics-read-reports-api-version-15.putv15reportsreportid
+        with:
+          reportId: rest.reportId
+          org: rest.org
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletev15reportsreportid
+        description: Delete a Report
+        call: usage-analytics-read-reports-api-version-15.deletev15reportsreportid
+        with:
+          reportId: rest.reportId
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v15/reports/{reportid}/access
+      name: v15-reports-reportid-access
+      description: REST surface for v15-reports-reportId-access.
+      operations:
+      - method: GET
+        name: getv15reportsreportidaccess
+        description: Get the Users and Groups Who Can View a Report
+        call: usage-analytics-read-reports-api-version-15.getv15reportsreportidaccess
+        with:
+          reportId: rest.reportId
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: putv15reportsreportidaccess
+        description: Set the Users and Groups Who Are Allowed to View a Report
+        call: usage-analytics-read-reports-api-version-15.putv15reportsreportidaccess
+        with:
+          reportId: rest.reportId
+          org: rest.org
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v15/reports/{reportid}/users
+      name: v15-reports-reportid-users
+      description: REST surface for v15-reports-reportId-users.
+      operations:
+      - method: GET
+        name: getv15reportsreportidusers
+        description: Get the Users Who Can View a Report
+        call: usage-analytics-read-reports-api-version-15.getv15reportsreportidusers
+        with:
+          reportId: rest.reportId
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: putv15reportsreportidusers
+        description: Set the Users Who Are Allowed to View a Report
+        call: usage-analytics-read-reports-api-version-15.putv15reportsreportidusers
+        with:
+          reportId: rest.reportId
+          org: rest.org
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: usage-analytics-read-reports-api-version-15-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Usage Analytics Read API — Reports API - Version 15. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: get-persisted-reports-one-all
+      description: Get the Persisted Reports of One or All Types
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.getv15reports
+      with:
+        type: tools.type
+        org: tools.org
+        includeConfig: tools.includeConfig
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-report
+      description: Create a Report
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: usage-analytics-read-reports-api-version-15.postv15reports
+      with:
+        org: tools.org
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: health-check-reports-service
+      description: Health Check for the Reports Service
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.getv15reportsmonitoringhealth
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-reports-service-status
+      description: Get the Reports Service Status
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.getv15reportsstatus
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-metadata-about-available-report
+      description: Get Metadata About Available Report Templates
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.getv15reportstemplates
+      with:
+        type: tools.type
+        includeMetadata: tools.includeMetadata
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-report-template
+      description: Get a Report Template
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.getv15reportstemplatestemplateid
+      with:
+        templateId: tools.templateId
+        includeMetadata: tools.includeMetadata
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-report
+      description: Get a Report
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.getv15reportsreportid
+      with:
+        reportId: tools.reportId
+        org: tools.org
+        tz: tools.tz
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-report
+      description: Update a Report
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.putv15reportsreportid
+      with:
+        reportId: tools.reportId
+        org: tools.org
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-report
+      description: Delete a Report
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.deletev15reportsreportid
+      with:
+        reportId: tools.reportId
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-users-and-groups-who
+      description: Get the Users and Groups Who Can View a Report
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.getv15reportsreportidaccess
+      with:
+        reportId: tools.reportId
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: set-users-and-groups-who
+      description: Set the Users and Groups Who Are Allowed to View a Report
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.putv15reportsreportidaccess
+      with:
+        reportId: tools.reportId
+        org: tools.org
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-users-who-can-view
+      description: Get the Users Who Can View a Report
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.getv15reportsreportidusers
+      with:
+        reportId: tools.reportId
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: set-users-who-are-allowed
+      description: Set the Users Who Are Allowed to View a Report
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-reports-api-version-15.putv15reportsreportidusers
+      with:
+        reportId: tools.reportId
+        org: tools.org
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

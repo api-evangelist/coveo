@@ -97,3 +97,100 @@ capability:
           in: query
           type: string
           description: The name of the organization (Coveo Cloud V2 only)
+  exposes:
+  - type: rest
+    namespace: usage-analytics-read-administration-api-version-15-rest
+    port: 8080
+    description: REST adapter for Coveo Usage Analytics Read API — Administration API - Version 15. One Spectral-compliant
+      resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v15/admin/account
+      name: v15-admin-account
+      description: REST surface for v15-admin-account.
+      operations:
+      - method: GET
+        name: getv15adminaccount
+        description: Get an Account
+        call: usage-analytics-read-administration-api-version-15.getv15adminaccount
+        with:
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: putv15adminaccount
+        description: Edit an Account
+        call: usage-analytics-read-administration-api-version-15.putv15adminaccount
+        with:
+          org: rest.org
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v15/admin/account/strictvalidationtest
+      name: v15-admin-account-strictvalidationtest
+      description: REST surface for v15-admin-account-strictValidationTest.
+      operations:
+      - method: GET
+        name: getv15adminaccountstrictvalidationtest
+        description: Get Example Values That Would Be Rejected by Strict Validation for the Specified Dimension
+        call: usage-analytics-read-administration-api-version-15.getv15adminaccountstrictvalidationtest
+        with:
+          from: rest.from
+          to: rest.to
+          d: rest.d
+          p: rest.p
+          n: rest.n
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: usage-analytics-read-administration-api-version-15-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Usage Analytics Read API — Administration API - Version 15. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: get-account
+      description: Get an Account
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-administration-api-version-15.getv15adminaccount
+      with:
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: edit-account
+      description: Edit an Account
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-administration-api-version-15.putv15adminaccount
+      with:
+        org: tools.org
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-example-values-that-would
+      description: Get Example Values That Would Be Rejected by Strict Validation for the Specified Dimension
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-administration-api-version-15.getv15adminaccountstrictvalidationtest
+      with:
+        from: tools.from
+        to: tools.to
+        d: tools.d
+        p: tools.p
+        n: tools.n
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.

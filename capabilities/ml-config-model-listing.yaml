@@ -65,3 +65,67 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: ml-config-model-listing-rest
+    port: 8080
+    description: REST adapter for Coveo Machine Learning Configuration API — Model Listing. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/modellisting
+      name: rest-organizations-organizationid-machinelearning-configuration-modellisting
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-modellisting.
+      operations:
+      - method: GET
+        name: getmodels
+        description: List Models
+        call: ml-config-model-listing.getmodels
+        with:
+          organizationId: rest.organizationId
+          engineIds: rest.engineIds
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: getmodels1
+        description: List Models
+        call: ml-config-model-listing.getmodels1
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: ml-config-model-listing-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Machine Learning Configuration API — Model Listing. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: list-models
+      description: List Models
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: ml-config-model-listing.getmodels
+      with:
+        organizationId: tools.organizationId
+        engineIds: tools.engineIds
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-models-2
+      description: List Models
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: ml-config-model-listing.getmodels1
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

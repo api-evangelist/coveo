@@ -50,3 +50,46 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-facet-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Facet. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/facet
+      name: rest-organizations-organizationid-commerce-v2-facet
+      description: REST surface for rest-organizations-organizationId-commerce-v2-facet.
+      operations:
+      - method: POST
+        name: facet
+        description: Executes a Facet Search Query
+        call: commerce-facet.facet
+        with:
+          organizationId: rest.organizationId
+          type: rest.type
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-facet-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Facet. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: executes-facet-search-query
+      description: Executes a Facet Search Query
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: commerce-facet.facet
+      with:
+        organizationId: tools.organizationId
+        type: tools.type
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

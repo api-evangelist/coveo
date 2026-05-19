@@ -162,3 +162,162 @@ capability:
           type: string
           description: The ending of the date range for which to show limit history in [ISO 8601](https://www.w3.org/TR/NOTE-datetime)
             format.</br>**Example:**`2022-05-10T01:30:00.000
+  exposes:
+  - type: rest
+    namespace: platform-limits-rest
+    port: 8080
+    description: REST adapter for Coveo Platform API — Limits. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/limits
+      name: rest-organizations-organizationid-limits
+      description: REST surface for rest-organizations-organizationId-limits.
+      operations:
+      - method: GET
+        name: getorganizationlimits
+        description: Show Organization Limits and Their Statuses
+        call: platform-limits.getorganizationlimits
+        with:
+          organizationId: rest.organizationId
+          limitType: rest.limitType
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/limits/reset/{sectionname}/{limitkey}
+      name: rest-organizations-organizationid-limits-reset-sectionname-limitkey
+      description: REST surface for rest-organizations-organizationId-limits-reset-sectionName-limitKey.
+      operations:
+      - method: POST
+        name: resetexpiredlimitstatuses
+        description: Manually Reset Limit Statuses for a Specific Section and Limit Key
+        call: platform-limits.resetexpiredlimitstatuses
+        with:
+          organizationId: rest.organizationId
+          sectionName: rest.sectionName
+          limitKey: rest.limitKey
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/limits/{sectionname}
+      name: rest-organizations-organizationid-limits-sectionname
+      description: REST surface for rest-organizations-organizationId-limits-sectionName.
+      operations:
+      - method: GET
+        name: getsectionlimits
+        description: List Section Limits and Their Statuses
+        call: platform-limits.getsectionlimits
+        with:
+          organizationId: rest.organizationId
+          sectionName: rest.sectionName
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/limits/{sectionname}/{limitkey}
+      name: rest-organizations-organizationid-limits-sectionname-limitkey
+      description: REST surface for rest-organizations-organizationId-limits-sectionName-limitKey.
+      operations:
+      - method: GET
+        name: getlimit
+        description: Show Specific Limit Status
+        call: platform-limits.getlimit
+        with:
+          organizationId: rest.organizationId
+          sectionName: rest.sectionName
+          limitKey: rest.limitKey
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/limits/{sectionname}/{limitkey}/history
+      name: rest-organizations-organizationid-limits-sectionname-limitkey-history
+      description: REST surface for rest-organizations-organizationId-limits-sectionName-limitKey-history.
+      operations:
+      - method: GET
+        name: getlimithistory
+        description: Show Limit History
+        call: platform-limits.getlimithistory
+        with:
+          organizationId: rest.organizationId
+          sectionName: rest.sectionName
+          limitKey: rest.limitKey
+          from: rest.from
+          to: rest.to
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: platform-limits-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Platform API — Limits. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: show-organization-limits-and-their
+      description: Show Organization Limits and Their Statuses
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-limits.getorganizationlimits
+      with:
+        organizationId: tools.organizationId
+        limitType: tools.limitType
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: manually-reset-limit-statuses-specific
+      description: Manually Reset Limit Statuses for a Specific Section and Limit Key
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: platform-limits.resetexpiredlimitstatuses
+      with:
+        organizationId: tools.organizationId
+        sectionName: tools.sectionName
+        limitKey: tools.limitKey
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-section-limits-and-their
+      description: List Section Limits and Their Statuses
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-limits.getsectionlimits
+      with:
+        organizationId: tools.organizationId
+        sectionName: tools.sectionName
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-specific-limit-status
+      description: Show Specific Limit Status
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-limits.getlimit
+      with:
+        organizationId: tools.organizationId
+        sectionName: tools.sectionName
+        limitKey: tools.limitKey
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-limit-history
+      description: Show Limit History
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-limits.getlimithistory
+      with:
+        organizationId: tools.organizationId
+        sectionName: tools.sectionName
+        limitKey: tools.limitKey
+        from: tools.from
+        to: tools.to
+      outputParameters:
+      - type: object
+        mapping: $.

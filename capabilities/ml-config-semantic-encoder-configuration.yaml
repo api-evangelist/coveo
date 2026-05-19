@@ -47,3 +47,44 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: ml-config-semantic-encoder-configuration-rest
+    port: 8080
+    description: REST adapter for Coveo Machine Learning Configuration API — Semantic Encoder Configuration. One Spectral-compliant
+      resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/semanticencoder/preview
+      name: rest-organizations-organizationid-machinelearning-configuration-semanticencoder
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-semanticencoder-.
+      operations:
+      - method: POST
+        name: getsemanticencoderpreview
+        description: Get Preview for Building an SE Model
+        call: ml-config-semantic-encoder-configuration.getsemanticencoderpreview
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: ml-config-semantic-encoder-configuration-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Machine Learning Configuration API — Semantic Encoder Configuration. One tool per consumed
+      operation, routed inline through this capability's consumes block.
+    tools:
+    - name: get-preview-building-se-model
+      description: Get Preview for Building an SE Model
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: ml-config-semantic-encoder-configuration.getsemanticencoderpreview
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

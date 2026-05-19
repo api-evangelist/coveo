@@ -167,3 +167,177 @@ capability:
           type: string
           description: The organization ID
           required: true
+  exposes:
+  - type: rest
+    namespace: search-usage-metrics-search-hubs-rest
+    port: 8080
+    description: REST adapter for Coveo Search Usage Metrics API — Search Hubs. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/searchusagemetrics/hubs
+      name: rest-organizations-organizationid-searchusagemetrics-hubs
+      description: REST surface for rest-organizations-organizationId-searchusagemetrics-hubs.
+      operations:
+      - method: POST
+        name: createsearchhub
+        description: Creates a Search Hub in the Organization
+        call: search-usage-metrics-search-hubs.createsearchhub
+        with:
+          hub: rest.hub
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: listsearchhubs
+        description: Lists the Search Hubs for an Organization
+        call: search-usage-metrics-search-hubs.listsearchhubs
+        with:
+          minimumQueries: rest.minimumQueries
+          filter: rest.filter
+          pageSize: rest.pageSize
+          page: rest.page
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchusagemetrics/hubs/{hubname}
+      name: rest-organizations-organizationid-searchusagemetrics-hubs-hubname
+      description: REST surface for rest-organizations-organizationId-searchusagemetrics-hubs-hubName.
+      operations:
+      - method: DELETE
+        name: deletesearchhub
+        description: Deletes a Search Hub for an Organization
+        call: search-usage-metrics-search-hubs.deletesearchhub
+        with:
+          hubName: rest.hubName
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: getsearchhub
+        description: Gets a Specific Search Hub for an Organization
+        call: search-usage-metrics-search-hubs.getsearchhub
+        with:
+          hubName: rest.hubName
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatesearchhub
+        description: Updates a Search Hub in an Organization
+        call: search-usage-metrics-search-hubs.updatesearchhub
+        with:
+          hub: rest.hub
+          hubName: rest.hubName
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchusagemetrics/hubs/{hubname}/bucket
+      name: rest-organizations-organizationid-searchusagemetrics-hubs-hubname-bucket
+      description: REST surface for rest-organizations-organizationId-searchusagemetrics-hubs-hubName-bucket.
+      operations:
+      - method: PUT
+        name: updatesearchhubbucket
+        description: Updates a Search Hub Bucket in an Organization, Creating the Hub If Required
+        call: search-usage-metrics-search-hubs.updatesearchhubbucket
+        with:
+          bucket: rest.bucket
+          hubName: rest.hubName
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-usage-metrics-search-hubs-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search Usage Metrics API — Search Hubs. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: creates-search-hub-organization
+      description: Creates a Search Hub in the Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-usage-metrics-search-hubs.createsearchhub
+      with:
+        hub: tools.hub
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: lists-search-hubs-organization
+      description: Lists the Search Hubs for an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-usage-metrics-search-hubs.listsearchhubs
+      with:
+        minimumQueries: tools.minimumQueries
+        filter: tools.filter
+        pageSize: tools.pageSize
+        page: tools.page
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deletes-search-hub-organization
+      description: Deletes a Search Hub for an Organization
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: search-usage-metrics-search-hubs.deletesearchhub
+      with:
+        hubName: tools.hubName
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: gets-specific-search-hub-organization
+      description: Gets a Specific Search Hub for an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-usage-metrics-search-hubs.getsearchhub
+      with:
+        hubName: tools.hubName
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: updates-search-hub-organization
+      description: Updates a Search Hub in an Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-usage-metrics-search-hubs.updatesearchhub
+      with:
+        hub: tools.hub
+        hubName: tools.hubName
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: updates-search-hub-bucket-organization
+      description: Updates a Search Hub Bucket in an Organization, Creating the Hub If Required
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-usage-metrics-search-hubs.updatesearchhubbucket
+      with:
+        bucket: tools.bucket
+        hubName: tools.hubName
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -46,3 +46,44 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-setup-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Setup. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/setup
+      name: rest-organizations-organizationid-commerce-v2-setup
+      description: REST surface for rest-organizations-organizationId-commerce-v2-setup.
+      operations:
+      - method: POST
+        name: setup
+        description: Create CMH Scaffolding
+        call: commerce-setup.setup
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-setup-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Setup. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: create-cmh-scaffolding
+      description: Create CMH Scaffolding
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-setup.setup
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

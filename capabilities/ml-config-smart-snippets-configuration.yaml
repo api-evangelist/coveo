@@ -93,3 +93,98 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: ml-config-smart-snippets-configuration-rest
+    port: 8080
+    description: REST adapter for Coveo Machine Learning Configuration API — Smart Snippets Configuration. One Spectral-compliant
+      resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/smartsnippets/contentfields
+      name: rest-organizations-organizationid-machinelearning-configuration-smartsnippets-co
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-smartsnippets-co.
+      operations:
+      - method: POST
+        name: getcontentfields
+        description: Get SS Content Fields
+        call: ml-config-smart-snippets-configuration.getcontentfields
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/smartsnippets/documenttypes
+      name: rest-organizations-organizationid-machinelearning-configuration-smartsnippets-do
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-smartsnippets-do.
+      operations:
+      - method: POST
+        name: getdocumenttypes
+        description: Get SS Document Types
+        call: ml-config-smart-snippets-configuration.getdocumenttypes
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/smartsnippets/preview
+      name: rest-organizations-organizationid-machinelearning-configuration-smartsnippets-pr
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-smartsnippets-pr.
+      operations:
+      - method: POST
+        name: getdocumentscountpreview
+        description: Get Preview for Building an SS Model.
+        call: ml-config-smart-snippets-configuration.getdocumentscountpreview
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: ml-config-smart-snippets-configuration-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Machine Learning Configuration API — Smart Snippets Configuration. One tool per consumed
+      operation, routed inline through this capability's consumes block.
+    tools:
+    - name: get-ss-content-fields
+      description: Get SS Content Fields
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: ml-config-smart-snippets-configuration.getcontentfields
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-ss-document-types
+      description: Get SS Document Types
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: ml-config-smart-snippets-configuration.getdocumenttypes
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-preview-building-ss-model
+      description: Get Preview for Building an SS Model.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: ml-config-smart-snippets-configuration.getdocumentscountpreview
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

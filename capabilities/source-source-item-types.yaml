@@ -46,3 +46,44 @@ capability:
           type: string
           description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
           required: true
+  exposes:
+  - type: rest
+    namespace: source-source-item-types-rest
+    port: 8080
+    description: REST adapter for Coveo Source API — Source Item Types. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/sources/{sourceid}/itemtypes
+      name: rest-organizations-organizationid-sources-sourceid-itemtypes
+      description: REST surface for rest-organizations-organizationId-sources-sourceId-itemTypes.
+      operations:
+      - method: GET
+        name: getsourceitemtypes
+        description: List Item Types
+        call: source-source-item-types.getsourceitemtypes
+        with:
+          organizationId: rest.organizationId
+          sourceId: rest.sourceId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: source-source-item-types-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Source API — Source Item Types. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: list-item-types
+      description: List Item Types
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: source-source-item-types.getsourceitemtypes
+      with:
+        organizationId: tools.organizationId
+        sourceId: tools.sourceId
+      outputParameters:
+      - type: object
+        mapping: $.

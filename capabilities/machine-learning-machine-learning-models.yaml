@@ -197,3 +197,227 @@ capability:
           type: string
           description: The unique identifier of the target model
           required: true
+  exposes:
+  - type: rest
+    namespace: machine-learning-machine-learning-models-rest
+    port: 8080
+    description: REST adapter for Coveo Machine Learning API — Machine Learning Models. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/machinelearning/engines/{engineid}/models/{modelname}
+      name: rest-organizations-organizationid-machinelearning-engines-engineid-models-modeln
+      description: REST surface for rest-organizations-organizationId-machinelearning-engines-engineId-models-modelN.
+      operations:
+      - method: DELETE
+        name: unregister
+        description: Delete a Model
+        call: machine-learning-machine-learning-models.unregister
+        with:
+          organizationId: rest.organizationId
+          engineId: rest.engineId
+          modelName: rest.modelName
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/machinelearning/model
+      name: rest-organizations-organizationid-machinelearning-model
+      description: REST surface for rest-organizations-organizationId-machinelearning-model.
+      operations:
+      - method: POST
+        name: register
+        description: Create a New Model
+        call: machine-learning-machine-learning-models.register
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/machinelearning/models
+      name: rest-organizations-organizationid-machinelearning-models
+      description: REST surface for rest-organizations-organizationId-machinelearning-models.
+      operations:
+      - method: GET
+        name: listmodels
+        description: List All Models
+        call: machine-learning-machine-learning-models.listmodels
+        with:
+          organizationId: rest.organizationId
+          engines: rest.engines
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/machinelearning/models/details
+      name: rest-organizations-organizationid-machinelearning-models-details
+      description: REST surface for rest-organizations-organizationId-machinelearning-models-details.
+      operations:
+      - method: GET
+        name: listmodelswithdetails
+        description: Get Detailed Information About All Models
+        call: machine-learning-machine-learning-models.listmodelswithdetails
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/machinelearning/models/{modelid}
+      name: rest-organizations-organizationid-machinelearning-models-modelid
+      description: REST surface for rest-organizations-organizationId-machinelearning-models-modelId.
+      operations:
+      - method: GET
+        name: getmodel
+        description: View a Model
+        call: machine-learning-machine-learning-models.getmodel
+        with:
+          organizationId: rest.organizationId
+          modelId: rest.modelId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatemodelinformationbyid
+        description: Update the Configuration of a Model
+        call: machine-learning-machine-learning-models.updatemodelinformationbyid
+        with:
+          organizationId: rest.organizationId
+          modelId: rest.modelId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: unregisterbyid
+        description: Delete a Model
+        call: machine-learning-machine-learning-models.unregisterbyid
+        with:
+          organizationId: rest.organizationId
+          modelId: rest.modelId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/machinelearning/models/{modelid}/details
+      name: rest-organizations-organizationid-machinelearning-models-modelid-details
+      description: REST surface for rest-organizations-organizationId-machinelearning-models-modelId-details.
+      operations:
+      - method: GET
+        name: getmodeldetailsbyid
+        description: Get detailed information about a specific model<br /><br /><details><summary>Privilege required</summary>
+        call: machine-learning-machine-learning-models.getmodeldetailsbyid
+        with:
+          organizationId: rest.organizationId
+          modelId: rest.modelId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: machine-learning-machine-learning-models-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Machine Learning API — Machine Learning Models. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: delete-model
+      description: Delete a Model
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: machine-learning-machine-learning-models.unregister
+      with:
+        organizationId: tools.organizationId
+        engineId: tools.engineId
+        modelName: tools.modelName
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-new-model
+      description: Create a New Model
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: machine-learning-machine-learning-models.register
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-all-models
+      description: List All Models
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: machine-learning-machine-learning-models.listmodels
+      with:
+        organizationId: tools.organizationId
+        engines: tools.engines
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-detailed-information-about-all
+      description: Get Detailed Information About All Models
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: machine-learning-machine-learning-models.listmodelswithdetails
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: view-model
+      description: View a Model
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: machine-learning-machine-learning-models.getmodel
+      with:
+        organizationId: tools.organizationId
+        modelId: tools.modelId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-configuration-model
+      description: Update the Configuration of a Model
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: machine-learning-machine-learning-models.updatemodelinformationbyid
+      with:
+        organizationId: tools.organizationId
+        modelId: tools.modelId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-model-2
+      description: Delete a Model
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: machine-learning-machine-learning-models.unregisterbyid
+      with:
+        organizationId: tools.organizationId
+        modelId: tools.modelId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-detailed-information-about-specific
+      description: Get detailed information about a specific model<br /><br /><details><summary>Privilege required</summary>
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: machine-learning-machine-learning-models.getmodeldetailsbyid
+      with:
+        organizationId: tools.organizationId
+        modelId: tools.modelId
+      outputParameters:
+      - type: object
+        mapping: $.

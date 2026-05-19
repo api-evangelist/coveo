@@ -71,3 +71,69 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: catalog-management-catalog-filter-rest
+    port: 8080
+    description: REST adapter for Coveo Catalog Management API — Catalog Filter. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/catalog-management/catalogs/{catalogid}/filter
+      name: api-preview-organizations-organizationid-catalog-management-catalogs-catalogid-f
+      description: REST surface for api-preview-organizations-organizationId-catalog-management-catalogs-catalogId-f.
+      operations:
+      - method: GET
+        name: getcatalogfilter
+        description: Get Filter for a Catalog
+        call: catalog-management-catalog-filter.getcatalogfilter
+        with:
+          organizationId: rest.organizationId
+          catalogId: rest.catalogId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: putcatalogfilter
+        description: Create or Update the Filter for a Catalog
+        call: catalog-management-catalog-filter.putcatalogfilter
+        with:
+          organizationId: rest.organizationId
+          catalogId: rest.catalogId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: catalog-management-catalog-filter-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Catalog Management API — Catalog Filter. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: get-filter-catalog
+      description: Get Filter for a Catalog
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalog-filter.getcatalogfilter
+      with:
+        organizationId: tools.organizationId
+        catalogId: tools.catalogId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-update-filter-catalog
+      description: Create or Update the Filter for a Catalog
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalog-filter.putcatalogfilter
+      with:
+        organizationId: tools.organizationId
+        catalogId: tools.catalogId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

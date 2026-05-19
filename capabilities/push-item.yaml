@@ -163,3 +163,143 @@ capability:
           type: string
           description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
           required: true
+  exposes:
+  - type: rest
+    namespace: push-item-rest
+    port: 8080
+    description: REST adapter for Coveo Push API — Item. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/sources/{sourceid}/documents
+      name: organizations-organizationid-sources-sourceid-documents
+      description: REST surface for organizations-organizationId-sources-sourceId-documents.
+      operations:
+      - method: DELETE
+        name: delete
+        description: Delete an Item and Optionally Its Children
+        call: push-item.delete
+        with:
+          orderingId: rest.orderingId
+          deleteChildren: rest.deleteChildren
+          sourceId: rest.sourceId
+          documentId: rest.documentId
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: put
+        description: Add or Update an Item
+        call: push-item.put
+        with:
+          orderingId: rest.orderingId
+          sourceId: rest.sourceId
+          documentId: rest.documentId
+          organizationId: rest.organizationId
+          compressionType: rest.compressionType
+          documentBody: rest.documentBody
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/sources/{sourceid}/documents/batch
+      name: organizations-organizationid-sources-sourceid-documents-batch
+      description: REST surface for organizations-organizationId-sources-sourceId-documents-batch.
+      operations:
+      - method: PUT
+        name: put
+        description: Add, Update, and/or Delete a Batch of Items
+        call: push-item.put
+        with:
+          orderingId: rest.orderingId
+          sourceId: rest.sourceId
+          fileId: rest.fileId
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/sources/{sourceid}/documents/olderthan
+      name: organizations-organizationid-sources-sourceid-documents-olderthan
+      description: REST surface for organizations-organizationId-sources-sourceId-documents-olderthan.
+      operations:
+      - method: DELETE
+        name: delete
+        description: Delete Old Items
+        call: push-item.delete
+        with:
+          sourceId: rest.sourceId
+          orderingId: rest.orderingId
+          queueDelay: rest.queueDelay
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: push-item-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Push API — Item. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: delete-item-and-optionally-its
+      description: Delete an Item and Optionally Its Children
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: push-item.delete
+      with:
+        orderingId: tools.orderingId
+        deleteChildren: tools.deleteChildren
+        sourceId: tools.sourceId
+        documentId: tools.documentId
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-update-item
+      description: Add or Update an Item
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: push-item.put
+      with:
+        orderingId: tools.orderingId
+        sourceId: tools.sourceId
+        documentId: tools.documentId
+        organizationId: tools.organizationId
+        compressionType: tools.compressionType
+        documentBody: tools.documentBody
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-update-and-delete-batch
+      description: Add, Update, and/or Delete a Batch of Items
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: push-item.put
+      with:
+        orderingId: tools.orderingId
+        sourceId: tools.sourceId
+        fileId: tools.fileId
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-old-items
+      description: Delete Old Items
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: push-item.delete
+      with:
+        sourceId: tools.sourceId
+        orderingId: tools.orderingId
+        queueDelay: tools.queueDelay
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.

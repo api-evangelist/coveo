@@ -103,3 +103,160 @@ capability:
         - name: result
           type: object
           value: $.
+  exposes:
+  - type: rest
+    namespace: search-interface-hosted-page-rest
+    port: 8080
+    description: REST adapter for Coveo Search Interface Service API — Hosted Page. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/hostedpages
+      name: rest-organizations-organizationid-hostedpages
+      description: REST surface for rest-organizations-organizationId-hostedpages.
+      operations:
+      - method: GET
+        name: getallhostedpages
+        description: List Hosted Pages
+        call: search-interface-hosted-page.getallhostedpages
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createhostedpage
+        description: Create Hosted Page
+        call: search-interface-hosted-page.createhostedpage
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/hostedpages/projects/pages
+      name: rest-organizations-organizationid-hostedpages-projects-pages
+      description: REST surface for rest-organizations-organizationId-hostedpages-projects-pages.
+      operations:
+      - method: GET
+        name: getprojecthostedpages
+        description: List Hosted Pages in a Project
+        call: search-interface-hosted-page.getprojecthostedpages
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/hostedpages/{pageid}
+      name: rest-organizations-organizationid-hostedpages-pageid
+      description: REST surface for rest-organizations-organizationId-hostedpages-pageId.
+      operations:
+      - method: GET
+        name: gethostedpage
+        description: Retrieve Hosted Page Configuration
+        call: search-interface-hosted-page.gethostedpage
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatehostedpage
+        description: Update Hosted Page
+        call: search-interface-hosted-page.updatehostedpage
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletehostedpage
+        description: Delete Hosted Page
+        call: search-interface-hosted-page.deletehostedpage
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/hostedpages/{pageid}/html/v1
+      name: rest-organizations-organizationid-hostedpages-pageid-html-v1
+      description: REST surface for rest-organizations-organizationId-hostedpages-pageId-html-v1.
+      operations:
+      - method: GET
+        name: gethostedpagehtml
+        description: Show Hosted Page
+        call: search-interface-hosted-page.gethostedpagehtml
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-interface-hosted-page-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search Interface Service API — Hosted Page. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: list-hosted-pages
+      description: List Hosted Pages
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-hosted-page.getallhostedpages
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-hosted-page
+      description: Create Hosted Page
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: search-interface-hosted-page.createhostedpage
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-hosted-pages-project
+      description: List Hosted Pages in a Project
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-hosted-page.getprojecthostedpages
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-hosted-page-configuration
+      description: Retrieve Hosted Page Configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-hosted-page.gethostedpage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-hosted-page
+      description: Update Hosted Page
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-interface-hosted-page.updatehostedpage
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-hosted-page
+      description: Delete Hosted Page
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: search-interface-hosted-page.deletehostedpage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-hosted-page
+      description: Show Hosted Page
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-hosted-page.gethostedpagehtml
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -115,3 +115,125 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-search-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Search. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/search
+      name: rest-organizations-organizationid-commerce-v2-search
+      description: REST surface for rest-organizations-organizationId-commerce-v2-search.
+      operations:
+      - method: POST
+        name: search
+        description: Execute a Search Query
+        call: commerce-search.search
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/search/productsuggest
+      name: rest-organizations-organizationid-commerce-v2-search-productsuggest
+      description: REST surface for rest-organizations-organizationId-commerce-v2-search-productSuggest.
+      operations:
+      - method: POST
+        name: productsuggest
+        description: Request Product Suggestions
+        call: commerce-search.productsuggest
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/search/querysuggest
+      name: rest-organizations-organizationid-commerce-v2-search-querysuggest
+      description: REST surface for rest-organizations-organizationId-commerce-v2-search-querySuggest.
+      operations:
+      - method: POST
+        name: querysuggest
+        description: Request Query Suggestions
+        call: commerce-search.querysuggest
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/search/redirect
+      name: rest-organizations-organizationid-commerce-v2-search-redirect
+      description: REST surface for rest-organizations-organizationId-commerce-v2-search-redirect.
+      operations:
+      - method: POST
+        name: redirect
+        description: Execute a Search Redirect Query
+        call: commerce-search.redirect
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-search-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Search. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: execute-search-query
+      description: Execute a Search Query
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: commerce-search.search
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: request-product-suggestions
+      description: Request Product Suggestions
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-search.productsuggest
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: request-query-suggestions
+      description: Request Query Suggestions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: commerce-search.querysuggest
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: execute-search-redirect-query
+      description: Execute a Search Redirect Query
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: commerce-search.redirect
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

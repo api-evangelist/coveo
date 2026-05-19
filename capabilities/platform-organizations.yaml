@@ -230,3 +230,256 @@ capability:
           description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
             `mycoveocloudv2organizationg8tp8wu3`
           required: true
+  exposes:
+  - type: rest
+    namespace: platform-organizations-rest
+    port: 8080
+    description: REST adapter for Coveo Platform API — Organizations. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations
+      name: rest-organizations
+      description: REST surface for rest-organizations.
+      operations:
+      - method: GET
+        name: getorganizations
+        description: List Organizations
+        call: platform-organizations.getorganizations
+        with:
+          additionalFields: rest.additionalFields
+          filter: rest.filter
+          type: rest.type
+          sortBy: rest.sortBy
+          order: rest.order
+          page: rest.page
+          perPage: rest.perPage
+          productTypes: rest.productTypes
+          accountId: rest.accountId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createorganization
+        description: Create Organization
+        call: platform-organizations.createorganization
+        with:
+          name: rest.name
+          owner: rest.owner
+          organizationTemplate: rest.organizationTemplate
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}
+      name: rest-organizations-organizationid
+      description: REST surface for rest-organizations-organizationId.
+      operations:
+      - method: GET
+        name: getorganization
+        description: Show Organization
+        call: platform-organizations.getorganization
+        with:
+          organizationId: rest.organizationId
+          additionalFields: rest.additionalFields
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateorganization
+        description: Update Organization
+        call: platform-organizations.updateorganization
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteorganization
+        description: Delete Organization
+        call: platform-organizations.deleteorganization
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/configuration/servingexperiment
+      name: rest-organizations-organizationid-configuration-servingexperiment
+      description: REST surface for rest-organizations-organizationId-configuration-servingExperiment.
+      operations:
+      - method: PUT
+        name: setservingexperiment
+        description: Allow or Disallow Serving Experiments on the Organization. It Is Allowed by Default.
+        call: platform-organizations.setservingexperiment
+        with:
+          organizationId: rest.organizationId
+          allowed: rest.allowed
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/launchprovisioning
+      name: rest-organizations-organizationid-launchprovisioning
+      description: REST surface for rest-organizations-organizationId-launchprovisioning.
+      operations:
+      - method: POST
+        name: launchprovisioning
+        description: Provision Organization
+        call: platform-organizations.launchprovisioning
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/resume
+      name: rest-organizations-organizationid-resume
+      description: REST surface for rest-organizations-organizationId-resume.
+      operations:
+      - method: POST
+        name: resumeorganization
+        description: Resume Organization
+        call: platform-organizations.resumeorganization
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/status
+      name: rest-organizations-organizationid-status
+      description: REST surface for rest-organizations-organizationId-status.
+      operations:
+      - method: GET
+        name: getorganizationstatus
+        description: Show Organization Status
+        call: platform-organizations.getorganizationstatus
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: platform-organizations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Platform API — Organizations. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: list-organizations
+      description: List Organizations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-organizations.getorganizations
+      with:
+        additionalFields: tools.additionalFields
+        filter: tools.filter
+        type: tools.type
+        sortBy: tools.sortBy
+        order: tools.order
+        page: tools.page
+        perPage: tools.perPage
+        productTypes: tools.productTypes
+        accountId: tools.accountId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-organization
+      description: Create Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: platform-organizations.createorganization
+      with:
+        name: tools.name
+        owner: tools.owner
+        organizationTemplate: tools.organizationTemplate
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-organization
+      description: Show Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-organizations.getorganization
+      with:
+        organizationId: tools.organizationId
+        additionalFields: tools.additionalFields
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-organization
+      description: Update Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: platform-organizations.updateorganization
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-organization
+      description: Delete Organization
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: platform-organizations.deleteorganization
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: allow-disallow-serving-experiments-organization
+      description: Allow or Disallow Serving Experiments on the Organization. It Is Allowed by Default.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: platform-organizations.setservingexperiment
+      with:
+        organizationId: tools.organizationId
+        allowed: tools.allowed
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: provision-organization
+      description: Provision Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: platform-organizations.launchprovisioning
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: resume-organization
+      description: Resume Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: platform-organizations.resumeorganization
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-organization-status
+      description: Show Organization Status
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-organizations.getorganizationstatus
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.

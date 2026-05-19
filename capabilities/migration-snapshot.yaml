@@ -399,3 +399,385 @@ capability:
           type: string
           description: 'The version of the snapshot to show.<br/>**Possible values:**<br/> - `PRIMARY`: The actual snapshot
             content.<br/> - `CURRENT_STATE`: The resources targeted by t'
+  exposes:
+  - type: rest
+    namespace: migration-snapshot-rest
+    port: 8080
+    description: REST adapter for Coveo Migration API — Snapshot. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/snapshots
+      name: rest-organizations-organizationid-snapshots
+      description: REST surface for rest-organizations-organizationId-snapshots.
+      operations:
+      - method: GET
+        name: getallsnapshots
+        description: List Snapshots
+        call: migration-snapshot.getallsnapshots
+        with:
+          organizationId: rest.organizationId
+          includeReports: rest.includeReports
+          filter: rest.filter
+          sortingOrder: rest.sortingOrder
+          sortingType: rest.sortingType
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createsnapshot
+        description: Create Snapshot from Configuration
+        call: migration-snapshot.createsnapshot
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/file
+      name: rest-organizations-organizationid-snapshots-file
+      description: REST surface for rest-organizations-organizationId-snapshots-file.
+      operations:
+      - method: POST
+        name: createsnapshotfromfile
+        description: Create Snapshot from File
+        call: migration-snapshot.createsnapshotfromfile
+        with:
+          organizationId: rest.organizationId
+          snapshotFileType: rest.snapshotFileType
+          developerNotes: rest.developerNotes
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/self
+      name: rest-organizations-organizationid-snapshots-self
+      description: REST surface for rest-organizations-organizationId-snapshots-self.
+      operations:
+      - method: POST
+        name: createsnapshotfromself
+        description: Create Organization Snapshot
+        call: migration-snapshot.createsnapshotfromself
+        with:
+          organizationId: rest.organizationId
+          targetOrganizationId: rest.targetOrganizationId
+          developerNotes: rest.developerNotes
+          includeChildrenResources: rest.includeChildrenResources
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/{snapshotid}
+      name: rest-organizations-organizationid-snapshots-snapshotid
+      description: REST surface for rest-organizations-organizationId-snapshots-snapshotId.
+      operations:
+      - method: GET
+        name: getsnapshot
+        description: Show Snapshot
+        call: migration-snapshot.getsnapshot
+        with:
+          organizationId: rest.organizationId
+          snapshotId: rest.snapshotId
+          includeReports: rest.includeReports
+          reportInclusion: rest.reportInclusion
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletesnapshot
+        description: Delete Snapshot
+        call: migration-snapshot.deletesnapshot
+        with:
+          organizationId: rest.organizationId
+          snapshotId: rest.snapshotId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/{snapshotid}/apply
+      name: rest-organizations-organizationid-snapshots-snapshotid-apply
+      description: REST surface for rest-organizations-organizationId-snapshots-snapshotId-apply.
+      operations:
+      - method: PUT
+        name: apply
+        description: Apply Snapshot
+        call: migration-snapshot.apply
+        with:
+          organizationId: rest.organizationId
+          snapshotId: rest.snapshotId
+          deleteMissingResources: rest.deleteMissingResources
+          deletionScope: rest.deletionScope
+          isTransient: rest.isTransient
+          validationRequired: rest.validationRequired
+          performAutoSynchronization: rest.performAutoSynchronization
+          autoSynchronizationThreshold: rest.autoSynchronizationThreshold
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/{snapshotid}/content
+      name: rest-organizations-organizationid-snapshots-snapshotid-content
+      description: REST surface for rest-organizations-organizationId-snapshots-snapshotId-content.
+      operations:
+      - method: GET
+        name: getarchivedsnapshotcontent
+        description: Retrieve Snapshot Content
+        call: migration-snapshot.getarchivedsnapshotcontent
+        with:
+          organizationId: rest.organizationId
+          snapshotId: rest.snapshotId
+          contentFormat: rest.contentFormat
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/{snapshotid}/diff
+      name: rest-organizations-organizationid-snapshots-snapshotid-diff
+      description: REST surface for rest-organizations-organizationId-snapshots-snapshotId-diff.
+      operations:
+      - method: GET
+        name: diff
+        description: Show Snapshot Diff Report
+        call: migration-snapshot.diff
+        with:
+          organizationId: rest.organizationId
+          snapshotId: rest.snapshotId
+          relativeReportId: rest.relativeReportId
+          numberOfLinesMax: rest.numberOfLinesMax
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/{snapshotid}/dryrun
+      name: rest-organizations-organizationid-snapshots-snapshotid-dryrun
+      description: REST surface for rest-organizations-organizationId-snapshots-snapshotId-dryrun.
+      operations:
+      - method: PUT
+        name: dryrun
+        description: Validate Snapshot
+        call: migration-snapshot.dryrun
+        with:
+          organizationId: rest.organizationId
+          snapshotId: rest.snapshotId
+          deleteMissingResources: rest.deleteMissingResources
+          deletionScope: rest.deletionScope
+          performAutoSynchronization: rest.performAutoSynchronization
+          autoSynchronizationThreshold: rest.autoSynchronizationThreshold
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/{snapshotid}/push
+      name: rest-organizations-organizationid-snapshots-snapshotid-push
+      description: REST surface for rest-organizations-organizationId-snapshots-snapshotId-push.
+      operations:
+      - method: PUT
+        name: pushsnapshot
+        description: Push Snapshot to Target Organization
+        call: migration-snapshot.pushsnapshot
+        with:
+          organizationId: rest.organizationId
+          snapshotId: rest.snapshotId
+          targetOrganizationId: rest.targetOrganizationId
+          developerNotes: rest.developerNotes
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/{snapshotid}/url
+      name: rest-organizations-organizationid-snapshots-snapshotid-url
+      description: REST surface for rest-organizations-organizationId-snapshots-snapshotId-url.
+      operations:
+      - method: GET
+        name: generatepresignedurl
+        description: Create URL to Retrieve Snapshot Content
+        call: migration-snapshot.generatepresignedurl
+        with:
+          organizationId: rest.organizationId
+          snapshotId: rest.snapshotId
+          contentType: rest.contentType
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: migration-snapshot-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Migration API — Snapshot. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: list-snapshots
+      description: List Snapshots
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: migration-snapshot.getallsnapshots
+      with:
+        organizationId: tools.organizationId
+        includeReports: tools.includeReports
+        filter: tools.filter
+        sortingOrder: tools.sortingOrder
+        sortingType: tools.sortingType
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-snapshot-configuration
+      description: Create Snapshot from Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: migration-snapshot.createsnapshot
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-snapshot-file
+      description: Create Snapshot from File
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: migration-snapshot.createsnapshotfromfile
+      with:
+        organizationId: tools.organizationId
+        snapshotFileType: tools.snapshotFileType
+        developerNotes: tools.developerNotes
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-organization-snapshot
+      description: Create Organization Snapshot
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: migration-snapshot.createsnapshotfromself
+      with:
+        organizationId: tools.organizationId
+        targetOrganizationId: tools.targetOrganizationId
+        developerNotes: tools.developerNotes
+        includeChildrenResources: tools.includeChildrenResources
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-snapshot
+      description: Show Snapshot
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: migration-snapshot.getsnapshot
+      with:
+        organizationId: tools.organizationId
+        snapshotId: tools.snapshotId
+        includeReports: tools.includeReports
+        reportInclusion: tools.reportInclusion
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-snapshot
+      description: Delete Snapshot
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: migration-snapshot.deletesnapshot
+      with:
+        organizationId: tools.organizationId
+        snapshotId: tools.snapshotId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: apply-snapshot
+      description: Apply Snapshot
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: migration-snapshot.apply
+      with:
+        organizationId: tools.organizationId
+        snapshotId: tools.snapshotId
+        deleteMissingResources: tools.deleteMissingResources
+        deletionScope: tools.deletionScope
+        isTransient: tools.isTransient
+        validationRequired: tools.validationRequired
+        performAutoSynchronization: tools.performAutoSynchronization
+        autoSynchronizationThreshold: tools.autoSynchronizationThreshold
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-snapshot-content
+      description: Retrieve Snapshot Content
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: migration-snapshot.getarchivedsnapshotcontent
+      with:
+        organizationId: tools.organizationId
+        snapshotId: tools.snapshotId
+        contentFormat: tools.contentFormat
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-snapshot-diff-report
+      description: Show Snapshot Diff Report
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: migration-snapshot.diff
+      with:
+        organizationId: tools.organizationId
+        snapshotId: tools.snapshotId
+        relativeReportId: tools.relativeReportId
+        numberOfLinesMax: tools.numberOfLinesMax
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: validate-snapshot
+      description: Validate Snapshot
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: migration-snapshot.dryrun
+      with:
+        organizationId: tools.organizationId
+        snapshotId: tools.snapshotId
+        deleteMissingResources: tools.deleteMissingResources
+        deletionScope: tools.deletionScope
+        performAutoSynchronization: tools.performAutoSynchronization
+        autoSynchronizationThreshold: tools.autoSynchronizationThreshold
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: push-snapshot-target-organization
+      description: Push Snapshot to Target Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: migration-snapshot.pushsnapshot
+      with:
+        organizationId: tools.organizationId
+        snapshotId: tools.snapshotId
+        targetOrganizationId: tools.targetOrganizationId
+        developerNotes: tools.developerNotes
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-url-retrieve-snapshot-content
+      description: Create URL to Retrieve Snapshot Content
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: migration-snapshot.generatepresignedurl
+      with:
+        organizationId: tools.organizationId
+        snapshotId: tools.snapshotId
+        contentType: tools.contentType
+      outputParameters:
+      - type: object
+        mapping: $.

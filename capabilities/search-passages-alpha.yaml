@@ -40,3 +40,42 @@ capability:
           type: object
           description: Request body (JSON).
           required: false
+  exposes:
+  - type: rest
+    namespace: search-passages-alpha-rest
+    port: 8080
+    description: REST adapter for Coveo Search API — Passages Alpha. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/search/alpha/passages/retrieve/debug
+      name: rest-search-alpha-passages-retrieve-debug
+      description: REST surface for rest-search-alpha-passages-retrieve-debug.
+      operations:
+      - method: POST
+        name: debugretrievepassagealpha
+        description: Allow to Debug Passage(s) Retrieval.
+        call: search-passages-alpha.debugretrievepassagealpha
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-passages-alpha-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search API — Passages Alpha. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: allow-debug-passage-s-retrieval
+      description: Allow to Debug Passage(s) Retrieval.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: search-passages-alpha.debugretrievepassagealpha
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

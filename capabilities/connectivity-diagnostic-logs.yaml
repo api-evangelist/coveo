@@ -68,3 +68,73 @@ capability:
           in: path
           type: string
           required: true
+  exposes:
+  - type: rest
+    namespace: connectivity-diagnostic-logs-rest
+    port: 8080
+    description: REST adapter for Coveo Connectivity API — Diagnostic Logs. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/logrequests
+      name: rest-organizations-organizationid-logrequests
+      description: REST surface for rest-organizations-organizationId-logrequests.
+      operations:
+      - method: POST
+        name: createlogrequestforactivity
+        description: <details><summary>Privilege required</summary>
+        call: connectivity-diagnostic-logs.createlogrequestforactivity
+        with:
+          organizationId: rest.organizationId
+          resourceType: rest.resourceType
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/logrequests/{logrequestid}
+      name: rest-organizations-organizationid-logrequests-logrequestid
+      description: REST surface for rest-organizations-organizationId-logrequests-logRequestId.
+      operations:
+      - method: GET
+        name: getlogrequest
+        description: <details><summary>Privilege required</summary>
+        call: connectivity-diagnostic-logs.getlogrequest
+        with:
+          organizationId: rest.organizationId
+          logRequestId: rest.logRequestId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: connectivity-diagnostic-logs-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Connectivity API — Diagnostic Logs. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: details-summary-privilege-required-summary
+      description: <details><summary>Privilege required</summary>
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: connectivity-diagnostic-logs.createlogrequestforactivity
+      with:
+        organizationId: tools.organizationId
+        resourceType: tools.resourceType
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: details-summary-privilege-required-summary-2
+      description: <details><summary>Privilege required</summary>
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: connectivity-diagnostic-logs.getlogrequest
+      with:
+        organizationId: tools.organizationId
+        logRequestId: tools.logRequestId
+      outputParameters:
+      - type: object
+        mapping: $.

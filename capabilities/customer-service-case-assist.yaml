@@ -294,3 +294,299 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: customer-service-case-assist-rest
+    port: 8080
+    description: REST adapter for Coveo Customer Service API — Case Assist. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/caseassists
+      name: rest-organizations-organizationid-caseassists
+      description: REST surface for rest-organizations-organizationId-caseassists.
+      operations:
+      - method: GET
+        name: getallcaseassistconfigurations
+        description: List Case Assist Configurations
+        call: customer-service-case-assist.getallcaseassistconfigurations
+        with:
+          organizationId: rest.organizationId
+          page: rest.page
+          perPage: rest.perPage
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createcaseassistconfiguration
+        description: Create Case Assist Configuration
+        call: customer-service-case-assist.createcaseassistconfiguration
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/caseassists/preview/classify
+      name: rest-organizations-organizationid-caseassists-preview-classify
+      description: REST surface for rest-organizations-organizationId-caseassists-preview-classify.
+      operations:
+      - method: POST
+        name: postclassifypreview
+        description: Request Classifications Preview
+        call: customer-service-case-assist.postclassifypreview
+        with:
+          organizationId: rest.organizationId
+          debug: rest.debug
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/caseassists/preview/documents/suggest
+      name: rest-organizations-organizationid-caseassists-preview-documents-suggest
+      description: REST surface for rest-organizations-organizationId-caseassists-preview-documents-suggest.
+      operations:
+      - method: POST
+        name: getsuggestdocumentpreview
+        description: Request Document Suggestions Preview
+        call: customer-service-case-assist.getsuggestdocumentpreview
+        with:
+          organizationId: rest.organizationId
+          debug: rest.debug
+          numberOfResults: rest.numberOfResults
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/caseassists/projects/get
+      name: rest-organizations-organizationid-caseassists-projects-get
+      description: REST surface for rest-organizations-organizationId-caseassists-projects-get.
+      operations:
+      - method: GET
+        name: getcaseassistconfigurationsbyproject
+        description: Get Case Assist Configurations by Project
+        call: customer-service-case-assist.getcaseassistconfigurationsbyproject
+        with:
+          organizationId: rest.organizationId
+          projectId: rest.projectId
+          page: rest.page
+          perPage: rest.perPage
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/caseassists/{caseassistid}
+      name: rest-organizations-organizationid-caseassists-caseassistid
+      description: REST surface for rest-organizations-organizationId-caseassists-caseAssistId.
+      operations:
+      - method: GET
+        name: getcaseassistconfiguration
+        description: Show Case Assist Configuration
+        call: customer-service-case-assist.getcaseassistconfiguration
+        with:
+          organizationId: rest.organizationId
+          caseAssistId: rest.caseAssistId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatecaseassistconfiguration
+        description: Update Case Assist Configuration
+        call: customer-service-case-assist.updatecaseassistconfiguration
+        with:
+          organizationId: rest.organizationId
+          caseAssistId: rest.caseAssistId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletecaseassistconfiguration
+        description: Delete Case Assist Configuration
+        call: customer-service-case-assist.deletecaseassistconfiguration
+        with:
+          organizationId: rest.organizationId
+          caseAssistId: rest.caseAssistId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/caseassists/{caseassistid}/classify
+      name: rest-organizations-organizationid-caseassists-caseassistid-classify
+      description: REST surface for rest-organizations-organizationId-caseassists-caseAssistId-classify.
+      operations:
+      - method: POST
+        name: postclassify
+        description: Request Classifications
+        call: customer-service-case-assist.postclassify
+        with:
+          organizationId: rest.organizationId
+          caseAssistId: rest.caseAssistId
+          debug: rest.debug
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/caseassists/{caseassistid}/documents/suggest
+      name: rest-organizations-organizationid-caseassists-caseassistid-documents-suggest
+      description: REST surface for rest-organizations-organizationId-caseassists-caseAssistId-documents-suggest.
+      operations:
+      - method: POST
+        name: getsuggestdocument
+        description: Request Document Suggestions
+        call: customer-service-case-assist.getsuggestdocument
+        with:
+          organizationId: rest.organizationId
+          caseAssistId: rest.caseAssistId
+          debug: rest.debug
+          numberOfResults: rest.numberOfResults
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: customer-service-case-assist-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Customer Service API — Case Assist. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: list-case-assist-configurations
+      description: List Case Assist Configurations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: customer-service-case-assist.getallcaseassistconfigurations
+      with:
+        organizationId: tools.organizationId
+        page: tools.page
+        perPage: tools.perPage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-case-assist-configuration
+      description: Create Case Assist Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: customer-service-case-assist.createcaseassistconfiguration
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: request-classifications-preview
+      description: Request Classifications Preview
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: customer-service-case-assist.postclassifypreview
+      with:
+        organizationId: tools.organizationId
+        debug: tools.debug
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: request-document-suggestions-preview
+      description: Request Document Suggestions Preview
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: customer-service-case-assist.getsuggestdocumentpreview
+      with:
+        organizationId: tools.organizationId
+        debug: tools.debug
+        numberOfResults: tools.numberOfResults
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-case-assist-configurations-project
+      description: Get Case Assist Configurations by Project
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: customer-service-case-assist.getcaseassistconfigurationsbyproject
+      with:
+        organizationId: tools.organizationId
+        projectId: tools.projectId
+        page: tools.page
+        perPage: tools.perPage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-case-assist-configuration
+      description: Show Case Assist Configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: customer-service-case-assist.getcaseassistconfiguration
+      with:
+        organizationId: tools.organizationId
+        caseAssistId: tools.caseAssistId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-case-assist-configuration
+      description: Update Case Assist Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: customer-service-case-assist.updatecaseassistconfiguration
+      with:
+        organizationId: tools.organizationId
+        caseAssistId: tools.caseAssistId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-case-assist-configuration
+      description: Delete Case Assist Configuration
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: customer-service-case-assist.deletecaseassistconfiguration
+      with:
+        organizationId: tools.organizationId
+        caseAssistId: tools.caseAssistId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: request-classifications
+      description: Request Classifications
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: customer-service-case-assist.postclassify
+      with:
+        organizationId: tools.organizationId
+        caseAssistId: tools.caseAssistId
+        debug: tools.debug
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: request-document-suggestions
+      description: Request Document Suggestions
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: customer-service-case-assist.getsuggestdocument
+      with:
+        organizationId: tools.organizationId
+        caseAssistId: tools.caseAssistId
+        debug: tools.debug
+        numberOfResults: tools.numberOfResults
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -126,3 +126,129 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: ml-config-case-classification-configuration-rest
+    port: 8080
+    description: REST adapter for Coveo Machine Learning Configuration API — Case Classification Configuration. One Spectral-compliant
+      resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/caseclassif/fields
+      name: rest-organizations-organizationid-machinelearning-configuration-caseclassif-fiel
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-caseclassif-fiel.
+      operations:
+      - method: POST
+        name: getfields
+        description: Get CC Content Fields
+        call: ml-config-case-classification-configuration.getfields
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/caseclassif/fields/{fieldname}/documentcount
+      name: rest-organizations-organizationid-machinelearning-configuration-caseclassif-fiel
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-caseclassif-fiel.
+      operations:
+      - method: POST
+        name: getdocumentcountforfield
+        description: <details><summary>Privilege required</summary>
+        call: ml-config-case-classification-configuration.getdocumentcountforfield
+        with:
+          organizationId: rest.organizationId
+          fieldName: rest.fieldName
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/caseclassif/fields/{fieldname}/valuecount
+      name: rest-organizations-organizationid-machinelearning-configuration-caseclassif-fiel
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-caseclassif-fiel.
+      operations:
+      - method: POST
+        name: getvaluecountforfield
+        description: <details><summary>Privilege required</summary>
+        call: ml-config-case-classification-configuration.getvaluecountforfield
+        with:
+          organizationId: rest.organizationId
+          fieldName: rest.fieldName
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/caseclassif/preview
+      name: rest-organizations-organizationid-machinelearning-configuration-caseclassif-prev
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-caseclassif-prev.
+      operations:
+      - method: POST
+        name: getdocumentscountpreview1
+        description: Get Preview for Building a CC Model.
+        call: ml-config-case-classification-configuration.getdocumentscountpreview1
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: ml-config-case-classification-configuration-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Machine Learning Configuration API — Case Classification Configuration. One tool per
+      consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: get-cc-content-fields
+      description: Get CC Content Fields
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: ml-config-case-classification-configuration.getfields
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: details-summary-privilege-required-summary
+      description: <details><summary>Privilege required</summary>
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: ml-config-case-classification-configuration.getdocumentcountforfield
+      with:
+        organizationId: tools.organizationId
+        fieldName: tools.fieldName
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: details-summary-privilege-required-summary-2
+      description: <details><summary>Privilege required</summary>
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: ml-config-case-classification-configuration.getvaluecountforfield
+      with:
+        organizationId: tools.organizationId
+        fieldName: tools.fieldName
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-preview-building-cc-model
+      description: Get Preview for Building a CC Model.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: ml-config-case-classification-configuration.getdocumentscountpreview1
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

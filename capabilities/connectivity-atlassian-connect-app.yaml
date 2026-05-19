@@ -76,3 +76,92 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: connectivity-atlassian-connect-app-rest
+    port: 8080
+    description: REST adapter for Coveo Connectivity API — Atlassian Connect App. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/atlassian/connectapp/atlassian-connect-json
+      name: rest-atlassian-connectapp-atlassian-connect-json
+      description: REST surface for rest-atlassian-connectapp-atlassian-connect.json.
+      operations:
+      - method: GET
+        name: atlassianconnectappdescriptor
+        description: atlassianconnectappdescriptor
+        call: connectivity-atlassian-connect-app.atlassianconnectappdescriptor
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/atlassian/connectapp/installed
+      name: rest-atlassian-connectapp-installed
+      description: REST surface for rest-atlassian-connectapp-installed.
+      operations:
+      - method: POST
+        name: addorupdateconnectapp
+        description: addorupdateconnectapp
+        call: connectivity-atlassian-connect-app.addorupdateconnectapp
+        with:
+          Authorization: rest.Authorization
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/atlassian/connectapp/uninstalled
+      name: rest-atlassian-connectapp-uninstalled
+      description: REST surface for rest-atlassian-connectapp-uninstalled.
+      operations:
+      - method: POST
+        name: removeconnectapp
+        description: removeconnectapp
+        call: connectivity-atlassian-connect-app.removeconnectapp
+        with:
+          Authorization: rest.Authorization
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: connectivity-atlassian-connect-app-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Connectivity API — Atlassian Connect App. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: atlassianconnectappdescriptor
+      description: atlassianconnectappdescriptor
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: connectivity-atlassian-connect-app.atlassianconnectappdescriptor
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: addorupdateconnectapp
+      description: addorupdateconnectapp
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: connectivity-atlassian-connect-app.addorupdateconnectapp
+      with:
+        Authorization: tools.Authorization
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: removeconnectapp
+      description: removeconnectapp
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: connectivity-atlassian-connect-app.removeconnectapp
+      with:
+        Authorization: tools.Authorization
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

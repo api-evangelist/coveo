@@ -313,3 +313,288 @@ capability:
           in: query
           type: boolean
           description: If true, the database cache will be refreshed and the most up-to-date fields data returned.
+  exposes:
+  - type: rest
+    namespace: catalog-management-catalogs-rest
+    port: 8080
+    description: REST adapter for Coveo Catalog Management API — Catalogs. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/catalogs
+      name: rest-organizations-organizationid-catalogs
+      description: REST surface for rest-organizations-organizationId-catalogs.
+      operations:
+      - method: GET
+        name: getcatalogs
+        description: List Catalogs
+        call: catalog-management-catalogs.getcatalogs
+        with:
+          organizationId: rest.organizationId
+          filter: rest.filter
+          catalogIds: rest.catalogIds
+          sourceIds: rest.sourceIds
+          page: rest.page
+          pageSize: rest.pageSize
+          enrichWithFields: rest.enrichWithFields
+          catalogSortingType: rest.catalogSortingType
+          sortingDirection: rest.sortingDirection
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createcatalog
+        description: Create Catalog
+        call: catalog-management-catalogs.createcatalog
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/catalogs/fieldssuggestions
+      name: rest-organizations-organizationid-catalogs-fieldssuggestions
+      description: REST surface for rest-organizations-organizationId-catalogs-fieldsSuggestions.
+      operations:
+      - method: POST
+        name: getfieldssuggestions
+        description: Suggest Fields
+        call: catalog-management-catalogs.getfieldssuggestions
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/catalogs/ids
+      name: rest-organizations-organizationid-catalogs-ids
+      description: REST surface for rest-organizations-organizationId-catalogs-ids.
+      operations:
+      - method: POST
+        name: getcatalogswithidsbody
+        description: List Catalogs Using Catalog Ids as a Body for Filtering.
+        call: catalog-management-catalogs.getcatalogswithidsbody
+        with:
+          organizationId: rest.organizationId
+          filter: rest.filter
+          sourceIds: rest.sourceIds
+          page: rest.page
+          pageSize: rest.pageSize
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/catalogs/project
+      name: rest-organizations-organizationid-catalogs-project
+      description: REST surface for rest-organizations-organizationId-catalogs-project.
+      operations:
+      - method: GET
+        name: getcatalogswithprojectid
+        description: List Catalogs Within Specified Project and According to the Specified Filter.
+        call: catalog-management-catalogs.getcatalogswithprojectid
+        with:
+          organizationId: rest.organizationId
+          filter: rest.filter
+          projectId: rest.projectId
+          sourceIds: rest.sourceIds
+          page: rest.page
+          pageSize: rest.pageSize
+          enrichWithFields: rest.enrichWithFields
+          catalogSortingType: rest.catalogSortingType
+          sortingDirection: rest.sortingDirection
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/catalogs/{catalogid}
+      name: rest-organizations-organizationid-catalogs-catalogid
+      description: REST surface for rest-organizations-organizationId-catalogs-catalogId.
+      operations:
+      - method: GET
+        name: getcatalog
+        description: Show Catalog
+        call: catalog-management-catalogs.getcatalog
+        with:
+          organizationId: rest.organizationId
+          catalogId: rest.catalogId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatecatalog
+        description: Update Catalog
+        call: catalog-management-catalogs.updatecatalog
+        with:
+          organizationId: rest.organizationId
+          catalogId: rest.catalogId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletecatalog
+        description: Delete Catalog
+        call: catalog-management-catalogs.deletecatalog
+        with:
+          organizationId: rest.organizationId
+          catalogId: rest.catalogId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/catalogs/{catalogid}/fieldstats
+      name: rest-organizations-organizationid-catalogs-catalogid-fieldstats
+      description: REST surface for rest-organizations-organizationId-catalogs-catalogId-fieldStats.
+      operations:
+      - method: GET
+        name: getfieldstats
+        description: Show Field Stats
+        call: catalog-management-catalogs.getfieldstats
+        with:
+          organizationId: rest.organizationId
+          catalogId: rest.catalogId
+          forceRefresh: rest.forceRefresh
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: catalog-management-catalogs-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Catalog Management API — Catalogs. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: list-catalogs
+      description: List Catalogs
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalogs.getcatalogs
+      with:
+        organizationId: tools.organizationId
+        filter: tools.filter
+        catalogIds: tools.catalogIds
+        sourceIds: tools.sourceIds
+        page: tools.page
+        pageSize: tools.pageSize
+        enrichWithFields: tools.enrichWithFields
+        catalogSortingType: tools.catalogSortingType
+        sortingDirection: tools.sortingDirection
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-catalog
+      description: Create Catalog
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: catalog-management-catalogs.createcatalog
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: suggest-fields
+      description: Suggest Fields
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: catalog-management-catalogs.getfieldssuggestions
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-catalogs-using-catalog-ids
+      description: List Catalogs Using Catalog Ids as a Body for Filtering.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: catalog-management-catalogs.getcatalogswithidsbody
+      with:
+        organizationId: tools.organizationId
+        filter: tools.filter
+        sourceIds: tools.sourceIds
+        page: tools.page
+        pageSize: tools.pageSize
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-catalogs-within-specified-project
+      description: List Catalogs Within Specified Project and According to the Specified Filter.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalogs.getcatalogswithprojectid
+      with:
+        organizationId: tools.organizationId
+        filter: tools.filter
+        projectId: tools.projectId
+        sourceIds: tools.sourceIds
+        page: tools.page
+        pageSize: tools.pageSize
+        enrichWithFields: tools.enrichWithFields
+        catalogSortingType: tools.catalogSortingType
+        sortingDirection: tools.sortingDirection
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-catalog
+      description: Show Catalog
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalogs.getcatalog
+      with:
+        organizationId: tools.organizationId
+        catalogId: tools.catalogId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-catalog
+      description: Update Catalog
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalogs.updatecatalog
+      with:
+        organizationId: tools.organizationId
+        catalogId: tools.catalogId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-catalog
+      description: Delete Catalog
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: catalog-management-catalogs.deletecatalog
+      with:
+        organizationId: tools.organizationId
+        catalogId: tools.catalogId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-field-stats
+      description: Show Field Stats
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalogs.getfieldstats
+      with:
+        organizationId: tools.organizationId
+        catalogId: tools.catalogId
+        forceRefresh: tools.forceRefresh
+      outputParameters:
+      - type: object
+        mapping: $.

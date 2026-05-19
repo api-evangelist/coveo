@@ -158,3 +158,192 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: usage-analytics-read-users-api-version-14-rest
+    port: 8080
+    description: REST adapter for Coveo Usage Analytics Read API — Users API - Version 14. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v14/users/monitoring/health
+      name: v14-users-monitoring-health
+      description: REST surface for v14-users-monitoring-health.
+      operations:
+      - method: GET
+        name: getv14usersmonitoringhealth
+        description: Health Check for the Users Service
+        call: usage-analytics-read-users-api-version-14.getv14usersmonitoringhealth
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/users/status
+      name: v14-users-status
+      description: REST surface for v14-users-status.
+      operations:
+      - method: GET
+        name: getv14usersstatus
+        description: Get the Users Service Status
+        call: usage-analytics-read-users-api-version-14.getv14usersstatus
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/users/{userid}
+      name: v14-users-userid
+      description: REST surface for v14-users-userId.
+      operations:
+      - method: GET
+        name: getv14usersuserid
+        description: Get a User
+        call: usage-analytics-read-users-api-version-14.getv14usersuserid
+        with:
+          userId: rest.userId
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/users/{userid}/filters
+      name: v14-users-userid-filters
+      description: REST surface for v14-users-userId-filters.
+      operations:
+      - method: GET
+        name: getv14usersuseridfilters
+        description: Get the Data Level Filters That Apply to a User
+        call: usage-analytics-read-users-api-version-14.getv14usersuseridfilters
+        with:
+          userId: rest.userId
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: putv14usersuseridfilters
+        description: Set the Filters That Will Be Applied to a User Query
+        call: usage-analytics-read-users-api-version-14.putv14usersuseridfilters
+        with:
+          userId: rest.userId
+          org: rest.org
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/users/{userid}/reports
+      name: v14-users-userid-reports
+      description: REST surface for v14-users-userId-reports.
+      operations:
+      - method: GET
+        name: getv14usersuseridreports
+        description: Get the Reports That a User Can Access
+        call: usage-analytics-read-users-api-version-14.getv14usersuseridreports
+        with:
+          userId: rest.userId
+          org: rest.org
+          includeConfig: rest.includeConfig
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: putv14usersuseridreports
+        description: Set Which Reports a User Can Access
+        call: usage-analytics-read-users-api-version-14.putv14usersuseridreports
+        with:
+          userId: rest.userId
+          org: rest.org
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: usage-analytics-read-users-api-version-14-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Usage Analytics Read API — Users API - Version 14. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: health-check-users-service
+      description: Health Check for the Users Service
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-users-api-version-14.getv14usersmonitoringhealth
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-users-service-status
+      description: Get the Users Service Status
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-users-api-version-14.getv14usersstatus
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-user
+      description: Get a User
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-users-api-version-14.getv14usersuserid
+      with:
+        userId: tools.userId
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-data-level-filters-that
+      description: Get the Data Level Filters That Apply to a User
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-users-api-version-14.getv14usersuseridfilters
+      with:
+        userId: tools.userId
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: set-filters-that-will-be
+      description: Set the Filters That Will Be Applied to a User Query
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-users-api-version-14.putv14usersuseridfilters
+      with:
+        userId: tools.userId
+        org: tools.org
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-reports-that-user-can
+      description: Get the Reports That a User Can Access
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-users-api-version-14.getv14usersuseridreports
+      with:
+        userId: tools.userId
+        org: tools.org
+        includeConfig: tools.includeConfig
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: set-which-reports-user-can
+      description: Set Which Reports a User Can Access
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-users-api-version-14.putv14usersuseridreports
+      with:
+        userId: tools.userId
+        org: tools.org
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

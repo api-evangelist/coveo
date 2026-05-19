@@ -62,3 +62,69 @@ capability:
           type: string
           description: The organization ID
           required: true
+  exposes:
+  - type: rest
+    namespace: schema-service-salesforce-trial-rest
+    port: 8080
+    description: REST adapter for Coveo Schema Service API — Salesforce Trial. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/salesforce/trial/licensestatus
+      name: rest-organizations-organizationid-salesforce-trial-licensestatus
+      description: REST surface for rest-organizations-organizationId-salesforce-trial-licenseStatus.
+      operations:
+      - method: GET
+        name: getlicensestatus
+        description: Retrieves the License Status for an Organization
+        call: schema-service-salesforce-trial.getlicensestatus
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/salesforce/trial/provisioningstatus
+      name: rest-organizations-organizationid-salesforce-trial-provisioningstatus
+      description: REST surface for rest-organizations-organizationId-salesforce-trial-provisioningStatus.
+      operations:
+      - method: GET
+        name: getprovisioningstatus
+        description: Retrieves the Provisioning Status for an Organization
+        call: schema-service-salesforce-trial.getprovisioningstatus
+        with:
+          salesforceOrganizationId: rest.salesforceOrganizationId
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: schema-service-salesforce-trial-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Schema Service API — Salesforce Trial. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: retrieves-license-status-organization
+      description: Retrieves the License Status for an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: schema-service-salesforce-trial.getlicensestatus
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieves-provisioning-status-organization
+      description: Retrieves the Provisioning Status for an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: schema-service-salesforce-trial.getprovisioningstatus
+      with:
+        salesforceOrganizationId: tools.salesforceOrganizationId
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.

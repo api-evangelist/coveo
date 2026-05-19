@@ -47,3 +47,44 @@ capability:
           type: string
           description: The unique identifier of the target machine learning model.<br />**Example:** `My_Model_ID`
           required: true
+  exposes:
+  - type: rest
+    namespace: ml-config-model-detailed-info-rest
+    port: 8080
+    description: REST adapter for Coveo Machine Learning Configuration API — Model Detailed Info. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/modeldetailedinfo/{modelid}
+      name: rest-organizations-organizationid-machinelearning-configuration-modeldetailedinf
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-modeldetailedinf.
+      operations:
+      - method: GET
+        name: getmodeldetailedinfo
+        description: Fetch Model
+        call: ml-config-model-detailed-info.getmodeldetailedinfo
+        with:
+          organizationId: rest.organizationId
+          modelId: rest.modelId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: ml-config-model-detailed-info-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Machine Learning Configuration API — Model Detailed Info. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: fetch-model
+      description: Fetch Model
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: ml-config-model-detailed-info.getmodeldetailedinfo
+      with:
+        organizationId: tools.organizationId
+        modelId: tools.modelId
+      outputParameters:
+      - type: object
+        mapping: $.

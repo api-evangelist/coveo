@@ -196,3 +196,276 @@ capability:
           type: string
           description: The unique identifier of the query pipeline to swap names with.
           required: true
+  exposes:
+  - type: rest
+    namespace: search-pipelines-rest
+    port: 8080
+    description: REST adapter for Coveo Search API — Pipelines. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/search/v1/admin/pipelines
+      name: rest-search-v1-admin-pipelines
+      description: REST surface for rest-search-v1-admin-pipelines.
+      operations:
+      - method: GET
+        name: listquerypipelinesv1
+        description: List Query Pipelines
+        call: search-pipelines.listquerypipelinesv1
+        with:
+          perPage: rest.perPage
+          enablePagination: rest.enablePagination
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createquerypipelinev1
+        description: Create Query Pipeline
+        call: search-pipelines.createquerypipelinev1
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v1/admin/pipelines/bulkget
+      name: rest-search-v1-admin-pipelines-bulkget
+      description: REST surface for rest-search-v1-admin-pipelines-bulkGet.
+      operations:
+      - method: POST
+        name: bulkgetpipelines
+        description: List Query Pipelines
+        call: search-pipelines.bulkgetpipelines
+        with:
+          perPage: rest.perPage
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v1/admin/pipelines/validate
+      name: rest-search-v1-admin-pipelines-validate
+      description: REST surface for rest-search-v1-admin-pipelines-validate.
+      operations:
+      - method: POST
+        name: validatepipelineoperation
+        description: Validate a Single Pipeline Operation.
+        call: search-pipelines.validatepipelineoperation
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v1/admin/pipelines/validate/batch
+      name: rest-search-v1-admin-pipelines-validate-batch
+      description: REST surface for rest-search-v1-admin-pipelines-validate-batch.
+      operations:
+      - method: POST
+        name: validatepipelineoperations
+        description: Validate Batch of Pipeline Operations.
+        call: search-pipelines.validatepipelineoperations
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v1/admin/pipelines/{pipelineid}
+      name: rest-search-v1-admin-pipelines-pipelineid
+      description: REST surface for rest-search-v1-admin-pipelines-pipelineId.
+      operations:
+      - method: GET
+        name: getquerypipelinev1
+        description: Get Query Pipeline
+        call: search-pipelines.getquerypipelinev1
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatequerypipeline
+        description: Update Query Pipeline
+        call: search-pipelines.updatequerypipeline
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletequerypipeline
+        description: Delete Query Pipeline
+        call: search-pipelines.deletequerypipeline
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v1/admin/pipelines/{pipelineid}/duplicate
+      name: rest-search-v1-admin-pipelines-pipelineid-duplicate
+      description: REST surface for rest-search-v1-admin-pipelines-pipelineId-duplicate.
+      operations:
+      - method: POST
+        name: v1copyquerypipeline
+        description: Copy Query Pipeline
+        call: search-pipelines.v1copyquerypipeline
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v1/admin/pipelines/{pipelineid}/statements/import
+      name: rest-search-v1-admin-pipelines-pipelineid-statements-import
+      description: REST surface for rest-search-v1-admin-pipelines-pipelineId-statements-import.
+      operations:
+      - method: POST
+        name: importquerypipelinestatements
+        description: Import Query Pipeline Statements
+        call: search-pipelines.importquerypipelinestatements
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v1/admin/pipelines/{pipelineid}/swap
+      name: rest-search-v1-admin-pipelines-pipelineid-swap
+      description: REST surface for rest-search-v1-admin-pipelines-pipelineId-swap.
+      operations:
+      - method: POST
+        name: swapquerypipelinenames
+        description: Swap Query Pipeline Names
+        call: search-pipelines.swapquerypipelinenames
+        with:
+          other: rest.other
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-pipelines-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search API — Pipelines. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: list-query-pipelines
+      description: List Query Pipelines
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-pipelines.listquerypipelinesv1
+      with:
+        perPage: tools.perPage
+        enablePagination: tools.enablePagination
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-query-pipeline
+      description: Create Query Pipeline
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-pipelines.createquerypipelinev1
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-query-pipelines-2
+      description: List Query Pipelines
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-pipelines.bulkgetpipelines
+      with:
+        perPage: tools.perPage
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: validate-single-pipeline-operation
+      description: Validate a Single Pipeline Operation.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-pipelines.validatepipelineoperation
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: validate-batch-pipeline-operations
+      description: Validate Batch of Pipeline Operations.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-pipelines.validatepipelineoperations
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-query-pipeline
+      description: Get Query Pipeline
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-pipelines.getquerypipelinev1
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-query-pipeline
+      description: Update Query Pipeline
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-pipelines.updatequerypipeline
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-query-pipeline
+      description: Delete Query Pipeline
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: search-pipelines.deletequerypipeline
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: copy-query-pipeline
+      description: Copy Query Pipeline
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-pipelines.v1copyquerypipeline
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: import-query-pipeline-statements
+      description: Import Query Pipeline Statements
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-pipelines.importquerypipelinestatements
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: swap-query-pipeline-names
+      description: Swap Query Pipeline Names
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-pipelines.swapquerypipelinenames
+      with:
+        other: tools.other
+      outputParameters:
+      - type: object
+        mapping: $.

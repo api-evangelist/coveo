@@ -174,3 +174,194 @@ capability:
           type: string
           description: The username of the user for which to list groups.</br>**Example:** `jsmith@email.com-google`
           required: true
+  exposes:
+  - type: rest
+    namespace: authorization-organization-members-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Organization Members. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/members
+      name: rest-organizations-organizationid-members
+      description: REST surface for rest-organizations-organizationId-members.
+      operations:
+      - method: GET
+        name: getorganizationmembers
+        description: List Members
+        call: authorization-organization-members.getorganizationmembers
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateorganizationmembers
+        description: Update Organization Members
+        call: authorization-organization-members.updateorganizationmembers
+        with:
+          organizationId: rest.organizationId
+          sendEmailToInvitedUsers: rest.sendEmailToInvitedUsers
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/members/privileges
+      name: rest-organizations-organizationid-members-privileges
+      description: REST surface for rest-organizations-organizationId-members-privileges.
+      operations:
+      - method: GET
+        name: getorganizationmemberprivileges2
+        description: List Privileges of Current User
+        call: authorization-organization-members.getorganizationmemberprivileges2
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/members/{username}
+      name: rest-organizations-organizationid-members-username
+      description: REST surface for rest-organizations-organizationId-members-username.
+      operations:
+      - method: GET
+        name: getorganizationmember
+        description: Show Member
+        call: authorization-organization-members.getorganizationmember
+        with:
+          organizationId: rest.organizationId
+          username: rest.username
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateorganizationmember
+        description: Update Member
+        call: authorization-organization-members.updateorganizationmember
+        with:
+          organizationId: rest.organizationId
+          username: rest.username
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteorganizationmember
+        description: Delete Member
+        call: authorization-organization-members.deleteorganizationmember
+        with:
+          organizationId: rest.organizationId
+          username: rest.username
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/members/{username}/groups
+      name: rest-organizations-organizationid-members-username-groups
+      description: REST surface for rest-organizations-organizationId-members-username-groups.
+      operations:
+      - method: GET
+        name: getmembergroups
+        description: List Groups for Organization Member
+        call: authorization-organization-members.getmembergroups
+        with:
+          organizationId: rest.organizationId
+          username: rest.username
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-organization-members-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Organization Members. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: list-members
+      description: List Members
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-members.getorganizationmembers
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-organization-members
+      description: Update Organization Members
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-organization-members.updateorganizationmembers
+      with:
+        organizationId: tools.organizationId
+        sendEmailToInvitedUsers: tools.sendEmailToInvitedUsers
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-privileges-current-user
+      description: List Privileges of Current User
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-members.getorganizationmemberprivileges2
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-member
+      description: Show Member
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-members.getorganizationmember
+      with:
+        organizationId: tools.organizationId
+        username: tools.username
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-member
+      description: Update Member
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-organization-members.updateorganizationmember
+      with:
+        organizationId: tools.organizationId
+        username: tools.username
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-member
+      description: Delete Member
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: authorization-organization-members.deleteorganizationmember
+      with:
+        organizationId: tools.organizationId
+        username: tools.username
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-groups-organization-member
+      description: List Groups for Organization Member
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-members.getmembergroups
+      with:
+        organizationId: tools.organizationId
+        username: tools.username
+      outputParameters:
+      - type: object
+        mapping: $.

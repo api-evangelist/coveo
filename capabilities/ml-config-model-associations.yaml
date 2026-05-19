@@ -55,3 +55,48 @@ capability:
           type: integer
           description: The maximum number of results to include per page.<br />**Must be in range:** `[1, 1000]`<br />**Default:**
             `100`
+  exposes:
+  - type: rest
+    namespace: ml-config-model-associations-rest
+    port: 8080
+    description: REST adapter for Coveo Machine Learning Configuration API — Model Associations. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/machinelearning/configuration/querypipelines/{pipelineid}/associations
+      name: rest-organizations-organizationid-machinelearning-configuration-querypipelines-p
+      description: REST surface for rest-organizations-organizationId-machinelearning-configuration-querypipelines-p.
+      operations:
+      - method: GET
+        name: getassociations
+        description: Lists Associations
+        call: ml-config-model-associations.getassociations
+        with:
+          organizationId: rest.organizationId
+          pipelineId: rest.pipelineId
+          page: rest.page
+          pageSize: rest.pageSize
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: ml-config-model-associations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Machine Learning Configuration API — Model Associations. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: lists-associations
+      description: Lists Associations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: ml-config-model-associations.getassociations
+      with:
+        organizationId: tools.organizationId
+        pipelineId: tools.pipelineId
+        page: tools.page
+        pageSize: tools.pageSize
+      outputParameters:
+      - type: object
+        mapping: $.

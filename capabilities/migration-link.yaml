@@ -212,3 +212,240 @@ capability:
           type: string
           description: The unique identifier of the target link.<br/>**Example:** `ufacpg3aoi63vxoy6qoyhocfuy`
           required: true
+  exposes:
+  - type: rest
+    namespace: migration-link-rest
+    port: 8080
+    description: REST adapter for Coveo Migration API — Link. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/links
+      name: rest-organizations-organizationid-links
+      description: REST surface for rest-organizations-organizationId-links.
+      operations:
+      - method: GET
+        name: getalllinks
+        description: List Links
+        call: migration-link.getalllinks
+        with:
+          organizationId: rest.organizationId
+          ResourceType: rest.ResourceType
+          page: rest.page
+          pageSize: rest.pageSize
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createlink
+        description: Create Link
+        call: migration-link.createlink
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletealllinks
+        description: Delete Links
+        call: migration-link.deletealllinks
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/links/batch
+      name: rest-organizations-organizationid-links-batch
+      description: REST surface for rest-organizations-organizationId-links-batch.
+      operations:
+      - method: PUT
+        name: updatelinkbatch
+        description: Edit Links
+        call: migration-link.updatelinkbatch
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createlinkbatch
+        description: Create Links
+        call: migration-link.createlinkbatch
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletelinkbatch
+        description: Delete Links
+        call: migration-link.deletelinkbatch
+        with:
+          organizationId: rest.organizationId
+          linkIds: rest.linkIds
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/links/{linkid}
+      name: rest-organizations-organizationid-links-linkid
+      description: REST surface for rest-organizations-organizationId-links-linkId.
+      operations:
+      - method: GET
+        name: getlink
+        description: Show Link
+        call: migration-link.getlink
+        with:
+          organizationId: rest.organizationId
+          linkId: rest.linkId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatelink
+        description: Edit Link
+        call: migration-link.updatelink
+        with:
+          organizationId: rest.organizationId
+          linkId: rest.linkId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletelink
+        description: Delete Link
+        call: migration-link.deletelink
+        with:
+          organizationId: rest.organizationId
+          linkId: rest.linkId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: migration-link-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Migration API — Link. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-links
+      description: List Links
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: migration-link.getalllinks
+      with:
+        organizationId: tools.organizationId
+        ResourceType: tools.ResourceType
+        page: tools.page
+        pageSize: tools.pageSize
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-link
+      description: Create Link
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: migration-link.createlink
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-links
+      description: Delete Links
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: migration-link.deletealllinks
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: edit-links
+      description: Edit Links
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: migration-link.updatelinkbatch
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-links
+      description: Create Links
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: migration-link.createlinkbatch
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-links-2
+      description: Delete Links
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: migration-link.deletelinkbatch
+      with:
+        organizationId: tools.organizationId
+        linkIds: tools.linkIds
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-link
+      description: Show Link
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: migration-link.getlink
+      with:
+        organizationId: tools.organizationId
+        linkId: tools.linkId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: edit-link
+      description: Edit Link
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: migration-link.updatelink
+      with:
+        organizationId: tools.organizationId
+        linkId: tools.linkId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-link
+      description: Delete Link
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: migration-link.deletelink
+      with:
+        organizationId: tools.organizationId
+        linkId: tools.linkId
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -69,3 +69,71 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-recommendations-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Recommendations. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/recommendations
+      name: rest-organizations-organizationid-commerce-v2-recommendations
+      description: REST surface for rest-organizations-organizationId-commerce-v2-recommendations.
+      operations:
+      - method: POST
+        name: recommendations
+        description: Execute a Recommendations Query
+        call: commerce-recommendations.recommendations
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/recommendations/preview
+      name: rest-organizations-organizationid-commerce-v2-recommendations-preview
+      description: REST surface for rest-organizations-organizationId-commerce-v2-recommendations-preview.
+      operations:
+      - method: POST
+        name: recommendationspreview
+        description: Preview a Recommendations Query
+        call: commerce-recommendations.recommendationspreview
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-recommendations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Recommendations. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: execute-recommendations-query
+      description: Execute a Recommendations Query
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: commerce-recommendations.recommendations
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: preview-recommendations-query
+      description: Preview a Recommendations Query
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: commerce-recommendations.recommendationspreview
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

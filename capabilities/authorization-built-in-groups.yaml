@@ -41,3 +41,42 @@ capability:
           description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
             `mycoveocloudv2organizationg8tp8wu3`
           required: true
+  exposes:
+  - type: rest
+    namespace: authorization-built-in-groups-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Built-in Groups. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/defaultgroups
+      name: rest-organizations-organizationid-defaultgroups
+      description: REST surface for rest-organizations-organizationId-defaultgroups.
+      operations:
+      - method: GET
+        name: getdefaultgroups
+        description: List Built-in Groups
+        call: authorization-built-in-groups.getdefaultgroups
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-built-in-groups-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Built-in Groups. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: list-built-groups
+      description: List Built-in Groups
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-built-in-groups.getdefaultgroups
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -82,3 +82,94 @@ capability:
           type: string
           description: The name of the target license section.</br>**Example:** `content`
           required: true
+  exposes:
+  - type: rest
+    namespace: platform-license-rest
+    port: 8080
+    description: REST adapter for Coveo Platform API — License. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/license
+      name: rest-organizations-organizationid-license
+      description: REST surface for rest-organizations-organizationId-license.
+      operations:
+      - method: GET
+        name: getlicense
+        description: Show Organization License
+        call: platform-license.getlicense
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/license/entitlements
+      name: rest-organizations-organizationid-license-entitlements
+      description: REST surface for rest-organizations-organizationId-license-entitlements.
+      operations:
+      - method: GET
+        name: getentitlements
+        description: Show Organization Entitlements
+        call: platform-license.getentitlements
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/license/{sectionname}
+      name: rest-organizations-organizationid-license-sectionname
+      description: REST surface for rest-organizations-organizationId-license-sectionName.
+      operations:
+      - method: GET
+        name: getlicensesection
+        description: Show Organization License Section
+        call: platform-license.getlicensesection
+        with:
+          organizationId: rest.organizationId
+          sectionName: rest.sectionName
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: platform-license-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Platform API — License. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: show-organization-license
+      description: Show Organization License
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-license.getlicense
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-organization-entitlements
+      description: Show Organization Entitlements
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-license.getentitlements
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-organization-license-section
+      description: Show Organization License Section
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: platform-license.getlicensesection
+      with:
+        organizationId: tools.organizationId
+        sectionName: tools.sectionName
+      outputParameters:
+      - type: object
+        mapping: $.

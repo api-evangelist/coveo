@@ -83,3 +83,111 @@ capability:
           type: string
           description: metricName
           required: true
+  exposes:
+  - type: rest
+    namespace: usage-analytics-read-metrics-api-version-14-rest
+    port: 8080
+    description: REST adapter for Coveo Usage Analytics Read API — Metrics API - Version 14. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v14/metrics
+      name: v14-metrics
+      description: REST surface for v14-metrics.
+      operations:
+      - method: GET
+        name: getv14metrics
+        description: Get All the Metrics
+        call: usage-analytics-read-metrics-api-version-14.getv14metrics
+        with:
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/metrics/monitoring/health
+      name: v14-metrics-monitoring-health
+      description: REST surface for v14-metrics-monitoring-health.
+      operations:
+      - method: GET
+        name: getv14metricsmonitoringhealth
+        description: Health Check for the Metrics Service
+        call: usage-analytics-read-metrics-api-version-14.getv14metricsmonitoringhealth
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/metrics/status
+      name: v14-metrics-status
+      description: REST surface for v14-metrics-status.
+      operations:
+      - method: GET
+        name: getv14metricsstatus
+        description: Get the Metrics Service Status
+        call: usage-analytics-read-metrics-api-version-14.getv14metricsstatus
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v14/metrics/{metricname}
+      name: v14-metrics-metricname
+      description: REST surface for v14-metrics-metricName.
+      operations:
+      - method: GET
+        name: getv14metricsmetricname
+        description: Get a Metric
+        call: usage-analytics-read-metrics-api-version-14.getv14metricsmetricname
+        with:
+          org: rest.org
+          metricName: rest.metricName
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: usage-analytics-read-metrics-api-version-14-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Usage Analytics Read API — Metrics API - Version 14. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: get-all-metrics
+      description: Get All the Metrics
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-metrics-api-version-14.getv14metrics
+      with:
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: health-check-metrics-service
+      description: Health Check for the Metrics Service
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-metrics-api-version-14.getv14metricsmonitoringhealth
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-metrics-service-status
+      description: Get the Metrics Service Status
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-metrics-api-version-14.getv14metricsstatus
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-metric
+      description: Get a Metric
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-metrics-api-version-14.getv14metricsmetricname
+      with:
+        org: tools.org
+        metricName: tools.metricName
+      outputParameters:
+      - type: object
+        mapping: $.

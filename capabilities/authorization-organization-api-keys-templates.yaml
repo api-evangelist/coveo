@@ -81,3 +81,94 @@ capability:
           type: string
           description: The unique identifier of the API key template.
           required: true
+  exposes:
+  - type: rest
+    namespace: authorization-organization-api-keys-templates-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Organization Api Keys Templates. One Spectral-compliant
+      resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/templates/apikeys
+      name: rest-organizations-organizationid-templates-apikeys
+      description: REST surface for rest-organizations-organizationId-templates-apikeys.
+      operations:
+      - method: GET
+        name: getorganizationapikeytemplates
+        description: List API Key Templates
+        call: authorization-organization-api-keys-templates.getorganizationapikeytemplates
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/templates/apikeys/privileges/eligibility
+      name: rest-organizations-organizationid-templates-apikeys-privileges-eligibility
+      description: REST surface for rest-organizations-organizationId-templates-apikeys-privileges-eligibility.
+      operations:
+      - method: GET
+        name: getapikeytemplateseligibility
+        description: Get All API Key Templates' Eligibility for the Current User
+        call: authorization-organization-api-keys-templates.getapikeytemplateseligibility
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/templates/apikeys/{organizationapikeytemplateid}
+      name: rest-organizations-organizationid-templates-apikeys-organizationapikeytemplateid
+      description: REST surface for rest-organizations-organizationId-templates-apikeys-organizationApiKeyTemplateId.
+      operations:
+      - method: GET
+        name: getorganizationapikeytemplate
+        description: Show API Key Template
+        call: authorization-organization-api-keys-templates.getorganizationapikeytemplate
+        with:
+          organizationId: rest.organizationId
+          organizationApiKeyTemplateId: rest.organizationApiKeyTemplateId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-organization-api-keys-templates-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Organization Api Keys Templates. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: list-api-key-templates
+      description: List API Key Templates
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-api-keys-templates.getorganizationapikeytemplates
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-all-api-key-templates
+      description: Get All API Key Templates' Eligibility for the Current User
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-api-keys-templates.getapikeytemplateseligibility
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-api-key-template
+      description: Show API Key Template
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-api-keys-templates.getorganizationapikeytemplate
+      with:
+        organizationId: tools.organizationId
+        organizationApiKeyTemplateId: tools.organizationApiKeyTemplateId
+      outputParameters:
+      - type: object
+        mapping: $.

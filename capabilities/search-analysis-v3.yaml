@@ -57,3 +57,67 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: search-analysis-v3-rest
+    port: 8080
+    description: REST adapter for Coveo Search API — Analysis V3. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/search/v3/analysis/expressions/structured
+      name: rest-search-v3-analysis-expressions-structured
+      description: REST surface for rest-search-v3-analysis-expressions-structured.
+      operations:
+      - method: POST
+        name: parseexpressiontostructured
+        description: Convert Query to Structured Expression
+        call: search-analysis-v3.parseexpressiontostructured
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v3/analysis/inspect/replay
+      name: rest-search-v3-analysis-inspect-replay
+      description: REST surface for rest-search-v3-analysis-inspect-replay.
+      operations:
+      - method: POST
+        name: replay
+        description: Replay a Query with Inspection Details
+        call: search-analysis-v3.replay
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-analysis-v3-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search API — Analysis V3. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: convert-query-structured-expression
+      description: Convert Query to Structured Expression
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-analysis-v3.parseexpressiontostructured
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: replay-query-inspection-details
+      description: Replay a Query with Inspection Details
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-analysis-v3.replay
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

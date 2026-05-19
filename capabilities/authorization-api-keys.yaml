@@ -331,3 +331,362 @@ capability:
           type: object
           description: Request body (JSON).
           required: false
+  exposes:
+  - type: rest
+    namespace: authorization-api-keys-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Api Keys. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/apikeys
+      name: rest-organizations-organizationid-apikeys
+      description: REST surface for rest-organizations-organizationId-apikeys.
+      operations:
+      - method: GET
+        name: getapikeys
+        description: List API Keys
+        call: authorization-api-keys.getapikeys
+        with:
+          organizationId: rest.organizationId
+          status: rest.status
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createapikey
+        description: Create API Key
+        call: authorization-api-keys.createapikey
+        with:
+          organizationId: rest.organizationId
+          apiKeyTemplateId: rest.apiKeyTemplateId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/apikeys/activate/bulk
+      name: rest-organizations-organizationid-apikeys-activate-bulk
+      description: REST surface for rest-organizations-organizationId-apikeys-activate-bulk.
+      operations:
+      - method: PUT
+        name: bulkactivateapikey
+        description: Activate API Keys
+        call: authorization-api-keys.bulkactivateapikey
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/apikeys/delete/bulk
+      name: rest-organizations-organizationid-apikeys-delete-bulk
+      description: REST surface for rest-organizations-organizationId-apikeys-delete-bulk.
+      operations:
+      - method: POST
+        name: bulkdeleteapikey
+        description: Delete API Keys
+        call: authorization-api-keys.bulkdeleteapikey
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/apikeys/disable/bulk
+      name: rest-organizations-organizationid-apikeys-disable-bulk
+      description: REST surface for rest-organizations-organizationId-apikeys-disable-bulk.
+      operations:
+      - method: PUT
+        name: bulkdisableapikey
+        description: Disable Multiple API Keys
+        call: authorization-api-keys.bulkdisableapikey
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/apikeys/rotate
+      name: rest-organizations-organizationid-apikeys-rotate
+      description: REST surface for rest-organizations-organizationId-apikeys-rotate.
+      operations:
+      - method: POST
+        name: rotateapikey
+        description: Rotate API Key
+        call: authorization-api-keys.rotateapikey
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/apikeys/{apikeyid}
+      name: rest-organizations-organizationid-apikeys-apikeyid
+      description: REST surface for rest-organizations-organizationId-apikeys-apiKeyId.
+      operations:
+      - method: GET
+        name: getapikey
+        description: Show API Key
+        call: authorization-api-keys.getapikey
+        with:
+          organizationId: rest.organizationId
+          apiKeyId: rest.apiKeyId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateapikey
+        description: Update API Key
+        call: authorization-api-keys.updateapikey
+        with:
+          organizationId: rest.organizationId
+          apiKeyId: rest.apiKeyId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteapikey
+        description: Delete API Key
+        call: authorization-api-keys.deleteapikey
+        with:
+          organizationId: rest.organizationId
+          apiKeyId: rest.apiKeyId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/apikeys/{apikeyid}/activate
+      name: rest-organizations-organizationid-apikeys-apikeyid-activate
+      description: REST surface for rest-organizations-organizationId-apikeys-apiKeyId-activate.
+      operations:
+      - method: PUT
+        name: activateapikey
+        description: Activate API Key
+        call: authorization-api-keys.activateapikey
+        with:
+          organizationId: rest.organizationId
+          apiKeyId: rest.apiKeyId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/apikeys/{apikeyid}/activation/extend
+      name: rest-organizations-organizationid-apikeys-apikeyid-activation-extend
+      description: REST surface for rest-organizations-organizationId-apikeys-apiKeyId-activation-extend.
+      operations:
+      - method: PUT
+        name: extendactivation
+        description: Extend API Key Activation
+        call: authorization-api-keys.extendactivation
+        with:
+          organizationId: rest.organizationId
+          apiKeyId: rest.apiKeyId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/apikeys/{apikeyid}/disable
+      name: rest-organizations-organizationid-apikeys-apikeyid-disable
+      description: REST surface for rest-organizations-organizationId-apikeys-apiKeyId-disable.
+      operations:
+      - method: PUT
+        name: disableapikey
+        description: Disable API Key
+        call: authorization-api-keys.disableapikey
+        with:
+          organizationId: rest.organizationId
+          apiKeyId: rest.apiKeyId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/apikeys/{sourceapikeyid}/duplicate
+      name: rest-organizations-organizationid-apikeys-sourceapikeyid-duplicate
+      description: REST surface for rest-organizations-organizationId-apikeys-sourceApiKeyId-duplicate.
+      operations:
+      - method: PUT
+        name: duplicateapikey
+        description: Duplicate API Key
+        call: authorization-api-keys.duplicateapikey
+        with:
+          organizationId: rest.organizationId
+          sourceApiKeyId: rest.sourceApiKeyId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-api-keys-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Api Keys. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: list-api-keys
+      description: List API Keys
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-api-keys.getapikeys
+      with:
+        organizationId: tools.organizationId
+        status: tools.status
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-api-key
+      description: Create API Key
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: authorization-api-keys.createapikey
+      with:
+        organizationId: tools.organizationId
+        apiKeyTemplateId: tools.apiKeyTemplateId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: activate-api-keys
+      description: Activate API Keys
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-api-keys.bulkactivateapikey
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-api-keys
+      description: Delete API Keys
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: authorization-api-keys.bulkdeleteapikey
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: disable-multiple-api-keys
+      description: Disable Multiple API Keys
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-api-keys.bulkdisableapikey
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: rotate-api-key
+      description: Rotate API Key
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: authorization-api-keys.rotateapikey
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-api-key
+      description: Show API Key
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-api-keys.getapikey
+      with:
+        organizationId: tools.organizationId
+        apiKeyId: tools.apiKeyId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-api-key
+      description: Update API Key
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-api-keys.updateapikey
+      with:
+        organizationId: tools.organizationId
+        apiKeyId: tools.apiKeyId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-api-key
+      description: Delete API Key
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: authorization-api-keys.deleteapikey
+      with:
+        organizationId: tools.organizationId
+        apiKeyId: tools.apiKeyId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: activate-api-key
+      description: Activate API Key
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-api-keys.activateapikey
+      with:
+        organizationId: tools.organizationId
+        apiKeyId: tools.apiKeyId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: extend-api-key-activation
+      description: Extend API Key Activation
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-api-keys.extendactivation
+      with:
+        organizationId: tools.organizationId
+        apiKeyId: tools.apiKeyId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: disable-api-key
+      description: Disable API Key
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-api-keys.disableapikey
+      with:
+        organizationId: tools.organizationId
+        apiKeyId: tools.apiKeyId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: duplicate-api-key
+      description: Duplicate API Key
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-api-keys.duplicateapikey
+      with:
+        organizationId: tools.organizationId
+        sourceApiKeyId: tools.sourceApiKeyId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

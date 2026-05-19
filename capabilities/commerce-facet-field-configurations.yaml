@@ -110,3 +110,106 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-facet-field-configurations-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Facet Field Configurations. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/tracking-ids/{trackingid}/facet/fields
+      name: rest-organizations-organizationid-commerce-v2-tracking-ids-trackingid-facet-fiel
+      description: REST surface for rest-organizations-organizationId-commerce-v2-tracking-ids-trackingId-facet-fiel.
+      operations:
+      - method: GET
+        name: getall1
+        description: Retrieves All Facet Fields
+        call: commerce-facet-field-configurations.getall1
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          page: rest.page
+          perPage: rest.perPage
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/tracking-ids/{trackingid}/facet/fields/bulk-create
+      name: rest-organizations-organizationid-commerce-v2-tracking-ids-trackingid-facet-fiel
+      description: REST surface for rest-organizations-organizationId-commerce-v2-tracking-ids-trackingId-facet-fiel.
+      operations:
+      - method: POST
+        name: bulkcreate
+        description: Creates Multiple Facet Fields
+        call: commerce-facet-field-configurations.bulkcreate
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/tracking-ids/{trackingid}/facet/fields/bulk-update
+      name: rest-organizations-organizationid-commerce-v2-tracking-ids-trackingid-facet-fiel
+      description: REST surface for rest-organizations-organizationId-commerce-v2-tracking-ids-trackingId-facet-fiel.
+      operations:
+      - method: PUT
+        name: bulkupdate
+        description: Update Multiple Facet Fields
+        call: commerce-facet-field-configurations.bulkupdate
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-facet-field-configurations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Facet Field Configurations. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: retrieves-all-facet-fields
+      description: Retrieves All Facet Fields
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-facet-field-configurations.getall1
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        page: tools.page
+        perPage: tools.perPage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: creates-multiple-facet-fields
+      description: Creates Multiple Facet Fields
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-facet-field-configurations.bulkcreate
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-multiple-facet-fields
+      description: Update Multiple Facet Fields
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: commerce-facet-field-configurations.bulkupdate
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

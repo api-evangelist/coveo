@@ -50,3 +50,63 @@ capability:
           in: path
           type: string
           required: true
+  exposes:
+  - type: rest
+    namespace: organization-region-configuration-rest
+    port: 8080
+    description: REST adapter for Coveo Organization API — Region Configuration. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/global/regions
+      name: rest-global-regions
+      description: REST surface for rest-global-regions.
+      operations:
+      - method: GET
+        name: getallregionconfigurations
+        description: List Region Configurations
+        call: organization-region-configuration.getallregionconfigurations
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/global/regions/{region}
+      name: rest-global-regions-region
+      description: REST surface for rest-global-regions-region.
+      operations:
+      - method: GET
+        name: getregionconfiguration
+        description: Show Region Configuration
+        call: organization-region-configuration.getregionconfiguration
+        with:
+          region: rest.region
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: organization-region-configuration-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Organization API — Region Configuration. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: list-region-configurations
+      description: List Region Configurations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: organization-region-configuration.getallregionconfigurations
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-region-configuration
+      description: Show Region Configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: organization-region-configuration.getregionconfiguration
+      with:
+        region: tools.region
+      outputParameters:
+      - type: object
+        mapping: $.

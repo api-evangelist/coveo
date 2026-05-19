@@ -164,3 +164,173 @@ capability:
           type: string
           description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
           required: true
+  exposes:
+  - type: rest
+    namespace: authorization-groups-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Groups. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/groups
+      name: rest-organizations-organizationid-groups
+      description: REST surface for rest-organizations-organizationId-groups.
+      operations:
+      - method: GET
+        name: getgroups
+        description: List Groups
+        call: authorization-groups.getgroups
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: creategroup
+        description: Create Group
+        call: authorization-groups.creategroup
+        with:
+          organizationId: rest.organizationId
+          sendEmailToInvitedUsers: rest.sendEmailToInvitedUsers
+          canEditItself: rest.canEditItself
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/groups/{groupid}
+      name: rest-organizations-organizationid-groups-groupid
+      description: REST surface for rest-organizations-organizationId-groups-groupId.
+      operations:
+      - method: GET
+        name: getgroup
+        description: Show Group Details
+        call: authorization-groups.getgroup
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updategroup
+        description: Update Group
+        call: authorization-groups.updategroup
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+          sendEmailToInvitedUsers: rest.sendEmailToInvitedUsers
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletegroup
+        description: Delete Group
+        call: authorization-groups.deletegroup
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/groups/{groupid}/privileges/exclusive/me
+      name: rest-organizations-organizationid-groups-groupid-privileges-exclusive-me
+      description: REST surface for rest-organizations-organizationId-groups-groupId-privileges-exclusive-me.
+      operations:
+      - method: GET
+        name: getgroupexclusiveprivileges
+        description: List Privileges Granted by Group to Current User
+        call: authorization-groups.getgroupexclusiveprivileges
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-groups-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Groups. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: list-groups
+      description: List Groups
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-groups.getgroups
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-group
+      description: Create Group
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: authorization-groups.creategroup
+      with:
+        organizationId: tools.organizationId
+        sendEmailToInvitedUsers: tools.sendEmailToInvitedUsers
+        canEditItself: tools.canEditItself
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-group-details
+      description: Show Group Details
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-groups.getgroup
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-group
+      description: Update Group
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-groups.updategroup
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+        sendEmailToInvitedUsers: tools.sendEmailToInvitedUsers
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-group
+      description: Delete Group
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: authorization-groups.deletegroup
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-privileges-granted-group-current
+      description: List Privileges Granted by Group to Current User
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-groups.getgroupexclusiveprivileges
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+      outputParameters:
+      - type: object
+        mapping: $.

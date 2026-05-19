@@ -141,3 +141,169 @@ capability:
           type: string
           description: The access token for which to list privileges.
           required: true
+  exposes:
+  - type: rest
+    namespace: authorization-organization-privileges-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Organization Privileges. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/privileges
+      name: rest-organizations-organizationid-privileges
+      description: REST surface for rest-organizations-organizationId-privileges.
+      operations:
+      - method: GET
+        name: getorganizationprivileges
+        description: List Possible Privileges
+        call: authorization-organization-privileges.getorganizationprivileges
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/privileges/apikeys
+      name: rest-organizations-organizationid-privileges-apikeys
+      description: REST surface for rest-organizations-organizationId-privileges-apikeys.
+      operations:
+      - method: GET
+        name: getapikeyprivileges
+        description: List Possible API Key Privileges
+        call: authorization-organization-privileges.getapikeyprivileges
+        with:
+          filter: rest.filter
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/privileges/me
+      name: rest-organizations-organizationid-privileges-me
+      description: REST surface for rest-organizations-organizationId-privileges-me.
+      operations:
+      - method: GET
+        name: getorganizationmemberprivileges1
+        description: List Privileges for Current Member
+        call: authorization-organization-privileges.getorganizationmemberprivileges1
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/privileges/platformtokens
+      name: rest-organizations-organizationid-privileges-platformtokens
+      description: REST surface for rest-organizations-organizationId-privileges-platformtokens.
+      operations:
+      - method: GET
+        name: getplatformtokenprivileges
+        description: List Possible Platform Token Privileges
+        call: authorization-organization-privileges.getplatformtokenprivileges
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/privileges/token
+      name: rest-organizations-organizationid-privileges-token
+      description: REST surface for rest-organizations-organizationId-privileges-token.
+      operations:
+      - method: GET
+        name: getorganizationmemberprivileges
+        description: List Privileges for Access Token
+        call: authorization-organization-privileges.getorganizationmemberprivileges
+        with:
+          organizationId: rest.organizationId
+          accessToken: rest.accessToken
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: getorganizationmemberprivilegesusingpost
+        description: List Privileges for Access Token
+        call: authorization-organization-privileges.getorganizationmemberprivilegesusingpost
+        with:
+          organizationId: rest.organizationId
+          accessToken: rest.accessToken
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-organization-privileges-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Organization Privileges. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: list-possible-privileges
+      description: List Possible Privileges
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-privileges.getorganizationprivileges
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-possible-api-key-privileges
+      description: List Possible API Key Privileges
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-privileges.getapikeyprivileges
+      with:
+        filter: tools.filter
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-privileges-current-member
+      description: List Privileges for Current Member
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-privileges.getorganizationmemberprivileges1
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-possible-platform-token-privileges
+      description: List Possible Platform Token Privileges
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-privileges.getplatformtokenprivileges
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-privileges-access-token
+      description: List Privileges for Access Token
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-organization-privileges.getorganizationmemberprivileges
+      with:
+        organizationId: tools.organizationId
+        accessToken: tools.accessToken
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-privileges-access-token-2
+      description: List Privileges for Access Token
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: authorization-organization-privileges.getorganizationmemberprivilegesusingpost
+      with:
+        organizationId: tools.organizationId
+        accessToken: tools.accessToken
+      outputParameters:
+      - type: object
+        mapping: $.

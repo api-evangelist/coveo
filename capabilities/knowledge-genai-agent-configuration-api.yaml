@@ -131,3 +131,148 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: knowledge-genai-agent-configuration-api-rest
+    port: 8080
+    description: REST adapter for Coveo Knowledge Generative AI API — Agent Configuration API. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/agents
+      name: api-preview-organizations-organizationid-agents
+      description: REST surface for api-preview-organizations-organizationId-agents.
+      operations:
+      - method: GET
+        name: getbypage
+        description: List Agents
+        call: knowledge-genai-agent-configuration-api.getbypage
+        with:
+          organizationId: rest.organizationId
+          page: rest.page
+          perPage: rest.perPage
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: create
+        description: Create an Agent
+        call: knowledge-genai-agent-configuration-api.create
+        with:
+          organizationId: rest.organizationId
+          X-Skip-Provisioning: rest.X-Skip-Provisioning
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/agents/{agentid}
+      name: api-preview-organizations-organizationid-agents-agentid
+      description: REST surface for api-preview-organizations-organizationId-agents-agentId.
+      operations:
+      - method: GET
+        name: get
+        description: Get an Agent by agentId
+        call: knowledge-genai-agent-configuration-api.get
+        with:
+          organizationId: rest.organizationId
+          agentId: rest.agentId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: delete
+        description: Delete an Agent
+        call: knowledge-genai-agent-configuration-api.delete
+        with:
+          organizationId: rest.organizationId
+          agentId: rest.agentId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PATCH
+        name: update
+        description: Update an Agent
+        call: knowledge-genai-agent-configuration-api.update
+        with:
+          organizationId: rest.organizationId
+          agentId: rest.agentId
+          X-Skip-Provisioning: rest.X-Skip-Provisioning
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: knowledge-genai-agent-configuration-api-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Knowledge Generative AI API — Agent Configuration API. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: list-agents
+      description: List Agents
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: knowledge-genai-agent-configuration-api.getbypage
+      with:
+        organizationId: tools.organizationId
+        page: tools.page
+        perPage: tools.perPage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-agent
+      description: Create an Agent
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: knowledge-genai-agent-configuration-api.create
+      with:
+        organizationId: tools.organizationId
+        X-Skip-Provisioning: tools.X-Skip-Provisioning
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-agent-agentid
+      description: Get an Agent by agentId
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: knowledge-genai-agent-configuration-api.get
+      with:
+        organizationId: tools.organizationId
+        agentId: tools.agentId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-agent
+      description: Delete an Agent
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: knowledge-genai-agent-configuration-api.delete
+      with:
+        organizationId: tools.organizationId
+        agentId: tools.agentId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-agent
+      description: Update an Agent
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: knowledge-genai-agent-configuration-api.update
+      with:
+        organizationId: tools.organizationId
+        agentId: tools.agentId
+        X-Skip-Provisioning: tools.X-Skip-Provisioning
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

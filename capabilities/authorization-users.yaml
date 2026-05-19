@@ -75,3 +75,90 @@ capability:
           type: string
           description: The username of the user for which to list realms.</br>**Example:** `jsmith@email.com-google`
           required: true
+  exposes:
+  - type: rest
+    namespace: authorization-users-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Users. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/users/{username}
+      name: rest-users-username
+      description: REST surface for rest-users-username.
+      operations:
+      - method: GET
+        name: getuser
+        description: Show User
+        call: authorization-users.getuser
+        with:
+          username: rest.username
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateuseradditionalinformation
+        description: Update User Additional Information
+        call: authorization-users.updateuseradditionalinformation
+        with:
+          username: rest.username
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/users/{username}/realms
+      name: rest-users-username-realms
+      description: REST surface for rest-users-username-realms.
+      operations:
+      - method: GET
+        name: getallexistingrealmsforuser
+        description: List User Realms
+        call: authorization-users.getallexistingrealmsforuser
+        with:
+          username: rest.username
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-users-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Users. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: show-user
+      description: Show User
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-users.getuser
+      with:
+        username: tools.username
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-user-additional-information
+      description: Update User Additional Information
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: authorization-users.updateuseradditionalinformation
+      with:
+        username: tools.username
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-user-realms
+      description: List User Realms
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-users.getallexistingrealmsforuser
+      with:
+        username: tools.username
+      outputParameters:
+      - type: object
+        mapping: $.

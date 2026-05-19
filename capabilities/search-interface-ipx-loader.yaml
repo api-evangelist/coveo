@@ -34,3 +34,38 @@ capability:
         - name: result
           type: object
           value: $.
+  exposes:
+  - type: rest
+    namespace: search-interface-ipx-loader-rest
+    port: 8080
+    description: REST adapter for Coveo Search Interface Service API — IPX loader. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/ipxinterface/v1/interfaces/{interfaceid}/loader
+      name: rest-organizations-organizationid-ipxinterface-v1-interfaces-interfaceid-loader
+      description: REST surface for rest-organizations-organizationId-ipxinterface-v1-interfaces-interfaceId-loader.
+      operations:
+      - method: GET
+        name: getipxinterfaceloader
+        description: Show an IPX Interface Loader
+        call: search-interface-ipx-loader.getipxinterfaceloader
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-interface-ipx-loader-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search Interface Service API — IPX loader. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: show-ipx-interface-loader
+      description: Show an IPX Interface Loader
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-ipx-loader.getipxinterfaceloader
+      outputParameters:
+      - type: object
+        mapping: $.

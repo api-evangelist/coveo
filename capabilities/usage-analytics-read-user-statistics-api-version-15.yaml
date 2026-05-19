@@ -70,3 +70,73 @@ capability:
           in: query
           type: string
           description: cached
+  exposes:
+  - type: rest
+    namespace: usage-analytics-read-user-statistics-api-version-15-rest
+    port: 8080
+    description: REST adapter for Coveo Usage Analytics Read API — User Statistics API - Version 15. One Spectral-compliant
+      resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v15/users/{userid}/alldata
+      name: v15-users-userid-alldata
+      description: REST surface for v15-users-userId-alldata.
+      operations:
+      - method: DELETE
+        name: deletev15usersuseridalldata
+        description: Delete the User Data
+        call: usage-analytics-read-user-statistics-api-version-15.deletev15usersuseridalldata
+        with:
+          userId: rest.userId
+          org: rest.org
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v15/users/{userid}/overview
+      name: v15-users-userid-overview
+      description: REST surface for v15-users-userId-overview.
+      operations:
+      - method: GET
+        name: getv15usersuseridoverview
+        description: Get the Stats of a User
+        call: usage-analytics-read-user-statistics-api-version-15.getv15usersuseridoverview
+        with:
+          userId: rest.userId
+          org: rest.org
+          cached: rest.cached
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: usage-analytics-read-user-statistics-api-version-15-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Usage Analytics Read API — User Statistics API - Version 15. One tool per consumed
+      operation, routed inline through this capability's consumes block.
+    tools:
+    - name: delete-user-data
+      description: Delete the User Data
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: usage-analytics-read-user-statistics-api-version-15.deletev15usersuseridalldata
+      with:
+        userId: tools.userId
+        org: tools.org
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-stats-user
+      description: Get the Stats of a User
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: usage-analytics-read-user-statistics-api-version-15.getv15usersuseridoverview
+      with:
+        userId: tools.userId
+        org: tools.org
+        cached: tools.cached
+      outputParameters:
+      - type: object
+        mapping: $.

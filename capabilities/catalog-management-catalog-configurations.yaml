@@ -162,3 +162,171 @@ capability:
           type: string
           description: The unique identifier of the catalog configuration to delete.<br />**Example:** `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
           required: true
+  exposes:
+  - type: rest
+    namespace: catalog-management-catalog-configurations-rest
+    port: 8080
+    description: REST adapter for Coveo Catalog Management API — Catalog Configurations. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/catalogconfigurations
+      name: rest-organizations-organizationid-catalogconfigurations
+      description: REST surface for rest-organizations-organizationId-catalogconfigurations.
+      operations:
+      - method: GET
+        name: getcatalogconfigurations
+        description: List Catalog Configurations
+        call: catalog-management-catalog-configurations.getcatalogconfigurations
+        with:
+          organizationId: rest.organizationId
+          page: rest.page
+          pageSize: rest.pageSize
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createcatalogconfiguration
+        description: Create Configuration
+        call: catalog-management-catalog-configurations.createcatalogconfiguration
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/catalogconfigurations/source/{sourceid}
+      name: rest-organizations-organizationid-catalogconfigurations-source-sourceid
+      description: REST surface for rest-organizations-organizationId-catalogconfigurations-source-sourceId.
+      operations:
+      - method: GET
+        name: getcatalogconfigurationfromsource
+        description: Show Catalog Configuration from a Source ID
+        call: catalog-management-catalog-configurations.getcatalogconfigurationfromsource
+        with:
+          organizationId: rest.organizationId
+          sourceId: rest.sourceId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/catalogconfigurations/{configurationid}
+      name: rest-organizations-organizationid-catalogconfigurations-configurationid
+      description: REST surface for rest-organizations-organizationId-catalogconfigurations-configurationId.
+      operations:
+      - method: GET
+        name: getcatalogconfiguration
+        description: Show Catalog Configuration
+        call: catalog-management-catalog-configurations.getcatalogconfiguration
+        with:
+          organizationId: rest.organizationId
+          configurationId: rest.configurationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatecatalogconfiguration
+        description: Update Catalog Configuration
+        call: catalog-management-catalog-configurations.updatecatalogconfiguration
+        with:
+          organizationId: rest.organizationId
+          configurationId: rest.configurationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletecatalogconfiguration
+        description: Delete Catalog Configuration
+        call: catalog-management-catalog-configurations.deletecatalogconfiguration
+        with:
+          organizationId: rest.organizationId
+          configurationId: rest.configurationId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: catalog-management-catalog-configurations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Catalog Management API — Catalog Configurations. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: list-catalog-configurations
+      description: List Catalog Configurations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalog-configurations.getcatalogconfigurations
+      with:
+        organizationId: tools.organizationId
+        page: tools.page
+        pageSize: tools.pageSize
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-configuration
+      description: Create Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: catalog-management-catalog-configurations.createcatalogconfiguration
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-catalog-configuration-source-id
+      description: Show Catalog Configuration from a Source ID
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalog-configurations.getcatalogconfigurationfromsource
+      with:
+        organizationId: tools.organizationId
+        sourceId: tools.sourceId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-catalog-configuration
+      description: Show Catalog Configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalog-configurations.getcatalogconfiguration
+      with:
+        organizationId: tools.organizationId
+        configurationId: tools.configurationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-catalog-configuration
+      description: Update Catalog Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: catalog-management-catalog-configurations.updatecatalogconfiguration
+      with:
+        organizationId: tools.organizationId
+        configurationId: tools.configurationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-catalog-configuration
+      description: Delete Catalog Configuration
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: catalog-management-catalog-configurations.deletecatalogconfiguration
+      with:
+        organizationId: tools.organizationId
+        configurationId: tools.configurationId
+      outputParameters:
+      - type: object
+        mapping: $.

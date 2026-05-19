@@ -71,3 +71,69 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: catalog-management-view-definitions-rest
+    port: 8080
+    description: REST adapter for Coveo Catalog Management API — View Definitions. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/catalog-management/catalogs/{catalogid}/view-definitions
+      name: api-preview-organizations-organizationid-catalog-management-catalogs-catalogid-v
+      description: REST surface for api-preview-organizations-organizationId-catalog-management-catalogs-catalogId-v.
+      operations:
+      - method: GET
+        name: getviewdefinitions
+        description: Get View Definitions for a Catalog
+        call: catalog-management-view-definitions.getviewdefinitions
+        with:
+          organizationId: rest.organizationId
+          catalogId: rest.catalogId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: putviewdefinitions
+        description: Update View Definitions for a Catalog
+        call: catalog-management-view-definitions.putviewdefinitions
+        with:
+          organizationId: rest.organizationId
+          catalogId: rest.catalogId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: catalog-management-view-definitions-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Catalog Management API — View Definitions. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: get-view-definitions-catalog
+      description: Get View Definitions for a Catalog
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: catalog-management-view-definitions.getviewdefinitions
+      with:
+        organizationId: tools.organizationId
+        catalogId: tools.catalogId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-view-definitions-catalog
+      description: Update View Definitions for a Catalog
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: catalog-management-view-definitions.putviewdefinitions
+      with:
+        organizationId: tools.organizationId
+        catalogId: tools.catalogId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -159,3 +159,126 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-listing-rule-preview-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Listing Rule Preview. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/listing/preview/rules
+      name: rest-organizations-organizationid-commerce-v2-listing-preview-rules
+      description: REST surface for rest-organizations-organizationId-commerce-v2-listing-preview-rules.
+      operations:
+      - method: POST
+        name: previewimpactofcreatingrule
+        description: Preview the Impact of Creating a Listing Rule on a Config.
+        call: commerce-listing-rule-preview.previewimpactofcreatingrule
+        with:
+          organizationId: rest.organizationId
+          isEditingGlobal: rest.isEditingGlobal
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/listing/preview/rules/{id}
+      name: rest-organizations-organizationid-commerce-v2-listing-preview-rules-id
+      description: REST surface for rest-organizations-organizationId-commerce-v2-listing-preview-rules-id.
+      operations:
+      - method: GET
+        name: previewimpactofrule
+        description: Preview the Impact of a Listing Rule.
+        call: commerce-listing-rule-preview.previewimpactofrule
+        with:
+          organizationId: rest.organizationId
+          id: rest.id
+          previewUrl: rest.previewUrl
+          listingName: rest.listingName
+          listingId: rest.listingId
+          trackingId: rest.trackingId
+          language: rest.language
+          country: rest.country
+          currency: rest.currency
+          page: rest.page
+          perPage: rest.perPage
+          isEditingGlobal: rest.isEditingGlobal
+          debug: rest.debug
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: previewimpactofupdatingrule
+        description: Preview the Impact of an Updated Listing Rule Vs Not Having the Rule, or If compareWithPreviousState
+          Is True, the Impact of a Rule Update Vs the Previous State of the Rule.
+        call: commerce-listing-rule-preview.previewimpactofupdatingrule
+        with:
+          organizationId: rest.organizationId
+          id: rest.id
+          isEditingGlobal: rest.isEditingGlobal
+          compareWithPreviousState: rest.compareWithPreviousState
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-listing-rule-preview-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Listing Rule Preview. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: preview-impact-creating-listing-rule
+      description: Preview the Impact of Creating a Listing Rule on a Config.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-listing-rule-preview.previewimpactofcreatingrule
+      with:
+        organizationId: tools.organizationId
+        isEditingGlobal: tools.isEditingGlobal
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: preview-impact-listing-rule
+      description: Preview the Impact of a Listing Rule.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-listing-rule-preview.previewimpactofrule
+      with:
+        organizationId: tools.organizationId
+        id: tools.id
+        previewUrl: tools.previewUrl
+        listingName: tools.listingName
+        listingId: tools.listingId
+        trackingId: tools.trackingId
+        language: tools.language
+        country: tools.country
+        currency: tools.currency
+        page: tools.page
+        perPage: tools.perPage
+        isEditingGlobal: tools.isEditingGlobal
+        debug: tools.debug
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: preview-impact-updated-listing-rule
+      description: Preview the Impact of an Updated Listing Rule Vs Not Having the Rule, or If compareWithPreviousState Is
+        True, the Impact of a Rule Update Vs the Previous State of the Rule.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: commerce-listing-rule-preview.previewimpactofupdatingrule
+      with:
+        organizationId: tools.organizationId
+        id: tools.id
+        isEditingGlobal: tools.isEditingGlobal
+        compareWithPreviousState: tools.compareWithPreviousState
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

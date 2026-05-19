@@ -87,3 +87,79 @@ capability:
           type: string
           description: The last day to retrieve
           required: true
+  exposes:
+  - type: rest
+    namespace: search-usage-metrics-query-logs-rest
+    port: 8080
+    description: REST adapter for Coveo Search Usage Metrics API — Query Logs. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/searchusagemetrics/hubs/logs
+      name: rest-organizations-organizationid-searchusagemetrics-hubs-logs
+      description: REST surface for rest-organizations-organizationId-searchusagemetrics-hubs-logs.
+      operations:
+      - method: POST
+        name: getquerylogs
+        description: Retrieves the Query Logs for a Search Hub
+        call: search-usage-metrics-query-logs.getquerylogs
+        with:
+          to: rest.to
+          from: rest.from
+          hubName: rest.hubName
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchusagemetrics/hubs/{hubname}/logs
+      name: rest-organizations-organizationid-searchusagemetrics-hubs-hubname-logs
+      description: REST surface for rest-organizations-organizationId-searchusagemetrics-hubs-hubName-logs.
+      operations:
+      - method: POST
+        name: getquerylogswithpathparam
+        description: Retrieves the Query Logs for a Search Hub
+        call: search-usage-metrics-query-logs.getquerylogswithpathparam
+        with:
+          organizationId: rest.organizationId
+          hubName: rest.hubName
+          from: rest.from
+          to: rest.to
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-usage-metrics-query-logs-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search Usage Metrics API — Query Logs. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: retrieves-query-logs-search-hub
+      description: Retrieves the Query Logs for a Search Hub
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-usage-metrics-query-logs.getquerylogs
+      with:
+        to: tools.to
+        from: tools.from
+        hubName: tools.hubName
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieves-query-logs-search-hub-2
+      description: Retrieves the Query Logs for a Search Hub
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-usage-metrics-query-logs.getquerylogswithpathparam
+      with:
+        organizationId: tools.organizationId
+        hubName: tools.hubName
+        from: tools.from
+        to: tools.to
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -76,3 +76,71 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: source-source-extension-configurations-rest
+    port: 8080
+    description: REST adapter for Coveo Source API — Source Extension Configurations. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/sources/{sourceid}/extensions
+      name: rest-organizations-organizationid-sources-sourceid-extensions
+      description: REST surface for rest-organizations-organizationId-sources-sourceId-extensions.
+      operations:
+      - method: GET
+        name: getsourceextensions
+        description: List Extension Configurations
+        call: source-source-extension-configurations.getsourceextensions
+        with:
+          organizationId: rest.organizationId
+          sourceId: rest.sourceId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: setsourceextensions
+        description: Update Extension Configurations
+        call: source-source-extension-configurations.setsourceextensions
+        with:
+          organizationId: rest.organizationId
+          sourceId: rest.sourceId
+          rebuild: rest.rebuild
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: source-source-extension-configurations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Source API — Source Extension Configurations. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: list-extension-configurations
+      description: List Extension Configurations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: source-source-extension-configurations.getsourceextensions
+      with:
+        organizationId: tools.organizationId
+        sourceId: tools.sourceId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-extension-configurations
+      description: Update Extension Configurations
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: source-source-extension-configurations.setsourceextensions
+      with:
+        organizationId: tools.organizationId
+        sourceId: tools.sourceId
+        rebuild: tools.rebuild
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

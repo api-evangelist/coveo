@@ -46,3 +46,44 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-listings-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Listings. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/listing
+      name: rest-organizations-organizationid-commerce-v2-listing
+      description: REST surface for rest-organizations-organizationId-commerce-v2-listing.
+      operations:
+      - method: POST
+        name: getlisting
+        description: Get a Listing Page
+        call: commerce-listings.getlisting
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-listings-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Listings. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: get-listing-page
+      description: Get a Listing Page
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: commerce-listings.getlisting
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

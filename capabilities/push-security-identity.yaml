@@ -182,3 +182,168 @@ capability:
           type: string
           description: A grace period (in minutes) whose purpose is to give the Coveo Cloud V2 indexing pipeline enough time
             to finish processing any previously enqueued operation tha
+  exposes:
+  - type: rest
+    namespace: push-security-identity-rest
+    port: 8080
+    description: REST adapter for Coveo Push API — Security Identity. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/providers/{providerid}/mappings
+      name: organizations-organizationid-providers-providerid-mappings
+      description: REST surface for organizations-organizationId-providers-providerId-mappings.
+      operations:
+      - method: PUT
+        name: put
+        description: Add or Update an Alias
+        call: push-security-identity.put
+        with:
+          providerId: rest.providerId
+          organizationId: rest.organizationId
+          orderingId: rest.orderingId
+          mappedIdentityBody: rest.mappedIdentityBody
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/providers/{providerid}/permissions
+      name: organizations-organizationid-providers-providerid-permissions
+      description: REST surface for organizations-organizationId-providers-providerId-permissions.
+      operations:
+      - method: DELETE
+        name: delete
+        description: Delete a Security Identity
+        call: push-security-identity.delete
+        with:
+          providerId: rest.providerId
+          organizationId: rest.organizationId
+          orderingId: rest.orderingId
+          baseIdentityBody: rest.baseIdentityBody
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: put
+        description: Add or Update a Security Identity
+        call: push-security-identity.put
+        with:
+          providerId: rest.providerId
+          organizationId: rest.organizationId
+          orderingId: rest.orderingId
+          identityBody: rest.identityBody
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/providers/{providerid}/permissions/batch
+      name: organizations-organizationid-providers-providerid-permissions-batch
+      description: REST surface for organizations-organizationId-providers-providerId-permissions-batch.
+      operations:
+      - method: PUT
+        name: put
+        description: Add, Update, and/or Delete a Batch of Security Identities
+        call: push-security-identity.put
+        with:
+          providerId: rest.providerId
+          fileId: rest.fileId
+          organizationId: rest.organizationId
+          orderingId: rest.orderingId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/providers/{providerid}/permissions/olderthan
+      name: organizations-organizationid-providers-providerid-permissions-olderthan
+      description: REST surface for organizations-organizationId-providers-providerId-permissions-olderthan.
+      operations:
+      - method: DELETE
+        name: delete
+        description: Delete Old Security Identities
+        call: push-security-identity.delete
+        with:
+          providerId: rest.providerId
+          organizationId: rest.organizationId
+          orderingId: rest.orderingId
+          queueDelay: rest.queueDelay
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: push-security-identity-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Push API — Security Identity. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: add-update-alias
+      description: Add or Update an Alias
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: push-security-identity.put
+      with:
+        providerId: tools.providerId
+        organizationId: tools.organizationId
+        orderingId: tools.orderingId
+        mappedIdentityBody: tools.mappedIdentityBody
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-security-identity
+      description: Delete a Security Identity
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: push-security-identity.delete
+      with:
+        providerId: tools.providerId
+        organizationId: tools.organizationId
+        orderingId: tools.orderingId
+        baseIdentityBody: tools.baseIdentityBody
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-update-security-identity
+      description: Add or Update a Security Identity
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: push-security-identity.put
+      with:
+        providerId: tools.providerId
+        organizationId: tools.organizationId
+        orderingId: tools.orderingId
+        identityBody: tools.identityBody
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-update-and-delete-batch
+      description: Add, Update, and/or Delete a Batch of Security Identities
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: push-security-identity.put
+      with:
+        providerId: tools.providerId
+        fileId: tools.fileId
+        organizationId: tools.organizationId
+        orderingId: tools.orderingId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-old-security-identities
+      description: Delete Old Security Identities
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: push-security-identity.delete
+      with:
+        providerId: tools.providerId
+        organizationId: tools.organizationId
+        orderingId: tools.orderingId
+        queueDelay: tools.queueDelay
+      outputParameters:
+      - type: object
+        mapping: $.

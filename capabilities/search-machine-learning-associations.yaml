@@ -182,3 +182,255 @@ capability:
           in: query
           type: integer
           required: true
+  exposes:
+  - type: rest
+    namespace: search-machine-learning-associations-rest
+    port: 8080
+    description: REST adapter for Coveo Search API — Machine learning associations. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/search/v2/admin/pipelines/ml/version
+      name: rest-search-v2-admin-pipelines-ml-version
+      description: REST surface for rest-search-v2-admin-pipelines-ml-version.
+      operations:
+      - method: GET
+        name: mlversion
+        description: Returns the Version of ML Models Supported by the Organization in the Request.
+        call: search-machine-learning-associations.mlversion
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v2/admin/pipelines/{pipelineid}/ml/model/associations
+      name: rest-search-v2-admin-pipelines-pipelineid-ml-model-associations
+      description: REST surface for rest-search-v2-admin-pipelines-pipelineId-ml-model-associations.
+      operations:
+      - method: GET
+        name: listassociationsofpipeline
+        description: List Query Pipeline ML Model Associations
+        call: search-machine-learning-associations.listassociationsofpipeline
+        with:
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: associatemodel
+        description: Associate an Existing Machine Learning Model with an Existing Pipeline.
+        call: search-machine-learning-associations.associatemodel
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v2/admin/pipelines/{pipelineid}/ml/model/associations/bulkget
+      name: rest-search-v2-admin-pipelines-pipelineid-ml-model-associations-bulkget
+      description: REST surface for rest-search-v2-admin-pipelines-pipelineId-ml-model-associations-bulkGet.
+      operations:
+      - method: POST
+        name: bulkgetassociationsofpipeline
+        description: List Query Pipeline ML Model Associations
+        call: search-machine-learning-associations.bulkgetassociationsofpipeline
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v2/admin/pipelines/{pipelineid}/ml/model/associations/validate
+      name: rest-search-v2-admin-pipelines-pipelineid-ml-model-associations-validate
+      description: REST surface for rest-search-v2-admin-pipelines-pipelineId-ml-model-associations-validate.
+      operations:
+      - method: POST
+        name: validatemlassociationoperation
+        description: Validate a Single ML Model Association Operation.
+        call: search-machine-learning-associations.validatemlassociationoperation
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v2/admin/pipelines/{pipelineid}/ml/model/associations/validate/batch
+      name: rest-search-v2-admin-pipelines-pipelineid-ml-model-associations-validate-batch
+      description: REST surface for rest-search-v2-admin-pipelines-pipelineId-ml-model-associations-validate-batch.
+      operations:
+      - method: POST
+        name: validatemlassociationoperations
+        description: Validate a Batch of ML Model Association Operations.
+        call: search-machine-learning-associations.validatemlassociationoperations
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v2/admin/pipelines/{pipelineid}/ml/model/associations/{associationid}
+      name: rest-search-v2-admin-pipelines-pipelineid-ml-model-associations-associationid
+      description: REST surface for rest-search-v2-admin-pipelines-pipelineId-ml-model-associations-associationId.
+      operations:
+      - method: GET
+        name: getassociation
+        description: Get a ML Model Association
+        call: search-machine-learning-associations.getassociation
+        with:
+          associationId: rest.associationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateassociation
+        description: Update ML Model Association
+        call: search-machine-learning-associations.updateassociation
+        with:
+          associationId: rest.associationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: disassociate
+        description: Remove Query Pipeline ML Model Association
+        call: search-machine-learning-associations.disassociate
+        with:
+          associationId: rest.associationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search/v2/admin/pipelines/{pipelineid}/ml/model/associations/{associationid}/position
+      name: rest-search-v2-admin-pipelines-pipelineid-ml-model-associations-associationid-po
+      description: REST surface for rest-search-v2-admin-pipelines-pipelineId-ml-model-associations-associationId-po.
+      operations:
+      - method: PUT
+        name: updateassociationposition
+        description: Update ML Model Association Position
+        call: search-machine-learning-associations.updateassociationposition
+        with:
+          associationId: rest.associationId
+          position: rest.position
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-machine-learning-associations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search API — Machine learning associations. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: returns-version-ml-models-supported
+      description: Returns the Version of ML Models Supported by the Organization in the Request.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-machine-learning-associations.mlversion
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-query-pipeline-ml-model
+      description: List Query Pipeline ML Model Associations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-machine-learning-associations.listassociationsofpipeline
+      with:
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: associate-existing-machine-learning-model
+      description: Associate an Existing Machine Learning Model with an Existing Pipeline.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: search-machine-learning-associations.associatemodel
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-query-pipeline-ml-model-2
+      description: List Query Pipeline ML Model Associations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-machine-learning-associations.bulkgetassociationsofpipeline
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: validate-single-ml-model-association
+      description: Validate a Single ML Model Association Operation.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-machine-learning-associations.validatemlassociationoperation
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: validate-batch-ml-model-association
+      description: Validate a Batch of ML Model Association Operations.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-machine-learning-associations.validatemlassociationoperations
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-ml-model-association
+      description: Get a ML Model Association
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-machine-learning-associations.getassociation
+      with:
+        associationId: tools.associationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-ml-model-association
+      description: Update ML Model Association
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-machine-learning-associations.updateassociation
+      with:
+        associationId: tools.associationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: remove-query-pipeline-ml-model
+      description: Remove Query Pipeline ML Model Association
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: search-machine-learning-associations.disassociate
+      with:
+        associationId: tools.associationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-ml-model-association-position
+      description: Update ML Model Association Position
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-machine-learning-associations.updateassociationposition
+      with:
+        associationId: tools.associationId
+        position: tools.position
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -154,3 +154,150 @@ capability:
           type: string
           description: The context mapping key
           required: true
+  exposes:
+  - type: rest
+    namespace: commerce-context-mapping-configurations-rest
+    port: 8080
+    description: REST adapter for Coveo Commerce API — Context Mapping Configurations. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/commerce/v2/tracking-ids/{trackingid}/context-mappings
+      name: rest-organizations-organizationid-commerce-v2-tracking-ids-trackingid-context-ma
+      description: REST surface for rest-organizations-organizationId-commerce-v2-tracking-ids-trackingId-context-ma.
+      operations:
+      - method: GET
+        name: list
+        description: List Context Mappings
+        call: commerce-context-mapping-configurations.list
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: create2
+        description: Creates a Context Mapping
+        call: commerce-context-mapping-configurations.create2
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/commerce/v2/tracking-ids/{trackingid}/context-mappings/{key}
+      name: rest-organizations-organizationid-commerce-v2-tracking-ids-trackingid-context-ma
+      description: REST surface for rest-organizations-organizationId-commerce-v2-tracking-ids-trackingId-context-ma.
+      operations:
+      - method: GET
+        name: get
+        description: Get Context Mapping
+        call: commerce-context-mapping-configurations.get
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          key: rest.key
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: update
+        description: Update Context Mapping
+        call: commerce-context-mapping-configurations.update
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          key: rest.key
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: delete
+        description: Delete Context Mapping
+        call: commerce-context-mapping-configurations.delete
+        with:
+          organizationId: rest.organizationId
+          trackingId: rest.trackingId
+          key: rest.key
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: commerce-context-mapping-configurations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Commerce API — Context Mapping Configurations. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: list-context-mappings
+      description: List Context Mappings
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-context-mapping-configurations.list
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: creates-context-mapping
+      description: Creates a Context Mapping
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: commerce-context-mapping-configurations.create2
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-context-mapping
+      description: Get Context Mapping
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: commerce-context-mapping-configurations.get
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        key: tools.key
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-context-mapping
+      description: Update Context Mapping
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: commerce-context-mapping-configurations.update
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        key: tools.key
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-context-mapping
+      description: Delete Context Mapping
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: commerce-context-mapping-configurations.delete
+      with:
+        organizationId: tools.organizationId
+        trackingId: tools.trackingId
+        key: tools.key
+      outputParameters:
+      - type: object
+        mapping: $.

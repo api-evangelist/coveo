@@ -124,3 +124,123 @@ capability:
           type: string
           description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
           required: true
+  exposes:
+  - type: rest
+    namespace: authorization-group-realms-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Group Realms. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/groups/{groupid}/realms
+      name: rest-organizations-organizationid-groups-groupid-realms
+      description: REST surface for rest-organizations-organizationId-groups-groupId-realms.
+      operations:
+      - method: GET
+        name: getgrouprealms
+        description: List Realms
+        call: authorization-group-realms.getgrouprealms
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: addgrouprealm
+        description: Add Realm
+        call: authorization-group-realms.addgrouprealm
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/groups/{groupid}/realms/{realmid}
+      name: rest-organizations-organizationid-groups-groupid-realms-realmid
+      description: REST surface for rest-organizations-organizationId-groups-groupId-realms-realmId.
+      operations:
+      - method: GET
+        name: getgrouprealm
+        description: Show Realm
+        call: authorization-group-realms.getgrouprealm
+        with:
+          organizationId: rest.organizationId
+          groupId: rest.groupId
+          realmId: rest.realmId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletegrouprealm
+        description: Destroy Realm
+        call: authorization-group-realms.deletegrouprealm
+        with:
+          organizationId: rest.organizationId
+          realmId: rest.realmId
+          groupId: rest.groupId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-group-realms-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Group Realms. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: list-realms
+      description: List Realms
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-group-realms.getgrouprealms
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-realm
+      description: Add Realm
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: authorization-group-realms.addgrouprealm
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-realm
+      description: Show Realm
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-group-realms.getgrouprealm
+      with:
+        organizationId: tools.organizationId
+        groupId: tools.groupId
+        realmId: tools.realmId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: destroy-realm
+      description: Destroy Realm
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: authorization-group-realms.deletegrouprealm
+      with:
+        organizationId: tools.organizationId
+        realmId: tools.realmId
+        groupId: tools.groupId
+      outputParameters:
+      - type: object
+        mapping: $.

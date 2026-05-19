@@ -34,3 +34,38 @@ capability:
         - name: result
           type: object
           value: $.
+  exposes:
+  - type: rest
+    namespace: authorization-token-certificates-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Token Certificates. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/tokens/certificates
+      name: rest-tokens-certificates
+      description: REST surface for rest-tokens-certificates.
+      operations:
+      - method: GET
+        name: getpubliccertificates
+        description: getpubliccertificates
+        call: authorization-token-certificates.getpubliccertificates
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-token-certificates-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Token Certificates. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: getpubliccertificates
+      description: getpubliccertificates
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-token-certificates.getpubliccertificates
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -78,3 +78,75 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: knowledge-genai-agent-orchestration-api-rest
+    port: 8080
+    description: REST adapter for Coveo Knowledge Generative AI API — Agent Orchestration API. One Spectral-compliant resource
+      per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/agents/{agentid}/answer
+      name: api-preview-organizations-organizationid-agents-agentid-answer
+      description: REST surface for api-preview-organizations-organizationId-agents-agentId-answer.
+      operations:
+      - method: POST
+        name: answer
+        description: Generates an Answer for the Given Configuration
+        call: knowledge-genai-agent-orchestration-api.answer
+        with:
+          organizationId: rest.organizationId
+          agentId: rest.agentId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/agents/{agentid}/follow-up
+      name: api-preview-organizations-organizationid-agents-agentid-follow-up
+      description: REST surface for api-preview-organizations-organizationId-agents-agentId-follow-up.
+      operations:
+      - method: POST
+        name: followup
+        description: Generates an Answer to the Follow-Up Question for the Given Configuration
+        call: knowledge-genai-agent-orchestration-api.followup
+        with:
+          organizationId: rest.organizationId
+          agentId: rest.agentId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: knowledge-genai-agent-orchestration-api-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Knowledge Generative AI API — Agent Orchestration API. One tool per consumed operation,
+      routed inline through this capability's consumes block.
+    tools:
+    - name: generates-answer-given-configuration
+      description: Generates an Answer for the Given Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: knowledge-genai-agent-orchestration-api.answer
+      with:
+        organizationId: tools.organizationId
+        agentId: tools.agentId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: generates-answer-follow-up-question
+      description: Generates an Answer to the Follow-Up Question for the Given Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: knowledge-genai-agent-orchestration-api.followup
+      with:
+        organizationId: tools.organizationId
+        agentId: tools.agentId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

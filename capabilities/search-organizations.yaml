@@ -237,3 +237,348 @@ capability:
           type: string
           description: The unique identifier of the trusted search page URI entry to delete.
           required: true
+  exposes:
+  - type: rest
+    namespace: search-organizations-rest
+    port: 8080
+    description: REST adapter for Coveo Search API — Organizations. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/authentication
+      name: rest-organizations-organizationid-authentication
+      description: REST surface for rest-organizations-organizationId-authentication.
+      operations:
+      - method: GET
+        name: listauthentications
+        description: Lists All Authentication Providers for an Organization
+        call: search-organizations.listauthentications
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/authentication/saml
+      name: rest-organizations-organizationid-authentication-saml
+      description: REST surface for rest-organizations-organizationId-authentication-saml.
+      operations:
+      - method: GET
+        name: listsamlauthentications
+        description: Lists the SAML Authentications for an Organization
+        call: search-organizations.listsamlauthentications
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createsamlauthentication
+        description: Creates a New SAML Authentication in an Organization
+        call: search-organizations.createsamlauthentication
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/authentication/saml/{id}
+      name: rest-organizations-organizationid-authentication-saml-id
+      description: REST surface for rest-organizations-organizationId-authentication-saml-id.
+      operations:
+      - method: GET
+        name: loadsamlauthentication
+        description: Loads a Single SAML Authentication from an Organization
+        call: search-organizations.loadsamlauthentication
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatesamlauthentication
+        description: Updates a SAML Authentication in an Organization
+        call: search-organizations.updatesamlauthentication
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletesamlauthentication
+        description: Deletes a SAML Authentication from an Organization
+        call: search-organizations.deletesamlauthentication
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/authentication/sharepoint
+      name: rest-organizations-organizationid-authentication-sharepoint
+      description: REST surface for rest-organizations-organizationId-authentication-sharepoint.
+      operations:
+      - method: GET
+        name: listsharepointclaimsauthprovider
+        description: List SharePoint Claims Authentication Providers
+        call: search-organizations.listsharepointclaimsauthprovider
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createsharepointauthenticationprovider
+        description: Create SharePoint Claims Authentication Provider
+        call: search-organizations.createsharepointauthenticationprovider
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/authentication/sharepoint/{id}
+      name: rest-organizations-organizationid-authentication-sharepoint-id
+      description: REST surface for rest-organizations-organizationId-authentication-sharepoint-id.
+      operations:
+      - method: GET
+        name: getsharepointauthenticationprovider
+        description: Get SharePoint Claims Authentication Provider
+        call: search-organizations.getsharepointauthenticationprovider
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatesharepointauthenticationprovider
+        description: Update SharePoint Claims Authentication Provider
+        call: search-organizations.updatesharepointauthenticationprovider
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletesharepointauthenticationprovider
+        description: Delete SharePoint Claims Authentication Provider
+        call: search-organizations.deletesharepointauthenticationprovider
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/authentication/trusteduris
+      name: rest-organizations-organizationid-authentication-trusteduris
+      description: REST surface for rest-organizations-organizationId-authentication-trusteduris.
+      operations:
+      - method: GET
+        name: gettrusteduris
+        description: List Trusted Search Page URIs
+        call: search-organizations.gettrusteduris
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: addtrusteduri
+        description: Add Trusted Search Page URI
+        call: search-organizations.addtrusteduri
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/authentication/trusteduris/recentuntrusted
+      name: rest-organizations-organizationid-authentication-trusteduris-recentuntrusted
+      description: REST surface for rest-organizations-organizationId-authentication-trusteduris-recentuntrusted.
+      operations:
+      - method: GET
+        name: getrecentuntrusteduris
+        description: List Recently Seen Search Page URIs That Were Not Trusted.
+        call: search-organizations.getrecentuntrusteduris
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/authentication/trusteduris/{id}
+      name: rest-organizations-organizationid-authentication-trusteduris-id
+      description: REST surface for rest-organizations-organizationId-authentication-trusteduris-id.
+      operations:
+      - method: DELETE
+        name: deletetrusteduri
+        description: Delete Trusted Search Page URI
+        call: search-organizations.deletetrusteduri
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-organizations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search API — Organizations. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: lists-all-authentication-providers-organization
+      description: Lists All Authentication Providers for an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-organizations.listauthentications
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: lists-saml-authentications-organization
+      description: Lists the SAML Authentications for an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-organizations.listsamlauthentications
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: creates-new-saml-authentication-organization
+      description: Creates a New SAML Authentication in an Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: search-organizations.createsamlauthentication
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: loads-single-saml-authentication-organization
+      description: Loads a Single SAML Authentication from an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-organizations.loadsamlauthentication
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: updates-saml-authentication-organization
+      description: Updates a SAML Authentication in an Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-organizations.updatesamlauthentication
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deletes-saml-authentication-organization
+      description: Deletes a SAML Authentication from an Organization
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: search-organizations.deletesamlauthentication
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-sharepoint-claims-authentication-providers
+      description: List SharePoint Claims Authentication Providers
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-organizations.listsharepointclaimsauthprovider
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-sharepoint-claims-authentication-provider
+      description: Create SharePoint Claims Authentication Provider
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: search-organizations.createsharepointauthenticationprovider
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-sharepoint-claims-authentication-provider
+      description: Get SharePoint Claims Authentication Provider
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-organizations.getsharepointauthenticationprovider
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-sharepoint-claims-authentication-provider
+      description: Update SharePoint Claims Authentication Provider
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-organizations.updatesharepointauthenticationprovider
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-sharepoint-claims-authentication-provider
+      description: Delete SharePoint Claims Authentication Provider
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: search-organizations.deletesharepointauthenticationprovider
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-trusted-search-page-uris
+      description: List Trusted Search Page URIs
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-organizations.gettrusteduris
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-trusted-search-page-uri
+      description: Add Trusted Search Page URI
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-organizations.addtrusteduri
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-recently-seen-search-page
+      description: List Recently Seen Search Page URIs That Were Not Trusted.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-organizations.getrecentuntrusteduris
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-trusted-search-page-uri
+      description: Delete Trusted Search Page URI
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: search-organizations.deletetrusteduri
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

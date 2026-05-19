@@ -44,3 +44,44 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: context-context-rest
+    port: 8080
+    description: REST adapter for Coveo Context API — Context. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/machinelearning/user/actions
+      name: rest-organizations-organizationid-machinelearning-user-actions
+      description: REST surface for rest-organizations-organizationId-machinelearning-user-actions.
+      operations:
+      - method: POST
+        name: legacyactionhistory
+        description: Get a Client's Action History in Legacy Format
+        call: context-context.legacyactionhistory
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: context-context-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Context API — Context. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: get-client-s-action-history-legacy
+      description: Get a Client's Action History in Legacy Format
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: context-context.legacyactionhistory
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

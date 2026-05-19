@@ -38,3 +38,42 @@ capability:
         - name: invite_code
           in: cookie
           type: string
+  exposes:
+  - type: rest
+    namespace: authorization-invites-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Invites. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/invites
+      name: rest-invites
+      description: REST surface for rest-invites.
+      operations:
+      - method: GET
+        name: getinvites1
+        description: List Groups Current User Is Invited to
+        call: authorization-invites.getinvites1
+        with:
+          invite_code: rest.invite_code
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-invites-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Invites. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: list-groups-current-user-is
+      description: List Groups Current User Is Invited to
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: authorization-invites.getinvites1
+      with:
+        invite_code: tools.invite_code
+      outputParameters:
+      - type: object
+        mapping: $.

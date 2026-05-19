@@ -46,3 +46,44 @@ capability:
           type: string
           description: The Zendesk Installation Id.
           required: true
+  exposes:
+  - type: rest
+    namespace: search-pages-zendesk-rest
+    port: 8080
+    description: REST adapter for Coveo Search Pages API — Zendesk. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/pages/{organizationid}/zendesk/unlink
+      name: pages-organizationid-zendesk-unlink
+      description: REST surface for pages-organizationID-zendesk-unlink.
+      operations:
+      - method: DELETE
+        name: delete
+        description: Unlink the Zendesk Installation
+        call: search-pages-zendesk.delete
+        with:
+          organizationID: rest.organizationID
+          installationId: rest.installationId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-pages-zendesk-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search Pages API — Zendesk. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: unlink-zendesk-installation
+      description: Unlink the Zendesk Installation
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: search-pages-zendesk.delete
+      with:
+        organizationID: tools.organizationID
+        installationId: tools.installationId
+      outputParameters:
+      - type: object
+        mapping: $.

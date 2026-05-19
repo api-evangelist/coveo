@@ -220,3 +220,258 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: security-cache-security-providers-rest
+    port: 8080
+    description: REST adapter for Coveo Security Cache API — Security Providers. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/securityproviders
+      name: rest-organizations-organizationid-securityproviders
+      description: REST surface for rest-organizations-organizationId-securityproviders.
+      operations:
+      - method: GET
+        name: getsecurityproviders
+        description: Get All Security Providers for an Organization
+        call: security-cache-security-providers.getsecurityproviders
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createsecurityprovider
+        description: Create a Security Provider for an Organization
+        call: security-cache-security-providers.createsecurityprovider
+        with:
+          organizationId: rest.organizationId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/securityproviders/batch/filter
+      name: rest-organizations-organizationid-securityproviders-batch-filter
+      description: REST surface for rest-organizations-organizationId-securityproviders-batch-filter.
+      operations:
+      - method: POST
+        name: getsecurityprovidersbyidswithfilter
+        description: Get and Filter Security Providers by Ids for an Organization.
+        call: security-cache-security-providers.getsecurityprovidersbyidswithfilter
+        with:
+          organizationId: rest.organizationId
+          filter: rest.filter
+          page: rest.page
+          perPage: rest.perPage
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/securityproviders/page
+      name: rest-organizations-organizationid-securityproviders-page
+      description: REST surface for rest-organizations-organizationId-securityproviders-page.
+      operations:
+      - method: GET
+        name: getsecurityprovidersbypage
+        description: Get and Filter Security Providers by Page for an Organization.
+        call: security-cache-security-providers.getsecurityprovidersbypage
+        with:
+          organizationId: rest.organizationId
+          filter: rest.filter
+          page: rest.page
+          perPage: rest.perPage
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/securityproviders/{securityproviderid}
+      name: rest-organizations-organizationid-securityproviders-securityproviderid
+      description: REST surface for rest-organizations-organizationId-securityproviders-securityProviderId.
+      operations:
+      - method: GET
+        name: getsecurityprovider
+        description: Get a Single Security Provider for an Organization
+        call: security-cache-security-providers.getsecurityprovider
+        with:
+          organizationId: rest.organizationId
+          securityProviderId: rest.securityProviderId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: createorupdatesecurityprovider
+        description: Update a Security Provider for an Organization
+        call: security-cache-security-providers.createorupdatesecurityprovider
+        with:
+          organizationId: rest.organizationId
+          securityProviderId: rest.securityProviderId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: removesecurityprovider
+        description: Remove a Security Provider from an Organization
+        call: security-cache-security-providers.removesecurityprovider
+        with:
+          organizationId: rest.organizationId
+          securityProviderId: rest.securityProviderId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/securityproviders/{securityproviderid}/raw
+      name: rest-organizations-organizationid-securityproviders-securityproviderid-raw
+      description: REST surface for rest-organizations-organizationId-securityproviders-securityProviderId-raw.
+      operations:
+      - method: GET
+        name: getsecurityproviderraw
+        description: Get the Raw Configuration of a Security Provider for an Organization
+        call: security-cache-security-providers.getsecurityproviderraw
+        with:
+          organizationId: rest.organizationId
+          securityProviderId: rest.securityProviderId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: createorupdatesecurityproviderraw
+        description: Update the Raw Configuration of a Security Provider for an Organization
+        call: security-cache-security-providers.createorupdatesecurityproviderraw
+        with:
+          organizationId: rest.organizationId
+          securityProviderId: rest.securityProviderId
+          forceUpdate: rest.forceUpdate
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: security-cache-security-providers-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Security Cache API — Security Providers. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: get-all-security-providers-organization
+      description: Get All Security Providers for an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: security-cache-security-providers.getsecurityproviders
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-security-provider-organization
+      description: Create a Security Provider for an Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: security-cache-security-providers.createsecurityprovider
+      with:
+        organizationId: tools.organizationId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-and-filter-security-providers
+      description: Get and Filter Security Providers by Ids for an Organization.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: security-cache-security-providers.getsecurityprovidersbyidswithfilter
+      with:
+        organizationId: tools.organizationId
+        filter: tools.filter
+        page: tools.page
+        perPage: tools.perPage
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-and-filter-security-providers-2
+      description: Get and Filter Security Providers by Page for an Organization.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: security-cache-security-providers.getsecurityprovidersbypage
+      with:
+        organizationId: tools.organizationId
+        filter: tools.filter
+        page: tools.page
+        perPage: tools.perPage
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-single-security-provider-organization
+      description: Get a Single Security Provider for an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: security-cache-security-providers.getsecurityprovider
+      with:
+        organizationId: tools.organizationId
+        securityProviderId: tools.securityProviderId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-security-provider-organization
+      description: Update a Security Provider for an Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: security-cache-security-providers.createorupdatesecurityprovider
+      with:
+        organizationId: tools.organizationId
+        securityProviderId: tools.securityProviderId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: remove-security-provider-organization
+      description: Remove a Security Provider from an Organization
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: security-cache-security-providers.removesecurityprovider
+      with:
+        organizationId: tools.organizationId
+        securityProviderId: tools.securityProviderId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-raw-configuration-security-provider
+      description: Get the Raw Configuration of a Security Provider for an Organization
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: security-cache-security-providers.getsecurityproviderraw
+      with:
+        organizationId: tools.organizationId
+        securityProviderId: tools.securityProviderId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-raw-configuration-security-provider
+      description: Update the Raw Configuration of a Security Provider for an Organization
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: security-cache-security-providers.createorupdatesecurityproviderraw
+      with:
+        organizationId: tools.organizationId
+        securityProviderId: tools.securityProviderId
+        forceUpdate: tools.forceUpdate
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

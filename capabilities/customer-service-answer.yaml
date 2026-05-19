@@ -40,3 +40,42 @@ capability:
           type: object
           description: Request body (JSON).
           required: false
+  exposes:
+  - type: rest
+    namespace: customer-service-answer-rest
+    port: 8080
+    description: REST adapter for Coveo Customer Service API — Answer. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/answer/v1/configs/{configid}/generate
+      name: rest-organizations-organizationid-answer-v1-configs-configid-generate
+      description: REST surface for rest-organizations-organizationId-answer-v1-configs-configId-generate.
+      operations:
+      - method: POST
+        name: getanswer
+        description: Get Answer
+        call: customer-service-answer.getanswer
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: customer-service-answer-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Customer Service API — Answer. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: get-answer
+      description: Get Answer
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: customer-service-answer.getanswer
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

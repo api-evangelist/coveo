@@ -105,3 +105,104 @@ capability:
           type: string
           description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
           required: true
+  exposes:
+  - type: rest
+    namespace: source-metadata-rest
+    port: 8080
+    description: REST adapter for Coveo Source API — Metadata. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/sources/{sourceid}/metadata
+      name: rest-organizations-organizationid-sources-sourceid-metadata
+      description: REST surface for rest-organizations-organizationId-sources-sourceId-metadata.
+      operations:
+      - method: GET
+        name: getsourcemetadatareport
+        description: Retrieve Metadata Report for a Source
+        call: source-metadata.getsourcemetadatareport
+        with:
+          organizationId: rest.organizationId
+          sourceId: rest.sourceId
+          page: rest.page
+          perPage: rest.perPage
+          filter: rest.filter
+          sortBy: rest.sortBy
+          order: rest.order
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createmetadatareport
+        description: Create Metadata Report for a Source
+        call: source-metadata.createmetadatareport
+        with:
+          organizationId: rest.organizationId
+          sourceId: rest.sourceId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/sources/{sourceid}/metadata/status
+      name: rest-organizations-organizationid-sources-sourceid-metadata-status
+      description: REST surface for rest-organizations-organizationId-sources-sourceId-metadata-status.
+      operations:
+      - method: GET
+        name: getsourcemetadatastatus
+        description: Get the Status of Metadata Reports for a Source
+        call: source-metadata.getsourcemetadatastatus
+        with:
+          organizationId: rest.organizationId
+          sourceId: rest.sourceId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: source-metadata-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Source API — Metadata. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: retrieve-metadata-report-source
+      description: Retrieve Metadata Report for a Source
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: source-metadata.getsourcemetadatareport
+      with:
+        organizationId: tools.organizationId
+        sourceId: tools.sourceId
+        page: tools.page
+        perPage: tools.perPage
+        filter: tools.filter
+        sortBy: tools.sortBy
+        order: tools.order
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-metadata-report-source
+      description: Create Metadata Report for a Source
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: source-metadata.createmetadatareport
+      with:
+        organizationId: tools.organizationId
+        sourceId: tools.sourceId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-status-metadata-reports-source
+      description: Get the Status of Metadata Reports for a Source
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: source-metadata.getsourcemetadatastatus
+      with:
+        organizationId: tools.organizationId
+        sourceId: tools.sourceId
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -156,3 +156,244 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: search-interface-configuration-rest
+    port: 8080
+    description: REST adapter for Coveo Search Interface Service API — Configuration. One Spectral-compliant resource per
+      consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/searchinterfaces
+      name: rest-organizations-organizationid-searchinterfaces
+      description: REST surface for rest-organizations-organizationId-searchinterfaces.
+      operations:
+      - method: GET
+        name: getallinterfaceconfig
+        description: List Search Interface Configurations
+        call: search-interface-configuration.getallinterfaceconfig
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createinterfaceconfig
+        description: Create Search Interface Configuration
+        call: search-interface-configuration.createinterfaceconfig
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchinterfaces/projects/interfaces
+      name: rest-organizations-organizationid-searchinterfaces-projects-interfaces
+      description: REST surface for rest-organizations-organizationId-searchinterfaces-projects-interfaces.
+      operations:
+      - method: GET
+        name: getprojectinterfaceconfig
+        description: List Search Interface Configurations in a Project
+        call: search-interface-configuration.getprojectinterfaceconfig
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchinterfaces/{interfaceid}
+      name: rest-organizations-organizationid-searchinterfaces-interfaceid
+      description: REST surface for rest-organizations-organizationId-searchinterfaces-interfaceId.
+      operations:
+      - method: GET
+        name: getinterfaceconfig
+        description: Show Search Interface Configuration
+        call: search-interface-configuration.getinterfaceconfig
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateinterfaceconfig
+        description: Update Search Interface Configuration
+        call: search-interface-configuration.updateinterfaceconfig
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteinterfaceconfig
+        description: Delete Search Interface Configuration
+        call: search-interface-configuration.deleteinterfaceconfig
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchinterfaces/{interfaceid}/accesses
+      name: rest-organizations-organizationid-searchinterfaces-interfaceid-accesses
+      description: REST surface for rest-organizations-organizationId-searchinterfaces-interfaceId-accesses.
+      operations:
+      - method: GET
+        name: getinterfaceaccess
+        description: List Search Interface Accesses
+        call: search-interface-configuration.getinterfaceaccess
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateinterfaceaccess
+        description: Update Search Interface Accesses
+        call: search-interface-configuration.updateinterfaceaccess
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchinterfaces/{interfaceid}/accesses/users
+      name: rest-organizations-organizationid-searchinterfaces-interfaceid-accesses-users
+      description: REST surface for rest-organizations-organizationId-searchinterfaces-interfaceId-accesses-users.
+      operations:
+      - method: GET
+        name: getinterfaceuseraccess
+        description: List Search Interface User Accesses
+        call: search-interface-configuration.getinterfaceuseraccess
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateinterfaceuseraccess
+        description: Update Search Interface User Accesses
+        call: search-interface-configuration.updateinterfaceuseraccess
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: addinterfaceuseraccess
+        description: Add Search Interface User Accesses
+        call: search-interface-configuration.addinterfaceuseraccess
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-interface-configuration-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search Interface Service API — Configuration. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: list-search-interface-configurations
+      description: List Search Interface Configurations
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-configuration.getallinterfaceconfig
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-search-interface-configuration
+      description: Create Search Interface Configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-interface-configuration.createinterfaceconfig
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-search-interface-configurations-project
+      description: List Search Interface Configurations in a Project
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-configuration.getprojectinterfaceconfig
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-search-interface-configuration
+      description: Show Search Interface Configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-configuration.getinterfaceconfig
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-search-interface-configuration
+      description: Update Search Interface Configuration
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-interface-configuration.updateinterfaceconfig
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-search-interface-configuration
+      description: Delete Search Interface Configuration
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: search-interface-configuration.deleteinterfaceconfig
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-search-interface-accesses
+      description: List Search Interface Accesses
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-configuration.getinterfaceaccess
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-search-interface-accesses
+      description: Update Search Interface Accesses
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-interface-configuration.updateinterfaceaccess
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-search-interface-user-accesses
+      description: List Search Interface User Accesses
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-interface-configuration.getinterfaceuseraccess
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-search-interface-user-accesses
+      description: Update Search Interface User Accesses
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: search-interface-configuration.updateinterfaceuseraccess
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-search-interface-user-accesses
+      description: Add Search Interface User Accesses
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: search-interface-configuration.addinterfaceuseraccess
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

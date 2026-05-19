@@ -47,3 +47,46 @@ capability:
           type: object
           description: Request body (JSON).
           required: true
+  exposes:
+  - type: rest
+    namespace: authorization-platform-tokens-rest
+    port: 8080
+    description: REST adapter for Coveo Authorization Server API — Platform Tokens. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/tokens
+      name: rest-organizations-organizationid-tokens
+      description: REST surface for rest-organizations-organizationId-tokens.
+      operations:
+      - method: POST
+        name: generateplatformtoken
+        description: generateplatformtoken
+        call: authorization-platform-tokens.generateplatformtoken
+        with:
+          organizationId: rest.organizationId
+          validityPeriod: rest.validityPeriod
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: authorization-platform-tokens-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Authorization Server API — Platform Tokens. One tool per consumed operation, routed
+      inline through this capability's consumes block.
+    tools:
+    - name: generateplatformtoken
+      description: generateplatformtoken
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: authorization-platform-tokens.generateplatformtoken
+      with:
+        organizationId: tools.organizationId
+        validityPeriod: tools.validityPeriod
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

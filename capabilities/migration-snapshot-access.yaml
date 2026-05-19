@@ -94,3 +94,100 @@ capability:
           type: string
           description: The resource access level to verify.<br/>**Allowed values:**<br/> - `READ`<br/> - `WRITE`
           required: true
+  exposes:
+  - type: rest
+    namespace: migration-snapshot-access-rest
+    port: 8080
+    description: REST adapter for Coveo Migration API — Snapshot Access. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/snapshots/access/resource
+      name: rest-organizations-organizationid-snapshots-access-resource
+      description: REST surface for rest-organizations-organizationId-snapshots-access-resource.
+      operations:
+      - method: GET
+        name: getaccessibleresourcetypes
+        description: Show Resource Access
+        call: migration-snapshot-access.getaccessibleresourcetypes
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/{snapshotid}/access
+      name: rest-organizations-organizationid-snapshots-snapshotid-access
+      description: REST surface for rest-organizations-organizationId-snapshots-snapshotId-access.
+      operations:
+      - method: GET
+        name: gethasresourcesaccess
+        description: Show Access
+        call: migration-snapshot-access.gethasresourcesaccess
+        with:
+          organizationId: rest.organizationId
+          snapshotId: rest.snapshotId
+          snapshotAccessType: rest.snapshotAccessType
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/snapshots/{snapshotid}/access/resources
+      name: rest-organizations-organizationid-snapshots-snapshotid-access-resources
+      description: REST surface for rest-organizations-organizationId-snapshots-snapshotId-access-resources.
+      operations:
+      - method: GET
+        name: getmissingprivilegeaccess
+        description: Show Resources Access
+        call: migration-snapshot-access.getmissingprivilegeaccess
+        with:
+          organizationId: rest.organizationId
+          snapshotId: rest.snapshotId
+          snapshotAccessType: rest.snapshotAccessType
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: migration-snapshot-access-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Migration API — Snapshot Access. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: show-resource-access
+      description: Show Resource Access
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: migration-snapshot-access.getaccessibleresourcetypes
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-access
+      description: Show Access
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: migration-snapshot-access.gethasresourcesaccess
+      with:
+        organizationId: tools.organizationId
+        snapshotId: tools.snapshotId
+        snapshotAccessType: tools.snapshotAccessType
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: show-resources-access
+      description: Show Resources Access
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: migration-snapshot-access.getmissingprivilegeaccess
+      with:
+        organizationId: tools.organizationId
+        snapshotId: tools.snapshotId
+        snapshotAccessType: tools.snapshotAccessType
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -140,3 +140,137 @@ capability:
           type: string
           description: The organization ID
           required: true
+  exposes:
+  - type: rest
+    namespace: search-usage-metrics-raw-metrics-rest
+    port: 8080
+    description: REST adapter for Coveo Search Usage Metrics API — Raw Metrics. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/organizations/{organizationid}/searchusagemetrics/raw/all
+      name: rest-organizations-organizationid-searchusagemetrics-raw-all
+      description: REST surface for rest-organizations-organizationId-searchusagemetrics-raw-all.
+      operations:
+      - method: GET
+        name: listrawmetrics
+        description: Lists the Available Metrics for Assignment
+        call: search-usage-metrics-raw-metrics.listrawmetrics
+        with:
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchusagemetrics/raw/monthly
+      name: rest-organizations-organizationid-searchusagemetrics-raw-monthly
+      description: REST surface for rest-organizations-organizationId-searchusagemetrics-raw-monthly.
+      operations:
+      - method: GET
+        name: getrawmetricsformonth
+        description: Gets Raw Metric Values for a Specific Month
+        call: search-usage-metrics-raw-metrics.getrawmetricsformonth
+        with:
+          minimumQueries: rest.minimumQueries
+          month: rest.month
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchusagemetrics/raw/searchhubs/{searchhub}/daily/{metric}
+      name: rest-organizations-organizationid-searchusagemetrics-raw-searchhubs-searchhub-da
+      description: REST surface for rest-organizations-organizationId-searchusagemetrics-raw-searchhubs-searchHub-da.
+      operations:
+      - method: GET
+        name: getdailyrawmetrics
+        description: Gets Daily Raw Values for a Specific Search Hub and Metric
+        call: search-usage-metrics-raw-metrics.getdailyrawmetrics
+        with:
+          to: rest.to
+          from: rest.from
+          metric: rest.metric
+          searchHub: rest.searchHub
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/organizations/{organizationid}/searchusagemetrics/raw/searchhubs/{searchhub}/monthly/{metric}
+      name: rest-organizations-organizationid-searchusagemetrics-raw-searchhubs-searchhub-mo
+      description: REST surface for rest-organizations-organizationId-searchusagemetrics-raw-searchhubs-searchHub-mo.
+      operations:
+      - method: GET
+        name: getmonthlyrawmetrics
+        description: Gets Monthly Raw Values for a Specific Search Hub and Metric
+        call: search-usage-metrics-raw-metrics.getmonthlyrawmetrics
+        with:
+          to: rest.to
+          from: rest.from
+          metric: rest.metric
+          searchHub: rest.searchHub
+          organizationId: rest.organizationId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: search-usage-metrics-raw-metrics-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Coveo Search Usage Metrics API — Raw Metrics. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: lists-available-metrics-assignment
+      description: Lists the Available Metrics for Assignment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-usage-metrics-raw-metrics.listrawmetrics
+      with:
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: gets-raw-metric-values-specific
+      description: Gets Raw Metric Values for a Specific Month
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-usage-metrics-raw-metrics.getrawmetricsformonth
+      with:
+        minimumQueries: tools.minimumQueries
+        month: tools.month
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: gets-daily-raw-values-specific
+      description: Gets Daily Raw Values for a Specific Search Hub and Metric
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-usage-metrics-raw-metrics.getdailyrawmetrics
+      with:
+        to: tools.to
+        from: tools.from
+        metric: tools.metric
+        searchHub: tools.searchHub
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: gets-monthly-raw-values-specific
+      description: Gets Monthly Raw Values for a Specific Search Hub and Metric
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: search-usage-metrics-raw-metrics.getmonthlyrawmetrics
+      with:
+        to: tools.to
+        from: tools.from
+        metric: tools.metric
+        searchHub: tools.searchHub
+        organizationId: tools.organizationId
+      outputParameters:
+      - type: object
+        mapping: $.
