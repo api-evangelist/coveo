@@ -1,0 +1,28 @@
+{
+  "name": "RestQueryFunction",
+  "structure": {
+    "type": "object",
+    "required": [
+      "fieldName",
+      "function"
+    ],
+    "properties": {
+      "function": {
+        "type": "string",
+        "description": "The mathematical expression whose output should be stored in a dynamic, temporary field.\n\n**Notes:**\n\n- The `function` expression can be defined using the [ExprTk](http://www.partow.net/programming/exprtk/index.html) library syntax, but control and loop structures (e.g., if-then-else, while loop, etc.) are **not** supported.\n- If the `function` expression references a numeric field, enable the **Use cache for computed fields** option on that field to speed up evaluation (see [Manage fields](https://docs.coveo.com/en/1833/))."
+      },
+      "fieldName": {
+        "type": "string",
+        "description": "The name of the dynamic, temporary field in which to store the query function expression output.\n\n**Note:** The `fieldName` value must not correspond to an existing field in the index."
+      },
+      "filter": {
+        "type": "string",
+        "description": "A query expression to specify which result items that the query function should apply to."
+      },
+      "allowMissingFields": {
+        "type": "boolean",
+        "description": "Whether a document should be considered by the query function when one or more referenced fields are missing.\nWhen set to `true`, the missing fields will be assigned a `NaN` value, and the query function should handle `NaN` values by replacing them with a default value.\n\nFor example:\n\n```\nvar price1 := @price == @price ? @price : 0;\nvar price2 := @price_store2 == @price_store2 ? @price_store2 : 0;\nprice1 + price2\n```\n\n> **Note**: To be considered by the query function, a document must have at least one defined field. Documents with all fields missing will be excluded.\n"
+      }
+    }
+  }
+}

@@ -1,0 +1,2058 @@
+swagger: '2.0'
+info:
+  description: Service in charge of CRUD operations for Coveo Cloud hosted search pages
+  title: Coveo Search Pages API
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo Community
+    url: https://answers.coveo.com/
+  version: '1.0'
+host: platform.cloud.coveo.com
+basePath: /
+paths:
+  /pages/{organizationID}/zendesk/unlink:
+    delete:
+      security:
+      - OAuth2:
+        - full
+      description: 'Remove the link between the Zendesk Installation and the Coveo Organization.  <br/><br/>**Required privilege:**
+        Search Pages - Edit<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Zendesk
+      summary: Unlink the Zendesk Installation
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The Zendesk Installation Id.
+        name: installationId
+        in: query
+        required: true
+      responses:
+        '204':
+          description: The organization was successfully unlinked
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages:
+    get:
+      security:
+      - OAuth2:
+        - full
+      description: 'Gets the JSON definition of search pages hosted in the target Coveo Cloud organization. <br/><br/>**Required
+        privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
+      produces:
+      - application/json
+      tags:
+      - Search Pages
+      summary: List Search Pages
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The _name_ metadata value of a specific search page to retrieve (e.g., _mysearchpage_).
+        name: name
+        in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/swaggermodels.ResponsePage'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+    post:
+      security:
+      - OAuth2:
+        - full
+      description: 'Creates a new empty search page in the target Coveo Cloud organization. <br/><br/>**Required privilege:**
+        Search Pages - Create<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "CREATE", "targetId": "*" }```</details>'
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - Search Pages
+      summary: Create Search Page
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - description: The new page metadata.
+        name: payload
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodels.RequestCreateEmptyPage'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponsePage'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/ids:
+    post:
+      security:
+      - OAuth2:
+        - full
+      description: 'Gets the JSON definition of search pages hosted in the target Coveo Cloud organization. <br/><br/>**Required
+        privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
+      produces:
+      - application/json
+      tags:
+      - Search Pages
+      summary: List Search Pages by Ids
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - description: The list of ids
+        name: payload
+        in: body
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/swaggermodels.ResponsePage'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/inappwidget:
+    post:
+      security:
+      - OAuth2:
+        - full
+      description: 'Creates an InAppWidget in a [Coveo Cloud organization](https://docs.coveo.com/en/185). <br/><br/>**Required
+        privilege:** Search Pages - Create<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "CREATE", "targetId": "*" }```</details>'
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - In-App
+      summary: Create InAppWidget
+      parameters:
+      - type: string
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - description: The configuration to use for the new InAppWidget.
+        name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodels.FullInAppWidgetRequestModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/swaggermodels.InAppWidgetCreateResponseBody'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/inappwidget/{pageID}:
+    put:
+      security:
+      - OAuth2:
+        - full
+      description: 'Updates an InAppWidget in a [Coveo Cloud organization](https://docs.coveo.com/en/185). <br/><br/>**Required
+        privilege:** Search Pages - Edit<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - In-App
+      summary: Update InAppWidget
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page whose corresponding InAppWidget should be updated (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - description: The new configuration to use for the updated InAppWidget.
+        name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodels.FullInAppWidgetRequestModel'
+      responses:
+        '204':
+          description: Updated successfully
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/inappwidgets:
+    get:
+      security:
+      - OAuth2:
+        - full
+      description: 'Lists all InAppWidgets in a [Coveo Cloud organization](https://docs.coveo.com/en/185/). <br/><br/>**Required
+        privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
+      produces:
+      - application/json
+      tags:
+      - In-App
+      summary: List InAppWidgets
+      parameters:
+      - type: string
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The 'name' metadata value of the search page whose corresponding InAppWidget should be retrieved (e.g.,
+          'mysearchpage').
+        name: name
+        in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+              - name
+              - title
+              properties:
+                button:
+                  description: The button.
+                  type: object
+                  properties:
+                    buttonCSS:
+                      description: The button's CSS.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.buttonCSSResponseModel'
+                    buttonCSSClasses:
+                      description: The CSS classes of the button.
+                      type: array
+                      items:
+                        type: string
+                      example:
+                      - btn
+                      - mod-primary
+                    buttonColor:
+                      description: The button's colors.
+                      type: object
+                      properties:
+                        color:
+                          description: The value of the button CSS background-color property.
+                          type: string
+                          example: '#2a2aa2'
+                        textColor:
+                          description: The value of the CSS color property.
+                          type: string
+                          example: '#e0e0e0'
+                    buttonFont:
+                      description: The button's font.
+                      type: object
+                      properties:
+                        family:
+                          description: The value of the CSS font-family property.
+                          type: string
+                          example: '''Courier New'', Courier, monospace'
+                        size:
+                          description: The value of the CSS font-size property.
+                          type: string
+                          example: 24px
+                    buttonIcon:
+                      description: The button's icon.
+                      type: object
+                      properties:
+                        value:
+                          description: The icon's stringified HTML.
+                          type: string
+                          default: "\n\t\t<svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\">     \n            <g fill=\"\
+                            currentColor\">         \n                <path d=\"m1,11c0,5.52 4.48,10 10,10s10,-4.48 10,-10s-4.48,-10\
+                            \ -10,-10s-10,4.48 -10,10z\" fill=\"transparent\"></path>         \n                <path d=\"\
+                            m11,22c-6.07,0 -11,-4.935 -11,-11s4.935,-11 11,-11s11,4.935 11,11s-4.935,11 -11,11m0,-20c-4.962,0\
+                            \ -9,4.04 -9,9s4.04,9 9,9s9,-4.04 9,-9s-4.04,-9 -9,-9\"></path>         \n                <path\
+                            \ d=\"m10,17l2,0l0,-2l-2,0l0,2m1,-12.344c-2.21,0 -4,1.79 -4,4l2,0c0,-1.1 0.9,-2 2,-2s2,0.9 2,2c0,2\
+                            \ -3,1.75 -3,5l2,0c0,-2.25 3,-2.5 3,-5c0,-2.21 -1.79,-4 -4,-4\"></path>     \n            </g>\n\
+                            \        </svg>\n\t\t"
+                          example: <svg><circle/></svg>
+                    buttonJS:
+                      description: The button's JavaScript.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.buttonJavaScriptResponseModel'
+                    buttonPosition:
+                      description: The button's text alignment.
+                      type: object
+                      properties:
+                        horizontalPosition:
+                          description: The horizontal alignment of the button.
+                          type: string
+                          default: Right
+                          enum:
+                          - Undefined
+                          - Left
+                          - Center
+                          - Right
+                          example: Center
+                        verticalPosition:
+                          description: 'The vertical alignment of the button.
+
+                            The vertical alignment.'
+                          type: string
+                          default: Bottom
+                          enum:
+                          - Undefined
+                          - Top
+                          - Middle
+                          - Bottom
+                          example: Middle
+                content:
+                  description: The HTML body content of the widget's page.
+                  type: string
+                  example: <main><h1>My page</h1></main>
+                hasToken:
+                  description: Whether or not this InAppWidget has a search token.
+                  type: boolean
+                  default: true
+                  example: true
+                header:
+                  description: The HTML head content of the widget's page.
+                  type: object
+                  properties:
+                    css:
+                      description: The CSS resources of the widget.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+                    javascript:
+                      description: The JavaScript resources of the widget.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+                id:
+                  description: The unique identifier of the search page.
+                  type: string
+                  example: 12b627f9-e3aa-49db-a0f5-5c0c1392e59e
+                lastModified:
+                  description: The time at which the search page was last modified.
+                  type: string
+                  example: '2019-10-31T20:17:35-04:00'
+                name:
+                  description: The unique name of the search page.
+                  type: string
+                  example: My_Page
+                orgId:
+                  description: The unique identifier of the parent Coveo Cloud organization.
+                  type: string
+                  example: mycoveocloudv2organizationg8tp8wu3
+                title:
+                  description: The search page HTML title tag value.
+                  type: string
+                  example: My page
+                token:
+                  description: The [search token](https://docs.coveo.com/en/1346/) to request when initializing the InAppWidget.
+                  allOf:
+                  - $ref: '#/definitions/swaggermodels.searchTokenConfigurationResponseModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorForbidden'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/inappwidgets/ids:
+    post:
+      security:
+      - OAuth2:
+        - full
+      description: 'lists InAppWidgets by ids in a [Coveo Cloud organization](https://docs.coveo.com/en/185/). <br/><br/>**Required
+        privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
+      produces:
+      - application/json
+      tags:
+      - In-App
+      summary: List InAppWidgets by Ids
+      parameters:
+      - type: string
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - description: The list of ids
+        name: payload
+        in: body
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+              - name
+              - title
+              properties:
+                button:
+                  description: The button.
+                  type: object
+                  properties:
+                    buttonCSS:
+                      description: The button's CSS.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.buttonCSSResponseModel'
+                    buttonCSSClasses:
+                      description: The CSS classes of the button.
+                      type: array
+                      items:
+                        type: string
+                      example:
+                      - btn
+                      - mod-primary
+                    buttonColor:
+                      description: The button's colors.
+                      type: object
+                      properties:
+                        color:
+                          description: The value of the button CSS background-color property.
+                          type: string
+                          example: '#2a2aa2'
+                        textColor:
+                          description: The value of the CSS color property.
+                          type: string
+                          example: '#e0e0e0'
+                    buttonFont:
+                      description: The button's font.
+                      type: object
+                      properties:
+                        family:
+                          description: The value of the CSS font-family property.
+                          type: string
+                          example: '''Courier New'', Courier, monospace'
+                        size:
+                          description: The value of the CSS font-size property.
+                          type: string
+                          example: 24px
+                    buttonIcon:
+                      description: The button's icon.
+                      type: object
+                      properties:
+                        value:
+                          description: The icon's stringified HTML.
+                          type: string
+                          default: "\n\t\t<svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\">     \n            <g fill=\"\
+                            currentColor\">         \n                <path d=\"m1,11c0,5.52 4.48,10 10,10s10,-4.48 10,-10s-4.48,-10\
+                            \ -10,-10s-10,4.48 -10,10z\" fill=\"transparent\"></path>         \n                <path d=\"\
+                            m11,22c-6.07,0 -11,-4.935 -11,-11s4.935,-11 11,-11s11,4.935 11,11s-4.935,11 -11,11m0,-20c-4.962,0\
+                            \ -9,4.04 -9,9s4.04,9 9,9s9,-4.04 9,-9s-4.04,-9 -9,-9\"></path>         \n                <path\
+                            \ d=\"m10,17l2,0l0,-2l-2,0l0,2m1,-12.344c-2.21,0 -4,1.79 -4,4l2,0c0,-1.1 0.9,-2 2,-2s2,0.9 2,2c0,2\
+                            \ -3,1.75 -3,5l2,0c0,-2.25 3,-2.5 3,-5c0,-2.21 -1.79,-4 -4,-4\"></path>     \n            </g>\n\
+                            \        </svg>\n\t\t"
+                          example: <svg><circle/></svg>
+                    buttonJS:
+                      description: The button's JavaScript.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.buttonJavaScriptResponseModel'
+                    buttonPosition:
+                      description: The button's text alignment.
+                      type: object
+                      properties:
+                        horizontalPosition:
+                          description: The horizontal alignment of the button.
+                          type: string
+                          default: Right
+                          enum:
+                          - Undefined
+                          - Left
+                          - Center
+                          - Right
+                          example: Center
+                        verticalPosition:
+                          description: 'The vertical alignment of the button.
+
+                            The vertical alignment.'
+                          type: string
+                          default: Bottom
+                          enum:
+                          - Undefined
+                          - Top
+                          - Middle
+                          - Bottom
+                          example: Middle
+                content:
+                  description: The HTML body content of the widget's page.
+                  type: string
+                  example: <main><h1>My page</h1></main>
+                hasToken:
+                  description: Whether or not this InAppWidget has a search token.
+                  type: boolean
+                  default: true
+                  example: true
+                header:
+                  description: The HTML head content of the widget's page.
+                  type: object
+                  properties:
+                    css:
+                      description: The CSS resources of the widget.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+                    javascript:
+                      description: The JavaScript resources of the widget.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+                id:
+                  description: The unique identifier of the search page.
+                  type: string
+                  example: 12b627f9-e3aa-49db-a0f5-5c0c1392e59e
+                lastModified:
+                  description: The time at which the search page was last modified.
+                  type: string
+                  example: '2019-10-31T20:17:35-04:00'
+                name:
+                  description: The unique name of the search page.
+                  type: string
+                  example: My_Page
+                orgId:
+                  description: The unique identifier of the parent Coveo Cloud organization.
+                  type: string
+                  example: mycoveocloudv2organizationg8tp8wu3
+                title:
+                  description: The search page HTML title tag value.
+                  type: string
+                  example: My page
+                token:
+                  description: The [search token](https://docs.coveo.com/en/1346/) to request when initializing the InAppWidget.
+                  allOf:
+                  - $ref: '#/definitions/swaggermodels.searchTokenConfigurationResponseModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorForbidden'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/inappwidgets/projectid:
+    get:
+      security:
+      - OAuth2:
+        - full
+      description: 'lists InAppWidgets by project id in a [Coveo Cloud organization](https://docs.coveo.com/en/185/). <br/><br/>**Required
+        privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
+      produces:
+      - application/json
+      tags:
+      - In-App
+      summary: List InAppWidgets by Project ID
+      parameters:
+      - type: string
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The project id
+        name: projectid
+        in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+              - name
+              - title
+              properties:
+                button:
+                  description: The button.
+                  type: object
+                  properties:
+                    buttonCSS:
+                      description: The button's CSS.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.buttonCSSResponseModel'
+                    buttonCSSClasses:
+                      description: The CSS classes of the button.
+                      type: array
+                      items:
+                        type: string
+                      example:
+                      - btn
+                      - mod-primary
+                    buttonColor:
+                      description: The button's colors.
+                      type: object
+                      properties:
+                        color:
+                          description: The value of the button CSS background-color property.
+                          type: string
+                          example: '#2a2aa2'
+                        textColor:
+                          description: The value of the CSS color property.
+                          type: string
+                          example: '#e0e0e0'
+                    buttonFont:
+                      description: The button's font.
+                      type: object
+                      properties:
+                        family:
+                          description: The value of the CSS font-family property.
+                          type: string
+                          example: '''Courier New'', Courier, monospace'
+                        size:
+                          description: The value of the CSS font-size property.
+                          type: string
+                          example: 24px
+                    buttonIcon:
+                      description: The button's icon.
+                      type: object
+                      properties:
+                        value:
+                          description: The icon's stringified HTML.
+                          type: string
+                          default: "\n\t\t<svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\">     \n            <g fill=\"\
+                            currentColor\">         \n                <path d=\"m1,11c0,5.52 4.48,10 10,10s10,-4.48 10,-10s-4.48,-10\
+                            \ -10,-10s-10,4.48 -10,10z\" fill=\"transparent\"></path>         \n                <path d=\"\
+                            m11,22c-6.07,0 -11,-4.935 -11,-11s4.935,-11 11,-11s11,4.935 11,11s-4.935,11 -11,11m0,-20c-4.962,0\
+                            \ -9,4.04 -9,9s4.04,9 9,9s9,-4.04 9,-9s-4.04,-9 -9,-9\"></path>         \n                <path\
+                            \ d=\"m10,17l2,0l0,-2l-2,0l0,2m1,-12.344c-2.21,0 -4,1.79 -4,4l2,0c0,-1.1 0.9,-2 2,-2s2,0.9 2,2c0,2\
+                            \ -3,1.75 -3,5l2,0c0,-2.25 3,-2.5 3,-5c0,-2.21 -1.79,-4 -4,-4\"></path>     \n            </g>\n\
+                            \        </svg>\n\t\t"
+                          example: <svg><circle/></svg>
+                    buttonJS:
+                      description: The button's JavaScript.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.buttonJavaScriptResponseModel'
+                    buttonPosition:
+                      description: The button's text alignment.
+                      type: object
+                      properties:
+                        horizontalPosition:
+                          description: The horizontal alignment of the button.
+                          type: string
+                          default: Right
+                          enum:
+                          - Undefined
+                          - Left
+                          - Center
+                          - Right
+                          example: Center
+                        verticalPosition:
+                          description: 'The vertical alignment of the button.
+
+                            The vertical alignment.'
+                          type: string
+                          default: Bottom
+                          enum:
+                          - Undefined
+                          - Top
+                          - Middle
+                          - Bottom
+                          example: Middle
+                content:
+                  description: The HTML body content of the widget's page.
+                  type: string
+                  example: <main><h1>My page</h1></main>
+                hasToken:
+                  description: Whether or not this InAppWidget has a search token.
+                  type: boolean
+                  default: true
+                  example: true
+                header:
+                  description: The HTML head content of the widget's page.
+                  type: object
+                  properties:
+                    css:
+                      description: The CSS resources of the widget.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+                    javascript:
+                      description: The JavaScript resources of the widget.
+                      type: array
+                      items:
+                        $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+                id:
+                  description: The unique identifier of the search page.
+                  type: string
+                  example: 12b627f9-e3aa-49db-a0f5-5c0c1392e59e
+                lastModified:
+                  description: The time at which the search page was last modified.
+                  type: string
+                  example: '2019-10-31T20:17:35-04:00'
+                name:
+                  description: The unique name of the search page.
+                  type: string
+                  example: My_Page
+                orgId:
+                  description: The unique identifier of the parent Coveo Cloud organization.
+                  type: string
+                  example: mycoveocloudv2organizationg8tp8wu3
+                title:
+                  description: The search page HTML title tag value.
+                  type: string
+                  example: My page
+                token:
+                  description: The [search token](https://docs.coveo.com/en/1346/) to request when initializing the InAppWidget.
+                  allOf:
+                  - $ref: '#/definitions/swaggermodels.searchTokenConfigurationResponseModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorForbidden'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/project/id:
+    get:
+      security:
+      - OAuth2:
+        - full
+      description: 'lists Pages by project id in a [Coveo Cloud organization](https://docs.coveo.com/en/185/). <br/><br/>**Required
+        privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
+      produces:
+      - application/json
+      tags:
+      - Search Pages
+      summary: List Pages by Project ID
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The _projectid_ of the pages.
+        name: projectid
+        in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/swaggermodels.ResponsePage'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/{pageID}:
+    get:
+      security:
+      - OAuth2:
+        - full
+      description: 'Gets the JSON definition of a specific search page hosted in the target Coveo Cloud organization. <br/><br/>**Required
+        privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
+      produces:
+      - application/json
+      tags:
+      - Search Pages
+      summary: Get Search Page
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page to retrieve (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponsePage'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+    put:
+      security:
+      - OAuth2:
+        - full
+      description: 'Updates metadata pertaining to a specific search page hosted in the target Coveo Cloud organization. <br/><br/>**Required
+        privilege:** Search Pages - Edit<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Update Search Page Metadata
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - description: The updated search page metadata.
+        name: payload
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodels.RequestUpdatePageMetadata'
+      responses:
+        '204':
+          description: The search page was successfully updated.
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+    delete:
+      security:
+      - OAuth2:
+        - full
+      description: 'Delete a specific search page hosted in the target Coveo Cloud organization. <br/><br/>**Required privilege:**
+        Search Pages - Edit<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain":
+        "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Delete a Search Page or in-App Widget
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      responses:
+        '204':
+          description: The search page was successfully deleted
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/{pageID}/header:
+    get:
+      security:
+      - OAuth2:
+        - full
+      description: 'Gets the JSON definition of a specific search page header hosted in the target Coveo Cloud organization.
+        <br/><br/>**Required privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner":
+        "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
+      produces:
+      - application/json
+      tags:
+      - Search Pages
+      summary: Get Search Page Header
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page to view (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/swaggermodels.PageHeaderSharedModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+    put:
+      security:
+      - OAuth2:
+        - full
+      description: 'Updates the order of the JavaScript and CSS resources in the header of a specific search page hosted in
+        the target Coveo Cloud organization. <br/><br/>**Required privilege:** Search Pages - Edit<br/><details><summary>Privilege
+        required</summary>```{ "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Reorder Resources in Search Page Header
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - description: The reordered resources.
+        name: payload
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodels.UpdateHeaderResourcesModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/swaggermodels.PageHeaderSharedModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/{pageID}/header/css:
+    post:
+      security:
+      - OAuth2:
+        - full
+      description: 'Create a CSS resource in the header pertaining to a specific search page hosted in the target Coveo Cloud
+        organization. <br/><br/>**Required privilege:** Search Pages - Edit<br/><details><summary>Privilege required</summary>```{
+        "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Create CSS Resource in a Search Page Header
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - description: The CSS resource to append.
+        name: payload
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/{pageID}/header/css/{resourceName}:
+    put:
+      security:
+      - OAuth2:
+        - full
+      description: 'Updates a CSS resource in the header of a specific search page hosted in the target Coveo Cloud organization.
+        <br/><br/>**Required privilege:** Search Pages - Edit<br/><details><summary>Privilege required</summary>```{ "owner":
+        "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Update CSS Resource in Search Page Header.
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - type: string
+        description: The name identifier of the CSS resource (e.g., 'myresource').
+        name: resourceName
+        in: path
+        required: true
+      - description: The updated CSS resource.
+        name: payload
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorNotFound'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+    delete:
+      security:
+      - OAuth2:
+        - full
+      description: 'Removes a CSS resource from the header of a specific search page hosted in the target Coveo Cloud organization.
+        <br/><br/>**Required privilege:** Search Pages - Edit<br/><details><summary>Privilege required</summary>```{ "owner":
+        "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Delete CSS Resource in Search Page Header.
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - type: string
+        description: The name identifier of the CSS resource (e.g., 'myresource').
+        name: resourceName
+        in: path
+        required: true
+      responses:
+        '204':
+          description: The resource was successfully deleted
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorNotFound'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/{pageID}/header/javascript:
+    post:
+      security:
+      - OAuth2:
+        - full
+      description: 'Appends a JavaScript resource to the header of a specific search page hosted in the target Coveo Cloud
+        organization. <br/><br/>**Required privilege:** Search Pages - Edit<br/><details><summary>Privilege required</summary>```{
+        "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Append JavaScript Resource to Search Page Header.
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - description: The JavaScript resource to append.
+        name: payload
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/{pageID}/header/javascript/{resourceName}:
+    put:
+      security:
+      - OAuth2:
+        - full
+      description: 'Updates a JavaScript resource in the header of a specific search page hosted in the target Coveo Cloud
+        organization. <br/><br/>**Required privilege:** Search Pages - Edit<br/><details><summary>Privilege required</summary>```{
+        "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Update JavaScript Resource in Search Page Header.
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - type: string
+        description: The name identifier of the JavaScript resource (e.g., 'myresource').
+        name: resourceName
+        in: path
+        required: true
+      - description: The updated JavaScript resource.
+        name: payload
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorNotFound'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+    delete:
+      security:
+      - OAuth2:
+        - full
+      description: 'Removes a JavaScript resource from the header of a specific search page hosted in the target Coveo Cloud
+        organization. <br/><br/>**Required privilege:** Search Pages - Edit<br/><details><summary>Privilege required</summary>```{
+        "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Delete JavaScript Resource in Search Page Header.
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - type: string
+        description: The name identifier of the JavaScript resource (e.g., 'myresource').
+        name: resourceName
+        in: path
+        required: true
+      responses:
+        '204':
+          description: The resource was successfully deleted
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorNotFound'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/{pageID}/inappwidget/loader:
+    get:
+      security:
+      - OAuth2:
+        - full
+      description: Retrieves the JavaScript code that can initialize a specific InAppWidget configured in a [Coveo Cloud organization](https://docs.coveo.com/en/185).
+        <br/><br/>**Required privilege:** None<br/>
+      produces:
+      - text/javascript
+      tags:
+      - In-App
+      summary: Get InAppWidget Loader
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) whose InAppWidget
+          loader should be retrieved (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page whose corresponding InAppWidget loader should be retrieved (e.g.,
+          '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - type: string
+        description: <p>An access token (e.g., [search token](https://docs.coveo.com/en/1346/) or API key) the loader should
+          initialize the InAppWidget with.</p><p>If provided, this token:</p><ul><li>Must grant the **Allowed** [access level](https://docs.coveo.com/en/2818/)
+          on the **Execute Queries** [domain](https://docs.coveo.com/en/2819/), and the **Push** access level on the **Analytics
+          Data** domain in the target [organization](https://docs.coveo.com/en/185/).</li><li>Will completely override the
+          search token configuration specified the InAppWidget.</li></ul>
+        name: access_token
+        in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorForbidden'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorNotFound'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+  /rest/organizations/{organizationID}/pages/{pageID}/searchui:
+    get:
+      security:
+      - OAuth2:
+        - full
+      description: 'Gets the identifier of the JavaScript Search Framework version currently being used for a specific search
+        page hosted in the target Coveo Cloud organization, and lists the newer versions this search page can be upgraded
+        to. <br/><br/>**Required privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner":
+        "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Get Search Page JavaScript Search Framework Information
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseSearchUIUpgradeInfo'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+    put:
+      security:
+      - OAuth2:
+        - full
+      description: 'Change the JavaScript Search Framework resources associated to a specific search page hosted in the target
+        Coveo Cloud organization. <br/><br/>**Required privilege:** Search Pages - Edit<br/><details><summary>Privilege required</summary>```{
+        "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "EDIT", "targetId": "*" }```</details>'
+      tags:
+      - Search Pages
+      summary: Change the JavaScript Search Framework Resources
+      parameters:
+      - type: string
+        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+          'mycoveocloudv2organizationg8tp8wu3').
+        name: organizationID
+        in: path
+        required: true
+      - type: string
+        description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        name: pageID
+        in: path
+        required: true
+      - type: string
+        description: The major version identifier of the JavaScript Search Framework version to upgrade the target search
+          page to (e.g., _2_).
+        name: major
+        in: query
+        required: true
+      - type: string
+        description: The minor version identifier of the JavaScript Search Framework version to upgrade the target search
+          page to (e.g., _4710_).
+        name: minor
+        in: query
+        required: true
+      responses:
+        '204':
+          description: The search page was successfully updated.
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+definitions:
+  coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasCSS:
+    type: object
+    properties:
+      InlineContent:
+        type: string
+      Name:
+        type: string
+      URL:
+        type: string
+  coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasJavaScript:
+    type: object
+    properties:
+      InlineContent:
+        type: string
+      Name:
+        type: string
+      URL:
+        type: string
+  swaggermodels.CSSResourceSharedModel:
+    type: object
+    properties:
+      inlineContent:
+        description: The content of the header "style" tag.
+        type: string
+        example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
+      name:
+        description: The identifier of the header "style" tag.
+        type: string
+        example: CoveoSearchUI
+      url:
+        description: The URL of CSS stylesheet.
+        type: string
+        example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
+  swaggermodels.FullInAppWidgetRequestModel:
+    type: object
+    required:
+    - name
+    - searchHub
+    - title
+    properties:
+      buttonCSSClasses:
+        description: The CSS classes of the button.
+        type: string
+        default: btn mod-primary
+        example: myframework-button myframework-button-blue
+      buttonColor:
+        description: The value of the button CSS background-color property.
+        type: string
+        example: '#2a2aa2'
+      buttonFont:
+        description: The value of the button CSS font-family property.
+        type: string
+        example: '''Courier New'', Courier, monospace'
+      buttonFontSize:
+        description: The value of the button CSS font-size property.
+        type: string
+        example: 24px
+      buttonIcon:
+        description: The stringified HTML icon of the button.
+        type: string
+        default: "\n\t\t<svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\">     \n            <g fill=\"currentColor\"\
+          >         \n                <path d=\"m1,11c0,5.52 4.48,10 10,10s10,-4.48 10,-10s-4.48,-10 -10,-10s-10,4.48 -10,10z\"\
+          \ fill=\"transparent\"></path>         \n                <path d=\"m11,22c-6.07,0 -11,-4.935 -11,-11s4.935,-11 11,-11s11,4.935\
+          \ 11,11s-4.935,11 -11,11m0,-20c-4.962,0 -9,4.04 -9,9s4.04,9 9,9s9,-4.04 9,-9s-4.04,-9 -9,-9\"></path>         \n\
+          \                <path d=\"m10,17l2,0l0,-2l-2,0l0,2m1,-12.344c-2.21,0 -4,1.79 -4,4l2,0c0,-1.1 0.9,-2 2,-2s2,0.9\
+          \ 2,2c0,2 -3,1.75 -3,5l2,0c0,-2.25 3,-2.5 3,-5c0,-2.21 -1.79,-4 -4,-4\"></path>     \n            </g>\n       \
+          \ </svg>\n\t\t"
+        example: <svg><circle/></svg>
+      buttonPositionHorizontal:
+        description: The horizontal alignment of the button.
+        type: string
+        default: right
+        enum:
+        - left
+        - center
+        - right
+        example: center
+      buttonPositionVertical:
+        description: The vertical alignment of the button.
+        type: string
+        default: bottom
+        enum:
+        - top
+        - middle
+        - bottom
+        example: middle
+      buttonTargetSelector:
+        description: The selector corresponding to a DOM element that should open the in-app search page when clicked.
+        type: string
+        example: .in-app-portal-target
+      buttonTextColor:
+        description: The value of the button CSS color property.
+        type: string
+        example: '#e0e0e0'
+      filter:
+        description: The [constant query expression ('cq')](https://docs.coveo.com/en/179/) to apply when executing search
+          requests with the token.
+        type: string
+        example: '@source==KnowledgeBase'
+      name:
+        description: The unique name of the search page.
+        type: string
+        example: My_Page
+      queryPipeline:
+        description: The name of the [query pipeline](https://docs.coveo.com/en/180/) to enforce when executing search requests
+          with the token.
+        type: string
+        example: InternalSearch
+      searchHub:
+        description: The name of the [search hub](https://docs.coveo.com/en/1342/) / [origin level 1](https://docs.coveo.com/en/1337/)
+          to pass when executing search requests and logging usage analytics events with the token.
+        type: string
+        example: SupportHub
+      title:
+        description: The search page HTML title tag value.
+        type: string
+        example: My page
+      userDisplayName:
+        description: The userDisplayName to pass when logging usage analytics search events.
+        type: string
+        default: Anonymous
+        example: Alice Smith
+      userGroups:
+        description: The userGroups to pass when logging usage analytics search events. Must be a stringified array in JSON.
+        type: string
+        default: '[]'
+        example: '["Tech support agents", "Employees"]'
+      userIds:
+        description: 'The security identities to impersonate when authenticating a query with this search token. Must be a
+          stringified array in JSON.
+
+          By default, the service uses a single security identity representing an anonymous user.'
+        type: string
+        default: '[{"name":"anonymous@coveo.com","provider":"Email Security Provider"}]'
+        example: '[{"name":"johndoe@coveo.com","provider":"Email Security Provider"}]'
+      validFor:
+        description: The number of milliseconds the search token will remain valid for once it has been created.
+        type: integer
+        default: 86400000
+        maximum: 86400000
+        minimum: 900000
+        example: 3600000
+  swaggermodels.InAppWidgetCreateResponseBody:
+    type: object
+    required:
+    - name
+    - title
+    properties:
+      button:
+        description: The button.
+        type: object
+        properties:
+          buttonCSS:
+            description: The button's CSS.
+            type: array
+            items:
+              $ref: '#/definitions/swaggermodels.buttonCSSResponseModel'
+          buttonCSSClasses:
+            description: The CSS classes of the button.
+            type: array
+            items:
+              type: string
+            example:
+            - btn
+            - mod-primary
+          buttonColor:
+            description: The button's colors.
+            type: object
+            properties:
+              color:
+                description: The value of the button CSS background-color property.
+                type: string
+                example: '#2a2aa2'
+              textColor:
+                description: The value of the CSS color property.
+                type: string
+                example: '#e0e0e0'
+          buttonFont:
+            description: The button's font.
+            type: object
+            properties:
+              family:
+                description: The value of the CSS font-family property.
+                type: string
+                example: '''Courier New'', Courier, monospace'
+              size:
+                description: The value of the CSS font-size property.
+                type: string
+                example: 24px
+          buttonIcon:
+            description: The button's icon.
+            type: object
+            properties:
+              value:
+                description: The icon's stringified HTML.
+                type: string
+                default: "\n\t\t<svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\">     \n            <g fill=\"currentColor\"\
+                  >         \n                <path d=\"m1,11c0,5.52 4.48,10 10,10s10,-4.48 10,-10s-4.48,-10 -10,-10s-10,4.48\
+                  \ -10,10z\" fill=\"transparent\"></path>         \n                <path d=\"m11,22c-6.07,0 -11,-4.935 -11,-11s4.935,-11\
+                  \ 11,-11s11,4.935 11,11s-4.935,11 -11,11m0,-20c-4.962,0 -9,4.04 -9,9s4.04,9 9,9s9,-4.04 9,-9s-4.04,-9 -9,-9\"\
+                  ></path>         \n                <path d=\"m10,17l2,0l0,-2l-2,0l0,2m1,-12.344c-2.21,0 -4,1.79 -4,4l2,0c0,-1.1\
+                  \ 0.9,-2 2,-2s2,0.9 2,2c0,2 -3,1.75 -3,5l2,0c0,-2.25 3,-2.5 3,-5c0,-2.21 -1.79,-4 -4,-4\"></path>     \n\
+                  \            </g>\n        </svg>\n\t\t"
+                example: <svg><circle/></svg>
+          buttonJS:
+            description: The button's JavaScript.
+            type: array
+            items:
+              $ref: '#/definitions/swaggermodels.buttonJavaScriptResponseModel'
+          buttonPosition:
+            description: The button's text alignment.
+            type: object
+            properties:
+              horizontalPosition:
+                description: The horizontal alignment of the button.
+                type: string
+                default: Right
+                enum:
+                - Undefined
+                - Left
+                - Center
+                - Right
+                example: Center
+              verticalPosition:
+                description: 'The vertical alignment of the button.
+
+                  The vertical alignment.'
+                type: string
+                default: Bottom
+                enum:
+                - Undefined
+                - Top
+                - Middle
+                - Bottom
+                example: Middle
+      id:
+        description: The unique identifier of the search page.
+        type: string
+        example: 12b627f9-e3aa-49db-a0f5-5c0c1392e59e
+      lastModified:
+        description: The time at which the search page was last modified.
+        type: string
+        example: '2019-10-31T20:17:35-04:00'
+      name:
+        description: The unique name of the search page.
+        type: string
+        example: My_Page
+      scriptToInclude:
+        description: The &lt;script&gt; HTML tag to include in the head content.
+        type: string
+        default: <script async src='https://platformdev.cloud.coveo.com/rest/organizations/{organizationID}/pages/{pageID}/inappwidget/loader'></script>
+      title:
+        description: The search page HTML title tag value.
+        type: string
+        example: My page
+      token:
+        description: The [search token](https://docs.coveo.com/en/1346/) to request when initializing the InAppWidget.
+        allOf:
+        - $ref: '#/definitions/swaggermodels.searchTokenConfigurationResponseModel'
+  swaggermodels.JavaScriptResourceSharedModel:
+    type: object
+    properties:
+      inlineContent:
+        description: The content of the header "script" tag.
+        type: string
+        example: window.location = 'about:blank';
+      name:
+        description: The identifier of the header "script" tag.
+        type: string
+        example: CoveoSearchUI
+      url:
+        description: The URL of the JavaScript source file.
+        type: string
+        example: https://code.jquery.com/jquery-3.4.1.min.js
+  swaggermodels.PageHeaderSharedModel:
+    type: object
+    properties:
+      css:
+        type: array
+        items:
+          $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+      javascript:
+        type: array
+        items:
+          $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+  swaggermodels.RequestCreateEmptyPage:
+    type: object
+    properties:
+      name:
+        description: A human-readable unique name for this search page. Can contain up to 50 alphanumeric, underscore, and
+          hyphen characters.
+        type: string
+        maxLength: 50
+        minLength: 1
+        example: My-Search-Page_name
+      title:
+        description: A human-readable HTML title for this search page. Can contain up to 200 characters.
+        type: string
+        maxLength: 200
+        minLength: 1
+        example: My Search Page title
+  swaggermodels.RequestUpdatePageMetadata:
+    type: object
+    properties:
+      html:
+        type: string
+      name:
+        description: A human-readable unique name for this search page. Can contain up to 50 alphanumeric, underscore, and
+          hyphen characters.
+        type: string
+        maxLength: 50
+        minLength: 1
+        example: My-Search-Page_name
+      title:
+        description: A human-readable HTML title for this search page. Can contain up to 200 characters.
+        type: string
+        maxLength: 200
+        minLength: 1
+        example: My Search Page title
+  swaggermodels.ResponseApplicationErrorBadRequest:
+    type: object
+    properties:
+      errorCode:
+        type: integer
+        example: 400
+      message:
+        type: string
+  swaggermodels.ResponseApplicationErrorForbidden:
+    type: object
+    properties:
+      errorCode:
+        type: integer
+        example: 403
+      message:
+        type: string
+  swaggermodels.ResponseApplicationErrorInternalServerError:
+    type: object
+    properties:
+      errorCode:
+        type: integer
+        example: 500
+      message:
+        type: string
+  swaggermodels.ResponseApplicationErrorNotFound:
+    type: object
+    properties:
+      errorCode:
+        type: integer
+        example: 404
+      message:
+        type: string
+  swaggermodels.ResponseApplicationErrorUnauthorized:
+    type: object
+    properties:
+      errorCode:
+        type: integer
+        example: 401
+      message:
+        type: string
+  swaggermodels.ResponsePage:
+    type: object
+    properties:
+      css:
+        type: array
+        items:
+          $ref: '#/definitions/coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasCSS'
+      html:
+        type: string
+      id:
+        type: string
+      javascript:
+        type: array
+        items:
+          $ref: '#/definitions/coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasJavaScript'
+      lastModified:
+        type: string
+      name:
+        type: string
+      title:
+        type: string
+  swaggermodels.ResponseSearchUIUpgradeInfo:
+    type: object
+    properties:
+      available:
+        description: Available contains the JavaScript Search Framework versions that can be used for this search page.
+        type: array
+        items:
+          $ref: '#/definitions/swaggermodels.ResponseSearchUIVersion'
+      current:
+        description: Current contains the JavaScript Search Framework version currently being used for this search page.
+        allOf:
+        - $ref: '#/definitions/swaggermodels.ResponseSearchUIVersion'
+      latest:
+        description: Latest contains the most recent JavaScript Search Framework version this search page can be upgrated
+          to.
+        allOf:
+        - $ref: '#/definitions/swaggermodels.ResponseSearchUIVersion'
+      upgradable:
+        description: Upgradable indicates whether this search page can be upgraded to a newer JavaScript Search Framework
+          version.
+        type: boolean
+  swaggermodels.ResponseSearchUIVersion:
+    type: object
+    properties:
+      major:
+        type: string
+      minor:
+        type: string
+  swaggermodels.UpdateHeaderResourcesModel:
+    type: object
+    properties:
+      css:
+        description: The name identifiers of all CSS resources in the search page header, in the desired order.
+        type: array
+        items:
+          type: string
+        example:
+        - myfirstCSS
+        - mysecondCSS
+      javascript:
+        description: The name identifiers of all JavaScript resources in the search page header, in the desired order.
+        type: array
+        items:
+          type: string
+        example:
+        - myfirstJS
+        - mysecondJS
+  swaggermodels.buttonCSSResponseModel:
+    type: object
+    properties:
+      inlineContent:
+        description: The content of the header "style" tag.
+        type: string
+        example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
+      name:
+        description: The identifier of the header "style" tag.
+        type: string
+        example: CoveoSearchUI
+      url:
+        description: The URL of CSS stylesheet.
+        type: string
+        example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
+  swaggermodels.buttonJavaScriptResponseModel:
+    type: object
+    properties:
+      inlineContent:
+        description: The content of the header "script" tag.
+        type: string
+        example: window.location = 'about:blank';
+      name:
+        description: The identifier of the header "script" tag.
+        type: string
+        example: CoveoSearchUI
+      url:
+        description: The URL of the JavaScript source file.
+        type: string
+        example: https://code.jquery.com/jquery-3.4.1.min.js
+  swaggermodels.searchTokenConfigurationResponseModel:
+    type: object
+    required:
+    - pipeline
+    - searchHub
+    properties:
+      filter:
+        description: The [constant query expression ('cq')](https://docs.coveo.com/en/179/) to apply when executing search
+          requests with the token.
+        type: string
+        example: '@source==KnowledgeBase'
+      pipeline:
+        description: The name of the [query pipeline](https://docs.coveo.com/en/180/) to enforce when executing search requests
+          with the token.
+        type: string
+        example: InternalSearch
+      searchHub:
+        description: The name of the [search hub](https://docs.coveo.com/en/1342/) / [origin level 1](https://docs.coveo.com/en/1337/)
+          to pass when executing search requests and logging usage analytics events with the token.
+        type: string
+        example: SupportHub
+      userDisplayName:
+        description: The userDisplayName to pass when logging usage analytics search events.
+        type: string
+        default: Anonymous
+        example: Alice Smith
+      userGroups:
+        description: The userGroups to passed when logging usage analytics search events.
+        type: array
+        items:
+          type: string
+        example:
+        - Tech support agents
+        - Employees
+      userIds:
+        description: 'The security identities impersonated when authenticating this query.
+
+          By default, the service uses a single security identity representing an anonymous user.'
+        type: array
+        items:
+          $ref: '#/definitions/swaggermodels.userIDResponseModel'
+      validFor:
+        description: The number of milliseconds the search token will remain valid for once it has been created.
+        type: integer
+        default: 86400000
+        maximum: 86400000
+        minimum: 900000
+        example: 3600000
+  swaggermodels.userIDResponseModel:
+    type: object
+    properties:
+      name:
+        description: The [security identity](https://docs.coveo.com/en/240/) name.
+        type: string
+        default: anonymous@coveo.com
+        example: johndoe@coveo.com
+      provider:
+        description: The [security identity provider](https://docs.coveo.com/en/242/) the [identity](https://docs.coveo.com/en/240/)
+          is defined in.
+        type: string
+        default: Email Security Provider
+        example: Email Security Provider
+securityDefinitions:
+  OAuth2:
+    type: oauth2
+    flow: implicit
+    authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+    scopes:
+      full: full
+tags:
+- description: Manage Classic hosted search pages
+  name: Search Pages
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations

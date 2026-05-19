@@ -1,0 +1,414 @@
+openapi: 3.0.1
+info:
+  title: Coveo Analytics Admin API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://analytics.cloud.coveo.com/rest/ua
+security:
+- oauth2:
+  - full
+paths:
+  /rest/organizations/{organizationId}/analyticsadmin/v1/properties/{trackingId}:
+    get:
+      tags:
+      - Property API
+      summary: Get a Specific Property.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"TRACKING_ID","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getProperty
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: trackingId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PropertyModel'
+      x-pretty-name: getProperty
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/analyticsadmin/v1/properties/paramId_get
+    put:
+      tags:
+      - Property API
+      summary: Update All Values of a Property.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"TRACKING_ID","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateProperty
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: trackingId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: displayName
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: defaultTimeZone
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: defaultCurrency
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PropertyActionResponse'
+      x-pretty-name: updateProperty
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/analyticsadmin/v1/properties/paramId_put
+    post:
+      tags:
+      - Property API
+      summary: Create a New Property.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"TRACKING_ID","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createProperty
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: trackingId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: displayName
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: defaultTimeZone
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: defaultCurrency
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PropertyActionResponse'
+      x-pretty-name: createProperty
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/analyticsadmin/v1/properties/paramId_post
+    delete:
+      tags:
+      - Property API
+      summary: Delete a Property.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"TRACKING_ID","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: deleteProperty
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: trackingId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PropertyActionResponse'
+      x-pretty-name: deleteProperty
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/analyticsadmin/v1/properties/paramId_delete
+  /rest/organizations/{organizationId}/analyticsadmin/v1/properties:
+    get:
+      tags:
+      - Property API
+      summary: Get All Properties for an Organization.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"TRACKING_ID","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: listProperties
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: params
+        in: query
+        required: true
+        style: form
+        schema:
+          $ref: '#/components/schemas/ListPropertiesRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelPropertyModel'
+      x-pretty-name: listProperties
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/analyticsadmin/v1/properties_get
+    post:
+      tags:
+      - Property API
+      summary: Query Properties for an Organization.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"TRACKING_ID","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: queryProperties
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListPropertiesRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelPropertyModel'
+      x-pretty-name: queryProperties
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: TRACKING_ID
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/analyticsadmin/v1/properties_post
+components:
+  schemas:
+    PropertyActionResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    ListPropertiesRequest:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: The page number for which results should be returned.
+          format: int32
+          example: 1
+          default: 0
+        perPage:
+          type: integer
+          description: The number of results per page.
+          format: int32
+          example: 100
+          default: 50
+        includeDefault:
+          type: boolean
+          description: Whether the default property should be included.
+          example: false
+          default: true
+        filter:
+          type: string
+          description: Optional filter on tracking id or display name.
+          example: default
+        projectId:
+          type: string
+          description: Optional filter on project id, requiring the view projects privilege.
+          example: myproject
+        includeProjectIds:
+          type: boolean
+          description: Whether the projectIds of properties should be included. Note that the default value becomes true,
+            if projectId is specified
+          example: true
+          default: false
+        trackingIds:
+          type: array
+          description: Optional filter on tracking ids.
+          example:
+          - default
+          - my_tracking_id
+          items:
+            type: string
+            description: Optional filter on tracking ids.
+            example: '["default","my_tracking_id"]'
+    PageModelPropertyModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    PropertyModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+          description: The Organization Id that owns the property.
+        trackingId:
+          type: string
+          description: The string used to represent the tracking ID when sending a event request.
+        displayName:
+          type: string
+          description: The name used for the property in the UI.
+        projectIds:
+          type: array
+          description: Optional list of project identifiers the property is mapped to.
+          nullable: true
+          items:
+            type: string
+            description: Optional list of project identifiers the property is mapped to.
+            nullable: true
+        defaultTimeZone:
+          type: string
+          description: Optional time zone used in reporting.
+          nullable: true
+        defaultCurrency:
+          type: string
+          description: Optional currency used in reporting.
+          nullable: true
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

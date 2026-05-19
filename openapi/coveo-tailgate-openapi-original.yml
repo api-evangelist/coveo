@@ -1,0 +1,438 @@
+openapi: 3.0.1
+info:
+  title: Coveo Tailgate API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations
+security:
+- oauth2:
+  - full
+paths:
+  /rest/organizations/{organizationId}/ingestioncontent/source/{sourceId}/objecttypes:
+    get:
+      tags:
+      - Ingestion Content
+      summary: Return Objecttype and Ingestion Content Status for a Source
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"CATALOG","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getObjectTypes
+      parameters:
+      - name: organizationId
+        in: path
+        description: '[organization](https://docs.coveo.com/en/185/)'
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ObjectTypeModel'
+      x-pretty-name: getObjectTypes
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/ingestioncontent/source/paramId/objecttypes_get
+  /rest/organizations/{organizationId}/ingestioncontent/source/{sourceId}/metadatavalues:
+    get:
+      tags:
+      - Ingestion Content
+      summary: Return a List of Metadata Names and Values for a Source
+      description: 'Get a list of [metadata](https://docs.coveo.com/en/218/glossary/metadata) names and values for a given
+        [source](https://docs.coveo.com/en/246/glossary/source) and [objecttype](https://docs.coveo.com/en/1965/index-content/source-item-types).
+        This method uses a limited subset of items, and may miss uncommon metadata.</br></br>**Required privilege:** Catalogs
+        - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"CATALOG","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMetadataValues
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/glossary/source).<br />**Example:**
+          `acmecorporation8tp8wu3-upggxcxbquuzbsn6l3ir3wcoiu`
+        required: true
+        schema:
+          type: string
+      - name: objectType
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MetadataNameAndValuesModel'
+      x-pretty-name: getMetadataValues
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/ingestioncontent/source/paramId/metadatavalues_get
+  /rest/organizations/{organizationId}/ingestioncontent/source/{sourceId}/metadata:
+    get:
+      tags:
+      - Ingestion Content
+      summary: Return Metadata Names for a Source
+      description: 'Get a list of [metadata](https://docs.coveo.com/en/218/glossary/metadata) names for a given [source](https://docs.coveo.com/en/246/glossary/source)
+        and [objecttype](https://docs.coveo.com/en/1965/index-content/source-item-types).</br></br>**Required privilege:**
+        Catalogs - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"CATALOG","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMetadataNames
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/glossary/source).<br />**Example:**
+          `acmecorporation8tp8wu3-upggxcxbquuzbsn6l3ir3wcoiu`
+        required: true
+        schema:
+          type: string
+      - name: objectType
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: version
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/PageModelString'
+                - $ref: '#/components/schemas/MetadataNameModel'
+      x-pretty-name: getMetadataNames
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/ingestioncontent/source/paramId/metadata_get
+  /rest/organizations/{organizationId}/catalogcontent/source/{sourceId}/objecttypes:
+    get:
+      tags:
+      - Catalog Content
+      summary: Return Objecttype and Catalog Content Status for a Source
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"CATALOG","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getObjectTypes_1
+      parameters:
+      - name: organizationId
+        in: path
+        description: '[organization](https://docs.coveo.com/en/185/)'
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ObjectTypeModel'
+      x-pretty-name: getObjectTypes
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/catalogcontent/source/paramId/objecttypes_get
+  /rest/organizations/{organizationId}/catalogcontent/source/{sourceId}/metadatavalues:
+    get:
+      tags:
+      - Catalog Content
+      summary: Return a List of Metadata Names and Values for a Source with Catalog Content
+      description: 'Get a list of [metadata](https://docs.coveo.com/en/218/glossary/metadata) names and values for a given
+        [source](https://docs.coveo.com/en/246/glossary/source) and [objecttype](https://docs.coveo.com/en/1965/index-content/source-item-types).
+        This method uses a limited subset of items, and may miss uncommon metadata.</br></br>**Required privilege:** Catalogs
+        - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"CATALOG","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMetadataValues_1
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/glossary/source).<br />**Example:**
+          `acmecorporation8tp8wu3-upggxcxbquuzbsn6l3ir3wcoiu`
+        required: true
+        schema:
+          type: string
+      - name: objectType
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MetadataNameAndValuesModel'
+      x-pretty-name: getMetadataValues
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/catalogcontent/source/paramId/metadatavalues_get
+  /rest/organizations/{organizationId}/catalogcontent/source/{sourceId}/metadata:
+    get:
+      tags:
+      - Catalog Content
+      summary: Return Metadata Names for a Source with Catalog Content
+      description: 'Get a list of [metadata](https://docs.coveo.com/en/218/glossary/metadata) names for a given [source](https://docs.coveo.com/en/246/glossary/source)
+        and [objecttype](https://docs.coveo.com/en/1965/index-content/source-item-types).</br></br>**Required privilege:**
+        Catalogs - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"CATALOG","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMetadataNames_1
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/glossary/source).<br />**Example:**
+          `acmecorporation8tp8wu3-upggxcxbquuzbsn6l3ir3wcoiu`
+        required: true
+        schema:
+          type: string
+      - name: objectType
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: version
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/PageModelString'
+                - $ref: '#/components/schemas/MetadataNameModel'
+      x-pretty-name: getMetadataNames
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/catalogcontent/source/paramId/metadata_get
+components:
+  schemas:
+    ObjectTypeModel:
+      type: object
+      properties:
+        hasIndexedCatalogContent:
+          type: boolean
+        hasIndexedIngestionContent:
+          type: boolean
+        objectTypeValues:
+          type: array
+          items:
+            type: string
+    MetadataNameAndValuesModel:
+      type: object
+      properties:
+        metadataValuesByName:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    MetadataNameModel:
+      type: object
+      properties:
+        metadataNames:
+          type: array
+          items:
+            type: string
+    PageModelString:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: string
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

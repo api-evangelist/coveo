@@ -1,0 +1,1241 @@
+openapi: 3.0.1
+info:
+  title: Coveo Knowledge Generative AI API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations
+security:
+- oauth2:
+  - full
+paths:
+  /api/preview/organizations/{organizationId}/agents:
+    get:
+      tags:
+      - Agent Configuration API
+      summary: List Agents
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getByPage
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: page
+        in: query
+        description: The zero-based index of the results page to retrieve
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The number of items to return per page
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PaginatedResponseAgent_Response'
+      x-pretty-name: getByPage
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/agents_get
+    post:
+      tags:
+      - Agent Configuration API
+      summary: Create an Agent
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: create
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: X-Skip-Provisioning
+        in: header
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Agent_Request'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Agent_Response'
+      x-pretty-name: create
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/agents_post
+  /api/preview/organizations/{organizationId}/agents/{agentId}/follow-up:
+    post:
+      tags:
+      - Agent Orchestration API
+      summary: Generates an Answer to the Follow-Up Question for the Given Configuration
+      operationId: followUp
+      parameters:
+      - name: organizationId
+        in: path
+        description: The organization id
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: agentId
+        in: path
+        description: The agent id
+        required: true
+        schema:
+          type: string
+          description: The agent id
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompositeModelFollowUpPayload_Request'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/SseEmitter_Response'
+      x-pretty-name: followUp
+      x-ui-operation-id: /api/preview/organizations/paramId/agents/paramId/follow-up_post
+  /api/preview/organizations/{organizationId}/agents/{agentId}/answer:
+    post:
+      tags:
+      - Agent Orchestration API
+      summary: Generates an Answer for the Given Configuration
+      operationId: answer
+      parameters:
+      - name: organizationId
+        in: path
+        description: The organization id
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: agentId
+        in: path
+        description: The agent id
+        required: true
+        schema:
+          type: string
+          description: The agent id
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompositeModelAnswerPayload_Request'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/SseEmitter_Response'
+      x-pretty-name: answer
+      x-ui-operation-id: /api/preview/organizations/paramId/agents/paramId/answer_post
+  /api/preview/organizations/{organizationId}/agents/{agentId}:
+    get:
+      tags:
+      - Agent Configuration API
+      summary: Get an Agent by agentId
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: get
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: agentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Agent_Response'
+      x-pretty-name: get
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/agents/paramId_get
+    delete:
+      tags:
+      - Agent Configuration API
+      summary: Delete an Agent
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: delete
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: agentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: delete
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/agents/paramId_delete
+    patch:
+      tags:
+      - Agent Configuration API
+      summary: Update an Agent
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: update
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: agentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Skip-Provisioning
+        in: header
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentUpdate_Response'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Agent_Response'
+      x-pretty-name: update
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/agents/paramId_patch
+components:
+  schemas:
+    Agent_Request:
+      required:
+      - agentType
+      - followUpEnabled
+      - name
+      - passageRetrievalModelId
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+          description: The name of the Agent
+        description:
+          type: string
+          description: The description of the Agent
+        agentType:
+          type: string
+          description: Agent type
+        passageRetrievalModelId:
+          type: string
+          description: Passage retrieval model identifier
+        answerModelId:
+          type: string
+          description: Answer model identifier
+          deprecated: true
+        followUpModelId:
+          type: string
+          description: Follow-up model identifier
+          deprecated: true
+        numberOfItemsToConsider:
+          maximum: 100
+          minimum: 1
+          type: integer
+          description: The maximum number of items/documents to consider for the Passage Retrieval model
+          format: int32
+        followUpEnabled:
+          type: boolean
+          description: Does the model support follow-up questions. When true, followUpModelId must be provided.
+        behaviors:
+          type: array
+          description: Optional behaviors to persist with the created agent.
+          items:
+            $ref: '#/components/schemas/Behavior_Request'
+      description: An agent configuration
+    Behavior_Request:
+      required:
+      - conditions
+      - obligation
+      type: object
+      properties:
+        obligation:
+          maxLength: 300
+          minLength: 0
+          type: string
+          description: The obligation/instruction that applies when conditions are met.
+        conditions:
+          maxItems: 15
+          minItems: 0
+          type: array
+          description: The list of conditions that must be met for this behavior to apply.
+          items:
+            maxLength: 300
+            minLength: 0
+            type: string
+            description: The list of conditions that must be met for this behavior to apply.
+      description: A behavior that the agent should follow.
+    Agent_Response:
+      required:
+      - agentType
+      - followUpEnabled
+      - name
+      - passageRetrievalModelId
+      type: object
+      properties:
+        id:
+          type: string
+          description: The public UUID for this configuration
+          format: uuid
+        name:
+          minLength: 1
+          type: string
+          description: The name of the Agent
+        description:
+          type: string
+          description: The description of the Agent
+        agentType:
+          type: string
+          description: Agent type
+        passageRetrievalModelId:
+          type: string
+          description: Passage retrieval model identifier
+        answerModelId:
+          type: string
+          description: Answer model identifier
+          deprecated: true
+        followUpModelId:
+          type: string
+          description: Follow-up model identifier
+          deprecated: true
+        numberOfItemsToConsider:
+          maximum: 100
+          minimum: 1
+          type: integer
+          description: The maximum number of items/documents to consider for the Passage Retrieval model
+          format: int32
+        followUpEnabled:
+          type: boolean
+          description: Does the model support follow-up questions. When true, followUpModelId must be provided.
+        status:
+          type: string
+          description: 'Overall status of the Agent.
+
+
+            Possible values:
+
+            - ACTIVE: The agent is active and can be queried.
+
+            - SOON_TO_BE_ARCHIVED: The agent is still available, but will be archived soon if it is not queried.
+
+            - INACTIVE: The agent is not ready to be queried yet.
+
+            - LIMITED: The latest build completed with issues that may affect performance.
+
+            - ARCHIVED: The agent has been archived and is no longer active.
+
+            - BUILD_IN_PROGRESS: A build or rebuild is currently in progress.
+
+            - ERROR: The latest build failed and the issue is customer-visible.
+
+            - NO_MODELS_DEFINED: No underlying models are configured for this agent.
+
+            '
+        behaviors:
+          type: array
+          description: Optional behaviors to persist with the created agent.
+          items:
+            $ref: '#/components/schemas/Behavior_Response'
+        createdDate:
+          type: string
+          description: Creation timestamp in ISO-8601 format
+          format: date-time
+        modifiedDate:
+          type: string
+          description: Last modification timestamp in ISO-8601 format
+          format: date-time
+      description: An agent configuration
+    Behavior_Response:
+      required:
+      - conditions
+      - obligation
+      type: object
+      properties:
+        obligation:
+          maxLength: 300
+          minLength: 0
+          type: string
+          description: The obligation/instruction that applies when conditions are met.
+        conditions:
+          maxItems: 15
+          minItems: 0
+          type: array
+          description: The list of conditions that must be met for this behavior to apply.
+          items:
+            maxLength: 300
+            minLength: 0
+            type: string
+            description: The list of conditions that must be met for this behavior to apply.
+      description: A behavior that the agent should follow.
+    AnalyticsCommerce_Request:
+      required:
+      - country
+      - currency
+      type: object
+      properties:
+        country:
+          pattern: ^[A-Z]{2}$
+          type: string
+          description: ISO 3166 alpha-2 country code.
+          example: US
+        currency:
+          pattern: ^[A-Z]{3}$
+          type: string
+          description: ISO 4217 currency code.
+          example: USD
+      description: Commerce context for the analytics.
+      nullable: true
+    Analytics_Request:
+      type: object
+      properties:
+        capture:
+          type: boolean
+          description: Whether the search API call should be tracked for analytics and ML purposes.
+          nullable: true
+        trackingId:
+          maxLength: 100
+          minLength: 0
+          pattern: ^[a-zA-Z0-9_\-\.]+$
+          type: string
+          description: A value to identify which web property an event is related to.
+          nullable: true
+        clientId:
+          type: string
+          description: A GUID representing the current client.
+          nullable: true
+        documentLocation:
+          maxLength: 1024
+          minLength: 0
+          type: string
+          description: The URL of the page that initiated the search.
+          nullable: true
+        documentReferrer:
+          maxLength: 3000
+          minLength: 0
+          pattern: ^(?:[a-zA-Z][a-zA-Z0-9+.-]*:(?://[^/?#\s]+(?:/[^\s]*)?|(?!//)[^\s]*))?$
+          type: string
+          description: The URL of the referrer page.
+          nullable: true
+        pageId:
+          maxLength: 36
+          minLength: 0
+          type: string
+          description: An identifier for the current page.
+          nullable: true
+        userIp:
+          maxLength: 45
+          minLength: 0
+          type: string
+          description: The IP address of the end user.
+          nullable: true
+        clientRequestId:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: A unique identifier for the client request.
+          nullable: true
+        clientTimestamp:
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}([+-]\d{2}:\d{2}|Z)$
+          type: string
+          description: ISO 8601 timestamp with milliseconds.
+          nullable: true
+        userAgent:
+          maxLength: 1024
+          minLength: 1
+          type: string
+          description: The user agent string of the client browser.
+          nullable: true
+        actionCause:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: The cause of the search action.
+          nullable: true
+        originContext:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The origin context of the search event.
+          nullable: true
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom key-value data. Max 300 properties.
+            nullable: true
+          description: Custom key-value data. Max 300 properties.
+          nullable: true
+        configId:
+          maxLength: 36
+          minLength: 36
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+          type: string
+          description: A lowercase UUID identifying the analytics configuration.
+          nullable: true
+        source:
+          maxItems: 10
+          minItems: 0
+          type: array
+          description: The analytics source identifiers.
+          nullable: true
+          items:
+            pattern: ^.*@.*$
+            type: string
+            description: The analytics source identifiers.
+            nullable: true
+        commerce:
+          $ref: '#/components/schemas/AnalyticsCommerce_Request'
+      description: Analytics parameters to forward to the search API.
+      nullable: true
+    CompositeModelFollowUpPayload_Request:
+      required:
+      - conversationId
+      - conversationToken
+      - q
+      type: object
+      properties:
+        q:
+          minLength: 1
+          type: string
+          description: The query string.
+        conversationId:
+          type: string
+          description: Conversation identifier
+        conversationToken:
+          minLength: 1
+          type: string
+          description: The conversation token received from the /answer response.
+        analytics:
+          $ref: '#/components/schemas/Analytics_Request'
+      description: Payload for sending a follow-up question to the agent.
+    SseEmitter_Response:
+      type: object
+      properties:
+        timeout:
+          type: integer
+          format: int64
+          nullable: true
+    CompositeModelAnswerPayload_Request:
+      required:
+      - q
+      type: object
+      properties:
+        q:
+          maxLength: 50000
+          minLength: 0
+          type: string
+          description: The user question.
+        searchHub:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: The search hub.
+        pipeline:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: The query pipeline name.
+        facets:
+          type: array
+          description: The list of facets.
+          items:
+            $ref: '#/components/schemas/FacetRequest_Request'
+        locale:
+          maxLength: 255
+          minLength: 2
+          type: string
+          description: The user locale preferences.
+        citationsFieldToInclude:
+          maxItems: 255
+          minItems: 0
+          type: array
+          description: The citation fields to include in the response.
+          items:
+            maxLength: 255
+            minLength: 0
+            type: string
+            description: The citation fields to include in the response.
+        recordDebugSession:
+          type: boolean
+          description: Optional. Whether to record debug session data for this conversation. Defaults to false when omitted.
+          default: false
+        context:
+          type: object
+        aq:
+          maxLength: 100000
+          minLength: 0
+          type: string
+          description: The advanced query expression.
+          nullable: true
+        cq:
+          maxLength: 100000
+          minLength: 0
+          type: string
+          description: The constant query expression.
+          nullable: true
+        referrer:
+          type: string
+          description: The URL of the referrer page.
+          nullable: true
+        tab:
+          maxLength: 1024
+          minLength: 0
+          type: string
+          description: The name or identifier of the search tab.
+          nullable: true
+        analytics:
+          $ref: '#/components/schemas/Analytics_Request'
+      description: Payload for getting an answer from an agent.
+    DateRangeFacetRequest_Request:
+      type: object
+      properties:
+        field:
+          maxLength: 254
+          minLength: 1
+          pattern: ^[a-z][a-zA-Z0-9_]*$
+          type: string
+          description: The name of the field on which to base the facet request.
+          example: author
+        facetId:
+          maxLength: 60
+          minLength: 1
+          pattern: ^[A-Za-z0-9_@-]*$
+          type: string
+          description: The unique identifier of the facet in the search interface.
+          example: author-1
+        type:
+          type: string
+          description: The kind of values to request for the facet.
+          default: specific
+          enum:
+          - specific
+          - dateRange
+          - numericalRange
+          - hierarchical
+        filterFacetCount:
+          type: boolean
+          description: Whether to exclude folded result parents when estimating the result count for each facet value.
+        injectionDepth:
+          type: integer
+          description: The maximum number of items to scan for facet values.
+          format: int32
+        isFieldExpanded:
+          type: boolean
+          description: Whether to make this facet request in the context of requesting more facet values.
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting values.
+        resultsMustMatch:
+          type: string
+          description: Specifies how a result must match the selected values.
+          enum:
+          - atLeastOneValue
+          - allValues
+        numberOfValues:
+          type: integer
+          description: The maximum number of facet values to fetch.
+          format: int32
+        freezeCurrentValues:
+          type: boolean
+          description: Whether to include the currentValues array from the facet request in the values array of the corresponding
+            facet response.
+        generateAutomaticRanges:
+          type: boolean
+          description: Whether to automatically generate range values for this facet.
+        sortCriteria:
+          type: string
+          description: The criterion to use for sorting returned facet values.
+          enum:
+          - ascending
+          - descending
+          - occurrences
+          - ascending
+          - descending
+          - occurrences
+        currentValues:
+          type: array
+          description: The values displayed by the facet in the search interface at the moment of the request.
+          items:
+            $ref: '#/components/schemas/DateRangeFacetValue_Request'
+      description: Request facet values representing ranges of dates.
+    DateRangeFacetValue_Request:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        previousState:
+          type: string
+          description: The previous facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting the facet value.
+        endInclusive:
+          type: boolean
+          description: Whether to include the end value in the range.
+        start:
+          pattern: ^\d{4}/\d{2}/\d{2}@\d{1,2}:\d{2}:\d{2}$
+          type: string
+          description: The value to start the range at.
+          example: 2019/01/01@00:00:00
+        end:
+          pattern: ^\d{4}/\d{2}/\d{2}@\d{1,2}:\d{2}:\d{2}$
+          type: string
+          description: The value to end the range at. Must be later than the start value.
+          example: 2019/12/31@23:59:59
+      description: A date range facet value.
+    FacetRequest_Request:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+      description: A facet request. The type property determines the kind of facet values to request.
+      discriminator:
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/SpecificFacetRequest_Request'
+      - $ref: '#/components/schemas/HierarchicalFacetRequest_Request'
+      - $ref: '#/components/schemas/DateRangeFacetRequest_Request'
+      - $ref: '#/components/schemas/NumericalRangeFacetRequest_Request'
+    HierarchicalFacetRequest_Request:
+      type: object
+      properties:
+        field:
+          maxLength: 254
+          minLength: 1
+          pattern: ^[a-z][a-zA-Z0-9_]*$
+          type: string
+          description: The name of the field on which to base the facet request.
+          example: author
+        facetId:
+          maxLength: 60
+          minLength: 1
+          pattern: ^[A-Za-z0-9_@-]*$
+          type: string
+          description: The unique identifier of the facet in the search interface.
+          example: author-1
+        type:
+          type: string
+          description: The kind of values to request for the facet.
+          default: specific
+          enum:
+          - specific
+          - dateRange
+          - numericalRange
+          - hierarchical
+        filterFacetCount:
+          type: boolean
+          description: Whether to exclude folded result parents when estimating the result count for each facet value.
+        injectionDepth:
+          type: integer
+          description: The maximum number of items to scan for facet values.
+          format: int32
+        isFieldExpanded:
+          type: boolean
+          description: Whether to make this facet request in the context of requesting more facet values.
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting values.
+        resultsMustMatch:
+          type: string
+          description: Specifies how a result must match the selected values.
+          enum:
+          - atLeastOneValue
+          - allValues
+        basePath:
+          type: array
+          description: The base path shared by all values for the facet.
+          example:
+          - Doors
+          - Metal
+          items:
+            type: string
+            description: The base path shared by all values for the facet.
+            example: '["Doors","Metal"]'
+        currentValues:
+          type: array
+          description: The values displayed by the facet in the search interface at the moment of the request.
+          items:
+            $ref: '#/components/schemas/HierarchicalFacetValue_Request'
+        filterByBasePath:
+          type: boolean
+          description: Whether to use basePath as a filter for the results.
+        numberOfValues:
+          type: integer
+          description: The maximum number of facet values to fetch.
+          format: int32
+        delimitingCharacter:
+          maxLength: 1
+          minLength: 1
+          type: string
+          description: The character to use to split field values into a hierarchical sequence.
+          default: ;
+        sortCriteria:
+          type: string
+          description: The criterion to use for sorting returned facet values. Unsupported values are deserialized to null
+            and treated as if no sort criteria was specified (ignored).
+          enum:
+          - score
+          - ascending
+          - descending
+          - alphanumeric
+          - alphanumericNatural
+          - occurrences
+          - score
+          - ascending
+          - descending
+          - alphanumeric
+          - alphanumericNatural
+          - occurrences
+      description: Request facet values representing hierarchically structured categories.
+    HierarchicalFacetValue_Request:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        previousState:
+          type: string
+          description: The previous facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting the facet value.
+        value:
+          maxLength: 512
+          minLength: 0
+          type: string
+          description: This represents a single path segment.
+          example: electronics
+        children:
+          type: array
+          description: The children of this hierarchical facet value.
+          items:
+            $ref: '#/components/schemas/HierarchicalFacetValue_Request'
+        retrieveChildren:
+          type: boolean
+          description: Whether to retrieve the children of this hierarchical facet value. Can only be used on leaf values.
+        retrieveCount:
+          type: integer
+          description: The maximum number of children to retrieve for this hierarchical facet value.
+          format: int32
+      description: A hierarchical facet value.
+    NumericalRangeFacetRequest_Request:
+      type: object
+      properties:
+        field:
+          maxLength: 254
+          minLength: 1
+          pattern: ^[a-z][a-zA-Z0-9_]*$
+          type: string
+          description: The name of the field on which to base the facet request.
+          example: author
+        facetId:
+          maxLength: 60
+          minLength: 1
+          pattern: ^[A-Za-z0-9_@-]*$
+          type: string
+          description: The unique identifier of the facet in the search interface.
+          example: author-1
+        type:
+          type: string
+          description: The kind of values to request for the facet.
+          default: specific
+          enum:
+          - specific
+          - dateRange
+          - numericalRange
+          - hierarchical
+        filterFacetCount:
+          type: boolean
+          description: Whether to exclude folded result parents when estimating the result count for each facet value.
+        injectionDepth:
+          type: integer
+          description: The maximum number of items to scan for facet values.
+          format: int32
+        isFieldExpanded:
+          type: boolean
+          description: Whether to make this facet request in the context of requesting more facet values.
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting values.
+        resultsMustMatch:
+          type: string
+          description: Specifies how a result must match the selected values.
+          enum:
+          - atLeastOneValue
+          - allValues
+        numberOfValues:
+          type: integer
+          description: The maximum number of facet values to fetch.
+          format: int32
+        freezeCurrentValues:
+          type: boolean
+          description: Whether to include the currentValues array from the facet request in the values array of the corresponding
+            facet response.
+        generateAutomaticRanges:
+          type: boolean
+          description: Whether to automatically generate range values for this facet.
+        sortCriteria:
+          type: string
+          description: The criterion to use for sorting returned facet values.
+          enum:
+          - ascending
+          - descending
+          - occurrences
+          - ascending
+          - descending
+          - occurrences
+        currentValues:
+          type: array
+          description: The values displayed by the facet in the search interface at the moment of the request.
+          items:
+            $ref: '#/components/schemas/NumericalRangeFacetValue_Request'
+        rangeAlgorithm:
+          type: string
+          description: Determines which algorithm is used to generate the ranges if generateAutomaticRanges is enabled.
+          enum:
+          - equiprobable
+          - even
+      description: Request facet values representing ranges of numbers.
+    NumericalRangeFacetValue_Request:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        previousState:
+          type: string
+          description: The previous facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting the facet value.
+        endInclusive:
+          type: boolean
+          description: Whether to include the end value in the range.
+        start:
+          type: number
+          description: The value to start the range at.
+          example: 0
+        end:
+          type: number
+          description: The value to end the range at. Must be greater than the start value.
+          example: 100
+      description: A numerical range facet value.
+    SpecificFacetRequest_Request:
+      type: object
+      properties:
+        field:
+          maxLength: 254
+          minLength: 1
+          pattern: ^[a-z][a-zA-Z0-9_]*$
+          type: string
+          description: The name of the field on which to base the facet request.
+          example: author
+        facetId:
+          maxLength: 60
+          minLength: 1
+          pattern: ^[A-Za-z0-9_@-]*$
+          type: string
+          description: The unique identifier of the facet in the search interface.
+          example: author-1
+        type:
+          type: string
+          description: The kind of values to request for the facet.
+          default: specific
+          enum:
+          - specific
+          - dateRange
+          - numericalRange
+          - hierarchical
+        filterFacetCount:
+          type: boolean
+          description: Whether to exclude folded result parents when estimating the result count for each facet value.
+        injectionDepth:
+          type: integer
+          description: The maximum number of items to scan for facet values.
+          format: int32
+        isFieldExpanded:
+          type: boolean
+          description: Whether to make this facet request in the context of requesting more facet values.
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting values.
+        resultsMustMatch:
+          type: string
+          description: Specifies how a result must match the selected values.
+          enum:
+          - atLeastOneValue
+          - allValues
+        currentValues:
+          type: array
+          description: The values displayed by the facet in the search interface at the moment of the request.
+          items:
+            $ref: '#/components/schemas/SpecificFacetValue_Request'
+        numberOfValues:
+          type: integer
+          description: The maximum number of facet values to fetch.
+          format: int32
+        freezeCurrentValues:
+          type: boolean
+          description: Whether to include the facet request's currentValues in corresponding facet response's values array.
+        sortCriteria:
+          type: string
+          description: The sort criterion to apply to the returned facet values. Values outside the documented list are accepted
+            but treated as unsupported and deserialized to null, which causes the sort criterion to be omitted and the default
+            behavior to apply.
+          enum:
+          - score
+          - alphanumeric
+          - alphanumericNatural
+          - occurrences
+          - score
+          - alphanumeric
+          - alphanumericNatural
+          - occurrences
+        customSort:
+          type: array
+          description: Facet values that must appear at the top, in this order.
+          items:
+            type: string
+            description: Facet values that must appear at the top, in this order.
+      description: Request facet values representing specific values (e.g., Alice Smith, Bob Jones, etc.).
+    SpecificFacetValue_Request:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        previousState:
+          type: string
+          description: The previous facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting the facet value.
+        value:
+          type: string
+          description: The facet value name.
+          example: Alice Smith
+      description: A specific facet value.
+    AgentUpdate_Response:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the Agent
+        description:
+          type: string
+          description: The description of the Agent
+      description: A partial agent update containing only the mutable metadata fields
+    PaginatedResponseAgent_Response:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination_Response'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agent_Response'
+    Pagination_Response:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+        perPage:
+          type: integer
+          format: int32
+        totalItems:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

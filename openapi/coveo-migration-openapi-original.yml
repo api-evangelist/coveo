@@ -1,0 +1,2923 @@
+openapi: 3.0.1
+info:
+  title: Coveo Migration API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations
+security:
+- oauth2:
+  - full
+paths:
+  /rest/organizations/{organizationId}/vaultentries/{key}:
+    get:
+      tags:
+      - Vault
+      summary: Get a Single Vault Entry
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getVaultEntry
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/VaultEntryModel'
+      x-pretty-name: getVaultEntry
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries/paramId_get
+    put:
+      tags:
+      - Vault
+      summary: Update a Vault Entry
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateVaultEntry
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VaultEntryModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/VaultEntryModel'
+      x-pretty-name: updateVaultEntry
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries/paramId_put
+    delete:
+      tags:
+      - Vault
+      summary: Delete a Vault Entry
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: deleteVaultEntry
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteVaultEntry
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries/paramId_delete
+  /rest/organizations/{organizationId}/vaultentries/fetch:
+    put:
+      tags:
+      - Vault
+      summary: Fetches Vault Entries Referenced in a Specific Snapshot from a Given Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: fetchVaultEntries
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: referenceSnapshotId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: sourceOrganizationId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: fetchStrategy
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - ALL_OR_NOTHING
+          - OVERWRITE
+          - ONLY_MISSING
+          default: ALL_OR_NOTHING
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: fetchVaultEntries
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries/fetch_put
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/synchronization/{synchronizationPlanId}:
+    get:
+      tags:
+      - Snapshot Synchronization
+      summary: Show Synchronization Plan
+      description: 'Shows a snapshot synchronization plan.</br>**Required privileges:**<br/> - `Snapshot - View`<br/> - `Link
+        - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSynchronizationPlan
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `destinationorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: synchronizationPlanId
+        in: path
+        description: The unique identifier of the target synchronization plan.<br/>**Example:** `destinationorganizationg7dg3gd-spnyvuywz6nbnqgujuwtlq2d7e`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SynchronizationPlanModel'
+      x-pretty-name: getSynchronizationPlan
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization/paramId_get
+    put:
+      tags:
+      - Snapshot Synchronization
+      summary: Update Synchronization Plan
+      description: 'Updates a snapshot synchronization plan.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> -
+        `Link - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateSynchronizationPlan
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `destinationorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: synchronizationPlanId
+        in: path
+        description: The unique identifier of the target synchronization plan.<br/>**Example:** `destinationorganizationg7dg3gd-spnyvuywz6nbnqgujuwtlq2d7e`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SynchronizationPlanModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SynchronizationPlanModel'
+      x-pretty-name: updateSynchronizationPlan
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization/paramId_put
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/synchronization/{synchronizationPlanId}/children:
+    put:
+      tags:
+      - Snapshot Synchronization
+      summary: Update Synchronization Plan Children
+      description: 'Updates child resource associations in a synchronization plan given a target parent association.</br>**Required
+        privileges:**<br/> - `Snapshot - Edit`<br/> - `Link - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: computeChildrenOperations
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `destinationorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: synchronizationPlanId
+        in: path
+        description: The unique identifier of the target synchronization plan.<br/>**Example:** `destinationorganizationg7dg3gd-spnyvuywz6nbnqgujuwtlq2d7e`
+        required: true
+        schema:
+          type: string
+      - name: parentResourceType
+        in: query
+        description: The `resourceType` of the parent resource.<br/>**Example:** `QUERY_PIPELINE`
+        required: true
+        schema:
+          type: string
+          enum:
+          - CATALOG_CONFIG
+          - CATALOG
+          - EXTENSION
+          - FIELD
+          - FILTER
+          - INSIGHT_PANEL_INTERFACE
+          - INSIGHT_PANEL_CONFIGURATION
+          - MAPPING
+          - ML_MODEL
+          - ML_MODEL_ASSOCIATION
+          - QUERY_PARAMETER
+          - QUERY_PIPELINE
+          - QUERY_PIPELINE_CONDITION
+          - RANKING_EXPRESSION
+          - RANKING_WEIGHT
+          - RESULT_RANKING
+          - FEATURED_RESULT
+          - SEARCH_PAGE
+          - SECURITY_PROVIDER
+          - SOURCE
+          - STATEMENT_GROUP
+          - SETTING
+          - STOP_WORD
+          - STOREFRONT_ASSOCIATION
+          - SUBSCRIPTION
+          - THESAURUS
+          - TRACKING_ID
+          - TRIGGER
+          - UNKNOWN
+      - name: snapshotParentResourceName
+        in: query
+        description: The `resourceName` of the parent resource.<br/>**Example:** `my_pipeline_aAePCD`
+        required: true
+        schema:
+          type: string
+      - name: targetParentId
+        in: query
+        description: The unique identifier of the parent resource in the target organization.<br/>**Example:** `destinationorganizationg7dg3gd-qvml6dkyvouchhehsjhxxbkgqq`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SynchronizationPlanModel'
+      x-pretty-name: computeChildrenOperations
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization/paramId/children_put
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/synchronization/{synchronizationPlanId}/apply:
+    put:
+      tags:
+      - Snapshot Synchronization
+      summary: Apply Synchronization Plan
+      description: 'Applies a snapshot synchronization plan.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> -
+        `Link - Edit`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: applySynchronizationPlan
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `destinationorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: synchronizationPlanId
+        in: path
+        description: The unique identifier of the target synchronization plan.<br/>**Example:** `destinationorganizationg7dg3gd-spnyvuywz6nbnqgujuwtlq2d7e`
+        required: true
+        schema:
+          type: string
+      - name: overrideExistingLinks
+        in: query
+        description: Whether to use the links in the target synchronization plan to override the ones already existing in
+          the organization if conflicts arise, rather than throwing an error.<br/>**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SynchronizationReportModel'
+      x-pretty-name: applySynchronizationPlan
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization/paramId/apply_put
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/push:
+    put:
+      tags:
+      - Snapshot
+      summary: Push Snapshot to Target Organization
+      description: 'Pushes a snapshot to an organization.</br>**Required privileges:**<br/>- `Snapshot - Edit` in both organizations.<br/>-
+        `View` in the original organization on all [domains](https://docs.coveo.com/en/2819/) targeted by the snapshot.<br
+        /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: pushSnapshot
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: targetOrganizationId
+        in: query
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/) where to send the snapshot.<br/>**Example:**
+          `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: developerNotes
+        in: query
+        description: A note you can attach to your snapshot.<br/>**Example:** `pipeline snapshot`
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: pushSnapshot
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/push_put
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/dryrun:
+    put:
+      tags:
+      - Snapshot
+      summary: Validate Snapshot
+      description: 'Checks the effects of applying a snapshot to an organization.</br>**Required privileges:**<br/> - `Snapshot
+        - Edit`<br/> - `View` on all domains corresponding to the resources targeted by the snapshot<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: dryrun
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: deleteMissingResources
+        in: query
+        description: Whether to simulate the deletion of organization resources not present in the snapshot.<br/>**Default:**
+          `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: deletionScope
+        in: query
+        description: '**Note:** only applies when `deleteMissingResources` is set to `true`.<br/>The scope of the resources
+          on which to calculate deletions.<br/>**Default:** `ONLY_TYPES_FROM_SNAPSHOT`'
+        required: false
+        schema:
+          type: string
+          enum:
+          - ALL_MANAGED_RESOURCES
+          - ONLY_TYPES_FROM_SNAPSHOT
+          default: ONLY_TYPES_FROM_SNAPSHOT
+      - name: performAutoSynchronization
+        in: query
+        description: Whether to automatically synchronize resources in the snapshot with corresponding organization resources.<br/>**Default:**
+          `true`
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: autoSynchronizationThreshold
+        in: query
+        description: If autoSynchronization is set to true, this score controls how lenient the pairing of values will be.<br/>The
+          value should be set to 1.00 or lower.  A value of 1 will require an exact match for synchronization of fields.
+        required: false
+        schema:
+          type: number
+          format: float
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ReportModel'
+      x-pretty-name: dryrun
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/dryrun_put
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/apply:
+    put:
+      tags:
+      - Snapshot
+      summary: Apply Snapshot
+      description: 'Applies a snapshot to an organization.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> - `Edit`
+        on all domains corresponding to the resources targeted by the snapshot<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: apply
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: deleteMissingResources
+        in: query
+        description: Whether to delete organization resources not present in the snapshot.<br/>**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: deletionScope
+        in: query
+        description: '**Note:** only applies when `deleteMissingResources` is set to `true`.<br/>The scope of the resources
+          on which to calculate deletions.<br/>**Default:** `ONLY_TYPES_FROM_SNAPSHOT`'
+        required: false
+        schema:
+          type: string
+          enum:
+          - ALL_MANAGED_RESOURCES
+          - ONLY_TYPES_FROM_SNAPSHOT
+          default: ONLY_TYPES_FROM_SNAPSHOT
+      - name: isTransient
+        in: query
+        description: Whether to delete the snapshot after it has been applied.<br/>**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: validationRequired
+        in: query
+        description: Whether to check the effects of applying the snapshot before actually applying it.When this parameter
+          is set to true, if an operation is found to be invalid during the validation, the service stops and returns an error
+          report.<br/>**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: performAutoSynchronization
+        in: query
+        description: Whether to automatically synchronize resources in the snapshot with corresponding organization resources.<br/>**Default:**
+          `true`
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: autoSynchronizationThreshold
+        in: query
+        description: If autoSynchronization is set to true, this score controls how lenient the pairing of values will be.<br/>The
+          value should be set to 1.00 or lower.  A value of 1 will require an exact match for synchronization of fields.
+        required: false
+        schema:
+          type: number
+          format: float
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ReportModel'
+      x-pretty-name: apply
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/apply_put
+  /rest/organizations/{organizationId}/links/{linkId}:
+    get:
+      tags:
+      - Link
+      summary: Show Link
+      description: 'Shows a link in an organization.</br>**Required privilege:**` Link - View`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getLink
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: linkId
+        in: path
+        description: The unique identifier of the target link.<br/>**Example:** `ufacpg3aoi63vxoy6qoyhocfuy`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LinkModel'
+      x-pretty-name: getLink
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: LINK
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/links/paramId_get
+    put:
+      tags:
+      - Link
+      summary: Edit Link
+      description: 'Edits a link in an organization.</br>**Required privilege:**` Link - Edit`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateLink
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: linkId
+        in: path
+        description: The unique identifier of the target link.<br/>**Example:** `ufacpg3aoi63vxoy6qoyhocfuy`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LinkModel'
+      x-pretty-name: updateLink
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/links/paramId_put
+    delete:
+      tags:
+      - Link
+      summary: Delete Link
+      description: 'Deletes a link in an organization.</br>**Required privilege:**` Link - Edit`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: deleteLink
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: linkId
+        in: path
+        description: The unique identifier of the target link.<br/>**Example:** `ufacpg3aoi63vxoy6qoyhocfuy`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteLink
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/links/paramId_delete
+  /rest/organizations/{organizationId}/links/batch:
+    put:
+      tags:
+      - Link
+      summary: Edit Links
+      description: 'Edits a batch of links in an organization.</br>**Required privilege:**` Link - Edit`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateLinkBatch
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The link definitions.
+              items:
+                $ref: '#/components/schemas/LinkModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LinkModel'
+      x-pretty-name: updateLinkBatch
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/links/batch_put
+    post:
+      tags:
+      - Link
+      summary: Create Links
+      description: 'Creates a batch of links in an organization.</br>**Required privilege:**` Link - Edit`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createLinkBatch
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The link definitions.
+              items:
+                $ref: '#/components/schemas/LinkModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LinkModel'
+      x-pretty-name: createLinkBatch
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: LINK
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/links/batch_post
+    delete:
+      tags:
+      - Link
+      summary: Delete Links
+      description: 'Deletes a batch of links in an organization.</br>**Required privilege:**` Link - Edit`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: deleteLinkBatch
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: linkIds
+        in: query
+        description: The unique identifier of the target links.<br/>To send multiple ids, either concatenate with `,` or send
+          multiple query parameters.For example, appending `?ids=link1,link2` is equivalent to appending `?ids=link1&ids=link2`.
+        required: true
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteLinkBatch
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/links/batch_delete
+  /rest/organizations/{organizationId}/vaultentries:
+    get:
+      tags:
+      - Vault
+      summary: Get All Vault Entries for an Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAllVaultEntries
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelVaultEntryModel'
+      x-pretty-name: getAllVaultEntries
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries_get
+    post:
+      tags:
+      - Vault
+      summary: Create a Vault Entry
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createVaultEntry
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VaultEntryModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/VaultEntryModel'
+      x-pretty-name: createVaultEntry
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries_post
+  /rest/organizations/{organizationId}/snapshots:
+    get:
+      tags:
+      - Snapshot
+      summary: List Snapshots
+      description: 'Lists the snapshots in an [organization](https://docs.coveo.com/en/185/).</br>**Required privilege:**
+        `Snapshot - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAllSnapshots
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: includeReports
+        in: query
+        description: Whether to include snapshot reports in the response.<br/>**Default:** `true`
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: sortingOrder
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - ASC
+          - DESC
+          default: ASC
+      - name: sortingType
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - CREATED_DATE
+          - DEVELOPER_NOTE
+          - CREATED_BY
+          - ORIGIN_ID
+          default: CREATED_DATE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnapshotModel'
+      x-pretty-name: getAllSnapshots
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots_get
+    post:
+      tags:
+      - Snapshot
+      summary: Create Snapshot from Configuration
+      description: 'Creates a snapshot from a configuration.</br>**Required privilege:**` Snapshot - Edit`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"{snapshotId}"}
+
+        ```
+
+        </details>'
+      operationId: createSnapshot
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnapshotModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SnapshotModel'
+      x-pretty-name: createSnapshot
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '{snapshotId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '{snapshotId}'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots_post
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/synchronization:
+    post:
+      tags:
+      - Snapshot Synchronization
+      summary: Create Synchronization Plan
+      description: 'Creates a snapshot synchronization plan.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> -
+        `Link - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createSynchronizationPlan
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `destinationorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SynchronizationPlanModel'
+      x-pretty-name: createSynchronizationPlan
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization_post
+  /rest/organizations/{organizationId}/snapshots/self:
+    post:
+      tags:
+      - Snapshot
+      summary: Create Organization Snapshot
+      description: 'Creates a snapshot of an organization and optionally sends it to another organization.</br>**Required
+        privileges:**<br/> - `Snapshot - Edit`<br/> - `View` on all domains corresponding to the resources to include in the
+        snapshot.<br>- If exporting to another organization, you also need `Snapshot - Edit` privilege in that target organization.<br
+        /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createSnapshotFromSelf
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: targetOrganizationId
+        in: query
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/) where to send the snapshot.<br/>**Example:**
+          `destinationorganizationg7dg3gd`<br/>By default, the snapshot remains in the original organization.
+        required: false
+        schema:
+          type: string
+      - name: developerNotes
+        in: query
+        description: A note you can attach to your snapshot.<br/>**Example:** `pipeline snapshot`
+        required: false
+        schema:
+          type: string
+      - name: includeChildrenResources
+        in: query
+        description: Whether to include child resources in the snapshot.<br/>For example, when creating a snapshot of a query
+          pipeline resource, if the `includeChildrenResources` parameter is set to true, the [pipeline's statements](https://docs.coveo.com/en/236/)
+          will be included in the snapshot.<br/>**Default:** `true`
+        required: false
+        schema:
+          type: boolean
+          default: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportConfigurationModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SnapshotModel'
+      x-pretty-name: createSnapshotFromSelf
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/self_post
+  /rest/organizations/{organizationId}/snapshots/file:
+    post:
+      tags:
+      - Snapshot
+      summary: Create Snapshot from File
+      description: 'Creates a snapshot from a file containing the configuration (or multiple files zipped into one).</br>**Required
+        privilege:** `Snapshot - Edit`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createSnapshotFromFile
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotFileType
+        in: query
+        description: 'The type of the file containing the configuration.<br/>**Possible values:**<br/> - `JSON`: the configuration
+          is in one single JSON file.<br/> - `ZIP`: the configuration is separated into several JSON files, each containing
+          one or more resources, without overlap between files'
+        required: true
+        schema:
+          type: string
+          enum:
+          - JSON
+          - ZIP
+      - name: developerNotes
+        in: query
+        description: A note you can attach to your snapshot.<br/>**Example:** `pipeline snapshot`
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: The file containing the configuration.
+                  format: binary
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnapshotModel'
+      x-pretty-name: createSnapshotFromFile
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/file_post
+  /rest/organizations/{organizationId}/links:
+    get:
+      tags:
+      - Link
+      summary: List Links
+      description: 'Lists the [links](https://docs.coveo.com/en/3355) in an [organization](https://docs.coveo.com/en/185/).</br>**Required
+        privilege:**` Link - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAllLinks
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: ResourceType
+        in: query
+        description: The resource type with which to filter results. In other words, when this parameter is specified, the
+          service only returns links containing the target resource type.<br/>By default, the service returns all links.
+        required: false
+        schema:
+          type: string
+          enum:
+          - CATALOG_CONFIG
+          - CATALOG
+          - EXTENSION
+          - FIELD
+          - FILTER
+          - INSIGHT_PANEL_INTERFACE
+          - INSIGHT_PANEL_CONFIGURATION
+          - MAPPING
+          - ML_MODEL
+          - ML_MODEL_ASSOCIATION
+          - QUERY_PARAMETER
+          - QUERY_PIPELINE
+          - QUERY_PIPELINE_CONDITION
+          - RANKING_EXPRESSION
+          - RANKING_WEIGHT
+          - RESULT_RANKING
+          - FEATURED_RESULT
+          - SEARCH_PAGE
+          - SECURITY_PROVIDER
+          - SOURCE
+          - STATEMENT_GROUP
+          - SETTING
+          - STOP_WORD
+          - STOREFRONT_ASSOCIATION
+          - SUBSCRIPTION
+          - THESAURUS
+          - TRACKING_ID
+          - TRIGGER
+          - UNKNOWN
+      - name: page
+        in: query
+        description: The 0-based number of the page of results to fetch.<br/>**Default:** `0`
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: pageSize
+        in: query
+        description: The number of results to fetch per page.<br/>**Default:** `1000`
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelLinkModel'
+      x-pretty-name: getAllLinks
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: LINK
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/links_get
+    post:
+      tags:
+      - Link
+      summary: Create Link
+      description: 'Creates a link in an organization.</br>**Required privilege:**` Link - Edit`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createLink
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LinkModel'
+      x-pretty-name: createLink
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: LINK
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/links_post
+    delete:
+      tags:
+      - Link
+      summary: Delete Links
+      description: 'Deletes a link in an organization.</br>**Required privilege:**` Link - Edit`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: deleteAllLinks
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteAllLinks
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/links_delete
+  /rest/organizations/{organizationId}/vaultentries/missing:
+    get:
+      tags:
+      - Vault
+      summary: Retrieve State of Vault Entries for Specified Snapshot
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSnapshotVaultEntryState
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SnapshotVaultEntryState'
+      x-pretty-name: getSnapshotVaultEntryState
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries/missing_get
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}:
+    get:
+      tags:
+      - Snapshot
+      summary: Show Snapshot
+      description: 'Shows a snapshot in an organization.</br>**Required privilege:** `Snapshot - View`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSnapshot
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: includeReports
+        in: query
+        description: Whether to include reports with the snapshot.<br/>**Default:** `true`
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: reportInclusion
+        in: query
+        description: 'The level of detail of the report.<br/>**Possible values:**<br/> - `NONE`: no report.<br/> - `SUMMARY`:
+          only report on the latest operation of every kind (dry run, application, synchronization, diff report generation).<br/>
+          - `ALL`: all reports.<br/>**Default:** `SUMMARY`'
+        required: false
+        schema:
+          type: string
+          enum:
+          - NONE
+          - SUMMARY
+          - ALL
+          default: SUMMARY
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SnapshotModel'
+      x-pretty-name: getSnapshot
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId_get
+    delete:
+      tags:
+      - Snapshot
+      summary: Delete Snapshot
+      description: 'Deletes a snapshot in an organization.</br>**Required privilege:** `Snapshot - Edit`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: deleteSnapshot
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteSnapshot
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId_delete
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/url:
+    get:
+      tags:
+      - Snapshot
+      summary: Create URL to Retrieve Snapshot Content
+      description: 'Creates a URL from which to retrieve the content of a snapshot.</br>**Required privileges:**<br/>- `Snapshot
+        - View`<br/>- `View` on all domains corresponding to the resources included in the snapshot<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: generatePresignedUrl
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: contentType
+        in: query
+        description: 'The version of the snapshot to show.<br/>**Possible values:**<br/> - `PRIMARY`: The actual snapshot
+          content.<br/> - `CURRENT_STATE`: The resources targeted by the snapshot as they were in the target organization
+          itself at the moment of the last dry run operation. This is useful to compare with the actual snapshot content (`PRIMARY`)
+          before applying it.<br/>**Default:** `PRIMARY`'
+        required: false
+        schema:
+          type: string
+          enum:
+          - PRIMARY
+          - CURRENT_STATE
+          default: PRIMARY
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UrlWithExpirationModel'
+      x-pretty-name: generatePresignedUrl
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/url_get
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/diff:
+    get:
+      tags:
+      - Snapshot
+      summary: Show Snapshot Diff Report
+      description: 'Shows the diff report for the target snapshot and dry-run report.</br>**Required privilege:** `Snapshot
+        - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: diff
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: relativeReportId
+        in: query
+        description: The unique identifier of the dry-run operation report associated with the target diff report.
+        required: true
+        schema:
+          type: string
+      - name: numberOfLinesMax
+        in: query
+        description: Maximum number of lines before the diff is downloaded to a file.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DiffGenerationReportModel'
+      x-pretty-name: diff
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/diff_get
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/content:
+    get:
+      tags:
+      - Snapshot
+      summary: Retrieve Snapshot Content
+      description: 'Retrieves a ZIP file holding the content of the target snapshot, in the target format.</br>**Required
+        privileges:**<br/>- `Snapshot - View`<br/>- `View` on all domains corresponding to the resources included in the snapshot<br
+        /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getArchivedSnapshotContent
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: contentFormat
+        in: query
+        description: The format of the snapshot content.<br> **FLAT:** Content unified into a single file<br>**SPLIT_PER_TYPE:**
+          Content split into one file per resource type
+        required: false
+        schema:
+          type: string
+          enum:
+          - FLAT
+          - SPLIT_PER_TYPE
+          default: FLAT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/zip:
+              schema:
+                $ref: '#/components/schemas/StreamingResponseBody'
+      x-pretty-name: getArchivedSnapshotContent
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/content_get
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/access:
+    get:
+      tags:
+      - Snapshot Access
+      summary: Show Access
+      description: 'Shows whether the authenticated user has the specified access level (i.e., read or write) to the content
+        of the target snapshot.<br/>**Required privilege:** `Snapshot - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getHasResourcesAccess
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: snapshotAccessType
+        in: query
+        description: The resource access level to verify.<br/>**Allowed values:**<br/> - `READ`<br/> - `WRITE`
+        required: true
+        schema:
+          type: string
+          enum:
+          - READ
+          - WRITE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SnapshotAccessModel'
+      x-pretty-name: getHasResourcesAccess
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/access_get
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/access/resources:
+    get:
+      tags:
+      - Snapshot Access
+      summary: Show Resources Access
+      description: 'Shows whether the authenticated user has the specified access level (i.e., read or write) to the content
+        of the snapshot and returns a list of missing privileges.<br/>**Required privilege:** `Snapshot - View`<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMissingPrivilegeAccess
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: snapshotAccessType
+        in: query
+        description: The resource access level to verify.<br/>**Allowed values:**<br/> - `READ`<br/> - `WRITE`
+        required: true
+        schema:
+          type: string
+          enum:
+          - READ
+          - WRITE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ResourceAccessValidationResult'
+      x-pretty-name: getMissingPrivilegeAccess
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/access/resources_get
+  /rest/organizations/{organizationId}/snapshots/access/resource:
+    get:
+      tags:
+      - Snapshot Access
+      summary: Show Resource Access
+      description: 'Lists the resources that the authenticated user can leverage in snapshots in the target [organization](https://docs.coveo.com/en/185/).</br>**Required
+        privilege:** `Snapshot - Edit`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAccessibleResourceTypes
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: string
+      x-pretty-name: getAccessibleResourceTypes
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/access/resource_get
+components:
+  schemas:
+    AttributeReferenceModel:
+      type: object
+      properties:
+        jsonPath:
+          type: string
+        resourceName:
+          type: string
+        resourceType:
+          type: string
+          enum:
+          - CATALOG_CONFIG
+          - CATALOG
+          - EXTENSION
+          - FIELD
+          - FILTER
+          - INSIGHT_PANEL_INTERFACE
+          - INSIGHT_PANEL_CONFIGURATION
+          - MAPPING
+          - ML_MODEL
+          - ML_MODEL_ASSOCIATION
+          - QUERY_PARAMETER
+          - QUERY_PIPELINE
+          - QUERY_PIPELINE_CONDITION
+          - RANKING_EXPRESSION
+          - RANKING_WEIGHT
+          - RESULT_RANKING
+          - FEATURED_RESULT
+          - SEARCH_PAGE
+          - SECURITY_PROVIDER
+          - SOURCE
+          - STATEMENT_GROUP
+          - SETTING
+          - STOP_WORD
+          - STOREFRONT_ASSOCIATION
+          - SUBSCRIPTION
+          - THESAURUS
+          - TRACKING_ID
+          - TRIGGER
+          - UNKNOWN
+    ScopeModel:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - CATALOG_CONFIG
+          - CATALOG
+          - EXTENSION
+          - FIELD
+          - FILTER
+          - INSIGHT_PANEL_INTERFACE
+          - INSIGHT_PANEL_CONFIGURATION
+          - MAPPING
+          - ML_MODEL
+          - ML_MODEL_ASSOCIATION
+          - QUERY_PARAMETER
+          - QUERY_PIPELINE
+          - QUERY_PIPELINE_CONDITION
+          - RANKING_EXPRESSION
+          - RANKING_WEIGHT
+          - RESULT_RANKING
+          - FEATURED_RESULT
+          - SEARCH_PAGE
+          - SECURITY_PROVIDER
+          - SOURCE
+          - STATEMENT_GROUP
+          - SETTING
+          - STOP_WORD
+          - STOREFRONT_ASSOCIATION
+          - SUBSCRIPTION
+          - THESAURUS
+          - TRACKING_ID
+          - TRIGGER
+          - UNKNOWN
+        id:
+          type: string
+    VaultEntryModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        key:
+          type: string
+        value:
+          type: string
+        valueType:
+          type: string
+          enum:
+          - BOOLEAN
+          - FLOAT
+          - INTEGER
+          - STRING
+        vaultVisibilityType:
+          type: string
+          enum:
+          - PUBLIC
+          - OBFUSCATED
+          - STRICT
+        attributeReferences:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeReferenceModel'
+        scopes:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeModel'
+        public:
+          type: boolean
+    LinkModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the link, if it already exists.
+          example: tngt45tayqj6op3zt22rf22ek
+        organizationId:
+          type: string
+          description: The unique identifier of the destination organization.
+          example: '`destinationorganizationg7dg3gd`'
+        resourceName:
+          type: string
+          description: The unique identifier of the resource in the snapshot that allows tracking across organizations.
+          example: myextension_aAePCD
+        resourceType:
+          type: string
+          description: The type of the resource.
+          enum:
+          - CATALOG_CONFIG
+          - CATALOG
+          - EXTENSION
+          - FIELD
+          - FILTER
+          - INSIGHT_PANEL_INTERFACE
+          - INSIGHT_PANEL_CONFIGURATION
+          - MAPPING
+          - ML_MODEL
+          - ML_MODEL_ASSOCIATION
+          - QUERY_PARAMETER
+          - QUERY_PIPELINE
+          - QUERY_PIPELINE_CONDITION
+          - RANKING_EXPRESSION
+          - RANKING_WEIGHT
+          - RESULT_RANKING
+          - FEATURED_RESULT
+          - SEARCH_PAGE
+          - SECURITY_PROVIDER
+          - SOURCE
+          - STATEMENT_GROUP
+          - SETTING
+          - STOP_WORD
+          - STOREFRONT_ASSOCIATION
+          - SUBSCRIPTION
+          - THESAURUS
+          - TRACKING_ID
+          - TRIGGER
+          - UNKNOWN
+        resourceId:
+          type: string
+          description: The unique identifier of the resource in the destination organization.
+          example: destinationorganizationg7dg3gd-qvml6dkyvouchhehsjhxxbkgqq
+      description: The link definition.
+    MatchModel:
+      type: object
+      properties:
+        linkModel:
+          $ref: '#/components/schemas/LinkModel'
+        associationScore:
+          type: number
+          description: A number between `0` and `1` denoting the degree of confidence in the match, where`1` is the highest
+            and `0` is the lowest.
+          format: float
+        displayName:
+          type: string
+          description: The human-readable name of the resource in the target organization.
+          example: myextension
+      description: The matches of the resource.
+    ReportResourceAlreadyLinkedModel:
+      type: object
+      properties:
+        resourceName:
+          type: string
+          description: The unique identifier of the resource in the snapshot that allows tracking across organizations.
+          example: '`myrankingexpression_aAePCD`'
+        displayName:
+          type: string
+          description: The name of the resource in your organization.
+          example: '`myrankingexpression`'
+        linkModel:
+          $ref: '#/components/schemas/LinkModel'
+      description: A preexisting link.
+    ReportResourceSynchronizationOperationsModel:
+      type: object
+      properties:
+        resourceName:
+          type: string
+          description: The unique identifier of the resource in the snapshot that allows tracking across organizations.
+          example: '`myrankingexpression_aAePCD`'
+        displayName:
+          type: string
+          description: The name of the resource in your organization.
+          example: '`myrankingexpression`'
+        parentResourceId:
+          type: string
+          description: The resourceId of the parent resource, if applicable.
+          example: mypipeline_f8dh8sh4
+        matches:
+          type: array
+          description: The matches of the resource.
+          items:
+            $ref: '#/components/schemas/MatchModel'
+      description: The links of the resource.
+    SynchronizationPlanModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the snapshot synchronization plan.
+          example: destinationorganizationg7dg3gd-vfjwjnn6shwxjjd5vujhu22k5u
+        snapshotId:
+          type: string
+          description: The unique identifier of the target snapshot.
+          example: destinationorganizationg7dg3gd-wbbkq2fg6zprmdsegcqfbocdwq
+        status:
+          type: string
+          description: The status of the snapshot synchronization plan.
+          enum:
+          - CREATING
+          - CREATED
+          - IN_ERROR
+        alreadyLinkedResources:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            description: For each resource type, the pre-existing links, if applicable.
+            items:
+              $ref: '#/components/schemas/ReportResourceAlreadyLinkedModel'
+          description: For each resource type, the pre-existing links, if applicable.
+        resourceSynchronizationOperations:
+          type: object
+          additionalProperties:
+            type: array
+            description: The link operations performed when applying the synchronization plan.
+            items:
+              $ref: '#/components/schemas/ReportResourceSynchronizationOperationsModel'
+          description: The link operations performed when applying the synchronization plan.
+      description: The updated synchronization plan.
+    SynchronizationReportLinkOperationsModel:
+      type: object
+      properties:
+        linksCreated:
+          type: integer
+          description: The number of synchronization links created.
+          format: int32
+        linksOverridden:
+          type: integer
+          description: The number of synchronization links overridden.
+          format: int32
+        linksInError:
+          type: integer
+          description: The number of synchronization links in error.
+          format: int32
+      description: A summary of the outcome of the link operations.
+    SynchronizationReportModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the synchronization operation.
+          example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
+        updatedDate:
+          type: string
+          description: The date at which the report was created in number of milliseconds since UNIX epoch.
+          format: date-time
+        synchronizationPlanId:
+          type: string
+          description: The unique identifier of the synchronization plan.
+          example: '`startingorganizationg8tp8wu3-xqtzk7c2lnskasagcxy75xkgp`'
+        type:
+          type: string
+          description: The synchronization operation type.
+          enum:
+          - CREATE_SNAPSHOT
+          - DRY_RUN
+          - APPLY
+          - CREATE_SYNCHRONIZATION_PLAN
+          - APPLY_SYNCHRONIZATION_PLAN
+          - GENERATE_DIFF
+        status:
+          type: string
+          description: The synchronization operation status.
+          enum:
+          - PENDING
+          - IN_PROGRESS
+          - COMPLETED
+          - ABORTED
+        resultCode:
+          type: string
+          description: The synchronization operation result code at the end of the operation, if applicable.
+          enum:
+          - AUTO_SYNCHRONIZATION_FAILURE
+          - EXTERNAL_SERVICE_COMMUNICATION_ERROR
+          - RESOURCE_DEPENDENCY_CYCLE
+          - RESOURCES_IN_ERROR
+          - SUCCESS
+          - UNABLE_TO_PUSH_TO_ORGANIZATION
+          - UNABLE_TO_RETRIEVE_RESOURCES
+          - UNEXPECTED_ERROR
+          - UNSUPPORTED_RESOURCE
+        resourcesProcessed:
+          type: integer
+          description: The number of resources processed by the synchronization.
+          format: int32
+        linkOperations:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SynchronizationReportLinkOperationsModel'
+          description: The summaries of the outcome of the link operations for the different resource types.
+        linkOperationDetails:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+              description: An object containing details about link operation failures, if applicable.
+            description: An object containing details about link operation failures, if applicable.
+          description: An object containing details about link operation failures, if applicable.
+      description: A snapshot synchronization report.
+    CurrentStage:
+      type: object
+      properties:
+        stage:
+          type: string
+          enum:
+          - CREATING_SNAPSHOT
+          - INITIAL_PROCESSING
+          - SYNCHRONIZING
+          - COMPUTING_OPERATIONS
+          - VALIDATING_OPERATIONS
+          - PERFORMING_OPERATIONS
+        progressValue:
+          type: number
+          format: float
+        progressType:
+          type: string
+          enum:
+          - BINARY
+          - PERCENTAGE
+      description: The current stage being executed, with its related progress value.
+    ReportModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the report.
+          example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
+        startDate:
+          type: string
+          description: The report start date in number of milliseconds since UNIX epoch.
+          format: date-time
+        updatedDate:
+          type: string
+          description: The report last update date in number of milliseconds since UNIX epoch.
+          format: date-time
+        type:
+          type: string
+          description: The type of snapshot event.
+          enum:
+          - CREATE_SNAPSHOT
+          - DRY_RUN
+          - APPLY
+          - CREATE_SYNCHRONIZATION_PLAN
+          - APPLY_SYNCHRONIZATION_PLAN
+          - GENERATE_DIFF
+        status:
+          type: string
+          description: The status of the snapshot.
+          enum:
+          - PENDING
+          - IN_PROGRESS
+          - COMPLETED
+          - ABORTED
+        stagesToExecute:
+          type: array
+          description: The ordered stages the migration operation has to go through in order to complete.
+          items:
+            type: string
+            description: The ordered stages the migration operation has to go through in order to complete.
+            enum:
+            - CREATING_SNAPSHOT
+            - INITIAL_PROCESSING
+            - SYNCHRONIZING
+            - COMPUTING_OPERATIONS
+            - VALIDATING_OPERATIONS
+            - PERFORMING_OPERATIONS
+        currentStage:
+          $ref: '#/components/schemas/CurrentStage'
+        resultCode:
+          type: string
+          description: The result code of the snapshot event, if applicable.
+          enum:
+          - AUTO_SYNCHRONIZATION_FAILURE
+          - EXTERNAL_SERVICE_COMMUNICATION_ERROR
+          - RESOURCE_DEPENDENCY_CYCLE
+          - RESOURCES_IN_ERROR
+          - SUCCESS
+          - UNABLE_TO_PUSH_TO_ORGANIZATION
+          - UNABLE_TO_RETRIEVE_RESOURCES
+          - UNEXPECTED_ERROR
+          - UNSUPPORTED_RESOURCE
+        resourcesProcessed:
+          type: integer
+          description: The number of resources processed by the event.
+          format: int32
+        resourceOperations:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ReportResourceOperationsModel'
+          description: For each type of resource, a breakdown of the number of resources per operation.
+        resourceOperationResults:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: array
+              description: For each type of resource, an object containing failure details, if applicable.
+              items:
+                $ref: '#/components/schemas/ResultInformation'
+            description: For each type of resource, an object containing failure details, if applicable.
+          description: For each type of resource, an object containing failure details, if applicable.
+      description: A snapshot event report.
+    ReportResourceOperationsModel:
+      type: object
+      properties:
+        resourcesCreated:
+          type: integer
+          description: The number of resources created by the operation.
+          format: int32
+        resourcesCreatedNames:
+          type: array
+          description: The `resourceName`s of the resources created by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources created by the operation.
+        resourcesUpdated:
+          type: integer
+          description: The number of resources updated by the operation.
+          format: int32
+        resourcesUpdatedNames:
+          type: array
+          description: The `resourceName`s of the resources updated by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources updated by the operation.
+        resourcesRecreated:
+          type: integer
+          description: The number of pre-existing resources recreated by the operation. This happens when a resource cannot
+            be updated. For example, it is not possible to rename a query pipeline, so in such a case the pipeline would be
+            deleted and created again with the desired name. This operation counts as one recreation.
+          format: int32
+        resourcesRecreatedNames:
+          type: array
+          description: The `resourceName`s of the resources recreated by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources recreated by the operation.
+        resourcesDeleted:
+          type: integer
+          description: The number of resources deleted by the operation.
+          format: int32
+        resourcesDeletedNames:
+          type: array
+          description: The `resourceName`s of the resources deleted by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources deleted by the operation.
+        resourcesSynchronized:
+          type: integer
+          description: The number of resources synchronized by the operation.
+          format: int32
+        resourcesSynchronizedNames:
+          type: array
+          description: The `resourceName`s of the resources synchronized by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources synchronized by the operation.
+        resourcesInError:
+          type: integer
+          description: The number of resources for which an error occurred during the operation.
+          format: int32
+        resourcesInErrorNames:
+          type: array
+          description: The `resourceName`s of the resources for which an error occurred during the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources for which an error occurred during the operation.
+        resourcesUnchanged:
+          type: integer
+          description: The number of resources unchanged by the operation.
+          format: int32
+        resourcesUnchangedNames:
+          type: array
+          description: The `resourceName`s of the resources unchanged by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources unchanged by the operation.
+      description: A summary of the outcome of the link operations.
+    ResultInformation:
+      type: object
+      properties:
+        resultCode:
+          type: string
+        message:
+          type: string
+      description: For each type of resource, an object containing failure details, if applicable.
+    DiffGenerationReportModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the report.
+          example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
+        snapshotId:
+          type: string
+          description: The unique identifier of the snapshot.
+        relativeReportId:
+          type: string
+          description: The unique identifier of the dry-run report that triggered the current diff generation.
+        updatedDate:
+          type: string
+          description: The report last update date in number of milliseconds since UNIX epoch.
+          format: date-time
+        status:
+          type: string
+          description: The status of the operation.
+          enum:
+          - PENDING
+          - IN_PROGRESS
+          - COMPLETED
+          - ABORTED
+        files:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UrlWithExpirationAndNumberOfLinesModel'
+          description: The generated files, separated by resource type.
+        contentPatchFiles:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UrlWithExpirationAndNumberOfLinesModel'
+          description: The generated content patch files, separated by resource type.
+    SnapshotContentModel:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/SnapshotMetadataModel'
+        resources:
+          type: object
+          additionalProperties:
+            type: array
+            description: The snapshot resources.
+            items:
+              $ref: '#/components/schemas/SnapshotResourceModel'
+          description: The snapshot resources.
+      description: The snapshot content.
+    SnapshotMetadataModel:
+      type: object
+      properties:
+        schemaVersion:
+          type: string
+          description: The schema version used to specify the snapshot content.
+          enum:
+          - v1
+      description: Metadata about the snapshot.
+    SnapshotModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the target snapshot.
+          example: destinationorganizationg7dg3gd-8dfs7hj3k
+        createdBy:
+          type: string
+          description: The username of the snapshot creator.
+          example: '`jdoe@example.com`'
+        createdDate:
+          type: string
+          description: The date of creation of the snapshot in number of milliseconds since UNIX epoch.
+          format: date-time
+        originId:
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/) from whichthe snapshot
+            originates, if it differs from the current organization.
+          example: '`startingorganizationg8tp8wu3`'
+        targetId:
+          type: string
+          description: The unique identifier of the organization in which the snapshot applies.
+          example: '`destinationorganizationg7dg3gd`'
+        developerNote:
+          type: string
+          description: A note you can attach to your snapshot.
+          example: '`pipeline snapshot`'
+        reports:
+          type: array
+          description: The list of reports of events on the snapshot.
+          items:
+            $ref: '#/components/schemas/ReportModel'
+        synchronizationReports:
+          type: array
+          description: The list of synchronization reports on the snapshot.
+          items:
+            $ref: '#/components/schemas/SynchronizationReportModel'
+        diffGenerationReports:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiffGenerationReportModel'
+        contentSummary:
+          type: object
+          additionalProperties:
+            type: integer
+            description: 'A summary of the contents of the snapshot.<br/>**Example:**`{QUERY_PIPELINE: 1, RANKING_EXPRESSION:
+              1}`'
+            format: int32
+          description: 'A summary of the contents of the snapshot.<br/>**Example:**`{QUERY_PIPELINE: 1, RANKING_EXPRESSION:
+            1}`'
+        snapshotContentModel:
+          $ref: '#/components/schemas/SnapshotContentModel'
+      description: The snapshot configuration.
+    SnapshotResourceModel:
+      type: object
+      properties:
+        resourceName:
+          type: string
+          description: The unique identifier of the resource that allows tracking across organizations.
+          example: myextension_aAePCD
+        parents:
+          type: object
+          additionalProperties:
+            type: string
+            description: The parents of the resource, if applicable.<br/>For example, a query pipeline ranking expression
+              will have the parent query pipeline as a value in its `parents` object.
+          description: The parents of the resource, if applicable.<br/>For example, a query pipeline ranking expression will
+            have the parent query pipeline as a value in its `parents` object.
+        model:
+          type: object
+          additionalProperties:
+            type: object
+            description: The JSON configuration of the resource.
+          description: The JSON configuration of the resource.
+      description: The snapshot of a resource.
+    UrlWithExpirationAndNumberOfLinesModel:
+      type: object
+      properties:
+        url:
+          type: string
+        urlExpiration:
+          type: string
+          format: date-time
+        numberOfLines:
+          type: integer
+          format: int32
+      description: The generated content patch files, separated by resource type.
+    ExportConfigurationModel:
+      type: object
+      properties:
+        resourcesToExport:
+          type: object
+          additionalProperties:
+            type: array
+            description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:**
+              `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
+            items:
+              type: string
+              description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:**
+                `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
+          description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:**
+            `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
+      description: The export configuration model that specifies the resources to include in the snapshot.
+    PageModelVaultEntryModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VaultEntryModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    SnapshotVaultEntryState:
+      type: object
+      properties:
+        missingVaultEntries:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    UrlWithExpirationModel:
+      type: object
+      properties:
+        url:
+          type: string
+        urlExpiration:
+          type: string
+          format: date-time
+    StreamingResponseBody:
+      type: object
+    SnapshotAccessModel:
+      type: object
+      properties:
+        allowed:
+          type: boolean
+    GlobalPrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`)
+            will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+        level:
+          type: string
+          description: The access level of the global privileges.`
+          example: GLOBAL
+      description: A global privilege.
+    ResourceAccessValidationResult:
+      type: object
+      properties:
+        accessGranted:
+          type: boolean
+        resourceNames:
+          type: array
+          items:
+            type: string
+        requiredPrivileges:
+          type: array
+          items:
+            $ref: '#/components/schemas/GlobalPrivilegeModel'
+    PageModelLinkModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

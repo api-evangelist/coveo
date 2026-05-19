@@ -1,0 +1,103 @@
+openapi: 3.0.1
+info:
+  title: Coveo Context API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/context
+security:
+- oauth2:
+  - full
+paths:
+  /rest/organizations/{organizationId}/machinelearning/user/actions:
+    post:
+      tags:
+      - Context
+      summary: Get a Client's Action History in Legacy Format
+      operationId: legacyActionHistory
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LegacyActionHistoryRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyActionHistoryResponse'
+      x-pretty-name: legacyActionHistory
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/user/actions_post
+components:
+  schemas:
+    LegacyActionHistoryRequest:
+      required:
+      - objectId
+      type: object
+      properties:
+        objectId:
+          type: string
+    LegacyAction:
+      type: object
+      properties:
+        name:
+          type: string
+        time:
+          type: string
+        value:
+          type: string
+    LegacyActionHistoryResponse:
+      type: object
+      properties:
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/LegacyAction'
+        debug:
+          type: boolean
+        internalExecutionLog:
+          type: string
+        requestId:
+          type: string
+          format: uuid
+        responseId:
+          type: string
+          format: uuid
+        responseTime:
+          type: integer
+          format: int64
+        executionTime:
+          type: number
+          format: double
+        modelType:
+          type: string
+        modelSubType:
+          type: string
+      example: "{\n  \"debug\": null,\n  \"internalExecutionLog\": null,\n  \"requestId\": null,\n  \"responseId\": \"d971cc57-65bc-427a-9c93-a17da1743e07\"\
+        ,\n  \"responseTime\": 1716365089415,\n  \"executionTime\": 0.011644682,\n  \"modelType\": \"Profile\",\n  \"modelSubType\"\
+        : \"userActionHistory\",\n  \"value\":[\n    {\n      \"name\": \"SEARCH\",\n      \"value\": \"{\"cause\":\"searchFromLink\"\
+        ,\n                 \"origin_level_1\":\"Coveo Docs Unified Search\",\n                 \"origin_level_2\":\"All\"\
+        ,\n                 \"query_expression\":\"user actions\"}\",\n      \"time\": \"1684522825040\"\n    },\n    {\n\
+        \      \"name\": \"VIEW\",\n      \"value\": \"{\"content_id_key\":\"@clickableUri\",\n                 \"content_id_value\"\
+        :\"https://docs.coveo.com/en/search/\",\n                 \"language\":\"en\",\n                 \"title\":\"Coveo\
+        \ Product Documentation\"}\",\n      \"time\": \"1684522824095\"\n    }\n  ]\n}\n"
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          scopes:
+            full: required

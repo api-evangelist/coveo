@@ -1,0 +1,3404 @@
+openapi: 3.0.1
+info:
+  title: Coveo Customer Service API Service
+  description: Documentation for Coveo Customer Service API Service
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: support@coveo.com
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations
+tags:
+- name: Answer
+  x-displayName: Answer
+- name: Case Assist
+  x-displayName: Case Assist
+- name: Insight Panel
+  x-displayName: Insight Panel
+- name: CRGA For Cases
+  x-displayName: CRGA For Cases
+paths:
+  /rest/organizations/{organizationId}/answer/cases/v1/configs/{configId}:
+    post:
+      tags:
+      - CRGA For Cases
+      summary: Create CRGA for Cases Configuration
+      description: Add a CRGA For Cases configuration to the answer configuration
+      operationId: createLfcaConfiguration
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+      - $ref: '#/components/parameters/ConfigIdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LfcaConfiguration'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LfcaConfiguration'
+      security:
+      - oauth2:
+        - full
+    get:
+      tags:
+      - CRGA For Cases
+      summary: Get CRGA for Cases Configuration
+      description: Get the CRGA For Cases configuration associated to the answer configuration.
+      operationId: getLfcaConfiguration
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+      - $ref: '#/components/parameters/ConfigIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LfcaConfiguration'
+      security:
+      - oauth2:
+        - full
+    patch:
+      tags:
+      - CRGA For Cases
+      summary: Update CRGA for Cases Configuration Attributes
+      description: Update attributes of the CRGA For Cases configuration.
+      operationId: patchLfcaConfiguration
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+      - $ref: '#/components/parameters/ConfigIdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LfcaConfigurationPatchRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LfcaConfiguration'
+      security:
+      - oauth2:
+        - full
+    delete:
+      tags:
+      - CRGA For Cases
+      summary: Delete CRGA for Cases Configuration
+      description: Delete the CRGA For Cases configuration associated to the answer configuration.
+      operationId: deleteLfcaConfiguration
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+      - $ref: '#/components/parameters/ConfigIdPath'
+      responses:
+        '204':
+          description: No content
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/answer/v1/configs/{configId}/generate:
+    post:
+      tags:
+      - Answer
+      summary: Get Answer
+      description: Get an answer for a question
+      operationId: getAnswer
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+      - $ref: '#/components/parameters/ConfigIdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerSearchRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/GenQAResponse'
+              examples:
+                HeaderMessage:
+                  $ref: '#/components/examples/HeaderMessage'
+                AnswerMessage:
+                  $ref: '#/components/examples/AnswerMessage'
+                CitationsMessage:
+                  $ref: '#/components/examples/CitationsMessage'
+                EndOfStreamMessage:
+                  $ref: '#/components/examples/EndOfStreamMessage'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/caseassists/{caseAssistId}:
+    get:
+      tags:
+      - Case Assist
+      summary: Show Case Assist Configuration
+      description: Shows a case assist configuration in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br
+        /><b>Required privilege:</b> Customer Service - Case assist configuration - View
+      operationId: getCaseAssistConfiguration
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: caseAssistId
+        in: path
+        description: The unique identifier of the target case assist configuration.<br /><b>Example:</b> `812efd5e-a7e3-49d5-8f1d-81be8e739b70`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+    put:
+      tags:
+      - Case Assist
+      summary: Update Case Assist Configuration
+      description: Updates a case assist configuration in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br /><b>Required privilege:</b> Customer Service - Case assist configuration - Edit
+      operationId: updateCaseAssistConfiguration
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: caseAssistId
+        in: path
+        description: The unique identifier of the target case assist configuration.<br /><b>Example:</b> `812efd5e-a7e3-49d5-8f1d-81be8e739b70`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestCaseAssistConfigurationRequest'
+        required: true
+      responses:
+        '204':
+          description: No Content
+          content: {}
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - Case Assist
+      summary: Delete Case Assist Configuration
+      description: Deletes a case assist configuration in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br /><b>Required privilege:</b> Customer Service - Case assist configuration - Edit
+      operationId: deleteCaseAssistConfiguration
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: caseAssistId
+        in: path
+        description: The unique identifier of the target case assist configuration.<br /><b>Example:</b> `812efd5e-a7e3-49d5-8f1d-81be8e739b70`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content: {}
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/caseassists/{caseAssistId}/classify:
+    post:
+      tags:
+      - Case Assist
+      summary: Request Classifications
+      description: Requests field value suggestions for a case.<br /><br /><b>Required privilege:</b> Customer Service - Use
+        case assist - Allowed<br/>
+      operationId: postClassify
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: caseAssistId
+        in: path
+        description: The unique identifier of the target case assist configuration.<br /><b>Example:</b> `812efd5e-a7e3-49d5-8f1d-81be8e739b70`
+        required: true
+        schema:
+          type: string
+      - name: debug
+        in: query
+        description: Whether to include an execution report for debugging purposes.
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestCaseAssistContext'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestClassification'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/caseassists/preview/classify:
+    post:
+      tags:
+      - Case Assist
+      summary: Request Classifications Preview
+      description: Requests field value suggestions preview for a case and configuration.<br /><br /><b>Required privilege:</b><ul><li>Customer
+        Service - Use case assist - Allowed</li><li>Customer Service - Case assist configuration - Edit</li><li>Search - All
+        Content - View</li></ul>
+      operationId: postClassifyPreview
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: debug
+        in: query
+        description: Whether to include an execution report for debugging purposes.
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/PreviewClassificationRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestClassification'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/caseassists/{caseAssistId}/documents/suggest:
+    post:
+      tags:
+      - Case Assist
+      summary: Request Document Suggestions
+      description: Requests document suggestions for a case.<br /><br /><b>Required privilege:</b> Customer Service - Use
+        case assist - Allowed
+      operationId: getSuggestDocument
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: caseAssistId
+        in: path
+        description: The unique identifier of the target case assist configuration.<br /><b>Example:</b> `812efd5e-a7e3-49d5-8f1d-81be8e739b70`
+        required: true
+        schema:
+          type: string
+      - name: debug
+        in: query
+        description: Whether to include an execution report for debugging purposes.
+        schema:
+          type: boolean
+          default: false
+      - name: numberOfResults
+        in: query
+        description: The maximum number of results to return.<br />**Must be in range:** `[1, 100]`
+        schema:
+          type: integer
+          format: int32
+          default: 5
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestCaseAssistContext'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestDocumentSuggestions'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/caseassists/preview/documents/suggest:
+    post:
+      tags:
+      - Case Assist
+      summary: Request Document Suggestions Preview
+      description: Requests document suggestions preview for a case and configuration.<br /><br /><b>Required privilege:</b><ul><li>Customer
+        Service - Use case assist - Allowed</li><li>Customer Service - Case assist configuration - Edit</li></ul>
+      operationId: getSuggestDocumentPreview
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: debug
+        in: query
+        description: Whether to include an execution report for debugging purposes.
+        schema:
+          type: boolean
+          default: false
+      - name: numberOfResults
+        in: query
+        description: The maximum number of results to return.<br />**Must be in range:** `[1, 100]`
+        schema:
+          type: integer
+          format: int32
+          default: 5
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/PreviewDocumentSuggestionRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestDocumentSuggestions'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/caseassists:
+    get:
+      tags:
+      - Case Assist
+      summary: List Case Assist Configurations
+      description: Lists all case assist configurations in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br /><b>Required privilege:</b> Customer Service - Case assist configuration - View
+      operationId: getAllCaseAssistConfigurations
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The 0-based number of the page of configurations to list.<br /><b>Default:</b> `0`
+        schema:
+          type: integer
+          format: int32
+      - name: perPage
+        in: query
+        description: The maximum number of configurations to include per page.<br /><b>Default:</b> `100`
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestListOfCaseAssistConfigurations'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+    post:
+      tags:
+      - Case Assist
+      summary: Create Case Assist Configuration
+      description: Creates a case assist configuration in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br/><br/><b>Required
+        privilege:</b><ul><li>Customer Service - Case assist configuration - Edit</li><li>Search - All Content - View</li></ul>
+      operationId: createCaseAssistConfiguration
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestCaseAssistConfigurationRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/caseassists/projects/get:
+    get:
+      tags:
+      - Case Assist
+      summary: Get Case Assist Configurations by Project
+      description: Retrieves case assist configurations associated with a specific project in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br /><b>Required privilege:</b> Customer Service - Case assist configuration - View
+      operationId: getCaseAssistConfigurationsByProject
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: query
+        description: The unique identifier of the project for which to retrieve case assist configurations.
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The 0-based number of the page of configurations to list.<br /><b>Default:</b> `0`
+        schema:
+          type: integer
+          format: int32
+      - name: perPage
+        in: query
+        description: The maximum number of configurations to include per page.<br /><b>Default:</b> `100`
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestListOfCaseAssistConfigurationsWithProjects'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/insightconfig/v1/configs:
+    get:
+      tags:
+      - Insight Panel
+      summary: List Insight Panel Configurations
+      description: Gets a list of Insight Panel configurations.
+      operationId: insight-panel-configuration-list
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The 0-based number of the page of configurations to list.
+        schema:
+          type: integer
+          format: Int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The number of configurations to list per page. Must be equal to or greater than <code>1</code>.
+        schema:
+          type: integer
+          format: Int32
+          default: 10
+      - name: filter
+        in: query
+        description: A filter that only retrieves matching Insight Panel configurations.
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: 'The order in which the configurations are listed. The available values are: <ul> <li><i>empty</i>: items
+          are not sorted in any specific order.</li> <li><code>asc</code>: items are sorted in ascending order.</li> <li><code>desc</code>:
+          items are sorted in descending order.</li> </ul>'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    description: List of Insight Panel configurations
+                    items:
+                      $ref: '#/components/schemas/RestInsightPanelConfiguration'
+                  totalEntries:
+                    type: integer
+                    description: The total number of items that match the <code>filter</code> parameter.
+                  totalPages:
+                    type: integer
+                    description: The total number of item pages according to the <code>perPage</code> parameter.
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+    post:
+      tags:
+      - Insight Panel
+      summary: Create an Insight Panel Configuration
+      description: Creates a new Insight Panel configuration.
+      operationId: insight-panel-configuration-create
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestInsightPanelConfigurationCreate'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestInsightPanelConfiguration'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/insightconfig/v1/configs/ids:
+    post:
+      tags:
+      - Insight Panel
+      summary: List Insight Panel Configurations by Ids.
+      description: Gets a list of Insight Panel configurations by ids.
+      operationId: insight-panel-configuration-list-ids
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The 0-based number of the page of configurations to list.
+        schema:
+          type: integer
+          format: Int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The number of configurations to list per page. Must be equal to or greater than <code>1</code>.
+        schema:
+          type: integer
+          format: Int32
+          default: 10
+      - name: filter
+        in: query
+        description: A filter that only retrieves matching Insight Panel configurations.
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: 'The order in which the configurations are listed. The available values are: <ul> <li><i>empty</i>: items
+          are not sorted in any specific order.</li> <li><code>asc</code>: items are sorted in ascending order.</li> <li><code>desc</code>:
+          items are sorted in descending order.</li> </ul>'
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestInsightPanelConfigurationListIds'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    description: List of Insight Panel configurations
+                    items:
+                      $ref: '#/components/schemas/RestInsightPanelConfiguration'
+                  totalEntries:
+                    type: integer
+                    description: The total number of items that match the <code>filter</code> parameter.
+                  totalPages:
+                    type: integer
+                    description: The total number of item pages according to the <code>perPage</code> parameter.
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/insightconfig/v1/configs/{configId}:
+    get:
+      tags:
+      - Insight Panel
+      summary: Get an Insight Panel Configuration
+      description: Gets a single Insight Panel configuration.
+      operationId: insight-panel-configuration-get
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: configId
+        in: path
+        description: The unique identifier of the target Insight Panel configuration.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestInsightPanelConfiguration'
+        '404':
+          description: When the specified Insight Panel configuration does not exist.
+          content: {}
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+    put:
+      tags:
+      - Insight Panel
+      summary: Update an Insight Panel Configuration
+      description: Updates an existing Insight Panel configuration.
+      operationId: insight-panel-configuration-update
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: configId
+        in: path
+        description: The unique identifier of the target Insight Panel configuration.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestInsightPanelConfigurationUpdate'
+        required: false
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestInsightPanelConfiguration'
+        '404':
+          description: When the specified Insight Panel configuration does not exist.
+          content: {}
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - Insight Panel
+      summary: Delete an Insight Panel Configuration
+      description: Deletes an existing Insight Panel configuration.
+      operationId: insight-panel-configuration-delete
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: configId
+        in: path
+        description: The unique identifier of the target Insight Panel configuration.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content: {}
+        '404':
+          description: When the specified Insight Panel configuration does not exist.
+          content: {}
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/insight/v1/configs/{configId}/interface:
+    get:
+      tags:
+      - Insight Panel
+      summary: Get an Insight Panel Interface
+      description: Gets a specific Insight Panel interface.
+      operationId: insight-panel-interface-get
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: configId
+        in: path
+        description: The unique identifier of the target Insight Panel configuration.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  contextFields:
+                    type: object
+                    properties: {}
+                    example:
+                      subject: case_subject
+                      description: case_description
+                  searchHub:
+                    type: string
+                  interface:
+                    $ref: '#/components/schemas/RestInsightPanelInterface'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/insight/v1/configs/{configId}/search:
+    post:
+      tags:
+      - Insight Panel
+      summary: Search for Items
+      description: Searches for items using a specific Insight Panel configuration.
+      operationId: insight-panel-search
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: configId
+        in: path
+        description: The unique identifier of the Insight Panel configuration.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestInsightPanelSearchRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestInsightPanelSearchResponse'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/insight/v1/configs/{configId}/querysuggest:
+    post:
+      tags:
+      - Insight Panel
+      summary: Retrieve Query Suggestions
+      description: Retrieves query suggestions using a specific Insight Panel configuration.
+      operationId: insight-panel-query-suggest
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: configId
+        in: path
+        description: The unique identifier of the Insight Panel configuration.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestInsightPanelQuerySuggestRequest'
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestInsightPanelQuerySuggestResponse'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/insight/v1/configs/{configId}/quickview:
+    get:
+      tags:
+      - Insight Panel
+      summary: Retrieve Item Quickview
+      description: Retrieves an item Quickview using a specific Insight Panel configuration.
+      operationId: insight-panel-quickview
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: configId
+        in: path
+        description: The unique identifier of the target Insight Panel configuration.
+        required: true
+        schema:
+          type: string
+      - name: uniqueId
+        in: query
+        description: The unique identifier of the target document.
+        required: true
+        schema:
+          type: string
+      - name: q
+        in: query
+        description: <p>The basic query expression, typically the keywords entered by the end user in a query box.</p> <p><strong>Note:</strong>
+          When logging a <strong>Search</strong> Usage Analytics event for a query, the <code>queryText</code> field of that
+          event should be set to the <code>q</code> value of the corresponding query.</p>
+        schema:
+          type: string
+      - name: enableNavigation
+        in: query
+        description: Provide controls to the end user for navigating through the matching keywords in the document.
+        schema:
+          type: boolean
+      - name: requestedOutputSize
+        in: query
+        description: The approximate number of bytes to request in the HTML response. <strong>Default:</strong> <code>0</code>,
+          meaning that the entire HTML document is requested.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: The item's HTML preview.
+          content: {}
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/insightconfig/v1/configs/projects/get:
+    get:
+      tags:
+      - Insight Panel
+      summary: Get Insight Configurations by Project
+      description: Retrieves insight panel configurations associated with a specific project in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br /><b>Required privilege:</b> Customer Service - Insight panel configuration - View
+      operationId: getInsightConfigurationsByProject
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: query
+        description: The unique identifier of the project for which to retrieve insight panel configurations.
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The 0-based number of the page of configurations to list.<br /><b>Default:</b> `0`
+        schema:
+          type: integer
+          format: int32
+      - name: perPage
+        in: query
+        description: The maximum number of configurations to include per page.<br /><b>Default:</b> `100`
+        schema:
+          type: integer
+          format: int32
+      - name: filter
+        in: query
+        description: A filter that only retrieves matching Insight Panel configurations.
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: 'The order in which the configurations are listed. The available values are: <ul> <li><i>empty</i>: items
+          are not sorted in any specific order.</li> <li><code>asc</code>: items are sorted in ascending order.</li> <li><code>desc</code>:
+          items are sorted in descending order.</li> </ul>'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestListOfInsightPanelConfigurationsWithProjects'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+components:
+  schemas:
+    Fields:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          value:
+            type: string
+            description: The value of the field.
+            example: My GC3000 series propane generator won't start
+      description: 'A dictionary where each key is the name of a field that pertains to the target case, and each value is
+        an object that describes the content of that field.<br /><b>Example:</b> `{"subject": {"value": "GC3000 won''t start"},
+        "description": {"value": "My GC3000 series propane generator won''t start"}`}'
+      example:
+        subject:
+          value: GC3000 won't start
+        description:
+          value: My GC3000 series propane generator won't start
+    ContextAttributes:
+      type: object
+      additionalProperties:
+        type: string
+        description: The value of the attribute.
+        example: GC3000 Series
+      description: A dictionary where each key is the name of a context attribute that pertains to the target case, and each
+        value is a string that describes the content of that context attribute.
+      example:
+        product: Propane Generator
+        subproduct: GC3000 Series
+    visitorId:
+      type: string
+      description: <p>A GUID which represents the current user, who can either be authenticated or anonymous.</p> <p><code>visitorId</code>
+        is deprecated and has been replaced by <a href="https://docs.coveo.com/en/masb0234/"><code>clientId</code><a> in newer
+        versions of the Coveo UI libraries. For compatibility, the new first-party cookie and local storage values are still
+        named <code>coveo_visitorId</code>.</p> <p>For older versions of the JavaScript Search Framework, the visitor ID is
+        generated by the Coveo Usage Analytics service and stored in a non-expiring third-party cookie. <strong>Note:</strong>
+        Third-party cookies <a href="https://docs.coveo.com/en/m54b9238/">have also been deprecated</a>. This is unrelated
+        to the deprecation of <code>visitorId</code>.</p>
+      example: 5cb98953-9c13-42ff-8176-e6fcba6a50bf
+    clientId:
+      type: string
+      description: The <a href="https://docs.coveo.com/en/masb0234/"><code>clientId</code><a> identifies a user on a browser
+        of a Coveo-powered search page and provides insight into the events they performed
+      example: 5cb98953-9c13-42ff-8176-e6fcba6a50bf
+    locale:
+      type: string
+      description: <p>The locale of the current user. Must comply with IETF's <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">BCP
+        47</a> definition.</p> <p>Coveo Machine Learning models use this information to provide contextually relevant output.
+        Moreover, this information can be referred to in query expressions and QPL statements by using the <code>$locale</code>
+        object.</p> <p><strong>Note:</strong> When logging a Search Usage Analytics event, the <code>language</code> field
+        of that event should match the language part of the <code>locale</code> value of the query (e.g., <code>en-US</code>
+        in <code>locale</code> becomes <code>en</code> in <code>language</code>).</p>
+      example: en-US
+    RestCaseAssistConfigurationRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the case assist configuration.<br />
+          example: myCaseAssistConfiguration
+        documentSuggestionConfiguration:
+          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
+        classificationConfigurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestClassificationConfiguration'
+      description: A case assist configuration.
+    DocumentSuggestionConfiguration:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the case assist configuration.<br />
+          example: myCaseAssistConfiguration
+        documentSuggestionConfiguration:
+          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
+      description: A mock case assist configuration to test a document suggestions configuration.
+    CaseClassificationConfiguration:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the case assist configuration.<br />
+          example: myCaseAssistConfiguration
+        classificationConfigurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestClassificationConfiguration'
+      description: A mock case assist configuration to test a case classification configuration.
+    RestDocumentSuggestionConfiguration:
+      required:
+      - filter
+      - pipeline
+      - strategy
+      type: object
+      properties:
+        strategy:
+          type: string
+          description: 'The strategy with which to retrieve document suggestions.<br /><b>Allowed value:</b><br /> - `ITD`:
+            Use [Intelligent Term Detection](https://docs.coveo.com/en/207/).'
+          example: ITD
+          enum:
+          - ITD
+        filter:
+          type: string
+          description: A [filter query expression](https://docs.coveo.com/en/1552/) to restrict returned items.
+          example: '@objecttype==case'
+        pipeline:
+          type: string
+          description: The name of a [query pipeline](https://docs.coveo.com/en/180/) to use to retrieve document suggestions.
+            The query pipeline must support the strategy defined in the `strategy` parameter.<br />For example, if you have
+            selected `ITD` as `strategy` value, you must provide the name of a pipeline that has an [ITD](https://docs.coveo.com/en/207/)-enabled
+            [Coveo ML](https://docs.coveo.com/en/188/) [ART](https://docs.coveo.com/en/1013/) model association.
+          example: myPipelineName
+      description: A document suggestions configuration.
+    RestClassificationConfiguration:
+      required:
+      - fieldsToPredict
+      - filter
+      - strategy
+      type: object
+      properties:
+        strategy:
+          type: string
+          description: 'The strategy with which to retrieve field value suggestions.<br /><b>Allowed value:</b><br /> - `Some`:
+            Use the [`$some` query extension](https://docs.coveo.com/en/1462/#some).<br /> - `Axon`: Use a Case Classification
+            Machine Learning Model.'
+          example: Some
+          enum:
+          - Some
+        filter:
+          type: string
+          description: A [filter query expression](https://docs.coveo.com/en/1552/) that restricts the items from which to
+            base the field value suggestions.
+          example: '@objecttype==case'
+        fieldsToPredict:
+          type: array
+          description: The [fields](https://docs.coveo.com/en/200/) for which to retrieve suggestions.<br /><b>Example:</b>
+            `[{"name":"opportunitytype"}]`
+          example:
+          - name: opportunitytype
+          - name: issuetype
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: A field name.
+      description: A document classification configuration.
+    RestCaseAssistConfigurationResponse:
+      required:
+      - classificationConfigurations
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the case assist configuration.
+          example: d9ff783c-574f-4d22-838c-df2c18a0c2b3
+        name:
+          type: string
+          description: The name of the case assist configuration.
+          example: myCaseAssistConfiguration
+        documentSuggestionConfiguration:
+          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
+        classificationConfigurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestClassificationConfiguration'
+      description: A case assist configuration.
+    RestListOfCaseAssistConfigurations:
+      required:
+      - configurations
+      type: object
+      properties:
+        configurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
+        totalEntries:
+          type: integer
+          description: The total number of configurations.
+          format: int32
+          example: 1
+        totalPages:
+          type: integer
+          description: The total number of pages.
+          format: int32
+          example: 1
+    RestCaseAssistContext:
+      type: object
+      properties:
+        analytics:
+          $ref: '#/components/schemas/Analytics'
+        visitorId:
+          $ref: '#/components/schemas/visitorId'
+        clientId:
+          $ref: '#/components/schemas/clientId'
+        locale:
+          $ref: '#/components/schemas/locale'
+        fields:
+          $ref: '#/components/schemas/Fields'
+        context:
+          $ref: '#/components/schemas/ContextAttributes'
+    RestClassification:
+      type: object
+      properties:
+        fields:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              predictions:
+                type: array
+                description: The field value suggestions.
+                items:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                      description: The field value suggestion.
+                      example: Electrical
+                    confidence:
+                      type: number
+                      description: 'A floating-point number between `0` and `1` indicating the level of certainty that the
+                        suggested field value is actually relevant to the case.<br />Minimum: `0.0` Maximum: `1.0`'
+                      format: float
+                      example: 0.9
+                    id:
+                      type: string
+                      description: The unique identifier of the predicted value.
+                      example: 5ac61db7-49ab-50be-b9c5-d62dd6083fde
+          example:
+            opportunitytype:
+              predictions:
+              - value: Propane
+                confidence: 0.9178082346916199
+                id: c38dec1f-349e-5dc1-bc24-4de96dc53bbd
+            issuetype:
+              predictions:
+              - value: Ignition
+                confidence: 0.8325673948382833
+                id: 7ac53b91-afd2-5472-8f6d-e829a0a8232f
+              - value: Controller
+                confidence: 0.5364940382730438
+                id: 7cf52516-3dc6-5a1a-ba2e-d05b0c255c1c
+        responseId:
+          type: string
+          description: The unique identifier of the response.
+          example: 123e4567-e89b-12d3-a456-426614174000
+    RestDocumentSuggestions:
+      required:
+      - documents
+      - responseId
+      - totalCount
+      type: object
+      properties:
+        documents:
+          type: array
+          description: The document suggestions.
+          items:
+            required:
+            - clickUri
+            - excerpt
+            - fields
+            - hasHtmlVersion
+            - title
+            - uniqueId
+            type: object
+            properties:
+              title:
+                type: string
+                description: The document title.
+                example: GC3000 Series Propane Generator Ignition
+              clickUri:
+                type: string
+                description: The document clickable URI.
+                example: http://www.salesforce.com/org:organization/object:Solution/record:5013h000000tPmnAAE
+              excerpt:
+                type: string
+                description: An excerpt from the document.
+                example: The GC3000 series propane generators need to be started up using the following process if the ignition
+                  fails at the first try
+              uniqueId:
+                type: string
+                description: The unique ID of the document.
+                example: 84.72597$http://www.salesforce.com/org:organization/object:Solution/record:5013h000000tPmnAAE:2
+              hasHtmlVersion:
+                type: boolean
+                description: Whether the index contains an HTML version of this item.
+                example: true
+              fields:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: GC3000 Series Propane Generator Ignition
+                  urihash:
+                    type: string
+                    example: EFQOedWwU1M5af37
+                  '...':
+                    type: object
+                    example: '...'
+                description: The `raw` fields of the item.
+        totalCount:
+          type: integer
+          description: The total number of suggestions.
+          format: int32
+          example: 1
+        responseId:
+          type: string
+          description: The unique identifier of the response.
+          example: 123e4567-e89b-12d3-a456-426614174000
+    PreviewDocumentSuggestionRequest:
+      required:
+      - configuration
+      - fields
+      type: object
+      properties:
+        allOf:
+        - $ref: '#/components/schemas/RestCaseAssistContext'
+        configuration:
+          $ref: '#/components/schemas/DocumentSuggestionConfiguration'
+    PreviewClassificationRequest:
+      required:
+      - configuration
+      - fields
+      type: object
+      properties:
+        allOf:
+        - $ref: '#/components/schemas/RestCaseAssistContext'
+        configuration:
+          $ref: '#/components/schemas/CaseClassificationConfiguration'
+    RestListOfCaseAssistConfigurationsWithProjects:
+      required:
+      - configurations
+      type: object
+      properties:
+        configurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestCaseAssistConfigurationWithProjectResponse'
+        totalEntries:
+          type: integer
+          format: int32
+          description: The total number of configurations
+          example: 1
+        totalPages:
+          type: integer
+          format: int32
+          description: The total number of pages
+          example: 1
+    RestCaseAssistConfigurationWithProjectResponse:
+      allOf:
+      - $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
+      - type: object
+        properties:
+          classificationConfigurations:
+            type: array
+            items:
+              $ref: '#/components/schemas/RestCaseAssistConfigurationWithProject'
+    RestCaseAssistConfigurationWithProject:
+      allOf:
+      - $ref: '#/components/schemas/RestClassificationConfiguration'
+      - type: object
+        properties:
+          projectIds:
+            type: array
+            description: Each item is the unique identifier of a project associated with the case assist configuration.
+            items:
+              type: string
+        required:
+        - projectIds
+    RestInsightPanelConfigurationCreate:
+      required:
+      - name
+      - pipeline
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the Insight Panel configuration.
+          example: My Insight Panel
+        pipeline:
+          type: string
+          description: The ID of the query pipeline to use.
+        contextFields:
+          type: object
+          properties: {}
+          description: A dictionary in which the keys represent context keys, and the values are CRM field names.
+          example:
+            subject: case_subject
+            description: case_description
+        interfaces:
+          type: array
+          description: A list of interface IDs that are bound to the Insight Panel configuration.
+          example:
+          - interface-id-1
+          - interface-id-2
+          items:
+            type: string
+    RestInsightPanelConfigurationListIds:
+      required:
+      - ids
+      type: object
+      properties:
+        ids:
+          type: array
+          description: A list of configuration ids.
+          example:
+          - config-id-1
+          - config-id-2
+          items:
+            type: string
+    RestInsightPanelConfigurationUpdate:
+      required:
+      - contextFields
+      - interfaces
+      - name
+      - pipeline
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the Insight Panel configuration.
+          example: My Insight Panel
+        pipeline:
+          type: string
+          description: The ID of the query pipeline to use.
+        contextFields:
+          type: object
+          properties: {}
+          description: A dictionary in which the keys represent context keys, and the values are CRM field names.
+          example:
+            subject: case_subject
+            description: case_description
+        interfaces:
+          type: array
+          description: A list of interface IDs that are bound to the Insight Panel configuration.
+          example:
+          - interface-id-1
+          - interface-id-2
+          items:
+            type: string
+    RestInsightPanelConfiguration:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the Insight Panel configuration.
+        name:
+          type: string
+          description: The name of the Insight Panel configuration.
+          example: My Insight Panel
+        pipeline:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the query pipeline.
+            name:
+              type: string
+              description: The name of the query pipeline.
+            models:
+              type: object
+              properties:
+                art:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                  description: Indicates whether an Automatic Relevance Tuning (ART) model is configured for the query pipeline.
+                dne:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                  description: Indicates whether a Dynamic Navigation Experience (DNE) model is configured for the query pipeline.
+                qs:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                  description: Indicates whether a Query Suggestion (QS) model is configured for the query pipeline.
+              description: Information about the machine learning models.
+          description: Information about the query pipeline.
+        contextFields:
+          type: object
+          properties: {}
+          description: A dictionary in which the keys represent context keys, and the values are CRM field names.
+          example:
+            subject: case_subject
+            description: case_description
+        searchHub:
+          type: string
+          description: The search hub value that is recorded by Usage Analytics events.
+        interfaces:
+          type: array
+          description: A list of interface IDs that are bound to the Insight Panel configuration.
+          example:
+          - interface-id-1
+          - interface-id-2
+          items:
+            type: string
+    RestInsightPanelInterface:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the Insight Panel interface.
+        name:
+          type: string
+          description: The name of the Insight Panel interface. It is usually the same as the name of the Insight Panel configuration.
+        resultTemplates:
+          type: array
+          description: The result templates configured for the Insight Panel interface.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the result template.
+              layout:
+                type: string
+                description: The layout of the result template. The allowed values are <code>default</code> and <code>thumbnail</code>.
+                default: default
+              conditions:
+                $ref: '#/components/schemas/RestConditions'
+              badge:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    description: The name of the field from which the value is retrieved.
+                  label:
+                    type: string
+                    description: A specific label to display.
+                  color:
+                    type: string
+                    description: The hexadecimal color code.
+                    example: '#5080F0'
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                    label:
+                      type: string
+              resultActions:
+                type: object
+                properties:
+                  attachToCase:
+                    type: object
+                    properties:
+                      enabled:
+                        type: boolean
+                    description: Users can attach items to the current CRM object (e.g., an opened case).
+                  copyToClipboard:
+                    type: object
+                    properties:
+                      enabled:
+                        type: boolean
+                    description: Users can copy a result to their clipboard.
+                  quickView:
+                    type: object
+                    properties:
+                      enabled:
+                        type: boolean
+                    description: Users can preview a result without leaving the search page.
+                  sendAsEmail:
+                    type: object
+                    properties:
+                      enabled:
+                        type: boolean
+                    description: Users can insert a link to an item into an email.
+                  sendToFeed:
+                    type: object
+                    properties:
+                      enabled:
+                        type: boolean
+                    description: Users can insert a link to an item into a post.
+                description: Indicates the actions that are available on each result.
+        facets:
+          type: array
+          description: The facets configured for the Insight Panel interface.
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: The name of the facet field.
+              label:
+                type: string
+                description: The title of the facet.
+              displayValuesAs:
+                type: string
+                description: Whether to display the facet values as checkboxes (multiple selection), links (single selection),
+                  or boxes (multiple selection). Possible values are <code>checkbox</code>, <code>link</code>, and <code>box</code>.
+                example: link
+                default: checkbox
+        tabs:
+          type: array
+          description: The tabs configured for the Insight Panel interface.
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+                description: The caption for the tab.
+                example: People
+              conditions:
+                $ref: '#/components/schemas/RestConditions'
+        settings:
+          type: object
+          properties:
+            createArticle:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+            fullSearch:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+          description: The settings for the Insight Panel interface.
+    RestConditions:
+      type: array
+      items:
+        type: object
+    RestInsightPanelSearchRequest:
+      type: object
+      properties:
+        analytics:
+          $ref: '#/components/schemas/Analytics'
+        q:
+          type: string
+          description: The basic query expression, typically the keywords entered by the end user in a query box.
+        cq:
+          type: string
+          description: <p>The constant query expression, typically populated with expressions that must apply to all queries
+            sent from a specific search interface (e.g., from a specific tab). Once evaluated, the result sets of those expressions
+            are kept in a special cache.</p><p><strong>Tip:</strong> Avoid including dynamic content in the constant query
+            expression. Otherwise, you risk filling up the cache with useless data, which can have a negative impact on performance.</p>
+        facets:
+          type: array
+          description: The facet operations to perform on the query results.
+          items:
+            $ref: '#/components/schemas/ServiceRestFacetRequest'
+        firstResult:
+          type: integer
+          description: <p>The 0-based position of the first result to return in the non-paginated result set.</p><p>Along
+            with the <code>numberOfResults</code> parameter, this allows you to retrieve a specific page of result items.</p>
+        numberOfResults:
+          type: integer
+          description: <p>The number of results to return.</p><p>Along with the <code>firstResult</code> parameter, this allows
+            you to retrieve a specific page of result items.</p><p>This parameter also defines the maximum number of results
+            which can be returned by the Coveo ML Recommencations feature.</p><p><strong>Note:</strong> The maximum <code>numberOfResults</code>
+            value depends on the index settings of your Coveo organization. By default, a Coveo index can return a maximum
+            of 5,000 items per query.</p>
+        caseContext:
+          type: object
+          properties: {}
+          description: Contextual information about the case.
+          example:
+            subject: This is the case subject
+            description: This is the case description
+        fieldsToInclude:
+          type: array
+          description: <p>The names of the fields to include with each item in the query results. If specified, no other fields
+            will be included.</p><p><strong>Note:</strong> If you specify both an array of fields to include and an array
+            of fields to exclude (see the <code>fieldsToExclude</code> parameter), the <code>fieldsToExclude</code> parameter
+            has no effect at all.</p> <p>If you do not explicitly specify an array of values for this parameter (or for the
+            <code>fieldsToExclude</code> parameter), each query result item will include all of its available fields.</p>
+          example:
+          - clickableuri
+          - author
+          - date
+          - filetype
+          - language
+          - conversationid
+          - messageid
+          - childid
+          - adjustednumberoflikes
+          items:
+            type: string
+        enableDidYouMean:
+          type: boolean
+          description: '<p><strong>Important:</strong> This feature is still in an experimental state.</p><p>Whether to enable
+            the Coveo ML query suggestions <i>Did You Mean</i> feature, which populates the <code>queryCorrection</code> property
+            of a successful response with keyword correction suggestions.</p><p>Notes: <ul><li>The Coveo ML query suggestions
+            Did You Mean feature only processes the basic query expression (see the <code>q</code> parameter).</li><li>When
+            both the <code>enableDidYouMean</code> and <code>enableMLDidYouMean</code> parameters are set to <code>true</code>,
+            the output of both features will appear in the <code>queryCorrections</code> array.</li></ul></p>'
+          default: false
+        sortCriteria:
+          type: string
+          description: '<p>The criteria to use for sorting the query results.</p> <p>Allowed values: <ul> <li><code>relevancy</code>:
+            use standard index ranking factors (adjacency, TDIDF, etc.) and custom ranking expressions (QREs and QRFs) to
+            compute a ranking <code>score</code> for each query result item, and sort the query results by descending <code>score</code>
+            value.</li> <li><code>date ascending</code>/<code>date descending</code>: use the <code>@date</code> field to
+            sort the query results. This field typically contains the last modification date of each item.</li> <li><code>qre</code>:
+            use only custom ranking expressions (QREs and QRFs) to compute a ranking <code>score</code> for each query result
+            item, and sort the query results by descending <code>score</code> value.</li> <li><code>nosort</code>: do not
+            sort the query results; the index will return result items in an essentially random order.</li> <li><code>@[field]
+            ascending</code>/<code>@[field] descending</code>: sort using the value of a specific sortable field (replace
+            <code>[field]</code> with the name of the target field).</li> </ul> </p> <p> You can specify a list of comma-separated
+            sort criteria. However, this only works when combining: <ul> <li>two or more field criteria (e.g., <code>@views
+            descending,@likes descending</code>).</li> <li>a single date criteria with one or mode field criteria (e.g., <code>date
+            ascending,@views descending</code>).</li> </ul> </p> <p> Examples: <ul> <li><code>date ascending</code></li> <li><code>@author
+            ascending</code></li> <li><code>date descending,@views descending,@likes descending</code></li> </ul> </p>'
+          default: relevancy
+        tab:
+          type: string
+          description: <p>The second level of origin of the request, typically the identifier of the selected tab in the graphical
+            search interface from which the request originates.</p> <p>Coveo Machine Learning models use this information
+            to provide contextually relevant output.</p> <p><strong>Note:</strong> When logging a <strong>Search</strong>
+            usage analytics event for a query, the <code>originLevel2</code> field of that event should be set to the <code>tab</code>
+            value of the query (or to the <code>&quot;default&quot;</code> string, if no <code>tab</code> value was specified
+            in the query).</p>
+        debug:
+          $ref: '#/components/schemas/RestDebug'
+    RestInsightPanelSearchResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          description: <p>The total number of items that match the query for the current user (security trimming applied).</p>
+            <p><strong>Note:</strong> When logging a Search Usage Analytics event for a query, the <code>numberOfResults</code>
+            field of that event should be set to the <code>totalCount</code> value of the query (for reporting purposes).</p>
+          example: 250
+        totalCountFiltered:
+          type: integer
+          description: <p>The total number of items that match the query for the current user (security trimming applied)
+            after duplicate filtering has been applied (see the <code>duplicateFiltering</code> query parameter).</p>
+          example: 245
+        duration:
+          type: integer
+          description: <p>The <code>requestDuration</code> added to the computing time (in milliseconds) that was required
+            by the Search API.</p>
+          example: 1235
+        indexDuration:
+          type: object
+          description: <p>The time (in milliseconds) that was required for the index to find the query items.</p>
+          example: '1175'
+        requestDuration:
+          type: integer
+          description: <p>The <code>indexDuration</code> added to the time (in milliseconds) that was required to establish
+            a connection between the Search API server and the index server.</p>
+          example: 1181
+        searchUid:
+          type: string
+          description: <p>The query <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>. Each query
+            sent to the Search API has its own randomly generated <code>searchUid</code>.</p> <p><strong>Note:</strong> When
+            logging a Search or Custom Usage Analytics event for a query, or a Click Usage Analytics event for an opened query
+            result item, the <code>searchQueryUid</code> field of that event should be set to the <code>searchUid</code> value
+            of the query response.</p>
+          example: a0e4773c-39c3-423c-90cd-c03a640ecde5
+        pipeline:
+          type: string
+          description: <p>The name of the query pipeline to use for this request (bypassing its conditions, if it has any).</p>
+          example: CustomQueryPipeline
+        apiVersion:
+          type: integer
+          description: <p>The version of the Search API that sent the query.</p>
+          example: 2
+        exception:
+          type: object
+          properties:
+            code:
+              type: string
+            context:
+              type: string
+        isFallbackToAdmin:
+          type: boolean
+          description: <p>Whether the admin session ID was allowed and used by the Coveo for Salesforce search engine. The
+            value will be set to <code>true</code> when this is the case, and might be absent or set to <code>false</code>
+            otherwise.</p>
+        warnings:
+          type: array
+          description: <p>The errors that did not make the query fail, but should be addressed. These might be security issues,
+            deprecated behaviors, or any other kind of concern.</p>
+          items:
+            type: string
+        errors:
+          type: array
+          description: <p>The errors that critically changed the query behavior. These should be addressed right away to prevent
+            future errors.</p>
+          items:
+            type: string
+        index:
+          type: string
+          description: <p>The identifier of the index mirror against which the query was executed (see the <code>indexToken</code>
+            query parameter).</p>
+          example: mycoveocloudv2organizationid-cqjd206sta1xb9qyxfhhnsu294-Indexer-2-9rbfxhp1n07cth80ckzeh3zotc
+        indexToken:
+          type: string
+          description: <p>The Base64 encoded identifier of the index mirror to which the request was forwarded (see the <code>index</code>
+            parameter).</p> <p>If you do not specify an <code>indexToken</code> (or <code>index</code>) value, any index mirror
+            could be used.</p> <p><strong>Note:</strong> Passing an <code>indexToken</code> (or <code>index</code>) value
+            has no effect when the results of a specific request can be returned from cache (see the <code>maximumAge</code>
+            query parameter).</p>
+          example: ZXhhbXBsZWluZGV4bWlycm9yLS4uLg==
+        triggers:
+          type: object
+          properties:
+            type:
+              type: string
+              description: <p>The type of Coveo query pipeline Trigger statement (see <a href="https://docs.coveo.com/en/3413">Manage
+                trigger rules</a>).</p>
+              example: notify
+            content:
+              type: object
+              properties: {}
+          description: <p>The actions that the client should perform based on the Trigger statements defined in the query
+            pipelines (see the <code>pipeline</code> query parameter).</p> <p><strong>Note:</strong> A trigger statement must
+            have a condition. Otherwise, the Search API ignores it and does not include it in the <code>triggers</code> array
+            of the query response (see <a href="https://docs.coveo.com/en/3413">Manage trigger rules</a>).</p>
+        termsToHighlight:
+          type: object
+          properties: {}
+          description: <p>The terms to highlight in each query result item. Includes all basic query expression keywords,
+            as well as any word that was stemmed from a basic query expression keyword (see the <code>q</code> query parameter),
+            unless the keyword was preceded by the no stemming Coveo query syntax operator (<code>+</code>).</p>
+          example:
+            coveo: []
+            cloud:
+            - clouds
+            v2: []
+            platform:
+            - platforms
+        phrasesToHighlight:
+          type: object
+          properties: {}
+          description: <p>The phrases to highlight in each query result item. This property is populated when the basic query
+            expression (see the <code>q</code> query parameter) contains one or more exact phrase match requests (terms between
+            double quote characters).</p>
+          example:
+            cloud v2:
+              cloud: []
+              v2: []
+        queryCorrections:
+          type: object
+          properties:
+            correctedQuery:
+              type: string
+              description: The corrected query expression.
+              example: Coveo Cloud V2 platform
+            wordCorrections:
+              type: array
+              description: The word correction suggestions.
+              items:
+                type: object
+                properties:
+                  offset:
+                    type: integer
+                    description: The offset (in number of characters) of the corrected word, from the beginning of the corrected
+                      query expression.
+                    example: 15
+                  length:
+                    type: integer
+                    description: The length (in number of characters) of the corrected word.
+                    example: 8
+                  originalWord:
+                    type: string
+                    description: The original, un-corrected word.
+                    example: platfomr
+                  correctedWord:
+                    type: string
+                    description: The suggested word correction.
+                    example: platform
+          description: <p>The query corrections suggested by the index, if the <code>enableDidYouMean</code> query parameter
+            was set to <code>true</code>.</p>
+        refinedKeywords:
+          type: array
+          description: The refined keywords used by the Coveo ML Automatic Relevance Tuning (ART) model.
+          example:
+          - v2
+          - platform
+          - cloud
+          - coveo
+          items:
+            type: string
+        categoryFacets:
+          type: array
+          description: Hierarchical data results that correspond to the hierarchical data in the query.
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              values:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                    numberOfResults:
+                      type: integer
+              parentValues:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                    numberOfResults:
+                      type: integer
+        facets:
+          type: array
+          description: <p>The facet results returned by the query. These results are included in the order they were requested
+            in the <code>facets</code> query parameter.</p>
+          items:
+            $ref: '#/components/schemas/RestHierarchicalFacetResponseValue'
+        suggestedFacets:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: The name of the field on which the DNE facet suggestion is based.
+                example: author
+              values:
+                type: array
+                description: The suggested facet values.
+                items:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                      description: A DNE facet value suggestion.
+                      example: Alice Smith
+                    path:
+                      type: array
+                      description: '<p>The path to the suggested facet value (only applies to hierarchical facet value suggestions).</p>
+                        <p>Example: If the suggested hierarchical facet value is <code>Parrot</code>, the returned path could
+                        be <code>["Animals", "Birds", "Parrot"]</code>.</p>'
+                      items:
+                        type: string
+            description: A DNE facet suggestion.
+        results:
+          type: array
+          description: The items returned for the query.
+          items:
+            $ref: '#/components/schemas/RestQueryResult'
+        questionAnswer:
+          type: object
+          properties:
+            answerFound:
+              type: boolean
+            question:
+              type: string
+            answerSnippet:
+              type: string
+            answerId:
+              type: string
+            documentId:
+              $ref: '#/components/schemas/RestContentId'
+            allContentIds:
+              type: array
+              items:
+                $ref: '#/components/schemas/RestContentId'
+            score:
+              type: number
+            relatedQuestions:
+              type: array
+              items:
+                type: object
+                properties:
+                  question:
+                    type: string
+                  answerSnippet:
+                    type: string
+                  documentId:
+                    $ref: '#/components/schemas/RestContentId'
+                  score:
+                    type: number
+            raw:
+              type: object
+              properties: {}
+    RestContentId:
+      type: object
+      properties:
+        contentIdKey:
+          type: string
+        contentIdValue:
+          type: string
+    RestHierarchicalFacetResponseValue:
+      type: object
+      properties:
+        field:
+          type: string
+          description: The name of the field on which the facet is based.
+          example: author
+        moreValuesAvailable:
+          type: boolean
+          description: Whether additional values are available for the facet.
+        values:
+          type: array
+          description: The returned facet values.
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                description: <p>The name of the facet value.</p><p><strong>Note:</strong> In the case of a hierarchical facet
+                  value, this represents a single path segment.</p>
+                example: Alice Smith
+              state:
+                type: string
+                description: The current state of the facet value in the search interface.
+                default: idle
+                enum:
+                - idle
+                - selected
+                - excluded
+              numberOfResults:
+                type: integer
+                description: <p>The number of query results that can be expected if the facet value is selected in the search
+                  interface.</p><p><strong>Note:</strong> This property only gets populated when the facet currently has no
+                  selected or excluded values.</p>
+              endInclusive:
+                type: boolean
+                description: Whether to include the <code>end</code> value in the range.
+                default: false
+              children:
+                type: array
+                description: <p>The children of this hierarchical facet value.</p> <p>Each child is a full-fledged hierarchical
+                  facet value that may in turn have its own children and so forth, up to a maximum depth of 50 levels.</p>
+                items:
+                  $ref: '#/components/schemas/RestHierarchicalFacetResponseValue'
+              moreValuesAvailable:
+                type: boolean
+                description: Whether additional values are available for the facet.
+              isSuggested:
+                type: boolean
+              isAutoSelected:
+                type: boolean
+                description: Whether the facet value was automatically selected by Coveo ML.
+              path:
+                type: array
+                items:
+                  type: string
+              isLeafValue:
+                type: boolean
+                description: Whether the hierarchical value is a childless node.
+        mlScore:
+          type: number
+          description: The ranking score computed by Coveo ML DNE for this facet.
+        indexScore:
+          type: number
+          description: The ranking score computed by the index for this facet.
+        isFromAutoSelect:
+          type: boolean
+          description: Whether the facet was recommended by Coveo ML.
+    RestQueryResult:
+      type: object
+      properties:
+        title:
+          type: string
+          description: <p>The item title.</p> <p><strong>Note:</strong> When logging a Click Usage Analytics event for an
+            opened query result item, the <code>documentTitle</code> field of that event should be set to the <code>title</code>
+            value of the opened query result item.</p>
+          example: Differences between Coveo Cloud V2 and V1
+        uri:
+          type: string
+          description: '<p>The item URI.</p> <p>Notes: <ul> <li>Avoid using the <code>uri</code> value to create hyperlinks
+            to the item. Use the <code>clickUri</code> value instead.</li> <li>When logging a Click Usage Analytics event
+            for an opened query result item, the <code>documentUrl</code> field of that event should be set to the <code>uri</code>
+            value of the opened query result item.</li> </ul> </p>'
+          example: https://example.com/Root:0/topic:898/post:2
+        printableUri:
+          type: string
+          description: <p>The human readable item URI.</p> <p><strong>Note:</strong> Avoid using the <code>printableUri</code>
+            value to create hyperlinks to the item. Use the <code>clickUri</code> value instead.</p>
+          example: https://example.com/topic:898/post:2
+        clickUri:
+          type: string
+          description: '<p>The hyperlinkable item URI.</p> <p>Notes: <ul> <li>Use the <code>clickUri</code> value when you
+            want to create hyperlinks to the item, rather than the <code>uri</code> or <code>printableUri</code> values.</li>
+            <li>The <code>clickUri</code> value is not necessarily unique for each item.</li> </ul> </p>'
+          example: https://example.com/t/1/898/2
+        uniqueId:
+          type: string
+          description: <p>The unique item identifier. You should consider the <code>uniqueId</code> value as an opaque string.</p>
+          example: 84.72597$https://example.com/Root:0/Topic:898/Post:2
+        excerpt:
+          type: string
+          description: <p>The contextual excerpt generated for the item (see the <code>excerptLength</code> query parameter).</p>
+          example: '... the new Coveo Cloud V2 and Coveo Cloud V1 ... the main differences between the two Coveo Cloud versions
+            ...'
+        firstSentences:
+          type: string
+          description: The first sentences from the item (see the <code>retrieveFirstSentences</code> query parameter).
+          example: Hello, I know Coveo currently hosts organizations in two independent cloud platforms, the new Coveo Cloud
+            V2 and Coveo Cloud V1, the original Coveo offering in the cloud. I would like to learn the main differences between
+            the two Coveo Cloud versions ...
+        summary:
+          type: string
+          description: The item summary (see the <code>summaryLength</code> query parameter).
+        flags:
+          type: string
+          description: The flags that are set on the item by the index. Distinct values are separated by semicolons.
+          example: HasHtmlVersion;HasMobileHtmlVersion
+        hasHtmlVersion:
+          type: boolean
+          description: Whether the index contains an HTML version of this item.
+        hasMobileHtmlVersion:
+          type: boolean
+          description: Whether the index contains a mobile HTML version of this item.
+        score:
+          type: integer
+          description: The total ranking score computed for the item (see the <code>sortCriteria</code> and <code>rankingFunctions</code>
+            query parameters).
+          example: 1626
+        percentScore:
+          type: number
+          description: The item ranking score expressed as a percentage (see the <code>sortCriteria</code> and <code>rankingFunctions</code>
+            query parameters).
+          example: 90.73539
+        rankingInfo:
+          type: string
+          description: The raw debug information generated by the index to detail how the item was ranked. This property is
+            <code>null</code> unless the <code>debug</code> query parameter is set to <code>true</code>.
+          example: 'Document weights: Title: 0; Quality: 180; Date: 596; Adjacency: 0; Source: 500; Custom: 350; Collaborative
+            rating: 0; QRE: 0; Ranking functions: 0; Total weight: 1626'
+        rating:
+          type: number
+          description: <p>The item rating (see the <code>enableCollaborativeRating</code> query parameter).</p> <p><strong>Note:</strong>
+            Unless collaborative rating is enabled for your index, the value of this property is always <code>3</code>.</p>
+          example: 3
+        isTopResult:
+          type: boolean
+          description: Whether the item score was boosted by a featured result rule in the query pipeline.
+        isRecommendation:
+          type: boolean
+          description: Whether the item score was boosted as a Coveo ML recommendation.
+        isUserActionView:
+          type: boolean
+          description: Whether the item score was boosted as a Coveo ML recommendation.
+        rankingModifier:
+          type: string
+          description: <p>If applicable, represents the type of ranking modification that was applied to this result.</p>
+            <p><strong>Note:</strong> When logging a Click Usage Analytics event for an opened query result item, the <code>rankingModifier</code>
+            field of that event should be set to the <code>rankingModifier</code> value of the opened query result item, if
+            available.</p>
+          example: TopResult
+        titleHighlights:
+          type: array
+          description: The length and offset of each word to highlight in the item <code>title</code> string.
+          items:
+            $ref: '#/components/schemas/RestHighlightResponse'
+        firstSentencesHighlights:
+          type: array
+          description: The length and offset of each word to highlight in the item <code>firstSentences</code> string.
+          items:
+            $ref: '#/components/schemas/RestHighlightResponse'
+        excerptHighlights:
+          type: array
+          description: The length and offset of each word to highlight in the item <code>excerpt</code> string.
+          items:
+            $ref: '#/components/schemas/RestHighlightResponse'
+        printableUriHighlights:
+          type: array
+          description: The length and offset of each word to highlight in the item <code>printableUri</code> string.
+          items:
+            $ref: '#/components/schemas/RestHighlightResponse'
+        summaryHighlights:
+          type: array
+          description: The length and offset of each word to highlight in the item <code>summary</code> string.
+          items:
+            $ref: '#/components/schemas/RestHighlightResponse'
+        parentResult:
+          $ref: '#/components/schemas/RestQueryResult'
+        childResults:
+          type: array
+          description: An array of references to the children of this item, if result folding was applied (see the <code>filterField</code>
+            query parameter). The query results contained in this field will have both their parent and child results set
+            to <code>null</code>.
+          items:
+            $ref: '#/components/schemas/RestQueryResult'
+        totalNumberOfChildResults:
+          type: integer
+          description: The total number of children available in the index for this item, if result folding was applied (see
+            the <code>filterField</code> query parameter).
+        absentTerms:
+          type: array
+          description: <p>The basic query expression terms which this query result item does not match.</p> <p><strong>Note:</strong>
+            This property is populated by terms from the query pipeline-processed <code>q</code> value (not from the original
+            <code>q</code> value).</p>
+          items:
+            type: string
+        raw:
+          type: object
+          properties: {}
+          description: <p>The values of the fields which were retrieved for this item (see the <code>fieldsToInclude</code>
+            and <code>fieldsToExclude</code> query parameters).</p>
+    ServiceRestFacetRequest:
+      required:
+      - field
+      - type
+      type: object
+      properties:
+        field:
+          type: string
+          description: <p>The name of the field on which to base the facet request.</p> <p><strong>Note:</strong> This must
+            reference a field whose <strong>Facet</strong> option is enabled (see <a href="https://docs.coveo.com/en/1833">Add
+            or edit a field</a>).</p>
+          example: author
+        type:
+          type: string
+          description: Request facet values representing specific values (e.g., Alice Smith, Bob Jones, etc.).
+          default: specific
+    RestHighlightResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+          description: The length of the word (in number of characters) to highlight.
+          example: 5
+        offset:
+          type: integer
+          description: The 0-based index position of the first character of the word to highlight in the string.
+          example: 15
+    RestDebug:
+      type: boolean
+      description: '<p>Whether to force a successful response to include debug information.</p> <p> Notes: <ul> <li>Debug
+        information can only appear in responses in the JSON format (see the <code>format</code> parameter).</li> <li>Avoid
+        setting this parameter to <code>true</code> in production, as it has a negative impact on query performance.</li>
+        </ul> </p>'
+      default: false
+    RestInsightPanelQuerySuggestRequest:
+      type: object
+      properties:
+        analytics:
+          $ref: '#/components/schemas/Analytics'
+        q:
+          type: string
+          description: The basic query expression, typically the keywords entered by the end user in a query box.
+          example: Coveo "Cloud V2" platform
+        count:
+          type: integer
+          description: The desired number of query suggestions.
+        context:
+          type: object
+          properties: {}
+          description: <p>The custom context information to send along with the request. Must be a dictionary of key-value
+            pairs (JSON) where each key is a string, and each value is either a string or an array of strings.</p> <p>Coveo
+            Machine Learning models may use this information to provide contextually relevant output. Moreover, this information
+            can be referred to in query expressions and QPL statements by using the <code>$context</code> object.</p> <p><strong>Note:</strong>
+            When logging a Search Usage Analytics event for a query, the <code>customData</code> field of that event should
+            include the same data as the <code>context</code> parameter of the query. However, each <code>context</code> key
+            included in <code>customData</code> must be prefixed by <code>context_</code> (e.g., the <code>userRoles</code>
+            key in context becomes <code>context_userRoles</code> in <code>customData</code>).</p> <p>See also the <code>referrer</code>
+            parameter.</p>
+          example:
+            userAgeRange: 25-35
+            userRoles:
+            - PremiumCustomer
+            - ProductReviewer
+        locale:
+          type: string
+          description: <p>The locale of the current user. Must comply with IETF's <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">BCP
+            47</a> definition.</p> <p>Coveo Machine Learning models use this information to provide contextually relevant
+            output. Moreover, this information can be referred to in query expressions and QPL statements by using the <code>$locale</code>
+            object.</p> <p><strong>Note:</strong> When logging a Search Usage Analytics event, the <code>language</code> field
+            of that event should match the language part of the <code>locale</code> value of the query (e.g., <code>en-US</code>
+            in <code>locale</code> becomes <code>en</code> in <code>language</code>).</p>
+          example: en-US
+        timezone:
+          type: string
+          description: <p>The <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">tz database</a> identifier
+            of the time zone to use to correctly interpret dates in the query expression and result items.</p> <p>If not specified,
+            the default time zone of the server hosting the index is used.</p> <p><strong>Note:</strong> While no Coveo Machine
+            Learning models use this information, it can nevertheless affect the ranking scores (and thus, potentially the
+            order) or result items, as ranking expressions may be based on time constants.</p>
+          example: America/New_York
+        actionsHistory:
+          type: array
+          description: <p>The previous query and page view actions made by the current user.</p> <p>Coveo Machine Learning
+            Content Recommendation models use this information to provide contextually relevant output.</p> <p><strong>Note:</strong>
+            Page view actions are typically populated by the <a href="https://github.com/coveo/coveo.analytics.js">coveo.analytics.js</a>
+            script.</p>
+          items:
+            $ref: '#/components/schemas/ActionHistory'
+        visitorId:
+          type: string
+          description: <p>A GUID which represents the current user, who can either be authenticated or anonymous.</p> <p><code>visitorId</code>
+            is deprecated and has been replaced by <a href="https://docs.coveo.com/en/masb0234/"><code>clientId</code><a>
+            in newer versions of the Coveo UI libraries. For compatibility, the new first-party cookie and local storage values
+            are still named <code>coveo_visitorId</code>.</p> <p>For older versions of the JavaScript Search Framework, the
+            visitor ID is generated by the Coveo Usage Analytics service and stored in a non-expiring third-party cookie.
+            <strong>Note:</strong> Third-party cookies <a href="https://docs.coveo.com/en/m54b9238/">have also been deprecated</a>.
+            This is unrelated to the deprecation of <code>visitorId</code>.</p>
+          example: 5cb98953-9c13-42ff-8176-e6fcba6a50bf
+        maximumAge:
+          type: integer
+          description: <p>The maximum age of cached results, in milliseconds.</p> <p>If the results of a specific request
+            are available in the cache, and if those results are no older than the <code>maximumAge</code> value, the service
+            returns those results rather than forwarding a new query to the index.</p> <p><strong>Note:</strong> This parameter
+            is automatically overridden when <code>staticQuery</code> is set to <code>true</code>.</p>
+          example: 180000
+        debug:
+          $ref: '#/components/schemas/RestDebug'
+    RestInsightPanelQuerySuggestResponse:
+      type: object
+      properties:
+        completions:
+          type: array
+          items:
+            type: object
+            properties:
+              expression:
+                type: string
+              score:
+                type: number
+              highlighted:
+                type: string
+              executableConfidence:
+                type: number
+              objectId:
+                type: string
+        responseId:
+          type: string
+        executionReport:
+          type: object
+          properties: {}
+          description: The execution report that is produced when the <code>debug</code> parameter is set to <code>true</code>.
+    RestListOfInsightPanelConfigurationsWithProjects:
+      type: object
+      properties:
+        configurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestInsightPanelConfigurationWithProjects'
+        totalEntries:
+          type: integer
+          format: int32
+          description: The total number of configurations
+          example: 1
+        totalPages:
+          type: integer
+          format: int32
+          description: The total number of pages
+          example: 1
+    RestInsightPanelConfigurationWithProjects:
+      allOf:
+      - $ref: '#/components/schemas/RestInsightPanelConfiguration'
+      - type: object
+        properties:
+          projectIds:
+            type: array
+            items:
+              type: string
+              example: myProjectId
+            description: Each item is the unique identifier of a project associated with the Insight Panel configuration.
+        required:
+        - projectIds
+    gencasereformulationModelId:
+      type: string
+      description: The unique identifier of the case reformulation machine-learning model.
+      example: myorganization1234_gencasereformulation_00000000_0000_0000_0000_000000000000
+    gencaseansweringModelId:
+      type: string
+      description: The unique identifier of the case answering machine-learning model.
+      example: myorganization1234_gencaseanswering_00000000_0000_0000_0000_000000000000
+    prapiModelId:
+      type: string
+      description: The unique identifier of the passage retrieval machine-learning model.
+      example: myorganization1234_chunksretrieval_00000000_0000_0000_0000_000000000000
+    caseTitleKey:
+      type: string
+      description: The case context key used to store the case title. It is used by the case answering model.
+      example: case-title
+    caseDescriptionKey:
+      type: string
+      description: The case context key used to store the case description. It is used by the case answering model.
+      example: case-description
+    LfcaConfiguration:
+      type: object
+      required:
+      - gencasereformulationModelId
+      - gencaseansweringModelId
+      - prapiModelId
+      - caseTitleKey
+      - caseDescriptionKey
+      properties:
+        gencasereformulationModelId:
+          $ref: '#/components/schemas/gencasereformulationModelId'
+        gencaseansweringModelId:
+          $ref: '#/components/schemas/gencaseansweringModelId'
+        prapiModelId:
+          $ref: '#/components/schemas/prapiModelId'
+        caseTitleKey:
+          $ref: '#/components/schemas/caseTitleKey'
+        caseDescriptionKey:
+          $ref: '#/components/schemas/caseDescriptionKey'
+    LfcaConfigurationPatchRequest:
+      type: object
+      properties:
+        gencasereformulationModelId:
+          $ref: '#/components/schemas/gencasereformulationModelId'
+        gencaseansweringModelId:
+          $ref: '#/components/schemas/gencaseansweringModelId'
+        prapiModelId:
+          $ref: '#/components/schemas/prapiModelId'
+        caseTitleKey:
+          $ref: '#/components/schemas/caseTitleKey'
+        caseDescriptionKey:
+          $ref: '#/components/schemas/caseDescriptionKey'
+    MaximumAge:
+      type: integer
+      nullable: true
+      description: 'The maximum age of cached results, in milliseconds.
+
+
+        If the results of a specific request are available in the cache, and if those results are no older than the `maximumAge`
+        value, the service returns those results rather than forwarding a new query to the index.
+
+
+        Such cache hits improve responsiveness but still count as queries in your queries per month (QPM) count.
+
+
+        **Note:** This parameter is automatically overridden when `staticQuery` is set to `true`.
+
+
+        **Default:** `-1` (which corresponds to the internal default value (15 minutes)'
+      format: int32
+      example: 1800000
+      default: -1
+    Pipeline:
+      type: string
+      nullable: true
+      description: 'The name of the query pipeline to use for this request (bypassing its conditions, if it has any).
+
+
+        You can pass an empty `pipeline` value to use an empty query pipeline (i.e., `?pipeline=` or `"pipeline": ""`).
+
+
+        If a query does not contain the `pipeline` parameter, the first query pipeline whose conditions are met by the request
+        is used (query pipelines without conditions are not evaluated). Should the request fail to meet the conditions of
+        each evaluated query pipeline, the default query pipeline of the target Coveo Cloud organization is used (bypassing
+        its conditions, if it has any).
+
+
+        **Notes:**
+
+
+        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/)
+        that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional)
+        that routes queries to a specific `pipeline` via a query pipeline condition.
+
+        - For reporting purposes, when logging a **Search** usage analytics event for a query, the `queryPipeline` field of
+        that event should be set to the `pipeline` value of the query (or to the `"default"` string, if no `pipeline` value
+        was specified in the query).
+
+
+        See also [Managing Query Pipelines](https://docs.coveo.com/en/1450/).
+
+        '
+      example: CustomerQueryPipeline
+    SearchHub:
+      type: string
+      nullable: true
+      description: 'The first level of origin of the request, typically the identifier of the graphical search interface from
+        which the request originates.
+
+
+        Coveo Machine Learning models use this information to provide contextually relevant output.
+
+
+        **Notes:**
+
+
+        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/)
+        that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional)
+        that routes queries to a specific `pipeline` via a query pipeline condition.
+
+        - When logging a **Search** usage analytics event for a query, the `originLevel1` field of that event should be set
+        to the value of the `searchHub` search request parameter.
+
+
+        See also the `tab` parameter.
+
+        '
+      example: CustomerPortal
+    Tab:
+      type: string
+      nullable: true
+      description: 'The second level of origin of the request, typically the identifier of the selected tab in the graphical
+        search interface from which the request originates.
+
+
+        Coveo Machine Learning models use this information to provide contextually relevant output.
+
+
+        **Note:** When logging a **Search** usage analytics event for a query, the `originLevel2` field of that event should
+        be set to the `tab` value of the query (or to the `"default"` string, if no `tab` value was specified in the query).
+
+
+        See also the `searchHub` parameter.
+
+        '
+      example: ForumTab
+    Context:
+      type: object
+      nullable: true
+      additionalProperties: true
+      description: 'The custom context information to send along with the request. Must be a dictionary of key-value pairs
+        (JSON) where each key is a string, and each value is either a string or an array of strings.
+
+
+        Coveo Machine Learning models may use this information to provide contextually relevant output. Moreover, this information
+        can be referred to in query expressions and QPL statements by using the `$context` object.
+
+
+        **Note:** When logging a **Search** usage analytics event for a query, the `customData` field of that event should
+        include the same data as the `context` parameter of the query. However, each `context` key included in `customData`
+        must be prefixed by `context_` (e.g., the `userRoles` key in `context` becomes `context_userRoles` in `customData`).
+
+
+        See also the `referrer` parameter.
+
+
+        **Example** `{"userAgeRange":"25-35","userRoles":["PremiumCustomer","ProductReviewer"]}`'
+    Locale:
+      type: string
+      nullable: true
+      description: 'The locale of the current user. Must comply with IETF''s [BCP 47](http://www.rfc-editor.org/rfc/bcp/bcp47.txt)
+        definition.
+
+
+        Coveo Machine Learning models use this information to provide contextually relevant output. Moreover, this information
+        can be referred to in query expressions and QPL statements by using the `$locale` object.
+
+
+        **Note:** When logging a **Search** usage analytics event, the `language` field of that event should match the language
+        part of the `locale` value of the query (e.g., `en-US` in `locale` becomes `en` in `language`).
+
+        '
+      example: en-US
+    Timezone:
+      type: string
+      nullable: true
+      description: 'The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time
+        zone to use to correctly interpret dates in the query expression and result items.
+
+
+        If not specified, the default time zone of the server hosting the index is used.
+
+
+        **Note:** While no Coveo Machine Learning model uses this information, it can nevertheless affect the ranking scores
+        (and thus, potentially the order) of result items, as ranking expressions may be based on time constants.
+
+        '
+      example: America/New_York
+    AnalyticsRequestParameters:
+      type: object
+      nullable: true
+      properties:
+        capture:
+          type: boolean
+          description: 'Whether the search api call should be tracked for analytics and machine learning purposes.
+
+            When set to `true`, be sure to set the `actionCause` parameter.
+
+            See [Standard actions and Usage Analytics reference](docs.coveo.com/en/1389)).'
+        trackingId:
+          type: string
+          description: A value to identify which web property an event is related to.
+        userId:
+          type: string
+          description: The ID of the user who is currently logged in. If not present, this ID is obtained from the authentication
+            token.
+        clientId:
+          type: string
+          description: 'A GUID which represents the current client.
+
+
+            If your implementation uses the Atomic or Headless libraries, or newer versions of the JavaScript Search Framework,
+            then the [client ID](https://docs.coveo.com/en/masb0234/) is generated automatically in client-side code. This
+            GUID is held in a browser''s local storage as well as a top level domain first-party cookie (`coveo_visitorId`)
+            that expires after 1 year. **Note:** The cookie takes precedence over the value in the browser''s local storage.
+
+
+            If you have a custom Coveo implementation, you will have to generate a [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)>)-formatted
+            GUID. You will need to send this ID as `analytics.clientId` in every event that is sent to Coveo UA and the Search
+            API.
+
+
+            Coveo Machine Learning models may use this information to provide contextually relevant output.
+
+
+            **Note** The `clientId` replaces the deprecated `visitorId`. For compatibility, the cookie and local storage values
+            are still named `coveo_visitorId`.'
+        documentLocation:
+          type: string
+          description: 'The URL of the current page or component.
+
+
+            If not present, the referrer is obtained from the [Referer](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer)
+            header.
+
+
+            **Note**: This information can be obtained from `coveo.analytics.js`.'
+        documentReferrer:
+          type: string
+          description: 'Typically the URL of the page that linked to the search interface from which the request originates
+            (e.g., in JavaScript, this would correspond to the `document.referrer` value).
+
+
+            Coveo Machine Learning models may use this information to provide contextually relevant output.
+
+
+            **Note**: This information can be obtained from `coveo.analytics.js`.'
+        pageId:
+          description: 'A GUID representing the page ID.
+
+
+            **Note**: This information can be obtained from `coveo.analytics.js`.'
+          anyOf:
+          - type: string
+            nullable: true
+          - type: integer
+        userIp:
+          type: string
+          description: 'The user IP. If not present, the IP is obtained from the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For)
+            and [Forwarded](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded) headers.
+
+
+            **Note**: This information is required when endpoints are behind a proxy.
+
+
+            **Example**: `127.0. 0.1`'
+        clientRequestId:
+          type: string
+          description: 'A GUID generated by the client representing the current request.
+
+
+            This information is used to identify operations across different apis related to the same request.'
+        clientTimestamp:
+          type: string
+          description: Client ISO 8601 timestamp with milliseconds.
+        userAgent:
+          type: string
+          description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent)
+            header.
+
+
+            **Note**: This information is required when endpoints are behind a proxy.'
+        actionCause:
+          type: string
+          description: 'The type of operation that triggered this event.
+
+            See [Standard actions and Usage Analytics reference](docs.coveo.com/en/1389)).'
+          example: facetSelect
+        originContext:
+          type: string
+          example: CommunitySearch
+          description: The origin of the event. Used to specify the deployment from which the user performs the action. Suggested
+            values are Search, InternalSearch, CommunitySearch, or the originLevel1 value
+        customData:
+          type: object
+          description: 'The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+
+            Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+
+            The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended
+            that you
+
+            create your custom dimension before adding customData'
+        configId:
+          type: string
+          description: 'An optional external reference to a use-case specific search configuration.
+
+            These configurations are maintained by LOBs and the search api has no knowledge of them.
+
+            This field can be used by LOBs to break down search statistics in LOB specific reporting.
+
+            This field is not present on non-captured search calls.'
+        source:
+          description: Defines one or more client side libraries that generated the analytics event. The format should be
+            the library's name followed by '@', and then the version. For example, '[custom.library.js@2.0.0]'.
+          type: array
+          items:
+            type: string
+          x-coveo-internal: true
+        commerce:
+          type: object
+          description: Commerce specific search context
+          x-coveo-internal: true
+          required:
+          - country
+          - currency
+          properties:
+            country:
+              type: string
+              nullable: true
+              example: US
+              description: The country of the storefront in ISO 3166 — Country Codes format.
+            currency:
+              type: string
+              nullable: true
+              example: USD
+              description: The selected currency of the cart and transactions.
+    Referrer:
+      type: string
+      nullable: true
+      description: 'The third level of origin of the request, typically the URL of the page that linked to the search interface
+        from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).
+
+
+        Coveo Machine Learning models may use this information to provide contextually relevant output.
+
+
+        **Note:** When logging a **Search** usage analytics event for a query, the `originLevel3` field of that event should
+        be set to the `referrer` value of the query, if specified.
+
+
+        See also the `context` parameter.
+
+        '
+      example: http://www.example.com/
+    ActionHistory:
+      required:
+      - name
+      - time
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The action history event name.
+
+
+            Possible values:
+
+
+            - **Query**
+
+            - **PageView**'
+          example: PageView
+        value:
+          type: string
+          description: The action history value, which is either a query expression or a page URI, depending on the action
+            history event `name`.
+        time:
+          type: string
+          description: The time when the action history event was sent from the client.
+    MlParameters:
+      type: object
+      nullable: true
+      description: 'A map of options to pass to the Coveo ML models associated with the request''s target query pipeline.
+
+
+        **Available parameters:**
+
+        - `considerUserContext` (boolean): Whether the models should attempt to leverage the `context` object of the request
+        to personalize their output. Applies to ER models only. Default is `true`.
+
+        - `maxActionsHistoryItemsToConsider` (unsigned integer): The maximum number of items in the `actionsHistory` array
+        of the request that should be taken into account by the models. Applies to ER models only. By default, all `actionsHistory`
+        items are considered.
+
+        - `num` (unsigned integer): The maximum number of recommendations/suggestions to request from the models. Must be
+        in range [1, 50], if specified. Applies to ART, ER, and QS models. Default depends on model configuration.
+
+        - `padding` (string enum): The kind of padding the models should complete their output with, if their maximum number
+        of recommendations/suggestions (i.e., `num`) has not been reached. Applies to ER models only. Allowed values are `popular`
+        (i.e., pad recommendations with all time most popular items) and `trending` (i.e., pad recommendations with items
+        that have recently been increasingly popular). By default, no padding applies.
+
+        - `wordSelection` (string): The ITD keyword selection options the models should use. Applies only to ART models with
+        ITD enabled. If specified, must be a string in the format `option:value`. The only available option is `wordsKept`
+        (i.e., the maximum number of `lq` keywords to inject in `q`); its default value is `5`.
+
+        - `minNumberOfWords` (unsigned integer): The minimum number of words a query suggestion may contain to be returned
+        by the model. Applies to QS models only. Must be in range [1, 10] Default is `1`, which implies that the model will
+        return all candidates.
+
+        - `itemId` (string): The unique identifier (e.g., SKU) of a product to get recommendations for. Only applies when
+        querying a Product Recommendations model with an association strategy considering a single item as an input.
+
+        - `itemIds` (array of strings): The unique identifiers (e.g., SKUs) of the products to get recommendations for. Only
+        applies when querying a Product Recommendations model with an association strategy considering multiple items as an
+        input.
+
+        - `categoryFilter` (string): The name of a category of products to get recommendations for.
+
+        - `brandFilter` (string): The name of a brand of products to get recommendations for.
+
+        - `filters` (map of strings): The dimensions along with the values to be used at query time by the model as filters
+        for potential suggestions. Only applies to ART, QS, and DNE models that don''t use the default `filterFields` advanced
+        parameter values. **Example:** `"filters": { "originContext": "<MY-VALUE>", "originLevel2": "<MY-VALUE>" }`.
+
+
+        **Examples:**
+
+        - `{"num": 3, "padding": "trending", "maxActionsHistoryItemsToConsider": 10, "considerUserContext": false}`
+
+        - `{"wordSelection": "wordsKept:4"}`
+
+        '
+      example:
+        num: 3
+        padding: trending
+    PipelineRuleParameters:
+      type: object
+      nullable: true
+      additionalProperties: true
+      maxProperties: 255
+      description: "This defines generic parameters to be used by rules.\nIt defines the \"scopes\", or in other words, the\
+        \ rules in which the parameters should be used.\nThe generic parameters are defined within a particular scope and\
+        \ are only be accessible inside of it.\nThis is a read-only parameter, so its value will not be overridden.\n\n`{\n\
+        \  \"scope\": {\n    \"parameterName\" : \"parameterValue\"\n  }\n}`\n\nWhile using Gen AI, if additional document\
+        \ fields are required for the resulting\ncitations, these fields can be specified through the 'citationsFieldToInclude'\n\
+        property of the 'mlGenerativeQuestionAnswering' scope.\n\n> **Note:**\n> Getting dictionary fields for citations is\
+        \ not supported.\n\n**Examples:**\n- `{\"mlGenerativeQuestionAnswering\": { \"responseFormat\": { \"answerStyle\"\
+        : \"bullet\" } } }`\n- `{\"mlGenerativeQuestionAnswering\": { \"citationsFieldToInclude\": [\"field1\", \"field2\"\
+        ] } }`\n\nMax Size: 1KB\n"
+      example:
+        genqa:
+          responseFormat:
+            answerStyle: bullet
+    AnswerSearchRequest:
+      type: object
+      properties:
+        q:
+          type: string
+          description: 'The basic query expression, typically the keywords entered by the end user in a query box.
+
+
+            **Note:** When logging a **Search** usage analytics event for a query, the `queryText` field of that event should
+            be set to the `q` value of the corresponding query.
+
+            '
+          example: Coveo "Cloud V2" platform
+        aq:
+          type: string
+          description: 'The advanced query expression, typically generated by code (e.g., when toggling facet values).
+
+
+            **Note:** When logging a **Search** usage analytics event for a query, the `advancedQuery` field of that event
+            should be set to the `aq` value of the corresponding query (for reporting purposes).
+
+            '
+          example: '@year==2017'
+        cq:
+          type: string
+          description: 'The constant query expression, typically populated with expressions that must apply to all queries
+            sent from a specific search interface (e.g., from a specific tab). Once evaluated, the result sets of those expressions
+            are kept in a special cache.
+
+
+            **Tip:** Avoid including dynamic content in the constant query expression. Otherwise you risk filling up the cache
+            with useless data, which can have a negative impact on performance.
+
+
+            **Notes:**
+
+
+            - Other parts of the query expression can also benefit from the index cache (see the `maximumAge` parameter).
+            However, using the constant query expression allows you to explicitly cache specific result sets.
+
+            - Temporal keywords (`now`, `today`, `yesterday`) in the constant query expression are only re-evaluated once
+            per 3-4 minutes; therefore, you should avoid basing `cq` expressions on temporal keywords if you require split
+            second accuracy.
+
+            '
+          example: '@documenttype==forumpost'
+        lq:
+          type: string
+          description: 'The large query expression, typically populated with a case description, long textual query, or any
+            other form of text that can help refine a query. The Coveo ML Intelligent Term Detection (ITD) feature can extract
+            relevant keywords from the large query expression and inject those keywords in the basic query expression (see
+            the `q` parameter).
+
+            '
+          example: 'I am looking for an enterprise-class native cloud SaaS/PaaS solution that provides a unified and secure
+            way to search for contextually relevant content across multiple enterprise systems.
+
+            '
+        queryCorrection:
+          type: object
+          required:
+          - enabled
+          description: "This parameter controls the behavior of the Coveo query correction feature.\n\nOnce enabled, this\
+            \ feature will:\n  - Attempt to correct your query if it doesn't return enough results.\n  - If corrections are\
+            \ found, the API will automatically correct your query.\n\nQuery corrections are derived from the index's _Did\
+            \ You Mean_ feature and ML query corrections.\n\nCorrection information will be returned in the `queryCorrection`\
+            \ property of the response. It will contain:\n  - The original query if it was automatically corrected.\n  - The\
+            \ corrected query if it was automatically corrected.\n  - A list of wordCorrections generated by our system.\n\
+            \nThis feature is off by default.\n"
+          properties:
+            enabled:
+              type: boolean
+              description: 'Whether or not this feature should be enabled. If it''s set to false, other `queryCorrection`
+                properties will be ignored.
+
+                '
+            options:
+              type: object
+              properties:
+                automaticallyCorrect:
+                  type: string
+                  enum:
+                  - never
+                  - whenNoResults
+                  default: whenNoResults
+                  description: "If set to `whenNoResults`, there are no results returned by the query and the original basic\
+                    \ query expression (`q`) appears to have been misspelled, the Search API will attempt to correct the `q`\
+                    \ value by either:\n\n  - applying keyword corrections, if any were provided by the _Did You Mean_ index\
+                    \ feature, or otherwise\n  - replacing the original `q` value with the highest ranked Coveo ML query suggestion\
+                    \ that will return results.\n\nIf the `q` value was corrected, the Search API will then automatically\
+                    \ fetch results from the index using the corrected `q` rather than the original one.\n"
+        maximumAge:
+          $ref: '#/components/schemas/MaximumAge'
+        pipeline:
+          $ref: '#/components/schemas/Pipeline'
+        searchHub:
+          $ref: '#/components/schemas/SearchHub'
+        tab:
+          $ref: '#/components/schemas/Tab'
+        context:
+          $ref: '#/components/schemas/Context'
+        locale:
+          $ref: '#/components/schemas/Locale'
+        timezone:
+          $ref: '#/components/schemas/Timezone'
+        analytics:
+          $ref: '#/components/schemas/AnalyticsRequestParameters'
+        partialMatch:
+          type: boolean
+          description: 'Whether to convert a basic expression containing at least `partialMatchKeywords` to a _partial match
+            expression_, so that any item containing at least `partialMatchThreshold` of those keywords will match the expression.
+
+
+            If you do not set this parameter to `true`, an item must contain all of the basic expression keywords to match
+            the expression.
+
+
+            **Default:** `false`
+
+            '
+          example: true
+          default: false
+        partialMatchKeywords:
+          type: integer
+          description: 'The minimum number of keywords that need to be present in a basic expression to convert it to a partial
+            match expression.
+
+
+            **Default:** `5`
+
+            '
+          format: int32
+          example: 4
+          default: 5
+        partialMatchThreshold:
+          type: string
+          description: 'An absolute or relative value indicating the minimum number (rounded up) of partial match expression
+            keywords an item must contain to match the expression.
+
+
+            **Default:** `50%`
+
+            '
+          example: 75%
+          default: 50%
+        lqPartialMatchMaxKeywords:
+          type: integer
+          description: 'The maximum number of keywords from the large query expression that will be included in the partial
+            match expression.
+
+
+            **Default:** `100`
+
+            '
+          format: int32
+          example: 20
+          default: 100
+        lqPartialMatchKeywords:
+          type: integer
+          description: 'The minimum number of keywords that need to be present in the large query expression to convert it
+            to a partial match expression.
+
+
+            **Default:** `5`
+
+            '
+          format: int32
+          example: 4
+          default: 5
+        lqPartialMatchThreshold:
+          type: string
+          description: 'An absolute or relative value indicating the minimum number of partial match expression keywords an
+            item must contain to match the large query expression.
+
+
+            **Default:** `50%`
+
+            '
+          example: 75%
+          default: 50%
+        wildcards:
+          type: boolean
+          description: 'Whether to enable the *wildcards* feature of the index in order to expand basic expression keywords
+            containing wildcard characters (`*`).
+
+
+            **Default:** `false`
+
+            '
+          example: true
+          default: false
+        questionMark:
+          type: boolean
+          description: 'Whether to enable question mark characters (`?`) in the *wildcards* feature of the index.
+
+
+            **Note:** Setting this parameter to `true` has no effect unless you also set the `wildcards` parameter to `true`.
+
+
+            **Default:** `false`
+
+            '
+          example: true
+          default: false
+        enableQuerySyntax:
+          type: boolean
+          description: 'Whether to interpret advanced Coveo Cloud query syntax as such in the basic query expression.
+
+
+            **Default:** `true`
+
+            '
+          example: true
+          default: true
+        facets:
+          type: array
+          description: The facet operations to perform on the query results.
+          items:
+            type: object
+            additionalProperties: true
+        facetOptions:
+          type: object
+          description: Options for configuring how facets are reordered.
+          properties:
+            freezeFacetOrder:
+              type: boolean
+              description: 'Whether facets should be returned in the same order they were requested.
+
+
+                **Note:** Setting this to `true` entirely prevents automatic score-based facet reordering.
+
+                To allow automatic facet reordering, but only take into account the scores generated by a Coveo ML DNE model,
+                set `enableIndexFacetOrdering` to `false` instead.
+
+
+                **Default:** `false`
+
+                '
+            enableIndexFacetOrdering:
+              type: boolean
+              description: 'Whether to take the scores generated by the index into account when reordering facets.
+
+
+                **Note:** Setting this to `false` implies that only the scores generated by a Coveo ML DNE model will be taken
+                into account when automatically reordering facets.
+
+                To disable automatic facet reordering entirely, set `freezeFacetOrder` to `true` instead.
+
+
+                **Default:** `true`
+
+                '
+        categoryFacets:
+          type: array
+          description: Hierarchical facet requests.
+          items:
+            type: object
+            additionalProperties: true
+        referrer:
+          $ref: '#/components/schemas/Referrer'
+        actionsHistory:
+          type: array
+          description: <p>The previous query and page view actions made by the current user.</p> <p>Coveo Machine Learning
+            Content Recommendation models use this information to provide contextually relevant output.</p> <p><strong>Note:</strong>
+            Page view actions are typically populated by the <a href="https://github.com/coveo/coveo.analytics.js">coveo.analytics.js</a>
+            script.</p>
+          items:
+            $ref: '#/components/schemas/ActionHistory'
+          example:
+          - name: Query
+            value: Machine learning powered search
+            time: '2017-08-16T11:33:29.427Z'
+          - name: PageView
+            value: http://www.example.com/
+            time: '2017-08-15T17:34:08.398Z'
+        mlParameters:
+          $ref: '#/components/schemas/MlParameters'
+        pipelineRuleParameters:
+          $ref: '#/components/schemas/PipelineRuleParameters'
+    GenQAResponse:
+      type: object
+      required:
+      - payloadType
+      - payload
+      properties:
+        payloadType:
+          type: string
+          description: Type of the contained GenQA payload (e.g., genqa.headerMessageType).
+        payload:
+          type: string
+          format: json
+          description: JSON-encoded string containing the actual message payload.
+        finishReason:
+          type: string
+          nullable: true
+          enum:
+          - COMPLETED
+          - ERROR
+          description: Reason for stream termination, if applicable.
+        errorMessage:
+          type: string
+          nullable: true
+          description: Error message if the stream failed.
+        statusCode:
+          type: integer
+          nullable: true
+          description: HTTP status code associated with the message, if applicable.
+    Analytics:
+      type: object
+      nullable: true
+      properties:
+        capture:
+          type: boolean
+          description: 'Whether the search api call should be tracked for analytics and machine learning purposes.
+
+            When set to `true`, be sure to set the `actionCause` parameter.
+
+            See [Standard actions and Usage Analytics reference](docs.coveo.com/en/1389)).'
+        trackingId:
+          type: string
+          description: A value to identify which web property an event is related to.
+        userId:
+          type: string
+          description: The ID of the user who is currently logged in. If not present, this ID is obtained from the authentication
+            token.
+        clientId:
+          type: string
+          description: 'A GUID which represents the current client.
+
+
+            If your implementation uses the Atomic or Headless libraries, or newer versions of the JavaScript Search Framework,
+            then the [client ID](https://docs.coveo.com/en/masb0234/) is generated automatically in client-side code. This
+            GUID is held in a browser''s local storage as well as a top level domain first-party cookie (`coveo_visitorId`)
+            that expires after 1 year. **Note:** The cookie takes precedence over the value in the browser''s local storage.
+
+
+            If you have a custom Coveo implementation, you will have to generate a [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)>)-formatted
+            GUID. You will need to send this ID as `analytics.clientId` in every event that is sent to Coveo UA and the Search
+            API.
+
+
+            Coveo Machine Learning models may use this information to provide contextually relevant output.
+
+
+            **Note** The `clientId` replaces the deprecated `visitorId`. For compatibility, the cookie and local storage values
+            are still named `coveo_visitorId`.'
+        documentLocation:
+          type: string
+          description: 'The URL of the current page or component.
+
+
+            If not present, the referrer is obtained from the [Referer](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer)
+            header.
+
+
+            **Note**: This information can be obtained from `coveo.analytics.js`.'
+        documentReferrer:
+          type: string
+          description: 'Typically the URL of the page that linked to the search interface from which the request originates
+            (e.g., in JavaScript, this would correspond to the `document.referrer` value).
+
+
+            Coveo Machine Learning models may use this information to provide contextually relevant output.
+
+
+            **Note**: This information can be obtained from `coveo.analytics.js`.'
+        pageId:
+          description: 'A GUID representing the page ID.
+
+
+            **Note**: This information can be obtained from `coveo.analytics.js`.'
+          anyOf:
+          - type: string
+            nullable: true
+          - type: integer
+        userIp:
+          type: string
+          description: 'The user IP. If not present, the IP is obtained from the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For)
+            and [Forwarded](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded) headers.
+
+
+            **Note**: This information is required when endpoints are behind a proxy.
+
+
+            **Example**: `127.0. 0.1`'
+        clientRequestId:
+          type: string
+          description: 'A GUID generated by the client representing the current request.
+
+
+            This information is used to identify operations across different apis related to the same request.'
+        clientTimestamp:
+          type: string
+          description: Client ISO 8601 timestamp with milliseconds.
+        userAgent:
+          type: string
+          description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent)
+            header.
+
+
+            **Note**: This information is required when endpoints are behind a proxy.'
+        actionCause:
+          type: string
+          description: 'The type of operation that triggered this event.
+
+            See [Standard actions and Usage Analytics reference](docs.coveo.com/en/1389)).'
+          example: facetSelect
+        originContext:
+          type: string
+          example: CommunitySearch
+          description: The origin of the event. Used to specify the deployment from which the user performs the action. Suggested
+            values are Search, InternalSearch, CommunitySearch, or the originLevel1 value
+        customData:
+          type: object
+          description: 'The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+
+            Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+
+            The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended
+            that you
+
+            create your custom dimension before adding customData'
+        configId:
+          type: string
+          description: 'An optional external reference to a use-case specific search configuration.
+
+            These configurations are maintained by LOBs and the search api has no knowledge of them.
+
+            This field can be used by LOBs to break down search statistics in LOB specific reporting.
+
+            This field is not present on non-captured search calls.'
+        source:
+          description: Defines one or more client side libraries that generated the analytics event. The format should be
+            the library's name followed by '@', and then the version. For example, '[custom.library.js@2.0.0]'.
+          type: array
+          items:
+            type: string
+          x-coveo-internal: true
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: OAuth2
+      flows:
+        implicit:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          scopes:
+            full: full
+  parameters:
+    OrganizationIdPath:
+      name: organizationId
+      in: path
+      description: The unique identifier of the target Coveo Cloud organization.
+      required: true
+      schema:
+        type: string
+    ConfigIdPath:
+      name: configId
+      in: path
+      description: The unique identifier of the answer configuration.
+      required: true
+      schema:
+        type: string
+  examples:
+    HeaderMessage:
+      summary: Header
+      description: "This is the decoded content of the `payload`:\n\n```json\n{\n  \"answerStyle\": \"default\",\n  \"contentFormat\"\
+        : \"text/markdown\"\n}\n```\n"
+      value:
+        payloadType: genqa.headerMessageType
+        payload: JSON omitted for readability. See description above.
+        finishReason: null
+        errorMessage: null
+        statusCode: null
+    AnswerMessage:
+      summary: Answer Content
+      description: "This is the decoded content of the `payload`:\n\n```json\n{\n  \"textDelta\": \"This is the next part\
+        \ of the answer.\"\n}\n```\n"
+      value:
+        payloadType: genqa.messageType
+        payload: JSON omitted for readability. See description above.
+        finishReason: null
+        errorMessage: null
+        statusCode: null
+    CitationsMessage:
+      summary: Citations
+      description: "This is the decoded content of the `payload`:\n\n```javascript\n{\n  \"citations\": [\n    {\n      \"\
+        id\": \"abc123\",                                           // The unique citation ID.          Required.\n      \"\
+        title\": \"Coveo Search Best Practices\",                   // The item title. It may be empty. Required.\n      \"\
+        uri\": \"https://example.com/docs/search\",                 // The item URI.                    Required.\n      \"\
+        permanentid\": \"xyz789\",                                  // The item permanent ID.           Required.\n      \"\
+        clickUri\": \"https://example.com/docs/search\",            // The item click URI.              Required.\n      \"\
+        text\": \"This document describes best practices\",         // The item excerpt.                Required.\n      \"\
+        fields\": {\n        \"urihash\": \"def456\",                                    // The item URI hash.           \
+        \    Required.\n        \"clickableuri\": \"https://example.com/docs/search\",      // The hyperlinkable item URI.\
+        \      Optional.\n        \"date\": 1680700000,                                     // The item date (Unix timestamp).\
+        \  Optional.\n        \"filetype\": \"html\",                                     // The item file type.         \
+        \     Optional.\n        \"language\": [\"en\"],                                     // The item language(s).    \
+        \        Optional.\n        \"objecttype\": \"document\",                               // The item object type. \
+        \           Optional.\n        \"parents\": \"parent-id-123\",                             // The item parents.  \
+        \              Optional.\n        \"permanentid\": \"xyz789\",                                // The item permanent\
+        \ ID.           Optional.\n        \"size\": 2048,                                           // The item size in bytes.\
+        \          Optional.\n        \"source\": \"Documentation\",                              // The item source.    \
+        \             Optional.\n        \"sourcetype\": \"Web\"                                     // The item source type.\
+        \            Optional.\n      }\n    }\n  ]\n}\n```\n"
+      value:
+        payloadType: genqa.citationsType
+        payload: JSON omitted for readability. See description above.
+        finishReason: null
+        errorMessage: null
+        statusCode: null
+    EndOfStreamMessage:
+      summary: End of stream
+      description: "This is the decoded content of the `payload`:\n\n```json\n{\n  \"answerGenerated\": true\n}\n```\n"
+      value:
+        payloadType: genqa.endOfStreamType
+        payload: JSON omitted for readability. See description above.
+        finishReason: completed
+        errorMessage: null
+        statusCode: 200
+x-tagGroups:
+- name: Coveo Customer Service API Service
+  tags:
+  - Case Assist
+  - Insight Panel
+- name: Coveo Answer API
+  tags:
+  - Answer
+  - CRGA For Cases

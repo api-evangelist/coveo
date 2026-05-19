@@ -1,0 +1,594 @@
+{
+  "name": "RestQueryResponse",
+  "structure": {
+    "type": "object",
+    "required": [
+      "apiVersion",
+      "categoryFacets",
+      "duration",
+      "facets",
+      "groupByResults",
+      "index",
+      "indexDuration",
+      "phrasesToHighlight",
+      "pipeline",
+      "refinedKeywords",
+      "requestDuration",
+      "results",
+      "searchUid",
+      "suggestedFacets",
+      "termsToHighlight",
+      "totalCount",
+      "totalCountFiltered",
+      "triggers"
+    ],
+    "properties": {
+      "totalCount": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The total number of items matching the query for the current user (security trimming applied).  \n  \n**Note:** When logging a **Search** usage analytics event for a query, the `numberOfResults` field of that event should be set to the `totalCount` value of the query (for reporting purposes)."
+      },
+      "totalCountFiltered": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The total number of items matching the query for the current user (security trimming applied) after duplicate filtering has been applied (see the `duplicateFiltering` query parameter)."
+      },
+      "duration": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The `requestDuration` added to the computing time (in milliseconds) that was required by the Search API."
+      },
+      "indexDuration": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The time (in milliseconds) that was required by the index to find the query items."
+      },
+      "requestDuration": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The `indexDuration` added to the time (in milliseconds) that was required to establish a connection between the Search API server and the index server."
+      },
+      "searchUid": {
+        "type": "string",
+        "description": "The query [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier). Each query sent to the Search API has its own randomly generated `searchUid`.  \n  \n**Note:** When logging a **Search** or **Custom** usage analytics event for a query, or a **Click** usage analytics event for an opened query result item, the `searchQueryUid` field of that event should be set to the `searchUid` value of the query response."
+      },
+      "pipeline": {
+        "type": "string",
+        "description": "The name of the query pipeline to use for this request (bypassing its conditions, if it has any).\n\nYou can pass an empty `pipeline` value to use an empty query pipeline (i.e., `?pipeline=` or `\"pipeline\": \"\"`).\n\nIf a query does not contain the `pipeline` parameter, the first query pipeline whose conditions are met by the request is used (query pipelines without conditions are not evaluated). Should the request fail to meet the conditions of each evaluated query pipeline, the default query pipeline of the target Coveo Cloud organization is used (bypassing its conditions, if it has any).\n\n**Notes:**\n\n- This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.\n- For reporting purposes, when logging a **Search** usage analytics event for a query, the `queryPipeline` field of that event should be set to the final `pipeline` value used in the query execution. This value is determined from the query response. If no pipeline was specified, it uses the `\"default\"` value.\n\nSee also [Managing Query Pipelines](https://docs.coveo.com/en/1450/).\n"
+      },
+      "apiVersion": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The version of the Search API that sent the query."
+      },
+      "splitTestRun": {
+        "type": "string",
+        "description": "The name of the active A/B test for the query pipeline. This field appears only when an A/B test is active. Use it to identify the test associated with the query."
+      },
+      "exception": {
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          }
+        }
+      },
+      "isFallbackToAdmin": {
+        "type": "boolean",
+        "description": "Whether the admin session ID was allowed and used by the Coveo for Salesforce search engine. The value will be set to `true` when it is the case, and might be absent or set to `false` otherwise."
+      },
+      "warnings": {
+        "type": "array",
+        "description": "The errors that did not make the query fail, but should be addressed. They might be security issues, deprecated behaviors, or any other kind of concern.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "errors": {
+        "type": "array",
+        "description": "The errors that critically changed the query behaviour. These should be addressed right away to prevent future errors.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "index": {
+        "type": "string",
+        "description": "The identifier of the index mirror against which the query was executed (see the `indexToken` query parameter)."
+      },
+      "indexToken": {
+        "type": "string",
+        "description": "The Base64 encoded identifier of the index mirror to forward the request to. See also the `index` parameter.\n\nIf you do not specify an `indexToken` (or `index`) value, any index mirror could be used.\n\n**Note:** Passing an `indexToken` (or `index`) value has no effect when the results of a specific request can be returned from cache (see the `maximumAge` parameter).\n"
+      },
+      "triggers": {
+        "type": "array",
+        "description": "The actions to perform by the client based on the Trigger statements defined in query pipelines (see the `pipeline` query parameter).\n\n**Note:**\n> A Trigger statement must have a condition. Otherwise, the Search API ignores it and does not include it in the `triggers` array of the query response (see [Manage trigger rules](https://docs.coveo.com/en/3413/)).",
+        "items": {
+          "type": "object",
+          "required": [
+            "content",
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "The type of Coveo Cloud query pipeline **Trigger** statement (see [Manage trigger rules](https://docs.coveo.com/en/3413/))."
+            },
+            "content": {}
+          }
+        }
+      },
+      "termsToHighlight": {
+        "type": "object",
+        "description": "The terms to highlight in each query result item. Includes all basic query expression keywords, as well as any word stemmed from a basic query expression keyword (see the `q` query parameter), unless this keyword was preceded by the no stemming Coveo Cloud query syntax operator (`+`)."
+      },
+      "phrasesToHighlight": {
+        "type": "object",
+        "description": "The phrases to highlight in each query result item. This property is populated when the basic query expression (see the `q` query parameter) contains one or several exact phrase match requests (terms between double quote characters)."
+      },
+      "queryCorrection": {
+        "type": "object",
+        "description": "Property returned when the `queryCorrection` feature is enabled.\n\nIt will either return:\n\n- The `originalQuery` and `correctedQuery` if the query was automatically corrected.\n- A list of `corrections` that could be be manually applied afterward.\n",
+        "properties": {
+          "originalQuery": {
+            "type": "string",
+            "description": "If the query was automatically corrected, this property indicates the original basic query expression (`q`) that triggered the automatic query correction.\n"
+          },
+          "correctedQuery": {
+            "type": "string",
+            "description": "If the query was automatically corrected, this property indicates the corrected basic query expression (`q`) that was executed instead of the original one.\n"
+          },
+          "corrections": {
+            "type": "array",
+            "description": "If the query wasn't automatically corrected, this property contains the basic query expression (`q`) keyword corrections suggested by the _Did You Mean_ index feature.\n",
+            "items": {}
+          },
+          "correctedQueryTrigger": {
+            "type": "string",
+            "description": "If the query was automatically corrected, this property indicates which strategy triggered the correction.\n\nPossible values: `whenNoResults`, `alwaysOnQS`\n"
+          }
+        }
+      },
+      "queryCorrections": {
+        "type": "array",
+        "description": "The query corrections suggested by the index, if the `enableDidYouMean` query parameter was set to `true`.",
+        "items": {
+          "type": "object",
+          "required": [
+            "correctedQuery",
+            "wordCorrections"
+          ],
+          "properties": {
+            "correctedQuery": {
+              "type": "string",
+              "description": "The resulting query expression correction suggestion."
+            },
+            "wordCorrections": {
+              "type": "array",
+              "description": "The word correction suggestions.",
+              "items": {}
+            }
+          }
+        }
+      },
+      "refinedKeywords": {
+        "type": "array",
+        "description": "The refined keywords used by the Coveo ML automatic relevance tuning model.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "groupByResults": {
+        "type": "array",
+        "description": "The Group By results returned by the query. These results are included in the order they were requested in the `groupBy` query parameter.",
+        "items": {
+          "type": "object",
+          "required": [
+            "field",
+            "globalComputedFieldResults",
+            "values"
+          ],
+          "properties": {
+            "field": {
+              "type": "string",
+              "description": "The field on which the Group By operation was executed."
+            },
+            "values": {
+              "type": "array",
+              "description": "The resulting Group By values.",
+              "items": {}
+            },
+            "globalComputedFieldResults": {
+              "type": "array",
+              "description": "The global computed fields that were processed by the index.",
+              "items": {
+                "type": "number",
+                "format": "double"
+              }
+            },
+            "Field": {
+              "type": "string",
+              "description": "> This property is deprecated and Coveo Cloud V1 only; The lowercase `field` should be used instead."
+            },
+            "GlobalComputedFieldResults": {
+              "type": "array",
+              "description": "> This property is deprecated and V1 only; The lowercase `globalComputedFieldResults` should be used instead.",
+              "items": {
+                "type": "number",
+                "format": "double"
+              }
+            }
+          }
+        }
+      },
+      "categoryFacets": {
+        "type": "array",
+        "description": "Hierarchical data results corresponding the to hierarchical data in the query.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "values": {},
+            "parentValues": {}
+          }
+        }
+      },
+      "facets": {
+        "type": "array",
+        "description": "The facet results returned by the query. These results are included in the order they were requested in the `facets` query parameter.",
+        "items": {
+          "type": "object",
+          "required": [
+            "field",
+            "indexScore",
+            "moreValuesAvailable",
+            "values"
+          ],
+          "properties": {
+            "field": {
+              "type": "string",
+              "description": "The name of the field on which the facet is based.\n\n**Example: `author`"
+            },
+            "moreValuesAvailable": {
+              "type": "boolean",
+              "description": "Whether additional values are available for the facet."
+            },
+            "values": {
+              "type": "array",
+              "description": "The returned facet values.",
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/RestFacetResultValue"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RestHierarchicalFacetResponseValue"
+                  }
+                ]
+              }
+            },
+            "mlScore": {
+              "type": "number",
+              "format": "double",
+              "description": "The ranking score computed by Coveo ML DNE for this facet."
+            },
+            "indexScore": {
+              "type": "number",
+              "format": "double",
+              "description": "The ranking score computed by the index for this facet."
+            },
+            "isFromAutoSelect": {
+              "type": "boolean",
+              "description": "Whether the facet was recommended by Coveo ML."
+            },
+            "label": {
+              "type": "string",
+              "description": "A human-readable title that describes the facet."
+            },
+            "domain": {}
+          }
+        }
+      },
+      "generateAutomaticFacets": {
+        "type": "object",
+        "description": "Automatically generated facets based on the `generateAutomaticFacets` request parameter.",
+        "properties": {
+          "facets": {
+            "type": "array",
+            "items": {}
+          }
+        }
+      },
+      "suggestedFacets": {
+        "type": "array",
+        "description": "A DNE facet suggestion.",
+        "items": {
+          "type": "object",
+          "required": [
+            "field",
+            "values"
+          ],
+          "properties": {
+            "field": {
+              "type": "string",
+              "description": "The name of the field on which the DNE facet suggestion is based.\n\n**Example**: `author`"
+            },
+            "values": {
+              "type": "array",
+              "description": "The name of the field on which the DNE facet suggestion is based.\n\n**Example**: `author`",
+              "items": {}
+            }
+          }
+        }
+      },
+      "results": {
+        "type": "array",
+        "description": "The items returned for the query.",
+        "items": {
+          "type": "object",
+          "required": [
+            "absentTerms",
+            "childResults",
+            "clickUri",
+            "excerpt",
+            "excerptHighlights",
+            "firstSentences",
+            "firstSentencesHighlights",
+            "flags",
+            "hasHtmlVersion",
+            "hasMobileHtmlVersion",
+            "isRecommendation",
+            "isTopResult",
+            "isUserActionView",
+            "parentResult",
+            "percentScore",
+            "printableUri",
+            "printableUriHighlights",
+            "rankingInfo",
+            "rating",
+            "raw",
+            "score",
+            "summary",
+            "summaryHighlights",
+            "title",
+            "titleHighlights",
+            "totalNumberOfChildResults",
+            "uniqueId",
+            "primaryid",
+            "uri"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "The item title.  \n  \n**Note:** When logging a **Click** usage analytics event for an opened query result item, the `documentTitle` field of that event should be set to the `title` value of the opened query result item."
+            },
+            "uri": {
+              "type": "string",
+              "description": "The item URI.\n\n**Notes:**\n\n- Avoid using the `uri` value to create hyperlinks to the item. Use the `ClickUri` value instead.\n- When logging a **Click** usage analytics event for an opened query result item, the `documentUrl` field of that event should be set to the `uri` value of the opened query result item."
+            },
+            "printableUri": {
+              "type": "string",
+              "description": "The human readable item URI.\n\n**Note:** Avoid using the `printableUri` value to create hyperlinks to the item. Use the `ClickUri` value instead."
+            },
+            "clickUri": {
+              "type": "string",
+              "description": "The hyperlinkable item URI.\n\n**Notes:**\n\n- Use the `clickUri` value when you want to create hyperlinks to the item, rather than the `uri` or `printableUri` value.\n- The `clickUri` value is not necessarily unique for each item."
+            },
+            "uniqueId": {
+              "type": "string",
+              "description": "The unique item identifier. You should consider the `uniqueId` value as an opaque string."
+            },
+            "primaryid": {
+              "type": "string",
+              "description": "The primary identifier of the item. See [primaryid field](https://docs.coveo.com/en/pa9c0434) for more details."
+            },
+            "excerpt": {
+              "type": "string",
+              "description": "The contextual excerpt generated for the item (see the `excerptLength` query parameter)."
+            },
+            "firstSentences": {
+              "type": "string",
+              "description": "The first sentences retrieved from the item (see the `retrieveFirstSentences` query parameter)."
+            },
+            "summary": {
+              "type": "string",
+              "description": "The item summary (see the `summaryLength` query parameter)."
+            },
+            "flags": {
+              "type": "string",
+              "description": "The flags that are set on the item by the index. Distinct values are separated by semicolons."
+            },
+            "hasHtmlVersion": {
+              "type": "boolean",
+              "description": "Whether the index contains an HTML version of this item."
+            },
+            "hasMobileHtmlVersion": {
+              "type": "boolean",
+              "description": "Whether the index contains a mobile HTML version of this item."
+            },
+            "score": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The total ranking score computed for the item (see the `sortCriteria` and `rankingFunctions` query parameters)."
+            },
+            "percentScore": {
+              "type": "number",
+              "format": "double",
+              "description": "The item ranking score expressed as a percentage (see the `sortCriteria` and `rankingFunctions` query parameters)."
+            },
+            "rankingInfo": {
+              "type": "string",
+              "description": "The raw debug information generated by the index to detail how the item was ranked. This property is `null` unless the `debug` query parameter is set to `true`."
+            },
+            "rating": {
+              "type": "number",
+              "format": "double",
+              "description": "**Note:** The value of this property is always `3`."
+            },
+            "isTopResult": {
+              "type": "boolean",
+              "description": "Whether the item score was boosted by a featured result rule in the query pipeline."
+            },
+            "isRecommendation": {
+              "type": "boolean",
+              "description": "Whether the item score was boosted as a Coveo ML recommendation."
+            },
+            "isUserActionView": {
+              "type": "boolean",
+              "description": "Whether the item score was boosted as a Coveo ML recommendation."
+            },
+            "rankingModifier": {
+              "type": "string",
+              "description": "If applicable, represents the type of ranking modification that was applied to this result.  \n  \n**Note:** When logging a **Click** usage analytics event for an opened query result item, the `rankingModifier` field of that event should be set to the `rankingModifier` value of the opened query result item, if available."
+            },
+            "titleHighlights": {
+              "type": "array",
+              "description": "The length and offset of each word to highlight in the item `title` string.",
+              "items": {}
+            },
+            "firstSentencesHighlights": {
+              "type": "array",
+              "description": "The length and offset of each word to highlight in the item `firstSentences` string.",
+              "items": {}
+            },
+            "excerptHighlights": {
+              "type": "array",
+              "description": "The length and offset of each word to highlight in the item `excerpt` string.",
+              "items": {}
+            },
+            "printableUriHighlights": {
+              "type": "array",
+              "description": "The length and offset of each word to highlight in the item `printableUri` string.",
+              "items": {}
+            },
+            "summaryHighlights": {
+              "type": "array",
+              "description": "The length and offset of each word to highlight in the item `summary` string.",
+              "items": {}
+            },
+            "parentResult": {},
+            "childResults": {
+              "type": "array",
+              "description": "An array of references to the children of this item, if result folding was applied (see the `filterField` query parameter). The query results contained in this field will have both their parent and child results set to `null`.",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/RestQueryResult"
+                  }
+                ]
+              }
+            },
+            "totalNumberOfChildResults": {
+              "type": "integer",
+              "format": "int64",
+              "description": "The total number of children available in the index for this item, if result folding was applied (see the `filterField` query parameter)."
+            },
+            "absentTerms": {
+              "type": "array",
+              "description": "The basic query expression terms which this query result item does not match.\n\n**Note:**\n> This property is populated by terms from the query pipeline-processed `q` value (not from the original `q` value).",
+              "items": {
+                "type": "string"
+              }
+            },
+            "raw": {
+              "type": "object",
+              "description": "The values of the fields which were retrieved for this item (see the `fieldsToInclude` and `fieldsToExclude` query parameters)."
+            },
+            "Title": {
+              "type": "string",
+              "description": "> This property is deprecated; it should not be populated by Search API V2 searches."
+            },
+            "Uri": {
+              "type": "string",
+              "description": "> This property is deprecated; it should not be populated by Search API V2 searches."
+            },
+            "PrintableUri": {
+              "type": "string",
+              "description": "> This property is deprecated; it should not be populated by Search API V2 searches."
+            },
+            "ClickUri": {
+              "type": "string",
+              "description": "> This property is deprecated; it should not be populated by Search API V2 searches."
+            },
+            "UniqueId": {
+              "type": "string",
+              "description": "> This property is deprecated; it should not be populated by Search API V2 searches."
+            },
+            "Excerpt": {
+              "type": "string",
+              "description": "> This property is deprecated; it should not be populated by Search API V2 searches."
+            },
+            "FirstSentences": {
+              "type": "string",
+              "description": "> This property is deprecated; it should not be populated by Search API V2 searches."
+            }
+          }
+        }
+      },
+      "questionAnswer": {
+        "type": "object",
+        "required": [
+          "answerFound",
+          "question",
+          "answerSnippet",
+          "documentId",
+          "relatedQuestions",
+          "score"
+        ],
+        "properties": {
+          "answerFound": {
+            "type": "boolean"
+          },
+          "question": {
+            "type": "string"
+          },
+          "answerSnippet": {
+            "type": "string"
+          },
+          "documentId": {},
+          "score": {
+            "type": "number"
+          },
+          "relatedQuestions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "question",
+                "answerSnippet",
+                "documentId",
+                "score"
+              ],
+              "properties": {
+                "question": {
+                  "type": "string"
+                },
+                "answerSnippet": {
+                  "type": "string"
+                },
+                "documentId": {},
+                "score": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "raw": {
+            "type": "object"
+          }
+        }
+      },
+      "extendedResults": {
+        "type": "object",
+        "description": "Additional response attributes coming from the execution of query pipeline integrations.\n\nCurrently supported properties:\n  - `generativeQuestionAnsweringId`: A stream ID to access the generated answer."
+      }
+    }
+  }
+}

@@ -1,0 +1,1640 @@
+openapi: 3.0.1
+info:
+  title: Usage Analytics Write API
+  description: The [Coveo Cloud](https://docs.coveo.com/en/186/) [Usage Analytics](https://docs.coveo.com/en/182/) Write API
+    service allows you to log all end-user interactions with search interfaces and optionally other interfaces such as support
+    case creation interfaces or your [indexed](https://docs.coveo.com/en/204/) web sites.
+  version: '1.0'
+servers:
+- url: https://analytics.cloud.coveo.com/rest/ua/v15
+security:
+- v8:
+  - full
+tags:
+- name: Analytics API - Version 14
+- name: Analytics API - Version 15
+paths:
+  /v14/analytics/click:
+    post:
+      tags:
+      - Analytics API - Version 14
+      summary: Adds a Click Event via POST
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_analytics_click
+      parameters:
+      - name: visitor
+        in: cookie
+        description: The unique identifier of the visitor. If not provided, a new identifier will be created and returned
+          as a HTTP cookie.
+        deprecated: true
+        schema:
+          type: string
+      requestBody:
+        description: The click event to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClickEventModelV14'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddClickEventResponseV14'
+      deprecated: true
+  /v14/analytics/custom:
+    post:
+      tags:
+      - Analytics API - Version 14
+      summary: Adds a Custom Event via POST
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_analytics_custom
+      parameters:
+      - name: visitor
+        in: cookie
+        description: The unique identifier of the visitor. If not provided, a new identifier will be created and returned
+          as a HTTP cookie.
+        deprecated: true
+        schema:
+          type: string
+      requestBody:
+        description: The custom event to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomEventModelV14'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddCustomEventResponseV14'
+      deprecated: true
+  /v14/analytics/search:
+    post:
+      tags:
+      - Analytics API - Version 14
+      summary: Adds a Search Event via POST
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_analytics_search
+      parameters:
+      - name: visitor
+        in: cookie
+        description: The unique identifier of the visitor. If not provided, a new identifier will be created and returned
+          as a HTTP cookie.
+        deprecated: true
+        schema:
+          type: string
+      requestBody:
+        description: The search event to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchEventModelV14'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddSearchEventResponseV14'
+      deprecated: true
+  /v14/analytics/searches:
+    post:
+      tags:
+      - Analytics API - Version 14
+      summary: Adds Multiple Search Events via POST
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_analytics_searches
+      parameters:
+      - name: visitor
+        in: cookie
+        description: The unique identifier of the visitor. If not provided, a new identifier will be created and returned
+          as a HTTP cookie.
+        deprecated: true
+        schema:
+          type: string
+      requestBody:
+        description: The search events to add. Please note that that the clientId from the first search event will be used
+          to compute the visit.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SearchEventModelV14'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddSearchEventResponseV14'
+      deprecated: true
+  /v14/analytics/monitoring/health:
+    get:
+      tags:
+      - Analytics API - Version 14
+      summary: Health Check for the Analytics Service
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_analytics_monitoring_health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/analytics/status:
+    get:
+      tags:
+      - Analytics API - Version 14
+      summary: Gets the Status of the Analytics Service
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_analytics_status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/analytics/visit:
+    get:
+      tags:
+      - Analytics API - Version 14
+      summary: Get the User Current Visit Informations
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_analytics_visit
+      parameters:
+      - name: user
+        in: query
+        description: The unique identifier of the user performing the search event. If not provided, the username will be
+          extracted from the token.
+        schema:
+          type: string
+      - name: visitor
+        in: cookie
+        description: The unique identifier of the visitor. If not provided, a new identifier will be created and returned
+          as a HTTP cookie.
+        deprecated: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitInfoResponseV14'
+      deprecated: true
+    delete:
+      tags:
+      - Analytics API - Version 14
+      summary: Clears All Cookies Associated with This API
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: delete__v14_analytics_visit
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+      deprecated: true
+  /v15/analytics/click:
+    post:
+      tags:
+      - Analytics API - Version 15
+      summary: Log Click Event via POST
+      description: Logs a click event. Typically, when the end-user opens or previews a result, the search interface logs
+        a click event.
+      operationId: post__v15_analytics_click
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: visitor
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. The unique identifier of the visitor. Unless `prioritizeVisitorParameter` is
+          set to `true`, the service automatically attempts to override this query string parameter with the visitor cookie.
+          If no `visitor` parameter is provided and the visitor cookie is absent, a new identifier is created and returned
+          as the `visitorId` property in the response body, and as a visitor cookie.'
+        deprecated: true
+        schema:
+          type: string
+      - name: prioritizeVisitorParameter
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. Whether to force the service to use the provided `visitor` query string parameter,
+          rather than automatically attempting to override this parameter with the visitor cookie.'
+        deprecated: true
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        description: The click event to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClickEventModelV15'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddClickEventResponseV15'
+  /v15/analytics/custom:
+    post:
+      tags:
+      - Analytics API - Version 15
+      summary: Log Custom Event via POST
+      description: Logs a custom event. Typically, when the end-user interacts with a page in a way that needs to be recorded,
+        but that is neither a search, a click, or a view event (e.g., toggling the result list layout, changing end-user preferences),
+        the page logs a custom event.
+      operationId: post__v15_analytics_custom
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: visitor
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. The unique identifier of the visitor. Unless `prioritizeVisitorParameter` is
+          set to `true`, the service automatically attempts to override this query string parameter with the visitor cookie.
+          If no `visitor` parameter is provided and the visitor cookie is absent, a new identifier is created and returned
+          as the `visitorId` property in the response body, and as a visitor cookie.'
+        deprecated: true
+        schema:
+          type: string
+      - name: prioritizeVisitorParameter
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. Whether to force the service to use the provided `visitor` query string parameter,
+          rather than automatically attempting to override this parameter with the visitor cookie.'
+        deprecated: true
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        description: The custom event to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomEventModelV15'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddCustomEventResponseV15'
+  /v15/analytics/search:
+    post:
+      tags:
+      - Analytics API - Version 15
+      summary: Log Search Event via POST
+      description: Logs a search event. Typically, when an end-user interacts with a search interface in a way that triggers
+        a [query](https://docs.coveo.com/en/231/glossary/query) to the [Search API](https://docs.coveo.com/en/52/cloud-v2-developers/search-api)
+        (e.g., submitting a query from the search box, selecting a [facet](https://docs.coveo.com/en/198/glossary/facet) value,
+        etc.), the search interface logs a search event.
+      operationId: post__v15_analytics_search
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: visitor
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. The unique identifier of the visitor. Unless `prioritizeVisitorParameter` is
+          set to `true`, the service automatically attempts to override this query string parameter with the visitor cookie.
+          If no `visitor` parameter is provided and the visitor cookie is absent, a new identifier is created and returned
+          as the `visitorId` property in the response body, and as a visitor cookie.'
+        deprecated: true
+        schema:
+          type: string
+      - name: prioritizeVisitorParameter
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. Whether to force the service to use the provided `visitor` query string parameter,
+          rather than automatically attempting to override this parameter with the visitor cookie.'
+        deprecated: true
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        description: The search event to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchEventModelV15'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddSearchEventResponseV15'
+  /v15/analytics/searches:
+    post:
+      tags:
+      - Analytics API - Version 15
+      summary: Log Search Event Batch via POST
+      description: Logs one or more search events. Typically, when an end-user interacts with a search interface in a way
+        that triggers a [query](https://docs.coveo.com/en/231/glossary/query) to the [Search API](https://docs.coveo.com/en/52/cloud-v2-developers/search-api)
+        (e.g., submitting a query from the search box, selecting a [facet](https://docs.coveo.com/en/198/glossary/facet) value,
+        etc.), the search interface logs a search event. Logging a batch of more than three items should generally be avoided,
+        due to possible timing issues (e.g., all items in a batch inherit the same datetime).
+      operationId: post__v15_analytics_searches
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: visitor
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. The unique identifier of the visitor. Unless `prioritizeVisitorParameter` is
+          set to `true`, the service automatically attempts to override this query string parameter with the visitor cookie.
+          If no `visitor` parameter is provided and the visitor cookie is absent, a new identifier is created and returned
+          as the `visitorId` property in the response body, and as a visitor cookie.'
+        schema:
+          type: string
+      - name: prioritizeVisitorParameter
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. Whether to force the service to use the provided `visitor` query string parameter,
+          rather than automatically attempting to override this parameter with the visitor cookie.'
+        deprecated: true
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        description: The search events to add.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SearchEventModelV15'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddSearchEventResponseV15'
+  /v15/analytics/view:
+    post:
+      tags:
+      - Analytics API - Version 15
+      summary: Log View Event via POST
+      description: Logs a view event. Although view events are not currently available for usage analytics reports, they are
+        required to feed [Coveo Machine Learning](https://docs.coveo.com/en/188/glossary/coveo-machine-learning) [event recommendations](https://docs.coveo.com/en/1016/glossary/event-recommendations)
+        [models](https://docs.coveo.com/en/1012/glossary/model). A page corresponding to an [item](https://docs.coveo.com/en/210/glossary/item)
+        which should be considered as a possible candidate result for the output of a Coveo Machine Learning event recommendation
+        model must log a view event on its own whenever it is navigated to.
+      operationId: post__v15_analytics_view
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: visitor
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. The unique identifier of the visitor. Unless `prioritizeVisitorParameter` is
+          set to `true`, the service automatically attempts to override this query string parameter with the visitor cookie.
+          If no `visitor` parameter is provided and the visitor cookie is absent, a new identifier is created and returned
+          as the `visitorId` property in the response body, and as a visitor cookie.'
+        deprecated: true
+        schema:
+          type: string
+      - name: prioritizeVisitorParameter
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. Whether to force the service to use the provided `visitor` query string parameter,
+          rather than automatically attempting to override this parameter with the visitor cookie.'
+        deprecated: true
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        description: The view event to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViewEventModelV15'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddViewEventResponseV15'
+  /v15/analytics/collect:
+    post:
+      tags:
+      - Analytics API - Version 15
+      summary: Collect GA-Style Events
+      operationId: post__v15_analytics_collect
+      parameters: []
+      requestBody:
+        description: The event in JSON based on https://docs.coveo.com/en/l41i0031/build-a-search-ui/measurement-protocol-parameter-reference
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+        required: true
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /v15/analytics/monitoring/health:
+    get:
+      tags:
+      - Analytics API - Version 15
+      summary: Get Service Status
+      description: Returns the status of the Usage Analytics Write service. Possible values are 'UP', 'unavailable' and 'degraded'.
+      operationId: get__v15_analytics_monitoring_health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+  /v15/analytics/status:
+    get:
+      tags:
+      - Analytics API - Version 15
+      summary: Get Service Status
+      description: This endpoint is exposed for backward compatibility reasons. Use `monitoring/health` instead. Returns the
+        status of the Usage Analytics Write service. Possible values are 'online', 'unavailable' and 'degraded'.
+      operationId: get__v15_analytics_status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+  /v15/analytics/visit:
+    get:
+      tags:
+      - Analytics API - Version 15
+      summary: Get Current Visit
+      description: Returns the current `visitId`, `visitorId` and `clientId`.
+      operationId: get__v15_analytics_visit
+      parameters:
+      - name: user
+        in: query
+        description: The unique identifier of the user performing the search event. If not provided, the username will be
+          extracted from the token.
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: visitor
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. The unique identifier of the visitor. Unless `prioritizeVisitorParameter` is
+          set to `true`, the service automatically attempts to override this query string parameter with the visitor cookie.
+          If no `visitor` parameter is provided and the visitor cookie is absent, a new identifier is created and returned
+          as the `visitorId` property in the response body, and as a visitor cookie.'
+        deprecated: true
+        schema:
+          type: string
+      - name: clientId
+        in: query
+        description: The unique identifier of the visitor. If a client id is provided, it is prioritized over any value passed
+          for the visitor id parameter.
+        schema:
+          type: string
+      - name: prioritizeVisitorParameter
+        in: query
+        description: '''''''DEPRECATED'''''' The `clientId` parameter should be used instead of `visitorId` in the event payload
+          to capture the visitor identifier. Whether to force the service to use the provided `visitor` query string parameter,
+          rather than automatically attempting to override this parameter with the visitor cookie.'
+        deprecated: true
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitInfoResponseV15'
+    delete:
+      tags:
+      - Analytics API - Version 15
+      summary: Delete Visit Cookie
+      description: Deletes the current `visitorId` cookie. A new one will be generated during the next interaction with the
+        service, which will also create a new `visitId`.
+      operationId: delete__v15_analytics_visit
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+components:
+  schemas:
+    AddClickEventResponseV14:
+      type: object
+      properties:
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided click event
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to add click event operation
+    ClickEventModelV14:
+      required:
+      - actionCause
+      - collectionName
+      - documentPosition
+      - documentUriHash
+      - language
+      - originLevel1
+      - originLevel2
+      - searchQueryUid
+      - sourceName
+      type: object
+      properties:
+        language:
+          type: string
+          description: The language that end user is using. Use ISO 639-1 codes. See <a href=http://en.wikipedia.org/wiki/ISO_639-1>ISO
+            639-1</a> for more information
+        userAgent:
+          type: string
+          description: The user agent string of the end user's browser. See <a href=http://en.wikipedia.org/wiki/User_agent>User
+            Agent</a> for more information.
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain
+              alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters
+              in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension
+              before adding customData
+          description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain
+            alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in
+            the key are converted to lowercase characters. It is highly recommended that you create your custom dimension
+            before adding customData
+        anonymous:
+          type: boolean
+          description: Indicates if the user is anonymous.
+        username:
+          type: string
+          description: The unique identifier of the user performing the search event. If not provided, the username will be
+            extracted from the token.
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the search event.
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active.
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active.
+        originLevel1:
+          type: string
+          description: The origin this event took place
+        originLevel2:
+          type: string
+          description: The origin this event took place
+        originLevel3:
+          type: string
+          description: The origin this event took place
+        device:
+          type: string
+          description: The name of the device that the end user is using
+          deprecated: true
+        mobile:
+          type: boolean
+          description: Whether the end user's device is a mobile device or not
+          deprecated: true
+        documentUri:
+          type: string
+          description: The @sysuri of the document that was clicked
+          deprecated: true
+        documentUriHash:
+          type: string
+          description: The @sysurihash of the document that was clicked
+        searchQueryUid:
+          type: string
+          description: The searchQueryUid of the search that returned the document that was clicked. This must be a valid
+            searchQueryUid that contains the provided documentUri and documentUriHash.
+        collectionName:
+          type: string
+          description: The @syscollection of the document that was clicked
+        sourceName:
+          type: string
+          description: The @syssource of the document that was clicked
+        documentPosition:
+          type: integer
+          description: The position of the document (one-based) that was clicked in the list of resultsThis number must take
+            into consideration pagination settings. If the pages contain ten results each, the third document of the second
+            page is at the position 22.
+          format: int32
+        actionCause:
+          type: string
+          description: 'The type of operation that triggered this event. Example: ''firstSearch'', ''searchEnter'''
+        documentTitle:
+          type: string
+          description: The title of the document that was clicked.
+        documentUrl:
+          type: string
+          description: The URL of the document that was clicked.
+        queryPipeline:
+          type: string
+          description: The query pipeline of the search that returned the document that was clicked.
+        rankingModifier:
+          type: string
+          description: The ranking modifier that affected the clicked document.
+      description: An event that represents a result that was clicked
+    AddCustomEventResponseV14:
+      type: object
+      properties:
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided custom event
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to add custom event operation
+    CustomEventModelV14:
+      required:
+      - eventType
+      - eventValue
+      - language
+      - originLevel1
+      - originLevel2
+      type: object
+      properties:
+        language:
+          type: string
+          description: The language that end user is using. Use ISO 639-1 codes. See <a href=http://en.wikipedia.org/wiki/ISO_639-1>ISO
+            639-1</a> for more information
+        userAgent:
+          type: string
+          description: The user agent string of the end user's browser. See <a href=http://en.wikipedia.org/wiki/User_agent>User
+            Agent</a> for more information.
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain
+              alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters
+              in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension
+              before adding customData
+          description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain
+            alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in
+            the key are converted to lowercase characters. It is highly recommended that you create your custom dimension
+            before adding customData
+        anonymous:
+          type: boolean
+          description: Indicates if the user is anonymous.
+        username:
+          type: string
+          description: The unique identifier of the user performing the search event. If not provided, the username will be
+            extracted from the token.
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the search event.
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active.
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active.
+        originLevel1:
+          type: string
+          description: The origin this event took place
+        originLevel2:
+          type: string
+          description: The origin this event took place
+        originLevel3:
+          type: string
+          description: The origin this event took place
+        device:
+          type: string
+          description: The name of the device that the end user is using
+          deprecated: true
+        mobile:
+          type: boolean
+          description: Whether the end user's device is a mobile device or not
+          deprecated: true
+        eventType:
+          type: string
+          description: The type of this event
+        eventValue:
+          type: string
+          description: The type of operation that triggered this event
+        lastSearchQueryUid:
+          type: string
+          description: The searchQueryUid of the last search event that occurred before this event
+      description: An event that represents a custom action.
+    AddSearchEventResponseV14:
+      required:
+      - searchEventUid
+      type: object
+      properties:
+        searchEventUid:
+          type: string
+          description: The searchEventUid associated with the provided search event
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided search event
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to add search event operations
+    ResultModelV14:
+      required:
+      - documentUri
+      - documentUriHash
+      type: object
+      properties:
+        documentUri:
+          type: string
+          description: The @sysuri of this document
+        documentUriHash:
+          type: string
+          description: The @sysurihash of this document
+      description: A search result
+    SearchEventModelV14:
+      required:
+      - actionCause
+      - contextual
+      - language
+      - originLevel1
+      - originLevel2
+      - queryText
+      - responseTime
+      - results
+      - searchQueryUid
+      type: object
+      properties:
+        language:
+          type: string
+          description: The language that end user is using. Use ISO 639-1 codes. See <a href=http://en.wikipedia.org/wiki/ISO_639-1>ISO
+            639-1</a> for more information
+        userAgent:
+          type: string
+          description: The user agent string of the end user's browser. See <a href=http://en.wikipedia.org/wiki/User_agent>User
+            Agent</a> for more information.
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain
+              alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters
+              in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension
+              before adding customData
+          description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain
+            alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in
+            the key are converted to lowercase characters. It is highly recommended that you create your custom dimension
+            before adding customData
+        anonymous:
+          type: boolean
+          description: Indicates if the user is anonymous.
+        username:
+          type: string
+          description: The unique identifier of the user performing the search event. If not provided, the username will be
+            extracted from the token.
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the search event.
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active.
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active.
+        originLevel1:
+          type: string
+          description: The origin this event took place
+        originLevel2:
+          type: string
+          description: The origin this event took place
+        originLevel3:
+          type: string
+          description: The origin this event took place
+        device:
+          type: string
+          description: The name of the device that the end user is using
+          deprecated: true
+        mobile:
+          type: boolean
+          description: Whether the end user's device is a mobile device or not
+          deprecated: true
+        searchQueryUid:
+          type: string
+          description: The unique identifier of the search event. Must be a UUID
+        queryText:
+          type: string
+          description: The text that was searched
+        actionCause:
+          type: string
+          description: 'The type of operation that triggered this event. Example: ''firstSearch'', ''searchEnter'''
+        advancedQuery:
+          type: string
+          description: The advanced part of the query that was sent to the index. Usually this contains various query elements
+            that were not manually added by the user.
+        numberOfResults:
+          type: integer
+          description: The number of results found. Must be equal to or greater than zero
+          format: int32
+        contextual:
+          type: boolean
+          description: Indicates if the query is modified by contextual filters (for instance, a query to find similar documents)
+        responseTime:
+          type: integer
+          description: The time, in milliseconds, between the moment the query was sent and the moment the results were received.
+            Must be greater than zero
+          format: int32
+        results:
+          type: array
+          description: The results of this search event
+          items:
+            $ref: '#/components/schemas/ResultModelV14'
+        queryPipeline:
+          type: string
+          description: The query pipeline of the search event.
+        userGroups:
+          type: array
+          description: The groups that the end user performing the event is a member of
+          items:
+            type: string
+      description: An event that represents a search that was done to the index
+    StatusResponse:
+      type: object
+      description: Service's status information
+    VisitInfoResponseV14:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The visit id.
+        visitorId:
+          type: string
+          description: The visitor id.
+      description: The user current visit
+    AddClickEventResponseV15:
+      type: object
+      properties:
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided click event. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to add click event operation
+    ClickEventModelV15:
+      required:
+      - actionCause
+      - documentPosition
+      - language
+      - searchQueryUid
+      - sourceName
+      type: object
+      properties:
+        language:
+          type: string
+          description: (Required, except when logging View events). The language of the end-user. Must be a valid [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1)
+            code
+          example: en
+        userAgent:
+          type: string
+          description: Information about the browser and operating system of the end-user who caused the search interface
+            to log an event. See [User Agent](http://en.wikipedia.org/wiki/User_agent) for more information
+          example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3249.481
+            Safari/537.36
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+              Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+              The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended
+              that you create your custom dimension before adding customData
+          description: The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+            Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+            The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended
+            that you create your custom dimension before adding customData
+        anonymous:
+          type: boolean
+          description: Whether the interaction that caused the search interface to log the event was triggered by an anonymous
+            user. If set to `true`, the Usage Analytics Write API will not extract the name and `userDisplayName`, if present,
+            from the search token
+          example: false
+        username:
+          type: string
+          description: The name of the user security identity who caused the search interface to log the event. Can only be
+            specified when authenticated with a token with **impersonate** privilege. If unspecified and the request is authenticated
+            with a search token, the service attempts to extract the username value from the access token that authenticated
+            the request. If this fails, the username value is left blank. If unspecified and the request is authenticated
+            with an API key, `username` is set to `anonymous`
+          example: alice.smith@example.com
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the event. Can only be specified when authenticated with a
+            token with **impersonate** privilege. If unspecified and the request is authenticated with a search token, the
+            service attempts to extract the `userdisplayName` value from the access token that authenticated the request
+          example: Alice
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active. See [Managing A/B Tests](https://docs.coveo.com/en/3255/)
+          example: splitTest
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active
+          example: splitTestRunAlpha
+        originLevel1:
+          type: string
+          description: The name/identifier of the search interface from which the event originates. If unspecified and the
+            request is authenticated with a search token, the service attempts to extract the `searchHub` value from the access
+            token that authenticated the request
+          example: ExternalSearch
+        originLevel2:
+          type: string
+          description: The name/identifier of the tab from which the event originates
+          example: all
+        originLevel3:
+          type: string
+          description: The URL of the page that redirected the browser to the search interface from which the event originates,
+            i.e. `document.referrer`
+          example: https://docs.coveo.com/en/0/coveo-documentation-for-developers
+        outcome:
+          type: integer
+          description: An indication of how good the outcome of this event is. A value of `-5` corresponds to the worst possible
+            outcome, a value of `0` corresponds to a neutral outcome, and a value of `5` corresponds to the best possible
+            outcome
+          format: int32
+          example: 0
+        originContext:
+          type: string
+          description: The origin of the event. Used to specify the deployment from which the user performs the action. Suggested
+            values are `Search`, `InternalSearch`, `CommunitySearch`, or the `originLevel1` value
+          example: CommunitySearch
+        clientId:
+          type: string
+          description: A value that uniquely identifies the user who is logging the event. Must be a valid UUID.
+          example: 489aa3e3-aed2-4563-8e81-62bb73178a56
+        trackingId:
+          type: string
+          description: A value to identify which web property an event is related to. This can only contain lowercase letters,
+            numbers, and underscores (`_`).
+          example: online_store
+        documentUri:
+          type: string
+          description: The `@uri` of the item that was clicked
+          example: https://docs.coveo.com/en/1243/
+          deprecated: true
+        documentUriHash:
+          type: string
+          description: The `@urihash` of the item that was clicked. Deprecated, please use customData.contentIdValue instead.
+          example: xyhvGJJGRDM3OiG5
+          deprecated: true
+        searchQueryUid:
+          type: string
+          description: The unique identifier of the event which led the search interface to log the click event. It is recommend
+            to use the `searchUid` in the response of the corresponding search request to the Search API, or any [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+            of length less than or equal to 36 characters. UUIDs longer than 36 characters are truncated by the service. This
+            must be a valid searchQueryUid for an event that contains the provided documentUri and documentUriHash.
+          example: df60b2fb-c276-49ae-b704-2ee45609f3a6
+        collectionName:
+          type: string
+          description: The `@syscollection` of the item that was clicked
+          example: Default
+        sourceName:
+          type: string
+          description: The `@source` of the item that was clicked
+          example: AnswersCloud
+        documentPosition:
+          type: integer
+          description: The 1-based index position of the item that was clicked in the result list. This number must take into
+            consideration pagination settings. If the pages contain ten results each, the third item of the second page is
+            at the position 23.
+          format: int32
+          example: 1
+        actionCause:
+          type: string
+          description: The type of operation that triggered this event (see [`analyticsActionCauseList`](https://github.com/coveo/search-ui/blob/master/src/ui/Analytics/AnalyticsActionListMeta.ts#L213)
+          example: documentOpen
+        documentTitle:
+          type: string
+          description: The title of the item that was clicked
+          example: Coveo for Salesforce
+        documentUrl:
+          type: string
+          description: The URL of the item that was clicked
+          example: https://docs.coveo.com/en/1243/
+        documentAuthor:
+          type: string
+          description: The author of the item that was clicked
+          example: John Doe
+        queryPipeline:
+          type: string
+          description: The name of the query pipeline which processed the query that led to the click event. When unspecified,
+            the service uses the [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional) value set in the search
+            token, if any
+          example: External Search
+        rankingModifier:
+          type: string
+          description: The ranking modifier that affected the clicked item
+          example: Reveal ART
+        documentCategory:
+          type: string
+          description: The category of the clicked item
+          example: KBSupport
+      description: An event that represents a result that was clicked
+    AddCustomEventResponseV15:
+      type: object
+      properties:
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided custom event. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to add custom event operation
+    CustomEventModelV15:
+      required:
+      - eventType
+      - eventValue
+      - language
+      type: object
+      properties:
+        language:
+          type: string
+          description: (Required, except when logging View events). The language of the end-user. Must be a valid [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1)
+            code
+          example: en
+        userAgent:
+          type: string
+          description: Information about the browser and operating system of the end-user who caused the search interface
+            to log an event. See [User Agent](http://en.wikipedia.org/wiki/User_agent) for more information
+          example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3249.481
+            Safari/537.36
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+              Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+              The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended
+              that you create your custom dimension before adding customData
+          description: The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+            Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+            The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended
+            that you create your custom dimension before adding customData
+        anonymous:
+          type: boolean
+          description: Whether the interaction that caused the search interface to log the event was triggered by an anonymous
+            user. If set to `true`, the Usage Analytics Write API will not extract the name and `userDisplayName`, if present,
+            from the search token
+          example: false
+        username:
+          type: string
+          description: The name of the user security identity who caused the search interface to log the event. Can only be
+            specified when authenticated with a token with **impersonate** privilege. If unspecified and the request is authenticated
+            with a search token, the service attempts to extract the username value from the access token that authenticated
+            the request. If this fails, the username value is left blank. If unspecified and the request is authenticated
+            with an API key, `username` is set to `anonymous`
+          example: alice.smith@example.com
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the event. Can only be specified when authenticated with a
+            token with **impersonate** privilege. If unspecified and the request is authenticated with a search token, the
+            service attempts to extract the `userdisplayName` value from the access token that authenticated the request
+          example: Alice
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active. See [Managing A/B Tests](https://docs.coveo.com/en/3255/)
+          example: splitTest
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active
+          example: splitTestRunAlpha
+        originLevel1:
+          type: string
+          description: The name/identifier of the search interface from which the event originates. If unspecified and the
+            request is authenticated with a search token, the service attempts to extract the `searchHub` value from the access
+            token that authenticated the request
+          example: ExternalSearch
+        originLevel2:
+          type: string
+          description: The name/identifier of the tab from which the event originates
+          example: all
+        originLevel3:
+          type: string
+          description: The URL of the page that redirected the browser to the search interface from which the event originates,
+            i.e. `document.referrer`
+          example: https://docs.coveo.com/en/0/coveo-documentation-for-developers
+        outcome:
+          type: integer
+          description: An indication of how good the outcome of this event is. A value of `-5` corresponds to the worst possible
+            outcome, a value of `0` corresponds to a neutral outcome, and a value of `5` corresponds to the best possible
+            outcome
+          format: int32
+          example: 0
+        originContext:
+          type: string
+          description: The origin of the event. Used to specify the deployment from which the user performs the action. Suggested
+            values are `Search`, `InternalSearch`, `CommunitySearch`, or the `originLevel1` value
+          example: CommunitySearch
+        clientId:
+          type: string
+          description: A value that uniquely identifies the user who is logging the event. Must be a valid UUID.
+          example: 489aa3e3-aed2-4563-8e81-62bb73178a56
+        trackingId:
+          type: string
+          description: A value to identify which web property an event is related to. This can only contain lowercase letters,
+            numbers, and underscores (`_`).
+          example: online_store
+        eventType:
+          type: string
+          description: The custom event type
+          example: facet
+        eventValue:
+          type: string
+          description: The custom event value
+          example: facetSearch
+        lastSearchQueryUid:
+          type: string
+          description: The unique identifier (typically, the `searchUid`) of the query that caused the search interface to
+            log the custom event, if applicable
+          example: 7bfc652a-9dea-4811-b3f9-6d24345c37ce
+      description: An event that represents a custom action.
+    AddSearchEventResponseV15:
+      required:
+      - clientId
+      - searchEventUid
+      - visitId
+      - visitorId
+      type: object
+      properties:
+        searchEventUid:
+          type: string
+          description: The searchEventUid associated with the provided search event. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided search event. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to add search event operations
+    FacetStateModelV15:
+      required:
+      - facetType
+      - field
+      - id
+      - state
+      - value
+      type: object
+      properties:
+        field:
+          type: string
+          description: The facet field
+          example: productcategory
+        id:
+          type: string
+          description: The unique identifier of the facet in the search interface. Must match ^[a-zA-Z0-9@\-_]{1,60}$
+          example: productcategory1
+        value:
+          type: string
+          description: The name of the facet value
+          example: laptop
+        valuePosition:
+          type: integer
+          description: The 1-based position of the value in the facet
+          format: int32
+          example: 2
+        displayValue:
+          type: string
+          description: The display name of the facet value that was interacted with
+          example: Laptop
+        facetType:
+          type: string
+          description: The facet data type
+          example: specific
+        state:
+          type: string
+          description: The facet action type.
+          example: selected
+          enum:
+          - auto_selected
+          - selected
+          - excluded
+        facetPosition:
+          type: integer
+          description: The 1-based position of the facet
+          format: int32
+          example: 1
+        title:
+          type: string
+          description: The facet title
+          example: Product Category
+      description: The facet state
+    ResultModelV15:
+      required:
+      - documentUri
+      - documentUriHash
+      type: object
+      properties:
+        documentUri:
+          type: string
+          description: The @sysuri of this item
+        documentUriHash:
+          type: string
+          description: The @sysurihash of this item
+      description: A search result
+      deprecated: true
+    SearchEventModelV15:
+      required:
+      - actionCause
+      - language
+      - queryText
+      - responseTime
+      - searchQueryUid
+      type: object
+      properties:
+        language:
+          type: string
+          description: (Required, except when logging View events). The language of the end-user. Must be a valid [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1)
+            code
+          example: en
+        userAgent:
+          type: string
+          description: Information about the browser and operating system of the end-user who caused the search interface
+            to log an event. See [User Agent](http://en.wikipedia.org/wiki/User_agent) for more information
+          example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3249.481
+            Safari/537.36
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+              Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+              The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended
+              that you create your custom dimension before adding customData
+          description: The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+            Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+            The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended
+            that you create your custom dimension before adding customData
+        anonymous:
+          type: boolean
+          description: Whether the interaction that caused the search interface to log the event was triggered by an anonymous
+            user. If set to `true`, the Usage Analytics Write API will not extract the name and `userDisplayName`, if present,
+            from the search token
+          example: false
+        username:
+          type: string
+          description: The name of the user security identity who caused the search interface to log the event. Can only be
+            specified when authenticated with a token with **impersonate** privilege. If unspecified and the request is authenticated
+            with a search token, the service attempts to extract the username value from the access token that authenticated
+            the request. If this fails, the username value is left blank. If unspecified and the request is authenticated
+            with an API key, `username` is set to `anonymous`
+          example: alice.smith@example.com
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the event. Can only be specified when authenticated with a
+            token with **impersonate** privilege. If unspecified and the request is authenticated with a search token, the
+            service attempts to extract the `userdisplayName` value from the access token that authenticated the request
+          example: Alice
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active. See [Managing A/B Tests](https://docs.coveo.com/en/3255/)
+          example: splitTest
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active
+          example: splitTestRunAlpha
+        originLevel1:
+          type: string
+          description: The name/identifier of the search interface from which the event originates. If unspecified and the
+            request is authenticated with a search token, the service attempts to extract the `searchHub` value from the access
+            token that authenticated the request
+          example: ExternalSearch
+        originLevel2:
+          type: string
+          description: The name/identifier of the tab from which the event originates
+          example: all
+        originLevel3:
+          type: string
+          description: The URL of the page that redirected the browser to the search interface from which the event originates,
+            i.e. `document.referrer`
+          example: https://docs.coveo.com/en/0/coveo-documentation-for-developers
+        outcome:
+          type: integer
+          description: An indication of how good the outcome of this event is. A value of `-5` corresponds to the worst possible
+            outcome, a value of `0` corresponds to a neutral outcome, and a value of `5` corresponds to the best possible
+            outcome
+          format: int32
+          example: 0
+        originContext:
+          type: string
+          description: The origin of the event. Used to specify the deployment from which the user performs the action. Suggested
+            values are `Search`, `InternalSearch`, `CommunitySearch`, or the `originLevel1` value
+          example: CommunitySearch
+        clientId:
+          type: string
+          description: A value that uniquely identifies the user who is logging the event. Must be a valid UUID.
+          example: 489aa3e3-aed2-4563-8e81-62bb73178a56
+        trackingId:
+          type: string
+          description: A value to identify which web property an event is related to. This can only contain lowercase letters,
+            numbers, and underscores (`_`).
+          example: online_store
+        searchQueryUid:
+          type: string
+          description: The unique identifier of the event which led the search interface to log the search event. It is recommended
+            to use the `searchUid` in the response of the corresponding search request to the Search API, or any [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+            of length less than or equal to 36 characters. UUIDs longer than 36 characters are truncated by the service.
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        queryText:
+          type: string
+          description: The original basic query expression (`q`) in the corresponding search request
+          example: coveo
+        actionCause:
+          type: string
+          description: The type of operation that triggered this event (see [`analyticsActionCauseList`](https://github.com/coveo/search-ui/blob/master/src/ui/Analytics/AnalyticsActionListMeta.ts#L213))
+          example: facetSelect
+        advancedQuery:
+          type: string
+          description: The original advanced query expression (`aq`) in the corresponding search request. Usually, this contains
+            various query elements that were not manually added by the user
+          example: (@objecttype==('Developer Guide', 'Developers Topic'))
+        numberOfResults:
+          type: integer
+          description: The number of results which were returned by the query that caused the search interface to log a search
+            event. Must be equal to or greater than zero
+          format: int32
+          example: 1866
+        contextual:
+          type: boolean
+          description: Indicates if the query is modified by contextual filters (for instance, a query to find similar items)
+          example: true
+        responseTime:
+          type: integer
+          description: The amount of time (in milliseconds) between the moment the query that caused the search interface
+            to log a search event was sent to the Search API and the moment the Search API returned the results. Must be greater
+            than zero
+          format: int32
+          example: 145
+        results:
+          type: array
+          description: The results of this search event
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/ResultModelV15'
+        queryPipeline:
+          type: string
+          description: The name of the query pipeline which processed the query that caused the search interface to log a
+            search event. When unspecified, the service uses the [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional)
+            value set in the search token, if any
+          example: External Search
+        userGroups:
+          type: array
+          description: The groups that the end-user performing the event is a member of. If the request is authenticated with
+            a search token, the service also attempts to extract the `userGroups` value from the access token that authenticated
+            the log search event request, and logs those groups as well.
+          items:
+            type: string
+        indexId:
+          type: string
+          description: The index name the search query performed against
+        facetState:
+          type: array
+          description: The facet state information in JSON ARRAY format at the time the search operation was performed
+          items:
+            $ref: '#/components/schemas/FacetStateModelV15'
+      description: An event that represents a search that was done to the index
+    AddViewEventResponseV15:
+      type: object
+      properties:
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided view event. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to the add view event operation
+    ViewEventModelV15:
+      required:
+      - language
+      - location
+      type: object
+      properties:
+        language:
+          type: string
+          description: (Required, except when logging View events). The language of the end-user. Must be a valid [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1)
+            code
+          example: en
+        userAgent:
+          type: string
+          description: Information about the browser and operating system of the end-user who caused the search interface
+            to log an event. See [User Agent](http://en.wikipedia.org/wiki/User_agent) for more information
+          example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3249.481
+            Safari/537.36
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+              Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+              The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended
+              that you create your custom dimension before adding customData
+          description: The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+            Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+            The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended
+            that you create your custom dimension before adding customData
+        anonymous:
+          type: boolean
+          description: Whether the interaction that caused the search interface to log the event was triggered by an anonymous
+            user. If set to `true`, the Usage Analytics Write API will not extract the name and `userDisplayName`, if present,
+            from the search token
+          example: false
+        username:
+          type: string
+          description: The name of the user security identity who caused the search interface to log the event. Can only be
+            specified when authenticated with a token with **impersonate** privilege. If unspecified and the request is authenticated
+            with a search token, the service attempts to extract the username value from the access token that authenticated
+            the request. If this fails, the username value is left blank. If unspecified and the request is authenticated
+            with an API key, `username` is set to `anonymous`
+          example: alice.smith@example.com
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the event. Can only be specified when authenticated with a
+            token with **impersonate** privilege. If unspecified and the request is authenticated with a search token, the
+            service attempts to extract the `userdisplayName` value from the access token that authenticated the request
+          example: Alice
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active. See [Managing A/B Tests](https://docs.coveo.com/en/3255/)
+          example: splitTest
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active
+          example: splitTestRunAlpha
+        originLevel1:
+          type: string
+          description: The name/identifier of the search interface from which the event originates. If unspecified and the
+            request is authenticated with a search token, the service attempts to extract the `searchHub` value from the access
+            token that authenticated the request
+          example: ExternalSearch
+        originLevel2:
+          type: string
+          description: The name/identifier of the tab from which the event originates
+          example: all
+        originLevel3:
+          type: string
+          description: The URL of the page that redirected the browser to the search interface from which the event originates,
+            i.e. `document.referrer`
+          example: https://docs.coveo.com/en/0/coveo-documentation-for-developers
+        outcome:
+          type: integer
+          description: An indication of how good the outcome of this event is. A value of `-5` corresponds to the worst possible
+            outcome, a value of `0` corresponds to a neutral outcome, and a value of `5` corresponds to the best possible
+            outcome
+          format: int32
+          example: 0
+        originContext:
+          type: string
+          description: The origin of the event. Used to specify the deployment from which the user performs the action. Suggested
+            values are `Search`, `InternalSearch`, `CommunitySearch`, or the `originLevel1` value
+          example: CommunitySearch
+        clientId:
+          type: string
+          description: A value that uniquely identifies the user who is logging the event. Must be a valid UUID.
+          example: 489aa3e3-aed2-4563-8e81-62bb73178a56
+        trackingId:
+          type: string
+          description: A value to identify which web property an event is related to. This can only contain lowercase letters,
+            numbers, and underscores (`_`).
+          example: online_store
+        location:
+          type: string
+          description: The URL of the viewed page or component, usually `document.location.href`
+          example: https://docs.coveo.com/en/1243/
+        referrer:
+          type: string
+          description: This parameter is exposed for backward compatibility reasons. Use `originLevel3` instead
+          example: https://support.coveo.com/s/search/All/Home/%40uri
+        title:
+          type: string
+          description: The title of the item
+          example: Coveo for Salesforce
+        contentIdKey:
+          type: string
+          description: The name of a field in the index that identifies the item uniquely. A good practice is to use `@permanentid`
+          example: '''@permanentid'''
+        contentIdValue:
+          type: string
+          description: The value of the field selected as `contentIdKey`. Generally the `@permanentid` value in the index
+          example: 648a63d6a19545297692b4ae41a7d5e947c711be5f3c23dff69af3106960
+        contentType:
+          type: string
+          description: The type of content in the page
+          example: Docs
+      description: An event that represents a page view
+    VisitInfoResponseV15:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The visit id. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        visitorId:
+          type: string
+          description: The visitor id. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The user current visit
+  securitySchemes:
+    v8:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          scopes:
+            full: ''

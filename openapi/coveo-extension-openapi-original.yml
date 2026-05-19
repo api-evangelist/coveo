@@ -1,0 +1,1570 @@
+openapi: 3.0.1
+info:
+  title: Coveo Extension API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations
+security:
+- oauth2:
+  - full
+paths:
+  /rest/organizations/{organizationId}/extensions/{extensionId}:
+    get:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Show Extension
+      description: 'Shows an [extension](https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getExtension
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        description: The unique identifier of the extension to show.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3n-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExtensionModel'
+      x-pretty-name: getExtension
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId_get
+    put:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Update Extension
+      description: 'Updates an [extension](https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"EDIT","targetId":"{extensionId}"}
+
+        ```
+
+        </details>'
+      operationId: updateExtension
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        description: The unique identifier of the extension to update.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The new configuration to use for the updated extension.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditExtensionModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExtensionModel'
+      x-pretty-name: updateExtension
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId_put
+    delete:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Delete Extension
+      description: 'Deletes an [extension](https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"EDIT","targetId":"{extensionId}"}
+
+        ```
+
+        </details>'
+      operationId: deleteExtension
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        description: The unique identifier of the extension to delete.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteExtension
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId_delete
+  /rest/organizations/{organizationId}/extensions/{extensionId}/timeouts:
+    put:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Set Timeout for a Given Extension for an Organization.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"EDIT","targetId":"{extensionId}"}
+
+        ```
+
+        </details>'
+      operationId: updateExtensionTimeout
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtensionTimeoutModel'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: updateExtensionTimeout
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId/timeouts_put
+  /rest/organizations/{organizationId}/extensions/{extensionId}/code:
+    get:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Show Extension Code
+      description: 'Shows an [extension] code(https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getExtensionCode
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+      x-pretty-name: getExtensionCode
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId/code_get
+    put:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Update Extension Code
+      description: 'Updates an [extension] code(https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"EDIT","targetId":"{extensionId}"}
+
+        ```
+
+        </details>'
+      operationId: updateExtensionCode
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExtensionModel'
+      x-pretty-name: updateExtensionCode
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId/code_put
+  /rest/organizations/{organizationId}/extensions:
+    get:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: List Extensions
+      description: 'Lists all [extensions](https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getExtensions
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExtensionModel'
+      x-pretty-name: getExtensions
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/extensions_get
+    post:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Create Extension
+      description: 'Creates an [extension](https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - Create<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createExtension
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The configuration to use for the new extension.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditExtensionModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExtensionModel'
+      x-pretty-name: createExtension
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/extensions_post
+  /rest/organizations/{organizationId}/extensions/{extensionId}/test:
+    post:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Test Extension
+      description: 'Tests an [extension](https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"EDIT","targetId":"{extensionId}"}
+
+        ```
+
+        </details>'
+      operationId: testExtension
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        description: The unique identifier of the extension to test.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: A mock document on which to test the extension.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtensionTestModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExtensionTestExecutionReportModel'
+      x-pretty-name: testExtension
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId/test_post
+  /rest/organizations/{organizationId}/extensions/{extensionId}/test/datastream:
+    post:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Create Test Data Stream Upload URI
+      description: 'Creates an upload URI to host a [data stream](https://docs.coveo.com/en/2891/) when testing an [extension](https://docs.coveo.com/en/206/)
+        in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br />See [Uploading a Data Stream for an Extension
+        Test](https://docs.coveo.com/en/2916).<br /><br />**Required privilege:** Extensions - Edit<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"EDIT","targetId":"{extensionId}"}
+
+        ```
+
+        </details>'
+      operationId: generateTestDataStreamUploadUri
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        description: The unique identifier of the extension for which to create an upload URI.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExtensionTestDataStreamUriModel'
+      x-pretty-name: generateTestDataStreamUploadUri
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId/test/datastream_post
+  /rest/organizations/{organizationId}/extensions/{extensionId}/enable:
+    post:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Enable Extension
+      description: 'Enables a disabled [extension](https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><b>Note:</b> Disabled extensions are not executed.<br /><br />**Required privilege:** Extensions - Edit<br /><br
+        /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"EDIT","targetId":"{extensionId}"}
+
+        ```
+
+        </details>'
+      operationId: enableExtension
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        description: The unique identifier of the extension to enable.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: enableExtension
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId/enable_post
+  /rest/organizations/{organizationId}/extensions/{extensionId}/disable:
+    post:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Disable Extension
+      description: 'Disables an [extension](https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><b>Note:</b> Disabled extensions are not executed.<br /><br />**Required privilege:** Extensions - Edit<br /><br
+        /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"EDIT","targetId":"{extensionId}"}
+
+        ```
+
+        </details>'
+      operationId: disableExtension
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        description: The unique identifier of the extension to disable.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: A JSON containing information regarding the disablement of an extension.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtensionDisableModel'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: disableExtension
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: EDIT
+        targetId: '{extensionId}'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId/disable_post
+  /rest/organizations/{organizationId}/extensions/test/compile:
+    post:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Try to Compile Code for an Extension
+      description: 'Tries to compile code that would be used in an extension for [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: compileExtension
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtensionCompileModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExtensionCompileResultModel'
+      x-pretty-name: compileExtension
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/test/compile_post
+  /rest/organizations/{organizationId}/extensions/ids:
+    post:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Get a Subset of Extensions by Ids for an Organization.
+      description: 'Lists subset of [extensions](https://docs.coveo.com/en/206/) by their respective ids in a [Coveo Cloud
+        organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Extensions - View<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getExtensionsByIds
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelExtensionModel'
+      x-pretty-name: getExtensionsByIds
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/ids_post
+  /rest/organizations/{organizationId}/extensions/{extensionId}/versions:
+    get:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: List Extension Versions
+      description: 'Lists all versions of an [extension](https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getExtensionVersions
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        description: The unique identifier of the target extension.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExtensionContentVersionModel'
+      x-pretty-name: getExtensionVersions
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId/versions_get
+  /rest/organizations/{organizationId}/extensions/{extensionId}/versions/{versionId}:
+    get:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Show Extension Version
+      description: 'Shows a specific version of an [extension](https://docs.coveo.com/en/206/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getExtensionVersion
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: extensionId
+        in: path
+        description: The unique identifier of the target extension.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        required: true
+        schema:
+          type: string
+      - name: versionId
+        in: path
+        description: The unique identifier of the extension version to show.<br /><b>Example</b>:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExtensionModel'
+      x-pretty-name: getExtensionVersion
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/paramId/versions/paramId_get
+  /rest/organizations/{organizationId}/extensions/project:
+    get:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: Get Extensions Associated with Specified Project.
+      description: 'Lists subset of [extensions](https://docs.coveo.com/en/206/) by their respective project id in a [Coveo
+        Cloud organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Extensions - View<br /><br
+        /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getExtensionsByProjectId
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelExtensionModel'
+      x-pretty-name: getExtensionsByProjectId
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/project_get
+  /rest/organizations/{organizationId}/extensions/page:
+    get:
+      tags:
+      - Indexing Pipeline Extensions
+      summary: List Extensions by Page with Filter.
+      description: 'Lists pages of [extensions](https://docs.coveo.com/en/206/) matching filter in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br
+        /><br />**Required privilege:** Extensions - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"INDEXING_PIPELINE_EXTENSION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getExtensionsByPage
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelExtensionModel'
+      x-pretty-name: getExtensionsByPage
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: INDEXING_PIPELINE_EXTENSION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/extensions/page_get
+components:
+  schemas:
+    EditExtensionModel:
+      required:
+      - content
+      - name
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        language:
+          type: string
+          description: 'The Python version.<br />**Allowed values:**<br /> - `PYTHON3`: Python 3. <br />'
+          enum:
+          - PYTHON3
+        apiVersion:
+          type: string
+          description: The api version.<br /> **Allowed values:** <br /> - `v1`, `v2`. <br /> **Default value:** `v1`<br />
+        content:
+          type: string
+          description: The body of the extension (user script), written in Python using the [document object](https://docs.coveo.com/en/34/).
+        description:
+          type: string
+          description: A description of the extension.
+        name:
+          type: string
+          description: A name for the extension.
+        requiredDataStreams:
+          type: array
+          description: 'The [data streams](https://docs.coveo.com/en/2891/) required by the extension.<br />**Example:** `["BODY_TEXT",
+            "THUMBNAIL"]`
+
+            **Allowed values:**<br />- `BODY_TEXT`<br />- `BODY_HTML`<br />- `THUMBNAIL`<br />- `DOCUMENT_DATA`'
+          items:
+            type: string
+            description: 'The [data streams](https://docs.coveo.com/en/2891/) required by the extension.<br />**Example:**
+              `["BODY_TEXT", "THUMBNAIL"]`
+
+              **Allowed values:**<br />- `BODY_TEXT`<br />- `BODY_HTML`<br />- `THUMBNAIL`<br />- `DOCUMENT_DATA`'
+            enum:
+            - BODY_TEXT
+            - BODY_HTML
+            - THUMBNAIL
+            - DOCUMENT_DATA
+            - BODY_MARKDOWN
+        useVault:
+          type: boolean
+          description: Whether the extension uses vault parameters or not.
+        enabled:
+          type: boolean
+      description: An [extension](https://docs.coveo.com/en/206/) to create or modify.
+    IdAndDisplayNameModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+    ExtensionDisabledStatusModel:
+      required:
+      - disabledDate
+      type: object
+      properties:
+        disabledDate:
+          type: string
+          description: The extension disablement date (in number of milliseconds since UNIX epoch).<br />**Example:** `1556034174000`
+          format: date-time
+        reason:
+          type: string
+          description: The reason why the extension was disabled.
+      description: Information regarding the disabled state of an extension, if applicable.
+    ExtensionHealthModel:
+      required:
+      - healthIndicator
+      type: object
+      properties:
+        healthIndicator:
+          type: string
+          description: A qualitative health indicator.<br />**Allowed values:**<br /> - `GOOD`<br /> - `WARNING`<br /> - `PROBLEMATIC`<br
+            /> - `UNKNOWN`<br />
+          enum:
+          - GOOD
+          - WARNING
+          - PROBLEMATIC
+          - UNKNOWN
+        reason:
+          type: string
+          description: Additional details if `healthIndicator` value is `Warning` or `Problematic`.
+      description: Information regarding a health characteristic of the extension.
+    ExtensionModel:
+      required:
+      - createdDate
+      - description
+      - enabled
+      - id
+      - language
+      - lastModified
+      - name
+      - requiredDataStreams
+      - status
+      - versionId
+      type: object
+      properties:
+        language:
+          type: string
+          description: 'The Python version.<br /> **Allowed values:** <br /> - `PYTHON3`: Python 3. <br />**Default value:**
+            `PYTHON3`<br />'
+          enum:
+          - PYTHON3
+        apiVersion:
+          type: string
+          description: The api version.<br /> **Allowed values:** <br /> - `v1`, `v2`. <br /> **Default value:** `v1`<br />
+        content:
+          type: string
+          description: The body of the extension (user script), written in Python using the [document object](https://docs.coveo.com/en/34/).
+        createdDate:
+          type: string
+          description: The creation date of the extension (in number of milliseconds since UNIX epoch).<br />**Example:**
+            `1556034174000`
+          format: date-time
+        description:
+          type: string
+          description: A description of the extension
+        enabled:
+          type: boolean
+          description: Whether the extension is enabled.<br />**Note:** Disabled extensions are not executed.
+        id:
+          type: string
+          description: The unique identifier of the extension.<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        lastModified:
+          type: string
+          description: 'The last modification date of the extension (in number of milliseconds since UNIX epoch).<br /> **Example**:
+            `1556308241000`'
+          format: date-time
+        name:
+          type: string
+          description: The name of the extension.
+        requiredDataStreams:
+          type: array
+          description: The [data streams](https://docs.coveo.com/en/2891/) required by the extension.
+          items:
+            type: string
+            description: The [data streams](https://docs.coveo.com/en/2891/) required by the extension.
+            enum:
+            - BODY_TEXT
+            - BODY_HTML
+            - THUMBNAIL
+            - DOCUMENT_DATA
+            - BODY_MARKDOWN
+        versionId:
+          type: string
+          description: The unique identifier of the extension version.<br />**Example**:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`
+        usedBy:
+          type: array
+          description: The [sources](https://docs.coveo.com/en/246/) the extension applies to.<br />**Note:** Only returned
+            when performing GET/PUT `/extensions/{extensionId}` requests.
+          items:
+            $ref: '#/components/schemas/ExtensionUsedByModel'
+        status:
+          $ref: '#/components/schemas/ExtensionStatusModel'
+        useVault:
+          type: boolean
+          description: Whether the extension uses vault parameters or not.
+        timeout:
+          type: integer
+          format: int32
+        projectIds:
+          type: array
+          items:
+            type: string
+      description: An [extension](https://docs.coveo.com/en/206/).
+    ExtensionStatisticsModel:
+      required:
+      - averageDurationInSeconds
+      - numberOfErrors
+      - numberOfExecutions
+      - numberOfSkips
+      - numberOfTimeouts
+      type: object
+      properties:
+        averageDurationInSeconds:
+          type: number
+          description: The average extension execution duration in seconds.
+          format: double
+        numberOfErrors:
+          type: integer
+          description: The number of extension executions for which the script returned an error.
+          format: int32
+        numberOfExecutions:
+          type: integer
+          description: The total number of executions of the extension.
+          format: int32
+        numberOfSkips:
+          type: integer
+          description: The number of times the extension was not executed due to any of the following reasons:<br />- The
+            extension condition was evaluated to `false`.<br />- The extension timed out.<br />- The extension was disabled.
+          format: int32
+        numberOfTimeouts:
+          type: integer
+          description: The number of executions that reached the maximum execution time (default of 5 seconds).
+          format: int32
+      description: Execution statistics pertaining to an extension over the past 24 hours (for all items from all sources
+        to which the extension applies).
+    ExtensionStatusModel:
+      required:
+      - dailyStatistics
+      - disabledStatus
+      - durationHealth
+      - timeoutHealth
+      - timeoutLikeliness
+      type: object
+      properties:
+        durationHealth:
+          $ref: '#/components/schemas/ExtensionHealthModel'
+        dailyStatistics:
+          $ref: '#/components/schemas/ExtensionStatisticsModel'
+        disabledStatus:
+          $ref: '#/components/schemas/ExtensionDisabledStatusModel'
+        timeoutHealth:
+          $ref: '#/components/schemas/ExtensionHealthModel'
+        timeoutLikeliness:
+          type: string
+          description: A qualitative indicator of the likelihood that the extension will time out.<br />**Allowed values:**<br
+            /> - `NONE`<br /> - `LOW`<br /> - `MEDIUM`<br /> - `HIGH`<br />
+          enum:
+          - NONE
+          - LOW
+          - MEDIUM
+          - HIGH
+        lastAutoDisablingDate:
+          type: string
+          description: The last date at which the extension was automatically disabled by the service, (in number of milliseconds
+            since UNIX epoch).<br />**Example:** `1533916446000`
+          format: date-time
+        lastDisablingDate:
+          type: string
+          description: '**Deprecated:** use `lastAutoDisablingDate` instead.'
+          format: date-time
+          deprecated: true
+      description: Status details of an [extension](https://docs.coveo.com/en/206/).
+    ExtensionUsedByModel:
+      type: object
+      properties:
+        sourceId:
+          type: string
+          description: The unique identifier of the source.<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-tqv7hb5wfju45im3lnuvtw2moq`
+        sourceName:
+          type: string
+          description: The name of the [source](https://docs.coveo.com/en/246/).<br />**Example:** `mysource`
+      description: A [source](https://docs.coveo.com/en/246/) a given extension applies to.
+    ExtensionTimeoutModel:
+      type: object
+      properties:
+        executionTimeout:
+          type: integer
+          description: Maximum interval in seconds that extension should be executing.
+          format: int32
+          default: 5
+      description: Timeout in seconds that are applicable for extensions.
+    DataStreamContentModel:
+      required:
+      - compressionType
+      - id
+      - inlineContent
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the data stream. One of `id` or `inlineContent` is required.<br />**Note:**
+            Overwrites the `inlineContent` value, if present.
+        inlineContent:
+          type: string
+          description: The data stream content. One of `id` or `inlineContent` is required.<br />**Note:** If an `id` value
+            is provided, the `inlineContent` one is ignored.
+        compressionType:
+          type: string
+          description: 'The data stream compression type.<br />**Allowed values:**<br /> - `UNCOMPRESSED`<br /> - `ZLIB`:
+            [zlib](https://www.zlib.net/)<br /> - `GZIP`: [gzip](https://www.gzip.org/)<br /> - `LZMA`: [Lempel-Ziv-Markov
+            chain algorithm](https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Markov_chain_algorithm)<br />**Default:**
+            `UNCOMPRESSED`<br />'
+          enum:
+          - UNCOMPRESSED
+          - ZLIB
+          - GZIP
+          - LZMA
+      description: A [data stream](https://docs.coveo.com/en/2891/) object.<br />**Allowed keys:**<br /> - `BODY_TEXT`<br
+        /> - `BODY_HTML`<br /> - `THUMBNAIL`<br /> - `DOCUMENT_DATA`<br />**Example:**`"BODY_TEXT":{"id":"47ce8655-3d0e-43d8-a997-f85fc5ab9e95","compressionType":"UNCOMPRESSED"}<br
+        />
+    DataStreamValueModel:
+      required:
+      - values
+      type: object
+      properties:
+        origin:
+          type: string
+          description: The [origin](https://docs.coveo.com/en/219/) of the set of data streams.<br />**Examples**:<br /> -
+            `myTestInput`<br /> - `myExtensionName`
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DataStreamContentModel'
+          description: The data streams in the set.
+      description: A set of [data streams](https://docs.coveo.com/en/2891/).
+    ExtensionTestDocumentModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: An identifier for the document.<br />**Example:** `42.29161$https://youtube.com/Playlist:PLSwAY_GuRbl1vrs7nkycdpKpTYbwFj6P2`
+        metadata:
+          type: array
+          description: The document metadata.
+          items:
+            $ref: '#/components/schemas/MetadataValueModel'
+        dataStreams:
+          type: array
+          description: The sets of [data streams](https://docs.coveo.com/en/2891/).
+          items:
+            $ref: '#/components/schemas/DataStreamValueModel'
+        permissions:
+          type: array
+          description: The document permissions.
+          items:
+            $ref: '#/components/schemas/PermissionLevelModel'
+      description: A mock document.<br />**Default:** `{"metadata":[],"dataStreams":[],"permissions":[]}`
+    ExtensionTestModel:
+      type: object
+      properties:
+        document:
+          $ref: '#/components/schemas/ExtensionTestDocumentModel'
+        parameters:
+          type: object
+          additionalProperties:
+            type: string
+            description: An object containing additional parameters to pass to the tested extension.<br />**Example:** `{"myparam":38}`<br
+              />**Default:** `{}`
+          description: An object containing additional parameters to pass to the tested extension.<br />**Example:** `{"myparam":38}`<br
+            />**Default:** `{}`
+        versionId:
+          type: string
+          description: The unique identifier of the extension version to test.<br />**Example**:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`<br
+            />By default, the service uses the latest version.
+        language:
+          type: string
+          enum:
+          - PYTHON3
+      description: A mock document on which to test the extension.
+    MetadataValueModel:
+      type: object
+      properties:
+        origin:
+          type: string
+          description: The [origin](https://docs.coveo.com/en/219/) of the medatada.<br />**Examples**:<br /> - `myTestInput`<br
+            /> - `myExtensionName`
+        values:
+          type: object
+          additionalProperties:
+            type: object
+            description: A metadata key-value store.<br />**Example:** `{"author":["John Cook"], "clickUri":["https://example.recipe.com"],
+              "tags":["soup","pasta"], [...]}`
+          description: A metadata key-value store.<br />**Example:** `{"author":["John Cook"], "clickUri":["https://example.recipe.com"],
+            "tags":["soup","pasta"], [...]}`
+      description: Metadata for an [item](https://docs.coveo.com/en/210/).<br />**Default:** `[]`
+    PermissionLevelModel:
+      type: object
+      properties:
+        name:
+          type: string
+        permissionSets:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionSetModel'
+      description: The document permissions.
+    PermissionSetModel:
+      type: object
+      properties:
+        anonymousAllowed:
+          type: boolean
+        name:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SinglePermissionModel'
+    SinglePermissionModel:
+      type: object
+      properties:
+        allowed:
+          type: boolean
+        identityType:
+          type: string
+          enum:
+          - USER
+          - GROUP
+          - VIRTUAL_GROUP
+          - UNKNOWN
+        identity:
+          type: string
+        securityProvider:
+          type: string
+        additionalInfo:
+          type: object
+          additionalProperties:
+            type: string
+        lastUpdateDate:
+          type: string
+          format: date-time
+        lastUpdateResult:
+          type: string
+          enum:
+          - NONE
+          - SUCCESS
+          - ACCESS_DENIED
+          - TIMED_OUT
+          - ENTITY_IS_INVALID
+          - ENTITY_IS_UNAVAILABLE
+          - SECURITY_PROVIDER_IS_UNAVAILABLE
+          - SECURITY_PROVIDER_IS_UNREACHABLE
+          - SECURITY_PROVIDER_IS_NOT_READY
+          - UNEXPECTED_ERROR
+        lastUpdateErrorDetail:
+          type: string
+        state:
+          type: string
+          enum:
+          - UNKNOWN
+          - UP_TO_DATE
+          - NOT_UPDATED
+          - OUT_OF_DATE
+          - IN_ERROR
+          - DISABLED
+    ExtensionTestDataStreamUriModel:
+      required:
+      - requiredHeaders
+      - streamId
+      - uri
+      type: object
+      properties:
+        streamId:
+          type: string
+          description: The unique identifier of the hosted data stream.<br />**Example:** `cdb87296-9790-4e70-8f71-46f1364fa83d`
+        uri:
+          type: string
+          description: The data stream upload/download URI.<br />**Example:** `https://coveo-nprod-customerdata.s3.amazonaws.com/proda/blobstore/mycoveocloudv2organizationg8tp8wu3/cdb87296-9790-4e70-8f71-46f1364fa83d?X-Amz-Security-Token=FQoGZXIvYXd[...]`
+        requiredHeaders:
+          type: object
+          additionalProperties:
+            type: string
+            description: "The required HTTP headers when uploading/downloading a data stream with the URI.<br />**Example:**\
+              \ \n`{\"x-amz-server-side-encryption\": \"AES256\",\n\"Content-Type\":\"application/octet-stream\"}`"
+          description: "The required HTTP headers when uploading/downloading a data stream with the URI.<br />**Example:**\
+            \ \n`{\"x-amz-server-side-encryption\": \"AES256\",\n\"Content-Type\":\"application/octet-stream\"}`"
+      description: Information regarding a [data stream](https://docs.coveo.com/en/2891/) upload/download URI.
+    ExtensionTestExecutionReportModel:
+      required:
+      - dataStreamUris
+      - document
+      - duration
+      - result
+      type: object
+      properties:
+        document:
+          $ref: '#/components/schemas/ExtensionTestDocumentModel'
+        logs:
+          type: array
+          description: The test execution logs.
+          items:
+            $ref: '#/components/schemas/LogEntryModel'
+        dataStreamUris:
+          type: array
+          description: The URIs of the uploaded test [data streams](https://docs.coveo.com/en/2891/).
+          items:
+            $ref: '#/components/schemas/ExtensionTestDataStreamUriModel'
+        duration:
+          type: number
+          description: The execution time of the extension test in seconds.
+          format: double
+        result:
+          $ref: '#/components/schemas/ExtensionTestResultModel'
+      description: Test results of an [extension](https://docs.coveo.com/en/206/).
+    ExtensionTestResultModel:
+      required:
+      - status
+      type: object
+      properties:
+        reason:
+          type: string
+          description: 'The explanation of the issue, if applicable.<br />**Example:** `Coveo::PythonScriptException: Traceback
+            (most recent call last):\n  File \"mycoveocloudv2organizationg8tp8wu3--vwlyqfbtjkotxqkmrxqjcbcpoy\", line 9, in
+            <module>\nNameError: name ''docment'' is not defined\n`'
+        status:
+          type: string
+          description: The status of the script execution.<br />**Allowed values:**<br /> - `DISABLED`<br /> - `EXECUTION_ERROR`<br
+            /> - `REJECTED`<br /> - `SUCCESS`<br /> - `TIMEOUT`<br />
+          enum:
+          - DISABLED
+          - EXECUTION_ERROR
+          - REJECTED
+          - SUCCESS
+          - TIMEOUT
+      description: Details regarding the outcome of an extension script execution.
+    LogEntryModel:
+      required:
+      - severity
+      type: object
+      properties:
+        severity:
+          type: string
+          description: Log message type.<br />**Allowed values:**<br /> - `DEBUG`<br /> - `DETAIL`<br /> - `NORMAL`<br />
+            - `IMPORTANT`<br /> - `WARNING`<br /> - `ERROR`<br /> - `FATAL`<br /> - `NOTIFICATION`<br />
+          enum:
+          - DEBUG
+          - DETAIL
+          - NORMAL
+          - IMPORTANT
+          - WARNING
+          - ERROR
+          - FATAL
+          - NOTIFICATION
+        comment:
+          type: string
+          description: The log message, if applicable.
+        fields:
+          type: object
+          additionalProperties:
+            type: string
+        date:
+          type: string
+        duration:
+          type: number
+          format: double
+      description: An extension test execution log.
+    ExtensionDisableModel:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: The reason why the extension was disabled.
+      description: Information regarding the disablement of an extension.
+    ExtensionCompileModel:
+      type: object
+      properties:
+        code:
+          type: string
+        language:
+          type: string
+          enum:
+          - PYTHON3
+    ExtensionCompileErrorModel:
+      type: object
+      properties:
+        type:
+          type: string
+        line:
+          type: integer
+          format: int32
+        offset:
+          type: integer
+          format: int32
+        message:
+          type: string
+    ExtensionCompileResultModel:
+      type: object
+      properties:
+        successful:
+          type: boolean
+        error:
+          $ref: '#/components/schemas/ExtensionCompileErrorModel'
+      description: Details regarding the outcome of an extension script compilation.
+    PageModelExtensionModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtensionModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    ExtensionContentVersionModel:
+      required:
+      - id
+      - lastModified
+      type: object
+      properties:
+        lastModified:
+          type: string
+          description: 'The date at which the extension version was created (in number of milliseconds since UNIX epoch),
+            i.e., the date of the modification of the extension when this extension version was created.<br />**Example**:
+            `1556308241000`'
+          format: date-time
+        id:
+          type: string
+          description: The unique identifier of the extension target version.<br />**Example**:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`
+      description: An [extension](https://docs.coveo.com/en/206/) version.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

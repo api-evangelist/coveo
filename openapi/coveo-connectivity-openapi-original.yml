@@ -1,0 +1,715 @@
+openapi: 3.0.1
+info:
+  title: Coveo Connectivity API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations
+security:
+- oauth2:
+  - full
+paths:
+  /rest/organizations/{organizationId}/crawlingmodules/{crawlingModuleId}/logrequests/{crawlingModuleLogRequestId}/state:
+    put:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE_LOG_REQUEST","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateCrawlingModuleLogRequestState
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleLogRequestId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrawlingModuleLogRequestStateModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+      x-pretty-name: updateCrawlingModuleLogRequestState
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/logrequests/paramId/state_put
+  /rest/organizations/{organizationId}/logrequests:
+    post:
+      tags:
+      - Diagnostic Logs
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CONNECTIVITY_DIAGNOSTIC_LOGS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createLogRequestForActivity
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resourceType
+        in: query
+        description: The type of the resource referenced in the request model. Possible values are SOURCE and SECURITY_PROVIDER.
+        required: false
+        schema:
+          type: string
+          default: SOURCE
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLogRequestModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ValueModelString'
+      x-pretty-name: createLogRequestForActivity
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CONNECTIVITY_DIAGNOSTIC_LOGS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CONNECTIVITY_DIAGNOSTIC_LOGS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/logrequests_post
+  /rest/organizations/{organizationId}/crawlingmodules/{crawlingModuleId}/reporting:
+    post:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"EDIT","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createCrawlingModuleReport
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: destination
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - CORE
+          - SERVICE
+          - WEBSITE
+          - WORKPLACE
+          - INFRA
+          - GENERIC
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrawlingModuleReportModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+      x-pretty-name: createCrawlingModuleReport
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/reporting_post
+  /rest/organizations/{organizationId}/crawlingmodules/{crawlingModuleId}/logrequests:
+    get:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE_LOG_REQUEST","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModuleLogRequests
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - SUCCESSFUL
+          - EMPTY
+          - ERROR
+          - TIMEOUT
+          - RUNNING
+          - CREATED
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelCrawlingModuleLogRequestModel'
+      x-pretty-name: getCrawlingModuleLogRequests
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/logrequests_get
+    post:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE_LOG_REQUEST","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createCrawlingModuleLogRequest
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCrawlingModuleLogRequestModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CrawlingModuleLogRequestModel'
+      x-pretty-name: createCrawlingModuleLogRequest
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/logrequests_post
+  /rest/atlassian/connectapp/uninstalled:
+    post:
+      tags:
+      - Atlassian Connect App
+      operationId: removeConnectApp
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AtlassianHost'
+        required: true
+      responses:
+        '200':
+          description: OK
+      x-pretty-name: removeConnectApp
+      x-ui-operation-id: /rest/atlassian/connectapp/uninstalled_post
+  /rest/atlassian/connectapp/installed:
+    post:
+      tags:
+      - Atlassian Connect App
+      operationId: addOrUpdateConnectApp
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AtlassianHost'
+        required: true
+      responses:
+        '200':
+          description: OK
+      x-pretty-name: addOrUpdateConnectApp
+      x-ui-operation-id: /rest/atlassian/connectapp/installed_post
+  /rest/organizations/{organizationId}/logrequests/{logRequestId}:
+    get:
+      tags:
+      - Diagnostic Logs
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CONNECTIVITY_DIAGNOSTIC_LOGS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getLogRequest
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: logRequestId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LogRequestModel'
+      x-pretty-name: getLogRequest
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CONNECTIVITY_DIAGNOSTIC_LOGS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CONNECTIVITY_DIAGNOSTIC_LOGS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/logrequests/paramId_get
+  /rest/organizations/{organizationId}/crawlingmodules/{crawlingModuleId}/logrequests/{crawlingModuleLogRequestId}/uploadurl:
+    get:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE_LOG_REQUEST","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModuleLogRequestUploadUrl
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleLogRequestId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ValueModelString'
+      x-pretty-name: getCrawlingModuleLogRequestUploadUrl
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/logrequests/paramId/uploadurl_get
+  /rest/organizations/{organizationId}/crawlingmodules/{crawlingModuleId}/logrequests/{crawlingModuleLogRequestId}/download:
+    get:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE_LOG_REQUEST","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModuleLogRequestDownload
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleLogRequestId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CrawlingModuleLogRequestDownloadModel'
+      x-pretty-name: getCrawlingModuleLogRequestDownload
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/logrequests/paramId/download_get
+  /rest/atlassian/connectapp/atlassian-connect.json:
+    get:
+      tags:
+      - Atlassian Connect App
+      operationId: atlassianConnectAppDescriptor
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppDescriptor'
+      x-pretty-name: atlassianConnectAppDescriptor
+      x-ui-operation-id: /rest/atlassian/connectapp/atlassian-connect.json_get
+components:
+  schemas:
+    CrawlingModuleLogRequestStateModel:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+          - SUCCESSFUL
+          - EMPTY
+          - ERROR
+          - TIMEOUT
+          - RUNNING
+          - CREATED
+        info:
+          type: string
+    CreateLogRequestModel:
+      type: object
+      properties:
+        resourceId:
+          type: string
+          description: Identifies the resource for which logs will be requested.
+        activityId:
+          type: string
+          description: Identifies the activity for which logs will be requested.
+      description: Specifies the resource and activity for a log request.
+    ValueModelString:
+      type: object
+      properties:
+        value:
+          type: string
+    CrawlingModuleExceptionModel:
+      type: object
+      properties:
+        message:
+          type: string
+        type:
+          type: string
+        source:
+          type: string
+        stackTrace:
+          type: string
+    CrawlingModuleReportModel:
+      type: object
+      properties:
+        message:
+          type: string
+        type:
+          type: string
+        source:
+          type: string
+        stackTrace:
+          type: string
+        user:
+          type: string
+        tags:
+          type: object
+          additionalProperties:
+            type: string
+        fingerprints:
+          type: array
+          items:
+            type: string
+        innerExceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrawlingModuleExceptionModel'
+    CreateCrawlingModuleLogRequestModel:
+      type: object
+      properties:
+        logType:
+          type: string
+          enum:
+          - MAESTRO
+          - WORKER
+        operationId:
+          type: string
+        instanceId:
+          type: string
+    CrawlingModuleLogRequestModel:
+      type: object
+      properties:
+        id:
+          type: string
+        logType:
+          type: string
+          enum:
+          - MAESTRO
+          - WORKER
+        operationId:
+          type: string
+        instanceId:
+          type: string
+        state:
+          type: string
+          enum:
+          - SUCCESSFUL
+          - EMPTY
+          - ERROR
+          - TIMEOUT
+          - RUNNING
+          - CREATED
+        createdDate:
+          type: string
+          format: date-time
+    AtlassianHost:
+      type: object
+      properties:
+        sharedSecret:
+          type: string
+        baseUrl:
+          type: string
+        productType:
+          type: string
+        appKey:
+          type: string
+    LogRequestModel:
+      type: object
+      properties:
+        url:
+          type: string
+        error:
+          type: string
+        state:
+          type: string
+    PageModelCrawlingModuleLogRequestModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrawlingModuleLogRequestModel'
+        totalPages:
+          type: integer
+          format: int32
+        totalEntries:
+          type: integer
+          format: int64
+    CrawlingModuleLogRequestDownloadModel:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+          - SUCCESSFUL
+          - EMPTY
+          - ERROR
+          - TIMEOUT
+          - RUNNING
+          - CREATED
+        info:
+          type: string
+        url:
+          type: string
+    ApiMigrations:
+      type: object
+      properties:
+        context-qsh:
+          type: boolean
+        signed-install:
+          type: boolean
+    AppDescriptor:
+      type: object
+      properties:
+        key:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        baseUrl:
+          type: string
+        authentication:
+          $ref: '#/components/schemas/Authentication'
+        lifecycle:
+          $ref: '#/components/schemas/Lifecycle'
+        scopes:
+          type: array
+          items:
+            type: string
+        apiMigrations:
+          $ref: '#/components/schemas/ApiMigrations'
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+    Authentication:
+      type: object
+      properties:
+        type:
+          type: string
+    Lifecycle:
+      type: object
+      properties:
+        installed:
+          type: string
+        uninstalled:
+          type: string
+    Vendor:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,1463 @@
+basePath: /
+definitions:
+  Empty:
+    type: object
+  Error:
+    properties:
+      errorCode:
+        type: string
+      message:
+        type: string
+    type: object
+  GetFacetsResponseBodyModel:
+    description: The retrieved values for each type of indexing pipeline log entry facet.
+    properties:
+      operations:
+        description: 'The retrieved _operation_ facet values.
+
+          Example: `["ADD"]`'
+        items:
+          $ref: '#/definitions/IndexingPipelineLogOperations'
+        type: array
+      resourceIds:
+        description: 'The retrieved _resourceId_ facet values.
+
+          Example: `["mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i", "mycoveocloudorganizationg8tp8wu3-rnj3eisk4as63kx7zc4ch4keja",
+          "MAPPING_EXTENSION"]`'
+        items:
+          type: string
+        type: array
+      results:
+        description: 'The retrieved _result_ facet values.
+
+          Example: `["SKIPPED", "COMPLETED"]`'
+        items:
+          $ref: '#/definitions/IndexingPipelineLogResults'
+        type: array
+      sourceIds:
+        description: 'The retrieved _sourceId_ facet values.
+
+          Example: `["w1zh6p45vh7s2uxzvg3s7kg85m-mycoveocloudorganizationg8tp8wu3", "xqgojoppe6qkojkotz7xsi2o3e-mycoveocloudorganizationg8tp8wu3"]`'
+        items:
+          type: string
+        type: array
+      tasks:
+        description: 'The retrieved _task_ facet values.
+
+          Example: `["MAPPING", "EXTENSION"]`'
+        items:
+          $ref: '#/definitions/IndexingPipelineLogTasks'
+        type: array
+    type: object
+  GetFacetsWithCountsResponseBodyModel:
+    description: The retrieved values/counts for each type of indexing pipeline log entry facet.
+    properties:
+      operations:
+        description: 'The retrieved _operation_ facet values/counts  (each key will be a valid _operation_ enum value).
+
+          Example: `{"ADD": 50}`'
+        type: object
+      resourceIds:
+        description: 'The retrieved _resourceId_ facet values/counts.
+
+          Example: `{"mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i": 10, "mycoveocloudorganizationg8tp8wu3-rnj3eisk4as63kx7zc4ch4keja":
+          3, "MAPPING_EXTENSION": 37}`'
+        type: object
+      results:
+        description: 'The retrieved _result_ facet values/counts  (each key will be a valid _result_ enum value).
+
+          Example: `{"SKIPPED": 3, "COMPLETED": 47}`'
+        type: object
+      sourceIds:
+        description: 'The retrieved _sourceId_ facet values/counts.
+
+          Example: `{"w1zh6p45vh7s2uxzvg3s7kg85m-mycoveocloudorganizationg8tp8wu3": 8,"xqgojoppe6qkojkotz7xsi2o3e-mycoveocloudorganizationg8tp8wu3":
+          42}`'
+        type: object
+      tasks:
+        description: 'The retrieved _task_ facet values/counts (each key will be a valid _task_ enum value).
+
+          Example: `{"MAPPING": 37, "EXTENSION": 13}`'
+        type: object
+    type: object
+  GetLogsOrFacetsRequestBodyModel:
+    properties:
+      excludeOperations:
+        description: The _operation_ values to filter out from the response. Entries matching other _operation_ values will
+          be included.
+        items:
+          $ref: '#/definitions/IndexingPipelineLogOperations'
+        type: array
+      excludeResourceIds:
+        description: The _resourceId_ values to filter out from the response. Entries matching other _resourceId_ values will
+          be included.
+        items:
+          type: string
+        type: array
+      excludeResults:
+        description: The _result_ values to filter out from the response. Entries matching other _result_ values will be included.
+        items:
+          $ref: '#/definitions/IndexingPipelineLogResults'
+        type: array
+      excludeSourceIds:
+        description: The _sourceId_ values to filter out from the response. Entries matching other _sourceId_ values will
+          be included.
+        items:
+          type: string
+        type: array
+      excludeTasks:
+        description: The _task_ values to filter out from the response. Entries matching other _task_ values will be included.
+        items:
+          $ref: '#/definitions/IndexingPipelineLogTasks'
+        type: array
+      operations:
+        description: The _operation_ values to allow in the response. Entries matching other _operation_ values will be filtered
+          out (has priority over `excludeOperations`).
+        items:
+          $ref: '#/definitions/IndexingPipelineLogOperations'
+        type: array
+      resourceIds:
+        description: The _resourceId_ values to allow in the response. Entries matching other _resourceId_ values will be
+          filtered out (has priority over `excludeResourceIds`).
+        items:
+          type: string
+        type: array
+      results:
+        description: The _result_ values to allow in the response. Entries matching other _result_ values will be filtered
+          out (has priority over `excludeResults`).
+        items:
+          $ref: '#/definitions/IndexingPipelineLogResults'
+        type: array
+      sourcesIds:
+        description: The _sourceId_ values to allow in the response. Entries matching other _sourceId_ values will be filtered
+          out (has priority over `excludeSourceIds`).
+        items:
+          type: string
+        type: array
+      tasks:
+        description: The _task_ values to allow in the response. Entries matching other _task_ values will be filtered out
+          (has priority over `excludeTasks`).
+        items:
+          $ref: '#/definitions/IndexingPipelineLogTasks'
+        type: array
+    type: object
+  GetLogsResponseBodyModel:
+    properties:
+      documentLogEntries:
+        description: The retrieved indexing pipeline log entries.
+        items:
+          $ref: '#/definitions/IndexingPipelineLogEntry'
+        type: array
+      hasNextPage:
+        description: Whether an additional page of indexing pipeline log entries matching the request is available.
+        type: boolean
+    type: object
+  IndexingPipelineLogEntry:
+    properties:
+      datetime:
+        description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+          at which the action described by the log entry was performed in the indexing pipeline.
+
+          Example: `2018-05-22T23:35:59.825Z`'
+        format: date-time
+        type: string
+      guid:
+        description: A unique log entry identifier.
+        format: uuid
+        type: string
+      id:
+        description: 'The URI of the item the log entry relates to.
+
+          Example: `https://example.com/item.html`'
+        type: string
+      meta:
+        description: 'Additional metadata about the indexing pipeline log entry.
+
+          Example: `{"duration": "0.012"}`'
+        type: object
+      operation:
+        $ref: '#/definitions/IndexingPipelineLogOperations'
+      organizationId:
+        description: 'The unique identifier of the Coveo Cloud organization the log entry was retrieved from.
+
+          Example: `mycoveocloudorganizationg8tp8wu3`'
+        type: string
+      requestId:
+        description: 'The unique identifier of the Source Logs API request that retrieved the log entry.
+
+          Example: `f852c8h1-6428-484b-8339-0da88b2cf718`'
+        type: string
+      resourceId:
+        description: 'The unique identifier of the indexing pipeline extension the log entry relates to.
+
+          Example: `mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i`'
+        type: string
+      result:
+        $ref: '#/definitions/IndexingPipelineLogResults'
+      sourceId:
+        description: 'The unique identifier of the source the log entry relates to.
+
+          Example: `w1zh6p45vh7s2uxzvg3s7kg85m-mycoveocloudorganizationg8tp8wu3`'
+        type: string
+      task:
+        $ref: '#/definitions/IndexingPipelineLogTasks'
+    type: object
+  IndexingPipelineLogOperations:
+    description: The _operation_ filter value.
+    enum:
+    - ADD
+    - ADD_BY_REFERENCE
+    - BATCH_FILE
+    - DELETE
+    - DELETE_AND_CHILDREN
+    - DELETE_OLDER_THAN
+    - UPDATE
+    type: string
+  IndexingPipelineLogResults:
+    description: The _result_ filter value.
+    enum:
+    - COMPLETED
+    - ERROR
+    - REJECTED
+    - SKIPPED
+    - WARNING
+    type: string
+  IndexingPipelineLogTasks:
+    description: The _task_ filter value.
+    enum:
+    - CONSUMING
+    - CONSUMING_BATCH
+    - CRAWLING
+    - STREAMING_EXTENSION
+    - EXTENSION
+    - INDEXING
+    - MAPPING
+    - PROCESSING
+    - STREAMING
+    - STREAMING_BATCH
+    - PREINDEXING
+    - VALIDATION
+    type: string
+host: api.cloud.coveo.com/logs/v1
+info:
+  description: The Source Logs API allows you to retrieve indexing pipeline logs for an organization, providing details about
+    indexing activities.
+  title: Source Logs - prd
+  version: '2016-03-03T13:22:11Z'
+paths:
+  /organizations/{organizationId}:
+    get:
+      consumes:
+      - application/json
+      deprecated: true
+      parameters:
+      - in: path
+        name: organizationId
+        required: true
+        type: string
+      - in: query
+        name: sourceId
+        required: false
+        type: string
+      - in: query
+        name: documentId
+        required: false
+        type: string
+      - in: query
+        name: tasks
+        required: false
+        type: string
+        x-allowMultiple: true
+      - in: query
+        name: operations
+        required: false
+        type: string
+        x-allowMultiple: true
+      - in: query
+        name: results
+        required: false
+        type: string
+        x-allowMultiple: true
+      - format: date-time
+        in: query
+        name: from
+        required: true
+        type: string
+      - format: date-time
+        in: query
+        name: to
+        required: true
+        type: string
+      - in: query
+        name: page
+        required: false
+        type: integer
+      - in: query
+        name: perPage
+        required: false
+        type: integer
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '504':
+          description: Gateway Timeout
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Get Specified Source Document Logs
+      tags:
+      - Logs
+      x-pretty-name: getDocumentLogsDeprecated
+    post:
+      consumes:
+      - application/json
+      description: Retrieves a page of indexing pipeline logs for a given time interval in a specific Coveo Cloud organization.
+      parameters:
+      - description: 'The unique identifier of the target Coveo Cloud organization.
+
+          Example: `mycoveocloudorganizationg8tp8wu3`'
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+          corresponding to the beginning of the range for which to retrieve indexing pipeline logs.
+
+          Example: `2018-05-22T23:36:30.589Z`'
+        format: date-time
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+          corresponding to the end of the range for which to retrieve indexing pipeline logs.
+
+          The end range must be within a week of the beginning range.
+
+          Example: `2018-05-22T23:36:30.589Z`'
+        format: date-time
+        in: query
+        name: to
+        required: true
+        type: string
+      - description: The filter string against which to match document `uri` field values. See the `documentIdMatching` parameter
+          to set the target kind of filter.<br />For example, setting the `documentId` parameter to `/attachment/` and setting
+          the `documentIdMatching` parameter to `PARTIAL` means that the service will only retrieve logs of items whose `uri`
+          field values contain the `/attachment/` substring.
+        in: query
+        name: documentId
+        type: string
+      - description: 'The kind of filter to apply when matching the target `documentId` value against document `uri` field
+          values.<br />**Allowed values:**<br />- `EXACT`: the `documentId` value must match exactly the document URI.<br
+          />- `PARTIAL`: the `documentId` values must be a substring of the document URI.<br />- `WILDCARD`: the `documentId`
+          may contain the wildcards `*` (one or more characters) and `?` (a single character) to match against document URIs.<br
+          />**Default:** `EXACT`'
+        enum:
+        - EXACT
+        - PARTIAL
+        - WILDCARD
+        in: query
+        name: documentIdMatching
+        required: false
+        type: string
+      - description: 'The 0-based index number of the page to retrieve.
+
+          Example: `5`'
+        in: query
+        minimum: 0
+        name: page
+        type: integer
+      - description: 'The number of indexing pipeline log entries to retrieve per page.
+
+          Example: `50`'
+        in: query
+        minimum: 0
+        name: perPage
+        type: integer
+      - description: The filters to apply when retrieving the indexing pipeline log entries.
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/GetLogsOrFacetsRequestBodyModel'
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: OK
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/GetLogsResponseBodyModel'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '504':
+          description: Gateway Timeout
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Get Indexing Pipeline Logs
+      tags:
+      - Logs
+      x-pretty-name: getDocumentLogs
+  /organizations/{organizationId}/facets:
+    post:
+      consumes:
+      - application/json
+      description: Retrieves basic facets for a specific unpaginated set of indexing pipeline log entries.
+      parameters:
+      - description: 'The unique identifier of the target Coveo Cloud organization.
+
+          Example: `mycoveocloudorganizationg8tp8wu3`'
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+          corresponding to the beginning of the range for which to retrieve indexing pipeline logs.
+
+          Example: `2018-05-22T23:36:30.589Z`'
+        format: date-time
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+          corresponding to the end of the range for which to retrieve indexing pipeline logs.
+
+          The end range must be within a week of the beginning range.
+
+          Example: `2018-05-22T23:36:30.589Z`'
+        format: date-time
+        in: query
+        name: to
+        required: true
+        type: string
+      - description: The filter string against which to match document `uri` field values. See the `documentIdMatching` parameter
+          to set the target kind of filter.<br />For example, setting the `documentId` parameter to `/attachment/` and setting
+          the `documentIdMatching` parameter to `PARTIAL` means that the service will only retrieve logs of items whose `uri`
+          field values contain the `/attachment/` substring.
+        in: query
+        name: documentId
+        type: string
+      - description: 'The kind of filter to apply when matching the target `documentId` value against document `uri` field
+          values.<br />**Allowed values:**<br />- `EXACT`: the `documentId` value must match exactly the document URI.<br
+          />- `PARTIAL`: the `documentId` values must be a substring of the document URI.<br />- `WILDCARD`: the `documentId`
+          may contain the wildcards `*` (one or more characters) and `?` (a single character) to match against document URIs.<br
+          />**Default:** `EXACT`'
+        enum:
+        - EXACT
+        - PARTIAL
+        - WILDCARD
+        in: query
+        name: documentIdMatching
+        required: false
+        type: string
+      - description: The filters to apply when retrieving the facets.
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/GetLogsOrFacetsRequestBodyModel'
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: OK
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/GetFacetsResponseBodyModel'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '504':
+          description: Gateway Timeout
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Get Facets
+      tags:
+      - Facets
+      x-pretty-name: getDocumentLogsFacets
+  /organizations/{organizationId}/facetsStats:
+    post:
+      consumes:
+      - application/json
+      description: Retrieves the facets, including facet counts, for a specific unpaginated set of indexing pipeline log entries.
+      parameters:
+      - description: 'The unique identifier of the target Coveo Cloud organization.
+
+          Example: `mycoveocloudorganizationg8tp8wu3`'
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+          corresponding to the beginning of the range for which to retrieve indexing pipeline logs.
+
+          Example: `2018-05-22T23:36:30.589Z`'
+        format: date-time
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+          corresponding to the end of the range for which to retrieve indexing pipeline logs.
+
+          The end range must be within a week of the beginning range.
+
+          Example: `2018-05-22T23:36:30.589Z`'
+        format: date-time
+        in: query
+        name: to
+        required: true
+        type: string
+      - description: The filter string against which to match document `uri` field values. See the `documentIdMatching` parameter
+          to set the target kind of filter.<br />For example, setting the `documentId` parameter to `/attachment/` and setting
+          the `documentIdMatching` parameter to `PARTIAL` means that the service will only retrieve logs of items whose `uri`
+          field values contain the `/attachment/` substring.
+        in: query
+        name: documentId
+        type: string
+      - description: 'The kind of filter to apply when matching the target `documentId` value against document `uri` field
+          values.<br />**Allowed values:**<br />- `EXACT`: the `documentId` value must match exactly the document URI.<br
+          />- `PARTIAL`: the `documentId` values must be a substring of the document URI.<br />- `WILDCARD`: the `documentId`
+          may contain the wildcards `*` (one or more characters) and `?` (a single character) to match against document URIs.<br
+          />**Default:** `EXACT`'
+        enum:
+        - EXACT
+        - PARTIAL
+        - WILDCARD
+        in: query
+        name: documentIdMatching
+        required: false
+        type: string
+      - description: The filters to apply when retrieving the facets.
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/GetLogsOrFacetsRequestBodyModel'
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: OK
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/GetFacetsWithCountsResponseBodyModel'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '504':
+          description: Gateway Timeout
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Get Facets with Counts
+      tags:
+      - Facets
+      x-pretty-name: getDocumentLogsFacetsStats
+schemes:
+- https
+securityDefinitions:
+  oauth2:
+    authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+    flow: implicit
+    scopes:
+      full: Required
+    type: oauth2
+swagger: '2.0'
+tags:
+- description: Retrieve indexing pipeline logs
+  name: Logs
+- description: Retrieve indexing pipeline log filters
+  name: Facets
+servers:
+- url: https://api.cloud.coveo.com/push/v1/sources

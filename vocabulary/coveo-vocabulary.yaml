@@ -1,0 +1,102 @@
+# Coveo Vocabulary
+#
+# Controlled vocabulary for the Coveo AI-relevance platform across its 31 published APIs.
+# This vocabulary maps Coveo platform concepts to the public domain language used in the
+# Coveo documentation (https://docs.coveo.com), aligned with `signals/_data/` taxonomy and
+# the json-ld/ contexts in this repo.
+vocabulary: coveo
+version: "1.0.0"
+modified: "2026-05-19"
+
+# Top-level subject areas (used to tag APIs, capabilities, and signals)
+domains:
+  - name: Search
+    description: Issuing queries against the unified Coveo index, retrieving relevance-ranked results, facets, passages, and personalization context.
+  - name: Indexing
+    description: Pushing or crawling content (documents, products, security identities) into Coveo's unified index via push, pull, stream, and catalog sources.
+  - name: Commerce
+    description: Product search, listing pages, recommendations, and discovery experiences for commerce storefronts.
+  - name: Usage Analytics
+    description: Recording and reading search/click/custom events that feed reporting dashboards and Coveo Machine Learning.
+  - name: Machine Learning
+    description: Automatic Relevance Tuning (ART), Query Suggestions (QS), Product Recommendations (PR), and Dynamic Navigation Experience (DNE) model lifecycles.
+  - name: Knowledge Generative AI
+    description: Relevance-grounded answer generation that synthesises responses from indexed content.
+  - name: Administration
+    description: Organization, source, field, security cache, extension, pipeline, and token management on the Coveo Platform.
+  - name: Security
+    description: Identity resolution, security caches, OAuth2 flows, and token-scoped search.
+  - name: Customer Service
+    description: Case classification, deflection, and agent-assist surfaces backed by Coveo Search and ML.
+
+# Core entities
+entities:
+  Result:
+    description: One ranked document in a Coveo search response.
+    properties: [uniqueId, title, uri, clickUri, excerpt, summary, score, percentScore, rankingInfo, raw]
+  Facet:
+    description: A grouped breakdown of result counts by a field value.
+    properties: [facetId, field, values, indexScore, numberOfValues]
+  Passage:
+    description: A semantically retrieved snippet used by Coveo's generative answering surface.
+    properties: [text, score, documentUri, documentTitle, relevanceScore]
+  GroupByResult:
+    description: A non-faceted aggregation produced by the legacy v2 groupBy operator.
+    properties: [field, values, completeValues]
+  QueryPipeline:
+    description: A configurable rules chain that mutates queries (filtering, ranking, featuring) before they hit the index.
+    properties: [id, name, condition, statements, splitTesting]
+  Source:
+    description: A Coveo connector instance — push, crawler, or catalog — that ingests content into the unified index.
+    properties: [id, name, sourceType, status, lastOperation]
+  Catalog:
+    description: A logical commerce catalog that groups products and availabilities for relevance.
+    properties: [id, name, productSources, availabilitySources, scope]
+  Model:
+    description: A trained Coveo Machine Learning model (ART, QS, PR, DNE).
+    properties: [id, modelDisplayName, modelType, status, modelActivenessReport]
+  SearchEvent:
+    description: A usage analytics record describing a single search submission.
+    properties: [searchQueryUid, queryText, numberOfResults, responseTime, originLevel1, originLevel2]
+  ClickEvent:
+    description: A usage analytics record describing a click on a result.
+    properties: [searchQueryUid, documentUri, documentUrl, documentTitle, rankingModifier, actionCause]
+
+# Cross-cutting modifiers / dimensions
+dimensions:
+  Locale:
+    description: Coveo content/searcher language pair, e.g. `en-US`, `fr-CA`, that drives stemming, dictionaries, and ML segmentation.
+  Hub:
+    description: `searchHub` value identifying the calling experience (e.g. `MainSearch`, `Community`, `Storefront`).
+  Pipeline:
+    description: `pipeline` value identifying which query pipeline to apply.
+  Tab:
+    description: `tab` value identifying which tab the user is on (often used as a pipeline routing condition).
+  Origin:
+    description: `originLevel1` / `originLevel2` / `originLevel3` triple that namespaces analytics events by experience.
+
+# Common verbs surfaced by the platform
+operations:
+  - searchQuery
+  - retrievePassages
+  - querySuggest
+  - recordSearchEvent
+  - recordClickEvent
+  - readEvents
+  - pushDocument
+  - manageSource
+  - manageModel
+  - manageOrganization
+  - manageSecurityCache
+  - manageExtension
+  - manageNotification
+  - manageMigration
+  - manageWorkspace
+
+# Authoritative anchors
+references:
+  documentation: https://docs.coveo.com/
+  apiOverview:   https://docs.coveo.com/en/143/
+  swaggerUI:     https://platform.cloud.coveo.com/docs
+  developerBlog: https://blog.coveo.com/
+  github:        https://github.com/coveo

@@ -1,0 +1,930 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations
+security:
+- oauth2:
+  - full
+paths:
+  /rest/organizations/{organizationId}/activities/public:
+    post:
+      tags:
+      - Activities
+      summary: List Activities
+      description: 'Retrieves a page of [activities](https://docs.coveo.com/en/173/) matching the specified time interval
+        and filters in the target [organization](https://docs.coveo.com/en/185/).</br></br>**Required privilege:** Activities
+        - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ACTIVITIES","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAllPublicActivitiesForOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The 0-based index number of the page of activities to retrieve.</br>**Minimum:** `0`</br>**Default:**
+          `0`
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The maximum number of activities to list per page.</br>**Minimum:** `0`</br>**Default:** `100`
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: from
+        in: query
+        description: The beginning of the date range, in [ISO 8601](https://www.w3.org/TR/NOTE-datetime) format, for which
+          to list activities. If not specified, the parameter will be set as the current date and time.</br>The end range
+          must be within 31 days of the beginning range.</br>**Example:** `2018-05-22T23:36:30.589Z`
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        description: The end of the date range, in [ISO 8601](https://www.w3.org/TR/NOTE-datetime) format, for which to list
+          activities.</br>The end range must be within 31 days of the beginning range.</br>**Example:** `2018-05-23T23:36:30.589Z`
+        required: false
+        schema:
+          type: string
+          format: date-time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityFacetModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelActivityModel'
+      x-pretty-name: getAllPublicActivitiesForOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/activities/public_post
+  /rest/organizations/{organizationId}/activities/latest:
+    post:
+      tags:
+      - Activities
+      summary: Get Latest Activities for a Resource ID of an Organization Based on a Facet Model.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ACTIVITIES","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getLatestActivitiesForOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The 0-based index number of the page of activities to retrieve.</br>**Minimum:** `0`</br>**Default:**
+          `0`
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The maximum number of activities to list per page.</br>**Minimum:** `0`</br>**Default:** `100`
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityFacetModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelActivityModel'
+      x-pretty-name: getLatestActivitiesForOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/activities/latest_post
+  /rest/organizations/{organizationId}/activities/facets/public:
+    post:
+      tags:
+      - Activities
+      summary: List Activity Facets
+      description: 'Lists [activity](https://docs.coveo.com/en/173/) facets matching the specified time interval and filters
+        in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).</br></br>**Required privilege:** Activities - View<br
+        /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ACTIVITIES","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getPublicActivitiesFacetsForOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning of the date range, in [ISO 8601](https://www.w3.org/TR/NOTE-datetime) format, for which
+          to list [activity](https://docs.coveo.com/en/173/) facets. If not specified, the parameter will be set as the current
+          date and time.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        description: The end of the date range, in [ISO 8601](https://www.w3.org/TR/NOTE-datetime) format, for which to list
+          [activity](https://docs.coveo.com/en/173/) facets.</br>The end range must be within 31 days of the beginning range.</br>**Example:**
+          `2018-05-23T23:36:30.589Z`
+        required: false
+        schema:
+          type: string
+          format: date-time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityFacetModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActivityFacetModel'
+      x-pretty-name: getPublicActivitiesFacetsForOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/activities/facets/public_post
+  /rest/organizations/{organizationId}/activities/{activityId}:
+    get:
+      tags:
+      - Activities
+      summary: Show Activity
+      description: 'Shows an [activity](https://docs.coveo.com/en/173/) in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).</br></br>**Required
+        privilege:** Activities - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ACTIVITIES","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getActivityById
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: activityId
+        in: path
+        description: The unique identifier of the target [activity](https://docs.coveo.com/en/173/).</br>**Example:** `128a706128d54btm98df8a98015301be`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActivityModel'
+      x-pretty-name: getActivityById
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/activities/paramId_get
+  /rest/organizations/{organizationId}/activities/resourcetypes:
+    get:
+      tags:
+      - Activities
+      summary: List Resource Types
+      description: 'Lists [resource](https://docs.coveo.com/en/2820/) types available in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).</br></br>**Required
+        privilege:** Activities - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ACTIVITIES","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getActivityResourceTypes
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+      x-pretty-name: getActivityResourceTypes
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/activities/resourcetypes_get
+  /rest/organizations/{organizationId}/activities/resourcesandoperations:
+    get:
+      tags:
+      - Activities
+      summary: List Resources and Operations
+      description: 'Lists [resource](https://docs.coveo.com/en/2820/) types and their corresponding operations<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ACTIVITIES","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getResourceTypesAndCorrespondingOperations
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  uniqueItems: true
+                  type: array
+                  items:
+                    type: string
+      x-pretty-name: getResourceTypesAndCorrespondingOperations
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/activities/resourcesandoperations_get
+  /rest/organizations/{organizationId}/activities/operationtypes:
+    get:
+      tags:
+      - Activities
+      summary: List Operation Types
+      description: 'Lists operation types available in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).</br></br>**Required
+        privilege:** Activities - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ACTIVITIES","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getNonInternalActivityOperationTypes
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+      x-pretty-name: getNonInternalActivityOperationTypes
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ACTIVITIES
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/activities/operationtypes_get
+components:
+  schemas:
+    ActivityFacetModel:
+      type: object
+      properties:
+        sections:
+          type: array
+          description: The retrieved _section_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/)
+            values.
+          items:
+            type: string
+            description: The retrieved _section_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/)
+              values.
+            enum:
+            - CONTENT
+            - COMMERCE
+            - SEARCH
+            - ANALYTICS
+            - ORGANIZATION
+            - PROJECT
+            - AI_AND_ML
+            - INTERNAL
+        operations:
+          type: array
+          description: The retrieved _operation_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/)
+            values.
+          items:
+            type: string
+            description: The retrieved _operation_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/)
+              values.
+            enum:
+            - APPLY
+            - ARCHIVE
+            - ARCHIVE_WARNING
+            - BACKUP
+            - CHANGE_ONLINE
+            - CHANGE_READ_ONLY
+            - COMMIT
+            - CONFIG_CHANGE
+            - CONFIG_CREATE
+            - CREATE
+            - DECLINE
+            - DELETE
+            - DISABLE
+            - DUPLICATE
+            - ENABLE
+            - ENABLE_DISABLED_ENTITIES
+            - EXPORT
+            - FULL_REFRESH
+            - HORIZONTAL_SCALING
+            - IDLE
+            - IMPORT
+            - INCREMENTAL_REFRESH
+            - LIMIT_ALMOST_REACHED
+            - LIMIT_EXCEEDED
+            - LIMIT_REACHED
+            - LOG_REQUEST
+            - METADATA_REPORT
+            - MODEL_BUILD
+            - MODEL_REFRESH
+            - ORG_PROVISIONING_CHECK
+            - PAUSE
+            - PAUSE_ON_ERROR
+            - REBUILD
+            - REFRESH
+            - REFRESH_CANCEL
+            - REFRESH_ENTITIES_IN_ERROR
+            - REFRESH_ENTITIES_NOT_UPDATED
+            - REFRESH_ENTITY
+            - REMEDIATE
+            - RESIZE
+            - RESTORE
+            - RESUME
+            - ROTATE
+            - SCHEDULE_CHANGE
+            - SCHEDULE_CREATE
+            - SCHEDULE_DELETE
+            - SEARCH_CERTIFICATE_UPDATE
+            - SEARCH_INCIDENT
+            - SEND_RESOURCE_SNAPSHOT
+            - START
+            - STOP
+            - SYNCHRONIZE
+            - TEST
+            - UPDATE
+            - UPGRADE
+            - UPGRADE_REVERT
+            - VALIDATE
+            - VERTICAL_SCALING
+        states:
+          type: array
+          description: The retrieved _state_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/)
+            values.
+          items:
+            type: string
+            description: The retrieved _state_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/)
+              values.
+            enum:
+            - NOT_EXECUTED
+            - EXECUTING
+            - PAUSED
+            - EXECUTED
+        resultTypes:
+          type: array
+          description: The retrieved _result type_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/)
+            values.
+          items:
+            type: string
+            description: The retrieved _result type_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/)
+              values.
+            enum:
+            - SUCCESS
+            - ERROR
+            - ABORT
+        resourceIds:
+          type: array
+          description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) ID [activity](https://docs.coveo.com/en/173/)
+            [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i",
+            "mycoveocloudorganizationg8tp8wu3-rnj3eisk4as63kx7zc4ch4keja", "MAPPING_EXTENSION"]`
+          items:
+            type: string
+            description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) ID [activity](https://docs.coveo.com/en/173/)
+              [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i",
+              "mycoveocloudorganizationg8tp8wu3-rnj3eisk4as63kx7zc4ch4keja", "MAPPING_EXTENSION"]`
+        resourceTypes:
+          type: array
+          description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) _type_ [activity](https://docs.coveo.com/en/173/)
+            [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["EXPORTS", "SECURITY_PROVIDER"]`
+          items:
+            type: string
+            description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) _type_ [activity](https://docs.coveo.com/en/173/)
+              [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["EXPORTS", "SECURITY_PROVIDER"]`
+        organizationIds:
+          type: array
+          description: The retrieved _organization ID_ [activity](https://docs.coveo.com/en/173/) facet values. For internal
+            use only.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3", "anotherorganizationgbg4hy"]`
+          items:
+            type: string
+            description: The retrieved _organization ID_ [activity](https://docs.coveo.com/en/173/) facet values. For internal
+              use only.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3", "anotherorganizationgbg4hy"]`
+      description: The filters to apply when retrieving [activity](https://docs.coveo.com/en/173/) facets.
+    ActivityAbortedByModel:
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: The display name of the [activity](https://docs.coveo.com/en/173/) that was aborted.</br>**Example:**
+            `MyActivity`
+        userId:
+          type: string
+          description: The unique identifier of the user who aborted the execution of the activity.</br>**Example:** `asmith@example.com`
+        abortedByType:
+          type: string
+          description: 'The entity type that aborted the [activity](https://docs.coveo.com/en/173/).</br>**Allowed values:**</br>-
+            `USER`: A user aborted the activity</br>- `SYSTEM`: A Coveo Cloud platform process aborted the activity'
+          enum:
+          - USER
+          - SYSTEM
+        relatedActivityId:
+          type: string
+          description: The unique identifier of the activity that was aborted.</br>**Example:** `128a706128d54btm98df8a98015301be`
+        relatedActivity:
+          type: string
+          description: The type of [activity](https://docs.coveo.com/en/173/) that was aborted.
+          enum:
+          - APPLY
+          - ARCHIVE
+          - ARCHIVE_WARNING
+          - BACKUP
+          - CHANGE_ONLINE
+          - CHANGE_READ_ONLY
+          - COMMIT
+          - CONFIG_CHANGE
+          - CONFIG_CREATE
+          - CREATE
+          - DECLINE
+          - DELETE
+          - DISABLE
+          - DUPLICATE
+          - ENABLE
+          - ENABLE_DISABLED_ENTITIES
+          - EXPORT
+          - FULL_REFRESH
+          - HORIZONTAL_SCALING
+          - IDLE
+          - IMPORT
+          - INCREMENTAL_REFRESH
+          - LIMIT_ALMOST_REACHED
+          - LIMIT_EXCEEDED
+          - LIMIT_REACHED
+          - LOG_REQUEST
+          - METADATA_REPORT
+          - MODEL_BUILD
+          - MODEL_REFRESH
+          - ORG_PROVISIONING_CHECK
+          - PAUSE
+          - PAUSE_ON_ERROR
+          - REBUILD
+          - REFRESH
+          - REFRESH_CANCEL
+          - REFRESH_ENTITIES_IN_ERROR
+          - REFRESH_ENTITIES_NOT_UPDATED
+          - REFRESH_ENTITY
+          - REMEDIATE
+          - RESIZE
+          - RESTORE
+          - RESUME
+          - ROTATE
+          - SCHEDULE_CHANGE
+          - SCHEDULE_CREATE
+          - SCHEDULE_DELETE
+          - SEARCH_CERTIFICATE_UPDATE
+          - SEARCH_INCIDENT
+          - SEND_RESOURCE_SNAPSHOT
+          - START
+          - STOP
+          - SYNCHRONIZE
+          - TEST
+          - UPDATE
+          - UPGRADE
+          - UPGRADE_REVERT
+          - VALIDATE
+          - VERTICAL_SCALING
+        relatedActivityResourceType:
+          type: string
+          description: The [resource](https://docs.coveo.com/en/2820/) type of the aborted activity.</br>**Example:** `FIELD`
+      description: An entity that aborted an [activity](https://docs.coveo.com/en/173/).
+    ActivityModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the activity.</br>**Example:** `128a706128d54btm98df8a98015301be`
+        operation:
+          type: string
+          description: The name of the [activity](https://docs.coveo.com/en/173/) _operation_.
+          enum:
+          - APPLY
+          - ARCHIVE
+          - ARCHIVE_WARNING
+          - BACKUP
+          - CHANGE_ONLINE
+          - CHANGE_READ_ONLY
+          - COMMIT
+          - CONFIG_CHANGE
+          - CONFIG_CREATE
+          - CREATE
+          - DECLINE
+          - DELETE
+          - DISABLE
+          - DUPLICATE
+          - ENABLE
+          - ENABLE_DISABLED_ENTITIES
+          - EXPORT
+          - FULL_REFRESH
+          - HORIZONTAL_SCALING
+          - IDLE
+          - IMPORT
+          - INCREMENTAL_REFRESH
+          - LIMIT_ALMOST_REACHED
+          - LIMIT_EXCEEDED
+          - LIMIT_REACHED
+          - LOG_REQUEST
+          - METADATA_REPORT
+          - MODEL_BUILD
+          - MODEL_REFRESH
+          - ORG_PROVISIONING_CHECK
+          - PAUSE
+          - PAUSE_ON_ERROR
+          - REBUILD
+          - REFRESH
+          - REFRESH_CANCEL
+          - REFRESH_ENTITIES_IN_ERROR
+          - REFRESH_ENTITIES_NOT_UPDATED
+          - REFRESH_ENTITY
+          - REMEDIATE
+          - RESIZE
+          - RESTORE
+          - RESUME
+          - ROTATE
+          - SCHEDULE_CHANGE
+          - SCHEDULE_CREATE
+          - SCHEDULE_DELETE
+          - SEARCH_CERTIFICATE_UPDATE
+          - SEARCH_INCIDENT
+          - SEND_RESOURCE_SNAPSHOT
+          - START
+          - STOP
+          - SYNCHRONIZE
+          - TEST
+          - UPDATE
+          - UPGRADE
+          - UPGRADE_REVERT
+          - VALIDATE
+          - VERTICAL_SCALING
+        state:
+          type: string
+          description: The current state of the activity.
+          enum:
+          - NOT_EXECUTED
+          - EXECUTING
+          - PAUSED
+          - EXECUTED
+        description:
+          type: string
+          description: A brief description of the activity.</br>**Example:** `Activity for refreshing the bookstore source`
+        result:
+          type: string
+          description: The result of the [activity](https://docs.coveo.com/en/173/) execution.
+          enum:
+          - SUCCESS
+          - ERROR
+          - ABORT
+        content:
+          type: object
+          additionalProperties:
+            type: object
+            description: A set of key-value pairs representing relevant information pertaining to the activity.
+          description: A set of key-value pairs representing relevant information pertaining to the activity.
+        errorCode:
+          type: string
+          description: The code of the error that caused the activity to fail, if applicable.</br>**Example:** `JOB_SERVICE_EXECUTION_ERROR`
+        errorDetail:
+          type: string
+          description: A brief description of what caused the [activity](https://docs.coveo.com/en/173/) to fail, if applicable.</br>**Example:**
+            `An error occurred while executing the job on the Job Service`
+        abortReason:
+          type: string
+          description: The reason for which the [activity](https://docs.coveo.com/en/173/) was cancelled, if applicable.</br>**Example:**
+            `Refresh has been stopped.`
+        abortedBy:
+          $ref: '#/components/schemas/ActivityAbortedByModel'
+        createDate:
+          type: string
+          description: The [activity](https://docs.coveo.com/en/173/) creation date, in number of milliseconds since UNIX
+            epoch.</br>**Example:** `1555347453376`
+          format: date-time
+        startDate:
+          type: string
+          description: The [activity](https://docs.coveo.com/en/173/) start date, in number of milliseconds since UNIX epoch.</br>**Example:**
+            `1555347453376`
+          format: date-time
+        endDate:
+          type: string
+          description: The [activity](https://docs.coveo.com/en/173/) completion date, in number of milliseconds since UNIX
+            epoch.</br>**Example:** `1555347453376`
+          format: date-time
+        duration:
+          type: integer
+          description: The number of seconds the [activity](https://docs.coveo.com/en/173/) lasted.</br>**Minimum:** `0`
+          format: int64
+        progress:
+          type: number
+          description: The percentage/ratio corresponding to the progress of the activity.</br>**Must be in range:** `[0.0,
+            1.0]`
+          format: double
+        triggeredBy:
+          $ref: '#/components/schemas/ActivityTriggerByModel'
+        organizationId:
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/) the [activity](https://docs.coveo.com/en/173/)
+            was retrieved in.</br>**Example:** `mycoveocloudorganizationg8tp8wu3`
+        resourceId:
+          type: string
+          description: The unique identifier of the [resource](https://docs.coveo.com/en/2820/) the [activity](https://docs.coveo.com/en/173/)
+            relates to.</br>**Example:** `mycoveocloudorganizationg8tp8wu3-qp2fnx5g7w7voteaiahlxfkf7i`
+        resourceName:
+          type: string
+          description: The name of the [resource](https://docs.coveo.com/en/2820/) the [activity](https://docs.coveo.com/en/173/)
+            relates to.</br>**Example:** `sample-extension`
+        resourceType:
+          type: string
+          description: The type of the [resource](https://docs.coveo.com/en/2820/) the [activity](https://docs.coveo.com/en/173/)
+            relates to. </br>**Example:** `SECURITY_PROVIDER`
+        section:
+          type: string
+          description: The section of the [Coveo Cloud administration console](https://docs.coveo.com/en/183/) in which the
+            [activity](https://docs.coveo.com/en/173/) was executed.
+          enum:
+          - CONTENT
+          - COMMERCE
+          - SEARCH
+          - ANALYTICS
+          - ORGANIZATION
+          - PROJECT
+          - AI_AND_ML
+          - INTERNAL
+        snapshotId:
+          type: string
+          description: The unique identifier for the snapshot. For internal use only.</br>**Example:** `w3mtqdxa0vt65g7p4arhfmlgyu`
+        severity:
+          type: string
+          description: The importance of an [activity](https://docs.coveo.com/en/173/)  </br>**Accepted values:** `INFO`,
+            `WARNING`, `ERROR`, `CRITICAL`
+          enum:
+          - INFO
+          - WARNING
+          - ERROR
+          - CRITICAL
+          - UNKNOWN
+        resourceDisplayInfo:
+          type: string
+          description: A short description of the event that occurred.</br>**Example:** `Organization '{orgId}' expired.`
+      description: An [activity](https://docs.coveo.com/en/173/).
+    ActivityTriggerByModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the entity that triggered the activity.</br>**Example:** `asmith@example.com-google`
+        type:
+          type: string
+          description: The type of entity that triggered the activity.
+          enum:
+          - USER
+          - SYSTEM
+        displayName:
+          type: string
+          description: The display name of the entity that triggered the activity.</br>**Example:** `asmith@example.com`
+        relatedActivityId:
+          type: string
+          description: The unique identifier of the [activity](https://docs.coveo.com/en/173/) that was triggered.</br>**Example:**
+            `128a706128d54btm98df8a98015301be`
+        relatedActivity:
+          type: string
+          description: The [activity](https://docs.coveo.com/en/173/) operation that was triggered.
+          enum:
+          - APPLY
+          - ARCHIVE
+          - ARCHIVE_WARNING
+          - BACKUP
+          - CHANGE_ONLINE
+          - CHANGE_READ_ONLY
+          - COMMIT
+          - CONFIG_CHANGE
+          - CONFIG_CREATE
+          - CREATE
+          - DECLINE
+          - DELETE
+          - DISABLE
+          - DUPLICATE
+          - ENABLE
+          - ENABLE_DISABLED_ENTITIES
+          - EXPORT
+          - FULL_REFRESH
+          - HORIZONTAL_SCALING
+          - IDLE
+          - IMPORT
+          - INCREMENTAL_REFRESH
+          - LIMIT_ALMOST_REACHED
+          - LIMIT_EXCEEDED
+          - LIMIT_REACHED
+          - LOG_REQUEST
+          - METADATA_REPORT
+          - MODEL_BUILD
+          - MODEL_REFRESH
+          - ORG_PROVISIONING_CHECK
+          - PAUSE
+          - PAUSE_ON_ERROR
+          - REBUILD
+          - REFRESH
+          - REFRESH_CANCEL
+          - REFRESH_ENTITIES_IN_ERROR
+          - REFRESH_ENTITIES_NOT_UPDATED
+          - REFRESH_ENTITY
+          - REMEDIATE
+          - RESIZE
+          - RESTORE
+          - RESUME
+          - ROTATE
+          - SCHEDULE_CHANGE
+          - SCHEDULE_CREATE
+          - SCHEDULE_DELETE
+          - SEARCH_CERTIFICATE_UPDATE
+          - SEARCH_INCIDENT
+          - SEND_RESOURCE_SNAPSHOT
+          - START
+          - STOP
+          - SYNCHRONIZE
+          - TEST
+          - UPDATE
+          - UPGRADE
+          - UPGRADE_REVERT
+          - VALIDATE
+          - VERTICAL_SCALING
+        relatedActivityResourceType:
+          type: string
+          description: The [resource](https://docs.coveo.com/en/2820/) type of the related activity.</br>**Example:** `SUCCESS`
+      description: An operation that triggered an [activity](https://docs.coveo.com/en/173/).
+    PageModelActivityModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivityModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

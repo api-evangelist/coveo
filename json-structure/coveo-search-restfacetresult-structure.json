@@ -1,0 +1,92 @@
+{
+  "name": "RestFacetResult",
+  "structure": {
+    "type": "object",
+    "required": [
+      "field",
+      "indexScore",
+      "moreValuesAvailable",
+      "values"
+    ],
+    "properties": {
+      "field": {
+        "type": "string",
+        "description": "The name of the field on which the facet is based.\n\n**Example: `author`"
+      },
+      "moreValuesAvailable": {
+        "type": "boolean",
+        "description": "Whether additional values are available for the facet."
+      },
+      "values": {
+        "type": "array",
+        "description": "The returned facet values.",
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/RestFacetResultValue"
+            },
+            {
+              "$ref": "#/components/schemas/RestHierarchicalFacetResponseValue"
+            }
+          ]
+        }
+      },
+      "mlScore": {
+        "type": "number",
+        "format": "double",
+        "description": "The ranking score computed by Coveo ML DNE for this facet."
+      },
+      "indexScore": {
+        "type": "number",
+        "format": "double",
+        "description": "The ranking score computed by the index for this facet."
+      },
+      "isFromAutoSelect": {
+        "type": "boolean",
+        "description": "Whether the facet was recommended by Coveo ML."
+      },
+      "label": {
+        "type": "string",
+        "description": "A human-readable title that describes the facet."
+      },
+      "domain": {
+        "type": "object",
+        "description": "The domain of the facet. It represents the lowest and highest values possible for this facet.\n\n**Note:** This property is only populated when the facet is a range facet and `generateAutomaticRanges: true` was requested.\n",
+        "properties": {
+          "start": {
+            "description": "The start of the domain. It represents the lowest value possible for this facet.",
+            "anyOf": [
+              {
+                "type": "string",
+                "example": "2001-07-20T23:01:05"
+              },
+              {
+                "type": "integer",
+                "format": "int64"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "end": {
+            "description": "The end of the domain. It represents the highest value possible for this facet.",
+            "anyOf": [
+              {
+                "type": "string",
+                "example": "2001-07-20T23:01:05"
+              },
+              {
+                "type": "integer",
+                "format": "int64"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

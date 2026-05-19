@@ -1,0 +1,920 @@
+openapi: 3.0.1
+info:
+  title: Coveo Field API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations
+security:
+- oauth2:
+  - full
+paths:
+  /rest/organizations/{organizationId}/indexes/fields/{fieldId}:
+    get:
+      tags:
+      - Fields
+      summary: Show Field
+      description: 'Shows information regarding a single [field](https://docs.coveo.com/en/200/glossary/field) in the [index](https://docs.coveo.com/en/204/glossary/index)
+        of the target [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Fields
+        - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getField
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: fieldId
+        in: path
+        description: The `name` property of the field to retrieve.<br />**Example:** `numberoflikes`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FieldModel'
+      x-pretty-name: getField
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields/paramId_get
+    put:
+      tags:
+      - Fields
+      summary: Update Field
+      description: 'Updates an existing [field](https://docs.coveo.com/en/200/glossary/field) in the [index](https://docs.coveo.com/en/204/glossary/index)
+        of the target [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Fields
+        - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateField
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: fieldId
+        in: path
+        description: The `name` property of the field to update.<br />**Example:** `numberoflikes`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldModel'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: updateField
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields/paramId_put
+    delete:
+      tags:
+      - Fields
+      summary: Delete Field
+      description: 'Deletes a [field](https://docs.coveo.com/en/200/glossary/field) in the [index](https://docs.coveo.com/en/204/glossary/index)
+        of the target [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Fields
+        - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: removeField
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: fieldId
+        in: path
+        description: The `name` property of the field to delete.<br />**Example:** `numberoflikes`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: removeField
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields/paramId_delete
+  /rest/organizations/{organizationId}/indexes/fields/batch/update:
+    put:
+      tags:
+      - Fields
+      summary: Update Fields
+      description: 'Updates a batch of existing [fields](https://docs.coveo.com/en/200/glossary/field) in the [index](https://docs.coveo.com/en/204/glossary/index)
+        of the target [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Fields
+        - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateFields
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The information to update the fields with.
+              items:
+                $ref: '#/components/schemas/FieldModel'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: updateFields
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields/batch/update_put
+  /rest/organizations/{organizationId}/indexes/fields/batch/update/results:
+    put:
+      tags:
+      - Fields
+      summary: Update Fields with Individual Results
+      description: 'Updates a batch of existing [fields](https://docs.coveo.com/en/200/glossary/field) in the [index](https://docs.coveo.com/en/204/glossary/index)
+        of the target [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Fields
+        - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateFieldsBatch
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The information to update the fields with.
+              items:
+                $ref: '#/components/schemas/FieldModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BatchOperationProgressModelFieldModel'
+      x-pretty-name: updateFieldsBatch
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields/batch/update/results_put
+  /rest/organizations/{organizationId}/indexes/fields:
+    post:
+      tags:
+      - Fields
+      summary: Create Field
+      description: 'Creates a new [field](https://docs.coveo.com/en/200/glossary/field) in the [index](https://docs.coveo.com/en/204/glossary/index)
+        of the target [Coveo Cloud organization](https://docs.coveo.com/en/185/glossary/coveo-cloud-v2-organization).<br /><br
+        />**Required privilege:** Fields - Create<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createField
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldModel'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: createField
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields_post
+  /rest/organizations/{organizationId}/indexes/fields/search:
+    post:
+      tags:
+      - Fields
+      summary: List Fields
+      description: 'Retrieves a filtered and paginated list of [fields](https://docs.coveo.com/en/200/) from the [index](https://docs.coveo.com/en/204/)
+        of the target Coveo Cloud [organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Fields
+        - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getFields
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldListingOptions'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelFieldModel'
+      x-pretty-name: getFields
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields/search_post
+  /rest/organizations/{organizationId}/indexes/fields/batch/create:
+    post:
+      tags:
+      - Fields
+      summary: Create Fields
+      description: 'Creates a batch of [fields](https://docs.coveo.com/en/200/glossary/field) in the [index](https://docs.coveo.com/en/204/glossary/index)
+        of the target [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Fields
+        - Create<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createFields
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The information to create the new fields with.
+              items:
+                $ref: '#/components/schemas/FieldModel'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: createFields
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields/batch/create_post
+  /rest/organizations/{organizationId}/indexes/fields/batch/create/results:
+    post:
+      tags:
+      - Fields
+      summary: Create Fields with Individual Results
+      description: 'Creates a batch of [fields](https://docs.coveo.com/en/200/glossary/field) in the [index](https://docs.coveo.com/en/204/glossary/index)
+        of the target [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Fields
+        - Create<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createFieldsBatch
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The information to create the new fields with.
+              items:
+                $ref: '#/components/schemas/FieldModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BatchOperationProgressModelFieldModel'
+      x-pretty-name: createFieldsBatch
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields/batch/create/results_post
+  /rest/organizations/{organizationId}/indexes/fields/batch/delete:
+    delete:
+      tags:
+      - Fields
+      summary: Delete Fields
+      description: 'Deletes a batch of [fields](https://docs.coveo.com/en/200/glossary/field) in the [index](https://docs.coveo.com/en/204/glossary/index)
+        of the target [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Fields
+        - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: removeFields
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: The `name` properties of the fields to delete.<br />**Example:** `myfield1,myfield2,myfield3`
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: removeFields
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields/batch/delete_delete
+  /rest/organizations/{organizationId}/indexes/fields/batch/delete/results:
+    delete:
+      tags:
+      - Fields
+      summary: Delete Fields with Individual Results
+      description: 'Deletes a batch of [fields](https://docs.coveo.com/en/200/glossary/field) in the [index](https://docs.coveo.com/en/204/glossary/index)
+        of the target [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br />**Required privilege:** Fields
+        - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"FIELD","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: removeFieldsBatch
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: The `name` properties of the fields to delete.<br />**Example:** `myfield1,myfield2,myfield3`
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BatchOperationProgressModelFieldModel'
+      x-pretty-name: removeFieldsBatch
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: FIELD
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/indexes/fields/batch/delete/results_delete
+components:
+  schemas:
+    FieldModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the [field](https://docs.coveo.com/en/200/), also referred to as the field identifier,
+            or `fieldId`.<br />**Note:** Must match `^([a-z][a-z0-9_]{0,254})$`<br />**Example:** `date`
+          example: date
+        description:
+          type: string
+          description: A description of the [field](https://docs.coveo.com/en/200/).<br />**Example:** `The date of creation
+            of a given item`
+        label:
+          type: string
+          description: A displayable label for the [field](https://docs.coveo.com/en/200/) when used by the facet generator.
+        automaticFacetsCandidate:
+          type: boolean
+          description: Whether this [field](https://docs.coveo.com/en/200/) is to be considered by the facet generator feature.<br
+            />**Default:** `false`.
+          example: false
+          default: false
+        automaticFacetsCandidateTags:
+          type: array
+          description: Optional list of tags that specify which properties/contexts this field should be an AFG candidate
+            for. An empty or null list means the field is an AFG candidate for all properties (org-wide). Tag names must be
+            1-64 characters and contain only alphanumeric characters (a-z, A-Z, 0-9), dots (.), hyphens (-), underscores (_),
+            or colons (:).<br />**Example:** `["store1", "us.retail", "brand-name_123"]`
+          items:
+            type: string
+            description: Optional list of tags that specify which properties/contexts this field should be an AFG candidate
+              for. An empty or null list means the field is an AFG candidate for all properties (org-wide). Tag names must
+              be 1-64 characters and contain only alphanumeric characters (a-z, A-Z, 0-9), dots (.), hyphens (-), underscores
+              (_), or colons (:).<br />**Example:** `["store1", "us.retail", "brand-name_123"]`
+        type:
+          type: string
+          description: The data type of the [field](https://docs.coveo.com/en/200/).<br />See [Field Types](https://docs.coveo.com/en/1833/#field-type).<br
+            />**Allowed values:** <br /> - `DATE`<br /> - `LONG`<br /> - `LONG_64`<br /> - `DOUBLE`<br /> - `STRING`<br />
+          example: STRING
+          enum:
+          - LONG
+          - LONG_64
+          - DOUBLE
+          - DATE
+          - STRING
+          - VECTOR
+        includeInQuery:
+          type: boolean
+          description: Whether this [field](https://docs.coveo.com/en/200/) can be referred to in [Coveo Cloud query syntax](https://docs.coveo.com/en/1552/)
+            expressions (for example, `@myfield=myvalue`).<br /> Coveo Atomic and Headless often rely on the fact that most
+            fields can be referred to in query expressions.Therefore, explicitly setting this option to `false` is not recommended,
+            unless you know for sure that this field is only used to return information on query results.An example where
+            it would make sense to set to `false` would be a field that contains large blobs of data that you want to display
+            in query results, but never want to search on.<br />**Default:** `true`
+          example: true
+          default: true
+        includeInResults:
+          type: boolean
+          description: Whether the [field](https://docs.coveo.com/en/200/) can be included in the `raw` property of [query](https://docs.coveo.com/en/231/)
+            results.<br />The Search API lets you explicitly specify which fields you want to include in or exclude from the
+            `raw` property of each result at query time.<br />Moreover, the [index](https://docs.coveo.com/en/204/) can include
+            a given field in the `raw` property of a query result only if this field has a non-null value for this particular
+            result.<br /> Therefore, explicitly setting this option to `false` on a field isn't recommended, unless you want
+            to override this behavior and ensure that this field can never be included in the `raw` property of any query
+            result.<br />**Default:** `true`
+          example: true
+          default: true
+        keyValue:
+          type: boolean
+          description: Whether the field is a [dictionary field](https://docs.coveo.com/en/2036/), which contains mappings
+            of keys to values instead of a single value.<br />**Default:** `false`
+          example: false
+          default: false
+        multilingual:
+          type: boolean
+          description: Whether the [field](https://docs.coveo.com/en/200/) contains a mapping of languages to values instead
+            of a single value.<br />**Note:** Applicable to field type `STRING` only. This option requires the `keyValue`
+            option to be enabled.<br />**Default:** `false`
+          example: false
+          default: false
+        keepAccentsDisplayValueFacet:
+          type: boolean
+          description: Whether [field](https://docs.coveo.com/en/200/) values with differing accents should be considered
+            distinct facet values (e.g., `quebec` vs `québec`).<br />**Note:** Applicable to field type `STRING` only.<br
+            />**Default:** `false`
+          example: false
+          default: false
+        keepDistinctDisplayValueFacet:
+          type: boolean
+          description: Whether [field](https://docs.coveo.com/en/200/) values with differing accents, ligatures, or casing
+            should be considered distinct facet values.<br />This parameter encompasses the behavior of **keepAccentsDisplayValueFacet**
+            but adds differentiation for ligatures (e.g., `ß` vs `ss`) and case sensitivity (e.g., `Québec` vs `québec`).<br
+            />**Note:** Applicable to field type `STRING` only.<br />**Default:** `false`
+          example: false
+          default: false
+        mergeWithLexicon:
+          type: boolean
+          description: Whether the field is [free text searchable](https://docs.coveo.com/en/1833#free-text-search).<br />**Note:**
+            Applicable to field type `STRING` only.<br />**Default:** `false`
+          example: false
+          default: false
+        smartDateFacet:
+          type: boolean
+          description: It is heavily recommended to set this option to `false` unless you know for sure you need it.<br /><br
+            />Whether to transform date and time string values into semicolon separated number of days/weeks/months/quarters/years
+            since January 1st, 1900.<br />**Note:** Applicable to [field](https://docs.coveo.com/en/200/) type `DATE` only.<br
+            />If you set this option to `true` on a `DATE` type field, the field itself will be populated by the number of
+            milliseconds since Unix epoch corresponding to the parsed date and time string, as usual.<br />However, the index
+            will also automatically create a new field, and populate it with the smart date data. <br />**Default:** `false`<br
+            /><br />Example:<br />You create the `mydate` field in your [index](https://docs.coveo.com/en/204/) and set the
+            `smartDateFacet` option to `true` on that field. The index processes a source item whose `mydate` metadata value
+            is `2017-11-20T19:58:55.126Z`. The `mydate` metadata is mapped to the `mydate` field in that source.<br />The
+            index populates the `mydate` field with the corresponding number of milliseconds since Unix epoch (that is, `1511207935000`).
+            It also creates a `mydatesmartfacet` field and populates it with the smart date data (that is, `D43057;W6151;M1414;Q471;Y117`).
+          example: false
+          default: false
+        facet:
+          type: boolean
+          description: Whether [Group By](https://docs.coveo.com/en/203/) operations and [Facet](https://docs.coveo.com/en/198/)
+            requests can be performed on the [field](https://docs.coveo.com/en/200/).<br />This option can't be set to `false`
+            on a non-`STRING` type field.<br />**Default:**<br /> - `false` for `STRING` type fields.<br /> - `true` for all
+            other types of fields.
+          example: false
+        multiValueFacet:
+          type: boolean
+          description: Whether the [field](https://docs.coveo.com/en/200/) contains multiple values (see also the `multiValueFacetTokenizers`
+            property).<br />**Note:** Applicable to field type `STRING` only.<br />**Default:** `false`
+          example: false
+          default: false
+        hierarchicalFacet:
+          type: boolean
+          description: Whether the [field](https://docs.coveo.com/en/200/) contains multiple values that form a hierarchy
+            (see also the `multiValueFacetTokenizers` property).<br />**Note:** Applicable to field type `STRING` only.<br
+            />**Default:** `false`
+          example: false
+          default: false
+        sort:
+          type: boolean
+          description: Whether [query](https://docs.coveo.com/en/231/) results can be sorted based on the value of the [field](https://docs.coveo.com/en/200/).Having
+            lots of sortable `STRING` type fields in a Coveo organization can have an adverse effect on its [index](https://docs.coveo.com/en/204/)
+            size and performance.<br />This option can't be set to `false` on a non-`STRING` type field.<br />**Default:**<br
+            /> - `false` for `STRING` type fields.<br /> - `true` for all other types of fields.
+          example: false
+        ranking:
+          type: boolean
+          description: Whether to use the [field](https://docs.coveo.com/en/200/) in result ranking calculation only.<br />**Notes:**
+            <br /> - Has a significant impact on query performance.<br /> - Applicable to field type `STRING`<br /><br />
+            **Default:** `false`
+          example: false
+          default: false
+        stemming:
+          type: boolean
+          description: Whether to allow [stemming](https://docs.coveo.com/en/1576/) on [field](https://docs.coveo.com/en/200/)
+            [queries](https://docs.coveo.com/en/231/).<br />**Notes:** <br /> - applicable to `STRING` type fields only. <br
+            /> - Has a significant impact on query performance. <br /><br />**Default:** `false`
+          example: false
+          default: false
+        multiValueFacetTokenizers:
+          type: string
+          description: The character to use as a value separator, if the [field](https://docs.coveo.com/en/200/) contains
+            multiple values (see also the `multiValueFacet` property). <br />**Example:** `;`
+          example: ;
+        useCacheForNestedQuery:
+          type: boolean
+          description: Whether to keep the data required to perform [nested queries](https://docs.coveo.com/en/220) in memory.
+            Setting this option to `true` on a [field](https://docs.coveo.com/en/200/) also speeds query performance for expressions
+            that compare the value of this field using [regex, wildcard, phonetic match, or fuzzy match query operators](https://docs.coveo.com/en/1552).<br
+            />**Note:** only applicable to fields which are faceted or multi-value faceted.<br />**Default:** `false`
+          example: false
+          default: false
+        useCacheForSort:
+          type: boolean
+          description: Whether to keep the entire [field](https://docs.coveo.com/en/200/) in memory for fast sorting.<br />**Default:**
+            `false`<br />This option can't be set to true on a `STRING` type field, unless the `sort` option is also `true`
+            for that field.
+          example: false
+          default: false
+        useCacheForNumericQuery:
+          type: boolean
+          description: Whether to keep the data required to execute operations on numeric and date [fields](https://docs.coveo.com/en/200/)
+            in memory.<br />**Note:** Cannot be enabled on `STRING` type fields.<br />**Default:** `false`
+          example: false
+          default: false
+        useCacheForComputedFacet:
+          type: boolean
+          description: Whether to keep computed field data in memory.<br />**Note:** Cannot be enabled on `STRING` type fields.<br
+            />**Default:** `false`
+          example: false
+          default: false
+        dateFormat:
+          type: string
+          description: A regex indicating the date format, for some `date` type fields.<br />**Example:** `%Y/%m/%d@%H:%M:%S%G`
+          example: '%Y/%m/%d@%H:%M:%S%G'
+        system:
+          type: boolean
+          description: Whether the [field](https://docs.coveo.com/en/200/) is a standard Coveo field.<br />**Note:** `system`
+            option can not be set to `true`.<br />**Default:** `false`
+          example: false
+        projectIds:
+          type: array
+          description: List of Project IDs a [field](https://docs.coveo.com/en/200/) can be associated with.<br />**Note:**
+            This is an optional list of `STRING`<br />**Default:** `null`
+          items:
+            type: string
+            description: List of Project IDs a [field](https://docs.coveo.com/en/200/) can be associated with.<br />**Note:**
+              This is an optional list of `STRING`<br />**Default:** `null`
+      description: The information to create the new field with.
+    BatchOperationProgressModelFieldModel:
+      type: object
+      properties:
+        batchOperationId:
+          type: string
+        status:
+          type: string
+          enum:
+          - IN_PROGRESS
+          - COMPLETED
+        batchOperationResourcesStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/BatchOperationResourceStatusModelFieldModel'
+    BatchOperationResourceStatusModelFieldModel:
+      type: object
+      properties:
+        resourceModel:
+          $ref: '#/components/schemas/FieldModel'
+        operationResult:
+          type: string
+          enum:
+          - SUCCESS
+          - ERROR
+        errorDetails:
+          type: string
+        successful:
+          type: boolean
+    FieldListingFilters:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A substring that must appear in the `name` property of a [field](https://docs.coveo.com/en/200/) in
+            order for this field to be included in the results.<br />**Example:** `author`
+          example: author
+        type:
+          type: string
+          description: The type of [field](https://docs.coveo.com/en/200/) to list.<br /> See [Field Types](https://docs.coveo.com/en/1833/#field-type).<br
+            />**Allowed values:** <br /> - `ALL` <br /> - `LONG` <br /> - `LONG_64` <br /> - `DOUBLE` <br /> - `DATE` <br
+            /> - `STRING`<br />
+          example: STRING
+          enum:
+          - LONG
+          - LONG_64
+          - DOUBLE
+          - DATE
+          - STRING
+          - VECTOR
+        origin:
+          type: string
+          description: 'The origin of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:** <br />
+            - `ALL` <br /> - `USER`: Created by a [Coveo Cloud organization](https://docs.coveo.com/en/185/) [member](https://docs.coveo.com/en/2869/)
+            or by a source addition (each source comes with a set of standard fields).<br /> - `SYSTEM`: Required by the Coveo
+            index and applies to all sources.<br /><br />**Default:** `ALL`'
+          example: ALL
+          enum:
+          - ALL
+          - USER
+          - SYSTEM
+          default: ALL
+        facet:
+          type: string
+          description: The facet status of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:**
+            <br /> - `ALL` <br /> - `TRUE_ONLY`<br /> - `FALSE_ONLY`<br /><br />**Default:** `ALL`
+          example: ALL
+          enum:
+          - ALL
+          - TRUE_ONLY
+          - FALSE_ONLY
+          default: ALL
+        automaticFacetsCandidate:
+          type: string
+          description: The automatic facet candidate status of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed
+            values:** <br /> - `ALL` <br /> - `TRUE_ONLY`<br /> - `FALSE_ONLY`<br /><br />**Default:** `ALL`
+          example: ALL
+          enum:
+          - ALL
+          - TRUE_ONLY
+          - FALSE_ONLY
+          default: ALL
+        sort:
+          type: string
+          description: The sort status of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:** <br
+            /> - `ALL` <br /> - `TRUE_ONLY`<br /> - `FALSE_ONLY`<br /><br />**Default:** `ALL`
+          example: ALL
+          enum:
+          - ALL
+          - TRUE_ONLY
+          - FALSE_ONLY
+          default: ALL
+        projectId:
+          type: string
+          description: Only return fields assigned to a projectId. <br />**Optional <br />**Default:** Null
+        fieldNames:
+          type: array
+          description: Only return fields whose ids are present in this list. <br />**Optional <br />**Default:** Null
+          items:
+            type: string
+            description: Only return fields whose ids are present in this list. <br />**Optional <br />**Default:** Null
+      description: Filters to narrow down the returned [fields](https://docs.coveo.com/en/200/).
+    FieldListingOptions:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: 'The 0-based number of the page of results to list.<br />Minimum: `0`<br />**Default:** `0`'
+          format: int32
+          example: 0
+          default: 0
+        perPage:
+          type: integer
+          description: The maximum number of results to include per page.<br />**Must be in range:** `[1, 1000]`<br />**Default:**
+            `100`
+          format: int32
+          example: 100
+          default: 100
+        sortBy:
+          type: string
+          description: The [field](https://docs.coveo.com/en/200/) property by which to sort results.<br />**Default:** `name`
+          example: name
+          default: name
+        order:
+          type: string
+          description: 'The sort direction of the results.<br />**Allowed values:**<br /> - `ASC`: Ascending order.<br />-
+            `DESC`: Descending order. <br /><br />**Default:** `ASC`'
+          example: ASC
+          default: ASC
+        filters:
+          $ref: '#/components/schemas/FieldListingFilters'
+      description: Options to control the pagination and filtering of [fields](https://docs.coveo.com/en/200/).
+    PageModelFieldModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

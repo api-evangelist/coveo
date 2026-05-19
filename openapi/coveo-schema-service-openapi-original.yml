@@ -1,0 +1,1133 @@
+swagger: '2.0'
+info:
+  title: Coveo Schema Service
+  version: 1.0.0
+  description: Documentation for Coveo Schema Service
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: ''
+    url: ''
+    email: support@coveo.com
+  license:
+    name: ''
+    url: ''
+paths:
+  /rest/organizations/{organizationId}/salesforce/defaultObjectsToGet:
+    get:
+      operationId: getSalesforceDefaultObjectsToGet
+      summary: Retrieves the Default Objects for a Salesforce Source
+      tags:
+      - Salesforce Sources
+      deprecated: false
+      parameters:
+      - name: preset
+        description: 'The preset name of default objects to get (Value: "B2BProduct")'
+        required: false
+        in: query
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SalesforceObjectToGet'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/salesforce/trial/licenseStatus:
+    get:
+      operationId: getLicenseStatus
+      summary: Retrieves the License Status for an Organization
+      tags:
+      - Salesforce Trial
+      deprecated: true
+      parameters:
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/OutgoingLicenseStatus'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/salesforce/trial/provisioningStatus:
+    get:
+      operationId: getProvisioningStatus
+      summary: Retrieves the Provisioning Status for an Organization
+      tags:
+      - Salesforce Trial
+      deprecated: true
+      parameters:
+      - name: salesforceOrganizationId
+        description: The ID of the Salesforce organization.
+        required: true
+        in: query
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/OutgoingProvisioningStatus'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/schema/sources/SLACK/validateToken:
+    post:
+      operationId: validateSlackToken
+      summary: Validates a Slack OAuth Token
+      tags:
+      - Sources
+      deprecated: false
+      parameters:
+      - name: accessTokenGuid
+        description: The OAuth token Guid linked with the token to validate.
+        required: false
+        in: query
+        type: string
+      - name: accessToken
+        description: The OAuth token to validate.
+        required: false
+        in: query
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SlackTokenValidationStatus'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/schema/sources/{sourceType}/defaultObjectsToGet:
+    get:
+      operationId: getDefaultObjectsToGet
+      summary: Retrieves the Default Objects for a Source of Type Specified.
+      tags:
+      - Sources
+      deprecated: false
+      parameters:
+      - name: sourceType
+        description: The type of the source
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericObjectsToGet'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/schema/sources/{sourceType}/entities:
+    get:
+      operationId: getSchemaEntities
+      summary: Retrieves the List of Entities Present in a Source, in Alphabetical Order of Display Names.
+      tags:
+      - Sources
+      deprecated: false
+      parameters:
+      - name: accessTokenGuid
+        description: The source's access token Guid (if authentified through access token)
+        required: false
+        in: query
+        type: string
+      - name: entityIds
+        description: IDs of the entities to retrieve (comma-separated list)
+        required: false
+        in: query
+        type: string
+      - name: limit
+        description: The number of entities to retrieve
+        required: false
+        in: query
+        type: integer
+        format: int32
+      - name: offset
+        description: Starting index of the first entity to retrieve
+        required: false
+        in: query
+        type: integer
+        format: int32
+      - name: query
+        description: A query used to match specific entities
+        required: false
+        in: query
+        type: string
+      - name: username
+        description: The source's username (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: passwordGuid
+        description: The source's password Guid (if authentified through Basic Auth)
+        required: false
+        in: query
+        type: string
+      - name: clientId
+        description: The source's client id(if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: clientSecretGuid
+        description: The source's client secret Guid (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: oauthRefreshTokenGuid
+        description: The source's refresh token Guid (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: instanceUrl
+        description: The source's instance Url.
+        required: true
+        in: query
+        type: string
+      - name: sourceType
+        description: The type of the source
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SchemaEntities'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/schema/sources/{sourceType}/entities/{entityId}:
+    get:
+      operationId: getSchemaEntity
+      summary: Retrieves the Entity Specified with Its Fields.
+      tags:
+      - Sources
+      deprecated: false
+      parameters:
+      - name: filter
+        description: The record count filter
+        required: false
+        in: query
+        type: string
+      - name: username
+        description: The source's username (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: passwordGuid
+        description: The source's password Guid (if authentified through Basic Auth)
+        required: false
+        in: query
+        type: string
+      - name: clientId
+        description: The source's client id(if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: clientSecretGuid
+        description: The source's client secret Guid (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: oauthRefreshTokenGuid
+        description: The source's refresh token Guid (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: instanceUrl
+        description: The source's instance Url.
+        required: true
+        in: query
+        type: string
+      - name: entityId
+        description: The id of the entity
+        required: true
+        in: path
+        type: string
+      - name: sourceType
+        description: The type of the source
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SchemaEntities'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/schema/sources/{sourceType}/entities/{entityId}/fields:
+    get:
+      operationId: getSchemaEntityFields
+      summary: Retrieves the Specified Entity, with Its Fields in Alphabetical Order of Display Names.
+      tags:
+      - Sources
+      deprecated: false
+      parameters:
+      - name: username
+        description: The source's username (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: passwordGuid
+        description: The source's password Guid (if authentified through Basic Auth)
+        required: false
+        in: query
+        type: string
+      - name: clientId
+        description: The source's client id(if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: clientSecretGuid
+        description: The source's client secret Guid (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: oauthRefreshTokenGuid
+        description: The source's refresh token Guid (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: instanceUrl
+        description: The source's instance Url.
+        required: true
+        in: query
+        type: string
+      - name: entityId
+        description: The name of the entity
+        required: true
+        in: path
+        type: string
+      - name: sourceType
+        description: The type of the source
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SchemaEntities'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/schema/sources/{sourceType}/translate/generic:
+    post:
+      operationId: translateToGeneric
+      summary: Computes the Generic Objects to Get from a Specific Objects to Get.
+      tags:
+      - Sources
+      deprecated: false
+      parameters:
+      - name: specificOTG
+        description: Specific objects to get
+        required: true
+        in: body
+        schema:
+          type: string
+      - name: sourceType
+        description: The type of the source
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericObjectsToGet'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/schema/sources/{sourceType}/translate/specific:
+    post:
+      operationId: translateToSpecific
+      summary: Computes the Specific Objects to Get from a Generic Objects to Get.
+      tags:
+      - Sources
+      deprecated: false
+      parameters:
+      - name: genericOTG
+        description: Generic objects to get
+        required: true
+        in: body
+        schema:
+          type: string
+      - name: sourceType
+        description: The type of the source
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SpecificObjectsToGet'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/schema/sources/{sourceType}/translate/specificWithMappings:
+    post:
+      operationId: translateToSpecificWithMappings
+      summary: Computes the Specific Objects to Get from a Generic Objects to Get with a List of Mapping Description
+      tags:
+      - Sources
+      deprecated: false
+      parameters:
+      - name: accessTokenGuid
+        description: The source's access token Guid (if authentified through access token)
+        required: false
+        in: query
+        type: string
+      - name: username
+        description: The source's username (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: passwordGuid
+        description: The source's password Guid (if authentified through Basic Auth)
+        required: false
+        in: query
+        type: string
+      - name: clientId
+        description: The source's client id(if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: clientSecretGuid
+        description: The source's client secret Guid (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: oauthRefreshTokenGuid
+        description: The source's refresh token Guid (if authentified through OAuth).
+        required: false
+        in: query
+        type: string
+      - name: instanceUrl
+        description: The source's instance Url.
+        required: true
+        in: query
+        type: string
+      - name: sourceType
+        description: The type of the source
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/JValue'
+      security:
+      - oauth2:
+        - full
+  /rest/salesforce/schema/:
+    delete:
+      operationId: flushCache
+      summary: Flushes the Cached Data for a Salesforce Organization
+      tags:
+      - Salesforce Organizations
+      deprecated: false
+      parameters:
+      - name: instanceUri
+        description: The instance URI of the Salesforce organization
+        required: true
+        in: query
+        type: string
+      - name: sessionId
+        description: Deprecated, use the appropriate 'X-Salesforce-Session-ID' header instead
+        required: true
+        in: query
+        type: string
+      - name: version
+        description: 'The schema version to use. Allowed values: ["0" (CloudV1), "1" (Legacy), "2" (Current)]'
+        default: '2'
+        required: false
+        in: query
+        type: string
+      - name: presets
+        description: 'The schema presets to apply. Allowed values: ["servicecloud", "knowledge", "content", "chatter"]'
+        required: false
+        in: query
+        type: string
+      - name: X-Salesforce-Session-ID
+        description: The Salesforce session ID to use
+        required: true
+        in: header
+        type: string
+      responses:
+        '200':
+          description: No response
+      security:
+      - oauth2:
+        - full
+  /rest/salesforce/schema/objects:
+    post:
+      operationId: loadObjects
+      summary: Loads the Object Data for a List of Salesforce Objects.
+      tags:
+      - Salesforce Organizations
+      deprecated: false
+      parameters:
+      - name: body
+        required: true
+        in: body
+        schema:
+          $ref: '#/definitions/LoadObjectsParams'
+      - name: instanceUri
+        description: The instance URI of the Salesforce organization
+        required: true
+        in: query
+        type: string
+      - name: sessionId
+        description: Deprecated, use the appropriate 'X-Salesforce-Session-ID' header instead
+        required: true
+        in: query
+        type: string
+      - name: version
+        description: 'The schema version to use. Allowed values: ["0" (CloudV1), "1" (Legacy), "2" (Current)]'
+        default: '2'
+        required: false
+        in: query
+        type: string
+      - name: presets
+        description: 'The schema presets to apply. Allowed values: ["servicecloud", "knowledge", "content", "chatter"]'
+        required: false
+        in: query
+        type: string
+      - name: X-Salesforce-Session-ID
+        description: The Salesforce session ID to use
+        required: true
+        in: header
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ObjectDescription'
+      security:
+      - oauth2:
+        - full
+  /rest/salesforce/schema/organization:
+    get:
+      operationId: loadOrganization
+      summary: Loads the Organization Data for a Salesforce Organization.
+      tags:
+      - Salesforce Organizations
+      deprecated: false
+      parameters:
+      - name: instanceUri
+        description: The instance URI of the Salesforce organization
+        required: true
+        in: query
+        type: string
+      - name: sessionId
+        description: Deprecated, use the appropriate 'X-Salesforce-Session-ID' header instead
+        required: true
+        in: query
+        type: string
+      - name: version
+        description: 'The schema version to use. Allowed values: ["0" (CloudV1), "1" (Legacy), "2" (Current)]'
+        default: '2'
+        required: false
+        in: query
+        type: string
+      - name: presets
+        description: 'The schema presets to apply. Allowed values: ["servicecloud", "knowledge", "content", "chatter"]'
+        required: false
+        in: query
+        type: string
+      - name: X-Salesforce-Session-ID
+        description: The Salesforce session ID to use
+        required: true
+        in: header
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/OrganizationDescription'
+      security:
+      - oauth2:
+        - full
+definitions:
+  SchemaEntity:
+    type: object
+    properties:
+      displayName:
+        description: The display name of the entity
+        type: string
+      id:
+        description: The entity ID
+        type: string
+      recordCount:
+        description: The record count of the entity
+        type: integer
+        format: int32
+      fields:
+        description: The entity fields
+        type: array
+        items:
+          $ref: '#/definitions/SchemaField'
+      settings:
+        description: The entity settings
+        type: object
+        additionalProperties:
+          type: string
+    required:
+    - displayName
+    - id
+  GenericObject:
+    type: object
+    properties:
+      ObjectName:
+        description: The object name
+        type: string
+      Fields:
+        description: The object fields to be indexed
+        type: array
+        items:
+          type: string
+      ParentRelationships:
+        description: The fields from a parent objects that have a parent relationship with this object.
+        type: array
+        items:
+          $ref: '#/definitions/SalesforceParentRelationships'
+      childRelationships:
+        description: The fields from a child objects that have a child relationship with this object.
+        type: array
+        items:
+          $ref: '#/definitions/SalesforceChildRelationships'
+      polymorphicRelationships:
+        description: The fields from an objects that have a Polymorphic relationship with this object.
+        type: array
+        items:
+          $ref: '#/definitions/SalesforcePolymorphicRelationships'
+    required:
+    - ObjectName
+    - Fields
+  DataCategoryGroupDescription:
+    type: object
+    properties:
+      name:
+        type: string
+      values:
+        type: array
+        items:
+          $ref: '#/definitions/DataCategoryValueDescription'
+    required:
+    - name
+    - values
+  RelationshipDescription:
+    type: object
+    properties: {}
+  SalesforceObjectToGet:
+    type: object
+    properties:
+      objects:
+        description: The collection of objects to get
+        type: array
+        items:
+          $ref: '#/definitions/GenericObject'
+      mappings:
+        description: The collection of objects to get
+        type: array
+        items:
+          $ref: '#/definitions/GenericMapping'
+      fields:
+        type: array
+        items:
+          $ref: '#/definitions/GenericField'
+  ObjectDescription:
+    type: object
+    properties:
+      objectType:
+        type: string
+      fieldsByName:
+        type: object
+        additionalProperties:
+          type: array
+          items:
+            $ref: '#/definitions/FieldDescription'
+      fieldsByCoveoName:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/FieldDescription'
+      fieldsBySalesforceName:
+        type: object
+        additionalProperties:
+          type: array
+          items:
+            $ref: '#/definitions/FieldDescription'
+      relationshipsByName:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/RelationshipDescription'
+      label:
+        type: string
+      searchable:
+        type: boolean
+      queryable:
+        type: boolean
+      replicateable:
+        type: boolean
+      keyPrefix:
+        type: string
+      isCustomObject:
+        type: boolean
+      isKnowledgeObject:
+        type: boolean
+      hasCustomFileType:
+        type: boolean
+      shouldIndexByDefault:
+        type: boolean
+      titleFields:
+        type: array
+        items:
+          type: string
+      fields:
+        type: array
+        items:
+          $ref: '#/definitions/FieldDescription'
+      relationships:
+        type: array
+        items:
+          $ref: '#/definitions/RelationshipDescription'
+    required:
+    - objectType
+    - label
+    - searchable
+    - queryable
+    - replicateable
+    - isCustomObject
+    - isKnowledgeObject
+    - hasCustomFileType
+    - shouldIndexByDefault
+    - titleFields
+    - fields
+    - relationships
+    - fieldsByName
+    - fieldsByCoveoName
+    - fieldsBySalesforceName
+    - relationshipsByName
+  LegacyFieldInformation:
+    type: object
+    properties:
+      relationshipName:
+        type: string
+      relationshipNameField:
+        type: string
+      polymorphic:
+        type: boolean
+      referenceTypes:
+        type: array
+        items:
+          type: string
+    required:
+    - relationshipName
+    - relationshipNameField
+    - polymorphic
+    - referenceTypes
+  OutgoingLicenseStatus:
+    type: object
+    properties:
+      status:
+        description: The status code for the current license status
+        enum:
+        - CANNOT_START_TRIAL
+        type: string
+    required:
+    - status
+  OrganizationDescription:
+    type: object
+    properties:
+      organizationId:
+        type: string
+      objects:
+        type: array
+        items:
+          $ref: '#/definitions/ObjectSummary'
+      knowledgeLanguages:
+        type: array
+        items:
+          type: string
+      dataCategoryGroups:
+        type: array
+        items:
+          $ref: '#/definitions/DataCategoryGroupDescription'
+    required:
+    - organizationId
+    - objects
+    - knowledgeLanguages
+    - dataCategoryGroups
+  SalesforcePolymorphicRelationships:
+    type: object
+    properties:
+      name:
+        description: The child relationship name
+        type: string
+      objectName:
+        description: The object name to match
+        type: string
+      fields:
+        description: The object fields to be indexed
+        type: array
+        items:
+          type: string
+    required:
+    - name
+    - objectName
+    - fields
+  LoadObjectsParams:
+    type: object
+    properties:
+      names:
+        description: The object names to load.
+        type: array
+        items:
+          type: string
+    required:
+    - names
+  GenericObjectsToGet:
+    type: object
+    properties:
+      objects:
+        description: The collection of objects to get
+        type: array
+        items:
+          $ref: '#/definitions/GenericObject'
+  OutgoingProvisioningStatus:
+    type: object
+    properties:
+      code:
+        description: The status code for the current provisioning status
+        enum:
+        - LEGACY
+        type: string
+      description:
+        description: Description of the current provisioning status
+        type: string
+      infos:
+        description: Optional information generated during the provisioning operation
+        type: string
+      warnings:
+        description: Optional warnings generated during the provisioning operation
+        type: string
+      error:
+        description: Optional error generated during the provisioning operation
+        type: string
+      done:
+        description: Whether the provisioning operation is done or not
+        type: boolean
+    required:
+    - code
+    - description
+    - done
+  MappingDescription:
+    type: object
+    properties:
+      extractionMethod:
+        type: string
+      content:
+        type: string
+      fieldTypeHint:
+        type: string
+    required:
+    - extractionMethod
+    - content
+  ObjectSummary:
+    type: object
+    properties:
+      objectType:
+        type: string
+      label:
+        type: string
+      searchable:
+        type: boolean
+      queryable:
+        type: boolean
+      replicateable:
+        type: boolean
+      keyPrefix:
+        type: string
+      isCustomObject:
+        type: boolean
+      isKnowledgeObject:
+        type: boolean
+      hasCustomFileType:
+        type: boolean
+      shouldIndexByDefault:
+        type: boolean
+    required:
+    - objectType
+    - label
+    - searchable
+    - queryable
+    - replicateable
+    - isCustomObject
+    - isKnowledgeObject
+    - hasCustomFileType
+    - shouldIndexByDefault
+  SpecificObjectsToGet:
+    type: object
+    properties: {}
+  GenericField:
+    type: object
+    properties:
+      facet:
+        description: Whether Group By operations and Facet requests can be performed on the field.
+        type: boolean
+      multiValueFacet:
+        description: Whether the field contains multiple values (see also the multiValueFacetTokenizers property).
+        type: boolean
+      name:
+        description: The name of the field, also referred to as the field identifier, or fieldId.
+        type: string
+      sort:
+        description: Whether query results can be sorted based on the value of the field.
+        type: boolean
+      type:
+        description: WThe data type of the field. ("LONG", "LONG_64", "DOUBLE", "DATE" or "STRING")
+        type: string
+    required:
+    - name
+    - type
+  SlackTokenValidationStatus:
+    type: object
+    properties:
+      valid:
+        description: Whether or not the token id valid.
+        type: boolean
+      workspace:
+        description: Workspace linked to the token.
+        type: string
+      reason:
+        description: Invalid token reason code.
+        type: string
+      details:
+        description: Provides more details on status.
+        type: string
+    required:
+    - valid
+  SalesforceChildRelationships:
+    type: object
+    properties:
+      name:
+        description: The child relationship name
+        type: string
+      fields:
+        description: The child object fields to be indexed
+        type: array
+        items:
+          type: string
+      parentRelationships:
+        description: The fields from a parent objects that have a parent relationship with this object.
+        type: array
+        items:
+          $ref: '#/definitions/SalesforceParentRelationships'
+    required:
+    - name
+    - fields
+  SchemaField:
+    type: object
+    properties:
+      displayName:
+        description: The display name of the entity field
+        type: string
+      id:
+        description: The entity field ID
+        type: string
+      type:
+        description: The field type of the entity in Coveo Cloud
+        type: string
+      reference:
+        description: The name of the entity that is optionally referenced by the field
+        type: string
+      isAlwaysIndexed:
+        description: A flag marking whether this field is indexed by the connector automatically
+        type: boolean
+    required:
+    - displayName
+    - id
+    - type
+  JValue:
+    type: object
+    properties: {}
+  DataCategoryValueDescription:
+    type: object
+    properties:
+      name:
+        type: string
+      label:
+        type: string
+    required:
+    - name
+    - label
+  SalesforceParentRelationships:
+    type: object
+    properties:
+      relationshipName:
+        description: The parent relationship name
+        type: string
+      fields:
+        description: The parent object fields to be indexed
+        type: array
+        items:
+          type: string
+    required:
+    - relationshipName
+    - fields
+  GenericMapping:
+    type: object
+    properties:
+      kind:
+        description: The kind of the relationship.
+        type: string
+      fieldName:
+        description: The new field name.
+        type: string
+      extractionMethod:
+        description: The way to extract the information.
+        type: string
+      content:
+        description: The content of the new field.
+        type: string
+      type:
+        description: The specific type that this mapping apply to.
+        type: string
+    required:
+    - kind
+    - fieldName
+    - extractionMethod
+    - content
+  FieldDescription:
+    type: object
+    properties:
+      name:
+        type: string
+      coveoName:
+        type: string
+      salesforceName:
+        type: string
+      label:
+        type: string
+      kind:
+        type: string
+      custom:
+        type: boolean
+      virtual:
+        type: boolean
+      retrievable:
+        type: boolean
+      filterable:
+        type: boolean
+      sortable:
+        type: boolean
+      multiValue:
+        type: boolean
+      mandatory:
+        type: boolean
+      shouldIndexByDefault:
+        type: boolean
+      dataCategoryGroup:
+        type: string
+      mapping:
+        $ref: '#/definitions/MappingDescription'
+      legacyFieldInformation:
+        $ref: '#/definitions/LegacyFieldInformation'
+    required:
+    - name
+    - coveoName
+    - salesforceName
+    - label
+    - kind
+    - custom
+    - virtual
+    - retrievable
+    - filterable
+    - sortable
+    - multiValue
+    - mandatory
+    - shouldIndexByDefault
+  SchemaEntities:
+    type: object
+    properties:
+      entitiesCount:
+        description: The total number of entities
+        type: integer
+        format: int32
+      entities:
+        description: The collection of entities
+        type: array
+        items:
+          $ref: '#/definitions/SchemaEntity'
+    required:
+    - entities
+securityDefinitions:
+  oauth2:
+    type: oauth2
+    description: OAuth2
+    flow: implicit
+    authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+    scopes:
+      full: full
+servers:
+- url: https://platform.cloud.coveo.com/rest/schema

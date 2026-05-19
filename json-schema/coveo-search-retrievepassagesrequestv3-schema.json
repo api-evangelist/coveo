@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/coveo/main/json-schema/coveo-search-retrievepassagesrequestv3-schema.json",
+  "title": "Coveo Search RetrievePassagesRequestV3",
+  "type": "object",
+  "required": [
+    "query",
+    "localization"
+  ],
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "The query for which to retrieve the passage(s).\n",
+      "example": "What are the benefits of using solar energy?",
+      "maxLength": 1000
+    },
+    "filter": {
+      "type": "string",
+      "description": "A filter expression that will be applied during the first stage retrieval.\n\nThe expression must comply with the Coveo Query Language (CQL) syntax.\n",
+      "example": "@source==\"acme\"\n"
+    },
+    "additionalFields": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "pattern": "^([a-z][a-z0-9_]{0,254})$"
+      },
+      "example": [
+        "clickableuri"
+      ],
+      "description": "The fields to include in the response.\n\nWhen omitted, only the identifier of the document will be returned.\n"
+    },
+    "maxPassages": {
+      "type": "integer",
+      "format": "int32",
+      "minimum": 1,
+      "maximum": 20,
+      "default": 5,
+      "description": "The maximum number of passage(s) to retrieve.",
+      "example": 5
+    },
+    "pipeline": {
+      "type": "string",
+      "nullable": true,
+      "description": "The name of the query pipeline to use for this request (bypassing its conditions, if it has any).\n\nYou can pass an empty `pipeline` value to use an empty query pipeline (i.e., `?pipeline=` or `\"pipeline\": \"\"`).\n\nIf a query does not contain the `pipeline` parameter, the first query pipeline whose conditions are met by the request is used (query pipelines without conditions are not evaluated). Should the request fail to meet the conditions of each evaluated query pipeline, the default query pipeline of the target Coveo Cloud organization is used (bypassing its conditions, if it has any).\n\n**Notes:**\n\n- This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.\n- For reporting purposes, when logging a **Search** usage analytics event for a query, the `queryPipeline` field of that event should be set to the final `pipeline` value used in the query execution. This value is determined from the query response. If no pipeline was specified, it uses the `\"default\"` value.\n\nSee also [Managing Query Pipelines](https://docs.coveo.com/en/1450/).\n",
+      "example": "CustomerQueryPipeline"
+    },
+    "searchHub": {
+      "type": "string",
+      "description": "The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates.\n\nCoveo Machine Learning models use this information to provide contextually relevant output.\n\n**Notes:**\n\n- This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.\n- When logging a **Search** usage analytics event for a query, the `originLevel1` field of that event should be set to the value of the `searchHub` search request parameter.\n",
+      "example": "Main"
+    },
+    "localization": {
+      "type": "object",
+      "required": [
+        "locale"
+      ],
+      "description": "Localization parameter.",
+      "properties": {
+        "locale": {
+          "type": "string",
+          "description": "The locale of the current user. Must comply with IETF's BCP 47 definition.\n\nCoveo Machine Learning models use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the $locale object.\n\nNote: When logging a Search usage analytics event, the language field of that event should match the language part of the locale value of the query (e.g., en-US in locale becomes en in language).\n",
+          "example": "en-CA"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "The [tz database identifier](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) of the user's time zone. Used for interpreting dates in query expressions and retrieving passages.",
+          "example": "America/Montreal"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "nullable": true,
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "description": "The custom context information to send along with the request. Must be a dictionary of key-value pairs (JSON) where each key is a string, and each value is either a string or an array of strings.\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the `$context` object.",
+      "example": {
+        "userAgeRange": "25-35",
+        "userRoles": [
+          "PremiumCustomer",
+          "ProductReviewer"
+        ]
+      }
+    },
+    "analytics": {
+      "type": "object",
+      "nullable": false,
+      "additionalProperties": false,
+      "properties": {
+        "capture": {
+          "type": "boolean",
+          "description": "Whether the API call should be tracked for analytics. When not provided, it defaults to `false`.\n"
+        },
+        "clientId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "description": "A UUID identifying the client or agent that generated the event."
+        },
+        "userAgent": {
+          "type": "string",
+          "description": "The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.\n\n**Note**: This information is required when endpoints are behind a proxy.\n"
+        }
+      }
+    }
+  }
+}

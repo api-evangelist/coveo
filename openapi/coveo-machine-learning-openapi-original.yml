@@ -1,0 +1,1571 @@
+openapi: 3.0.1
+info:
+  title: Coveo Machine Learning API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations
+security:
+- oauth2:
+  - full
+paths:
+  /rest/organizations/{organizationId}/machinelearning/models/{modelId}:
+    get:
+      tags:
+      - Machine Learning Models
+      summary: View a Model
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getModel
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Model'
+      x-pretty-name: getModel
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId_get
+    put:
+      tags:
+      - Machine Learning Models
+      summary: Update the Configuration of a Model
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateModelInformationById
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registration'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Information To Update Model'
+      x-pretty-name: updateModelInformationById
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId_put
+    delete:
+      tags:
+      - Machine Learning Models
+      summary: Delete a Model
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: unregisterById
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: unregisterById
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId_delete
+  /rest/organizations/{organizationId}/machinelearning/models/{modelId}/configs/{configurationType}:
+    get:
+      tags:
+      - Advanced Model Configurations
+      summary: Download the Specified Configuration File for the Model
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: download
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          oneOf:
+          - type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          oneOf:
+          - type: string
+        example: My_Model_ID
+      - name: configurationType
+        in: path
+        description: The type of advanced configuration file.
+        required: true
+        schema:
+          type: string
+          enum:
+          - STOPWORDS
+          - BLOCKLISTS
+          - ID_MAPPING
+          - DEFAULT_QUERIES
+        example: BLOCKLISTS
+      - name: languageCode
+        in: query
+        description: The language of the configuration file to retrieve. It must be an <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO
+          639-1 code</a>, or the string 'commons'
+        required: false
+        schema:
+          oneOf:
+          - type: string
+        example: en
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+      x-pretty-name: download
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/configs/paramId_get
+    put:
+      tags:
+      - Advanced Model Configurations
+      description: 'Upload configuration file for the model. Maximum file size allowed: 10 MB.<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: upload
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          oneOf:
+          - type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          oneOf:
+          - type: string
+        example: My_Model_ID
+      - name: configurationType
+        in: path
+        description: The type of advanced configuration file.
+        required: true
+        schema:
+          type: string
+          enum:
+          - STOPWORDS
+          - BLOCKLISTS
+          - ID_MAPPING
+          - DEFAULT_QUERIES
+        example: BLOCKLISTS
+      - name: languageCode
+        in: query
+        description: The language of the configuration file to retrieve. It must be an <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO
+          639-1 code</a>, or the string 'commons'
+        required: false
+        schema:
+          oneOf:
+          - type: string
+        example: en
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - configFile
+              type: object
+              properties:
+                configFile:
+                  type: string
+                  description: The configuration file to be uploaded.
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AdvancedRegistrationConfigFileCreationResponse'
+      x-pretty-name: upload
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/configs/paramId_put
+    delete:
+      tags:
+      - Advanced Model Configurations
+      summary: Delete Configuration File for the Model.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: deleteFile
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          oneOf:
+          - type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          oneOf:
+          - type: string
+        example: My_Model_ID
+      - name: configurationType
+        in: path
+        description: The type of advanced configuration file.
+        required: true
+        schema:
+          type: string
+          enum:
+          - STOPWORDS
+          - BLOCKLISTS
+          - ID_MAPPING
+          - DEFAULT_QUERIES
+        example: BLOCKLISTS
+      - name: languageCode
+        in: query
+        description: The language of the configuration file to retrieve. Only required when the specified modelConfigFileType
+          is language-specific (e.g., STOPWORDS), and ignored otherwise. If specified, must be an <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO
+          639-1 code</a>, or the string 'commons'
+        required: false
+        schema:
+          oneOf:
+          - type: string
+        example: en
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteFile
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/configs/paramId_delete
+  /rest/organizations/{organizationId}/machinelearning/model:
+    post:
+      tags:
+      - Machine Learning Models
+      summary: Create a New Model
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: register
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registration'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Registration Response'
+      x-pretty-name: register
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/model_post
+  /rest/organizations/{organizationId}/machinelearning/streaming/{streamId}:
+    get:
+      tags:
+      - Streaming Model Response
+      summary: Get Model Response Events for a Query Stream
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"SEARCH_API","targetDomain":"EXECUTE_QUERY","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getQueryStreamEvents
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          oneOf:
+          - type: string
+      - name: streamId
+        in: path
+        description: Unique Identifier for the response stream. For details on how to obtain the streamId for this response,
+          refer to [Streaming model responses](https://docs.coveo.com/en/pc8b3515/)
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServerSentEventQueryStreamMessage'
+      x-pretty-name: getQueryStreamEvents
+      x-required-privilege:
+        owner: SEARCH_API
+        targetDomain: EXECUTE_QUERY
+        targetId: '*'
+      x-required-privileges:
+      - owner: SEARCH_API
+        targetDomain: EXECUTE_QUERY
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/streaming/paramId_get
+  /rest/organizations/{organizationId}/machinelearning/models:
+    get:
+      tags:
+      - Machine Learning Models
+      summary: List All Models
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: listModels
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          type: string
+      - name: engines
+        in: query
+        description: A list of engine ids
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/Model'
+      x-pretty-name: listModels
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models_get
+  /rest/organizations/{organizationId}/machinelearning/models/{modelId}/details:
+    get:
+      tags:
+      - Machine Learning Models
+      description: 'Get detailed information about a specific model<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getModelDetailsById
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Model With Additional Information'
+      x-pretty-name: getModelDetailsById
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/details_get
+  /rest/organizations/{organizationId}/machinelearning/models/{modelId}/configs/status:
+    get:
+      tags:
+      - Advanced Model Configurations
+      summary: List Advanced Registration Configuration Files for the Model
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAllConfigFilesStatus
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          oneOf:
+          - type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          oneOf:
+          - type: string
+        example: My_Model_ID
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AdvancedRegistrationConfigContentsResponse'
+      x-pretty-name: getAllConfigFilesStatus
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/configs/status_get
+  /rest/organizations/{organizationId}/machinelearning/models/details:
+    get:
+      tags:
+      - Machine Learning Models
+      summary: Get Detailed Information About All Models
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: listModelsWithDetails
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/Model With Additional Information'
+      x-pretty-name: listModelsWithDetails
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/details_get
+  /rest/organizations/{organizationId}/machinelearning/engines/{engineId}/models/{modelName}:
+    delete:
+      tags:
+      - Machine Learning Models
+      summary: Delete a Model
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: unregister
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          type: string
+      - name: engineId
+        in: path
+        description: The id of the engine
+        required: true
+        schema:
+          type: string
+      - name: modelName
+        in: path
+        description: The model name
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      deprecated: true
+      x-pretty-name: unregister
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/engines/paramId/models/paramId_delete
+components:
+  schemas:
+    IdAndDisplayNameModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+      description: 'DEPRECATED: not supported as of Jan 2026'
+      readOnly: true
+      deprecated: true
+    Registration:
+      required:
+      - engineId
+      - exportPeriod
+      - intervalTime
+      - intervalUnit
+      type: object
+      properties:
+        commandLineParameters:
+          type: array
+          description: 'DEPRECATED: no longer supported as of Dec 2023'
+          readOnly: true
+          deprecated: true
+          items:
+            type: string
+            description: 'DEPRECATED: no longer supported as of Dec 2023'
+            readOnly: true
+            deprecated: true
+        commonFilter:
+          type: string
+          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple
+            filter parameters are joined with the AND operator
+          example: country=='United States'
+        customEventFilter:
+          type: string
+          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined
+            with the AND operator
+          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
+        viewEventFilter:
+          type: string
+          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple
+            filter parameters are joined with the AND operator
+          example: viewContentType=@'product'
+        engineId:
+          type: string
+          description: The id of the engine
+          example: topclicks
+        exportOffset:
+          type: string
+          description: The offset period to apply to the export. An undefined `exportOffset` means that the `exportPeriod`
+            is based on the moment when the model was generated. An `exportOffset` of `P1W` means that the `exportPeriod`
+            is based on the moment one week before the model was generated. If specified, must be in the ISO8601 period format
+            (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1W
+          deprecated: true
+        exportPeriod:
+          type: string
+          description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the
+            moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1D
+        intervalTime:
+          type: integer
+          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
+          format: int32
+          example: 1
+        extraConfig:
+          type: object
+          description: A JSON object representing the additional configuration to pass to a model configuration
+          example:
+            someKey: value
+        intervalUnit:
+          type: string
+          description: The duration unit of the interval between each run of the job. See `intervalTime`
+          example: WEEK
+          enum:
+          - DAY
+          - WEEK
+          - MONTH
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Cloud V2 administration console
+          example: MyModelDisplayName
+        modelName:
+          type: string
+          description: The model name
+          example: remove_me_model_name
+        searchEventFilter:
+          type: string
+          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters
+            are joined with the AND operator
+          example: (originLevel1=~'search' OR originLevel1=~'listings')
+        startTime:
+          type: string
+          description: 'DEPRECATED: no longer supported as of March 2026'
+          format: date-time
+          readOnly: true
+          deprecated: true
+        versionMatcher:
+          $ref: '#/components/schemas/VersionExpression'
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+      description: The registration's information
+    VersionExpression:
+      type: object
+      description: 'DEPRECATED: no longer supported as of Dec 2025'
+      readOnly: true
+      deprecated: true
+    DurationFieldType:
+      type: object
+      properties:
+        name:
+          type: string
+    Information To Update Model:
+      required:
+      - exportPeriod
+      - intervalTime
+      - intervalUnit
+      type: object
+      properties:
+        commandLineParameters:
+          type: array
+          description: 'DEPRECATED: no longer supported as of Dec 2023'
+          readOnly: true
+          deprecated: true
+          items:
+            type: string
+            description: 'DEPRECATED: no longer supported as of Dec 2023'
+            readOnly: true
+            deprecated: true
+        extraConfig:
+          type: object
+          description: A JSON object representing the additional configuration to pass to a model configuration
+          example:
+            someKey: value
+        commonFilter:
+          type: string
+          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple
+            filter parameters are joined with the AND operator
+          example: country=='United States'
+        customEventFilter:
+          type: string
+          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined
+            with the AND operator
+          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
+        exportOffset:
+          $ref: '#/components/schemas/Period'
+        exportPeriod:
+          $ref: '#/components/schemas/Period'
+        intervalTime:
+          type: integer
+          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
+          format: int32
+          example: 1
+        intervalUnit:
+          type: string
+          description: The duration unit of the interval between each run of the job. See `intervalTime`
+          example: WEEK
+          enum:
+          - MILLISECOND
+          - SECOND
+          - MINUTE
+          - HOUR
+          - DAY
+          - WEEK
+          - MONTH
+          - YEAR
+          - DAY, WEEK, MONTH
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Cloud V2 administration console
+          example: MyModelDisplayName
+        searchEventFilter:
+          type: string
+          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters
+            are joined with the AND operator
+          example: (originLevel1=~'search' OR originLevel1=~'listings')
+        viewEventFilter:
+          type: string
+          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple
+            filter parameters are joined with the AND operator
+          example: viewContentType=@'product'
+        pauseEndDateForModelUpdates:
+          type: string
+          description: 'DEPRECATED: no longer supported as of Dec 2025'
+          format: date
+          readOnly: true
+          deprecated: true
+        versionMatcher:
+          $ref: '#/components/schemas/VersionExpression'
+    Period:
+      type: object
+      properties:
+        weeks:
+          type: integer
+          format: int32
+        months:
+          type: integer
+          format: int32
+        seconds:
+          type: integer
+          format: int32
+        days:
+          type: integer
+          format: int32
+        years:
+          type: integer
+          format: int32
+        hours:
+          type: integer
+          format: int32
+        minutes:
+          type: integer
+          format: int32
+        millis:
+          type: integer
+          format: int32
+        periodType:
+          $ref: '#/components/schemas/PeriodType'
+        values:
+          type: array
+          items:
+            type: integer
+            format: int32
+        periodInternal:
+          $ref: '#/components/schemas/ReadablePeriod'
+        period:
+          $ref: '#/components/schemas/ReadablePeriod'
+        fieldTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DurationFieldType'
+      description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the moment
+        when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+      example: P1D
+    PeriodType:
+      type: object
+      properties:
+        name:
+          type: string
+    ReadablePeriod:
+      type: object
+      properties:
+        periodType:
+          $ref: '#/components/schemas/PeriodType'
+    AdvancedRegistrationConfigFileCreationResponse:
+      type: object
+      properties:
+        modelId:
+          $ref: '#/components/schemas/RegistrationId'
+        filePath:
+          $ref: '#/components/schemas/Key'
+    Key:
+      type: object
+    RegistrationId:
+      type: object
+      properties:
+        modelId:
+          type: string
+    Registration Response:
+      required:
+      - engineId
+      - exportPeriod
+      - intervalTime
+      - intervalUnit
+      type: object
+      properties:
+        commandLineParameters:
+          type: array
+          description: 'DEPRECATED: no longer supported as of Dec 2023'
+          readOnly: true
+          deprecated: true
+          items:
+            type: string
+            description: 'DEPRECATED: no longer supported as of Dec 2023'
+            readOnly: true
+            deprecated: true
+        commonFilter:
+          type: string
+          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple
+            filter parameters are joined with the AND operator
+          example: country=='United States'
+        customEventFilter:
+          type: string
+          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined
+            with the AND operator
+          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
+        viewEventFilter:
+          type: string
+          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple
+            filter parameters are joined with the AND operator
+          example: viewContentType=@'product'
+        engineId:
+          type: string
+          description: The id of the engine
+          example: topclicks
+        exportOffset:
+          type: string
+          description: The offset period to apply to the export. An undefined `exportOffset` means that the `exportPeriod`
+            is based on the moment when the model was generated. An `exportOffset` of `P1W` means that the `exportPeriod`
+            is based on the moment one week before the model was generated. If specified, must be in the ISO8601 period format
+            (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1W
+          deprecated: true
+        exportPeriod:
+          type: string
+          description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the
+            moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1D
+        intervalTime:
+          type: integer
+          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
+          format: int32
+          example: 1
+        extraConfig:
+          type: object
+          description: A JSON object representing the additional configuration to pass to a model configuration
+          example:
+            someKey: value
+        intervalUnit:
+          type: string
+          description: The duration unit of the interval between each run of the job. See `intervalTime`
+          example: WEEK
+          enum:
+          - DAY
+          - WEEK
+          - MONTH
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Cloud V2 administration console
+          example: MyModelDisplayName
+        modelName:
+          type: string
+          description: The model name
+          example: remove_me_model_name
+        searchEventFilter:
+          type: string
+          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters
+            are joined with the AND operator
+          example: (originLevel1=~'search' OR originLevel1=~'listings')
+        startTime:
+          type: string
+          description: A timestamp indicating when to begin the first job (in milliseconds since UNIX epoch format). If no
+            start date is specified, the job starts immediately
+          format: date-time
+          readOnly: true
+          deprecated: true
+        versionMatcher:
+          $ref: '#/components/schemas/VersionExpression'
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        modelId:
+          type: string
+          description: The unique identifier of the target model
+          example: My_Model_ID
+        endTime:
+          type: string
+          description: The epoch date when the schedule will end. If there is no end date, the schedule will last forever.
+          format: date-time
+          readOnly: true
+          deprecated: true
+        platformVersion:
+          type: integer
+          format: int32
+          deprecated: true
+          enum:
+          - 1
+          - 2
+        orgId:
+          type: string
+          description: The unique identifier of the target Coveo Cloud organization
+          example: MyCoveoOrganization
+        resourceId:
+          type: string
+          deprecated: true
+    ServerSentEventQueryStreamMessage:
+      type: object
+    CustomerError:
+      type: object
+      properties:
+        precision:
+          type: string
+        description:
+          type: string
+        troubleshoot:
+          type: string
+        errorCode:
+          type: string
+        errorType:
+          type: string
+    EngineId:
+      type: object
+    EngineVersion:
+      type: object
+      description: The version of the engine
+      example: 1.23.4+build.567
+    Model:
+      required:
+      - engineId
+      - exportPeriod
+      - intervalTime
+      - intervalUnit
+      type: object
+      properties:
+        commandLineParameters:
+          type: array
+          description: 'DEPRECATED: no longer supported as of Dec 2023'
+          readOnly: true
+          deprecated: true
+          items:
+            type: string
+            description: 'DEPRECATED: no longer supported as of Dec 2023'
+            readOnly: true
+            deprecated: true
+        commonFilter:
+          type: string
+          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple
+            filter parameters are joined with the AND operator
+          example: country=='United States'
+        customEventFilter:
+          type: string
+          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined
+            with the AND operator
+          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
+        viewEventFilter:
+          type: string
+          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple
+            filter parameters are joined with the AND operator
+          example: viewContentType=@'product'
+        engineId:
+          type: string
+          description: The id of the engine
+          example: topclicks
+        exportOffset:
+          type: string
+          description: The offset period to apply to the export. An undefined `exportOffset` means that the `exportPeriod`
+            is based on the moment when the model was generated. An `exportOffset` of `P1W` means that the `exportPeriod`
+            is based on the moment one week before the model was generated. If specified, must be in the ISO8601 period format
+            (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1W
+          deprecated: true
+        exportPeriod:
+          type: string
+          description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the
+            moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1D
+        intervalTime:
+          type: integer
+          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
+          format: int32
+          example: 1
+        extraConfig:
+          type: object
+          description: A JSON object representing the additional configuration to pass to a model configuration
+          example:
+            someKey: value
+        intervalUnit:
+          type: string
+          description: The duration unit of the interval between each run of the job. See `intervalTime`
+          example: WEEK
+          enum:
+          - DAY
+          - WEEK
+          - MONTH
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Cloud V2 administration console
+          example: MyModelDisplayName
+        modelName:
+          type: string
+          description: The model name
+          example: remove_me_model_name
+        searchEventFilter:
+          type: string
+          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters
+            are joined with the AND operator
+          example: (originLevel1=~'search' OR originLevel1=~'listings')
+        startTime:
+          type: string
+          description: 'DEPRECATED: no longer supported as of March 2026'
+          format: date-time
+          readOnly: true
+          deprecated: true
+        versionMatcher:
+          $ref: '#/components/schemas/VersionExpression'
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        status:
+          type: string
+          enum:
+          - COMPLETED
+          - COMPLETED_DEGRADED
+          - SCHEDULED
+          - ERROR
+          - IN_PROGRESS
+          - ONLINE
+          - ONLINE_DEGRADED
+          - OFFLINE
+          - IN_QUEUE
+          - BUILDING
+          - FAILED
+          - IN_QUEUE_UPDATING
+          - IN_PROGRESS_UPDATING
+          - UPDATING
+          - UPDATE_FAILED
+        modelActivenessState:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - ARCHIVED
+          - ARCHIVED_PENDING_REBUILD
+        orgId:
+          $ref: '#/components/schemas/OrgId'
+        id:
+          type: string
+          description: The unique identifier of the target model
+          example: My_Model_ID
+        engineVersion:
+          $ref: '#/components/schemas/EngineVersion'
+        modelVersion:
+          $ref: '#/components/schemas/ModelVersion'
+        modelCreationTime:
+          type: string
+          description: The time when the model will be / was created
+          format: date-time
+        previousModelUpdateTime:
+          type: string
+          description: The moment when the model was last updated.
+          format: date-time
+        nextModelUpdateTime:
+          type: string
+          description: The next scheduled moment for starting the model update process.
+          format: date-time
+        platformVersion:
+          type: integer
+          format: int32
+          deprecated: true
+          enum:
+          - 1
+          - 2
+        registrationKey:
+          $ref: '#/components/schemas/RegistrationKey'
+        modelSizeStatistic:
+          type: integer
+          description: The model size statistic. Depending on the model type, this value represents the number of items or
+            queries on which the model was built.
+          format: int32
+          example: 1
+        daysUntilArchival:
+          type: integer
+          format: int64
+        modelErrorDescription:
+          $ref: '#/components/schemas/ModelErrorDescription'
+    ModelErrorDescription:
+      type: object
+      properties:
+        customer_errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerError'
+    ModelName:
+      type: object
+    ModelVersion:
+      type: object
+      properties:
+        patchVersion:
+          type: integer
+          format: int64
+      description: The version of the model
+      example: 1.23.4567890
+    OrgId:
+      type: object
+    RegistrationKey:
+      type: object
+      properties:
+        engineId:
+          $ref: '#/components/schemas/EngineId'
+        orgId:
+          $ref: '#/components/schemas/OrgId'
+        modelName:
+          $ref: '#/components/schemas/ModelName'
+        key:
+          type: string
+        id:
+          $ref: '#/components/schemas/RegistrationId'
+    Model With Additional Information:
+      required:
+      - engineId
+      - exportPeriod
+      - intervalTime
+      - intervalUnit
+      type: object
+      properties:
+        commandLineParameters:
+          type: array
+          description: 'DEPRECATED: no longer supported as of Dec 2023'
+          readOnly: true
+          deprecated: true
+          items:
+            type: string
+            description: 'DEPRECATED: no longer supported as of Dec 2023'
+            readOnly: true
+            deprecated: true
+        commonFilter:
+          type: string
+          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple
+            filter parameters are joined with the AND operator
+          example: country=='United States'
+        customEventFilter:
+          type: string
+          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined
+            with the AND operator
+          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
+        viewEventFilter:
+          type: string
+          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple
+            filter parameters are joined with the AND operator
+          example: viewContentType=@'product'
+        engineId:
+          type: string
+          description: The id of the engine
+          example: topclicks
+        exportOffset:
+          type: string
+          description: The offset period to apply to the export. An undefined `exportOffset` means that the `exportPeriod`
+            is based on the moment when the model was generated. An `exportOffset` of `P1W` means that the `exportPeriod`
+            is based on the moment one week before the model was generated. If specified, must be in the ISO8601 period format
+            (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1W
+          deprecated: true
+        exportPeriod:
+          type: string
+          description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the
+            moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1D
+        intervalTime:
+          type: integer
+          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
+          format: int32
+          example: 1
+        extraConfig:
+          type: object
+          description: A JSON object representing the additional configuration to pass to a model configuration
+          example:
+            someKey: value
+        intervalUnit:
+          type: string
+          description: The duration unit of the interval between each run of the job. See `intervalTime`
+          example: WEEK
+          enum:
+          - DAY
+          - WEEK
+          - MONTH
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Cloud V2 administration console
+          example: MyModelDisplayName
+        modelName:
+          type: string
+          description: The model name
+          example: remove_me_model_name
+        searchEventFilter:
+          type: string
+          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters
+            are joined with the AND operator
+          example: (originLevel1=~'search' OR originLevel1=~'listings')
+        startTime:
+          type: string
+          description: 'DEPRECATED: no longer supported as of March 2026'
+          format: date-time
+          readOnly: true
+          deprecated: true
+        versionMatcher:
+          $ref: '#/components/schemas/VersionExpression'
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        status:
+          type: string
+          enum:
+          - COMPLETED
+          - COMPLETED_DEGRADED
+          - SCHEDULED
+          - ERROR
+          - IN_PROGRESS
+          - ONLINE
+          - ONLINE_DEGRADED
+          - OFFLINE
+          - IN_QUEUE
+          - BUILDING
+          - FAILED
+          - IN_QUEUE_UPDATING
+          - IN_PROGRESS_UPDATING
+          - UPDATING
+          - UPDATE_FAILED
+        modelActivenessState:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - ARCHIVED
+          - ARCHIVED_PENDING_REBUILD
+        orgId:
+          $ref: '#/components/schemas/OrgId'
+        id:
+          type: string
+          description: The unique identifier of the target model
+          example: My_Model_ID
+        engineVersion:
+          $ref: '#/components/schemas/EngineVersion'
+        modelVersion:
+          $ref: '#/components/schemas/ModelVersion'
+        modelCreationTime:
+          type: string
+          description: The time when the model will be / was created
+          format: date-time
+        previousModelUpdateTime:
+          type: string
+          description: The moment when the model was last updated.
+          format: date-time
+        nextModelUpdateTime:
+          type: string
+          description: The next scheduled moment for starting the model update process.
+          format: date-time
+        platformVersion:
+          type: integer
+          format: int32
+          deprecated: true
+          enum:
+          - 1
+          - 2
+        registrationKey:
+          $ref: '#/components/schemas/RegistrationKey'
+        modelSizeStatistic:
+          type: integer
+          description: The model size statistic. Depending on the model type, this value represents the number of items or
+            queries on which the model was built.
+          format: int32
+          example: 1
+        daysUntilArchival:
+          type: integer
+          format: int64
+        modelErrorDescription:
+          $ref: '#/components/schemas/ModelErrorDescription'
+        info:
+          type: object
+          additionalProperties:
+            type: object
+            description: Contains metadata and information about the model
+          description: Contains metadata and information about the model
+    AdvancedRegistrationConfigContentsResponse:
+      required:
+      - advancedRegistrationConfigFiles
+      - modelId
+      - orgId
+      type: object
+      properties:
+        modelId:
+          $ref: '#/components/schemas/RegistrationId'
+        advancedRegistrationConfigFiles:
+          type: object
+          additionalProperties:
+            type: array
+            description: Advanced Registration Config Files
+            items:
+              $ref: '#/components/schemas/FileInfo'
+          description: Advanced Registration Config Files
+        orgId:
+          $ref: '#/components/schemas/OrgId'
+    FileInfo:
+      type: object
+      properties:
+        languageCode:
+          type: string
+          description: Language Code
+        modifiedDate:
+          type: string
+          description: Modified Date
+          format: date-time
+        fileSizeInKb:
+          type: integer
+          description: File Size (kb)
+          format: int64
+        fileDisplayName:
+          type: string
+          description: fileDisplayName
+        md5Hash:
+          type: string
+          description: md5Hash
+      description: Advanced Registration Config Files
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

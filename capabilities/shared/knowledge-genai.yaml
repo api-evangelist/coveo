@@ -1,0 +1,180 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Knowledge Generative AI API
+  description: Generate answers grounded in indexed content via Coveo Relevance Generative Answering.
+  tags:
+  - Coveo
+  - API
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: knowledge-genai
+    baseUri: https://platform.cloud.coveo.com/rest/organizations
+    description: Coveo Knowledge Generative AI API HTTP API.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: api-preview-organizations-organizationId-agents
+      path: /api/preview/organizations/{organizationId}/agents
+      operations:
+      - name: getbypage
+        method: GET
+        description: List Agents
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: page
+          in: query
+          type: integer
+          description: The zero-based index of the results page to retrieve
+        - name: perPage
+          in: query
+          type: integer
+          description: The number of items to return per page
+      - name: create
+        method: POST
+        description: Create an Agent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: X-Skip-Provisioning
+          in: header
+          type: boolean
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+    - name: api-preview-organizations-organizationId-agents-agentId-follow-up
+      path: /api/preview/organizations/{organizationId}/agents/{agentId}/follow-up
+      operations:
+      - name: followup
+        method: POST
+        description: Generates an Answer to the Follow-Up Question for the Given Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization id
+          required: true
+        - name: agentId
+          in: path
+          type: string
+          description: The agent id
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+    - name: api-preview-organizations-organizationId-agents-agentId-answer
+      path: /api/preview/organizations/{organizationId}/agents/{agentId}/answer
+      operations:
+      - name: answer
+        method: POST
+        description: Generates an Answer for the Given Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization id
+          required: true
+        - name: agentId
+          in: path
+          type: string
+          description: The agent id
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+    - name: api-preview-organizations-organizationId-agents-agentId
+      path: /api/preview/organizations/{organizationId}/agents/{agentId}
+      operations:
+      - name: get
+        method: GET
+        description: Get an Agent by agentId
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: agentId
+          in: path
+          type: string
+          required: true
+      - name: delete
+        method: DELETE
+        description: Delete an Agent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: agentId
+          in: path
+          type: string
+          required: true
+      - name: update
+        method: PATCH
+        description: Update an Agent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: agentId
+          in: path
+          type: string
+          required: true
+        - name: X-Skip-Provisioning
+          in: header
+          type: boolean
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).

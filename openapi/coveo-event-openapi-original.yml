@@ -1,0 +1,526 @@
+openapi: 3.0.1
+info:
+  title: Coveo Event API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest/organizations
+security:
+- oauth2:
+  - full
+tags:
+- name: Event API
+  description: The [Coveo Cloud Event API](https://docs.coveo.com/en/o3r90189/) allows you to log all events from end-user
+    interactions. The event protocol reference can be found [here](https://docs.coveo.com/en/n9da0377).
+- name: Usage Analytics Event Validation API
+  description: Validate usage analytics events from the [Coveo Usage Analytics Write API](https://docs.coveo.com/en/1373)
+paths:
+  /rest/organizations/{organizationId}/events/v1:
+    post:
+      tags:
+      - Event API
+      summary: Send Events to Coveo Analytics.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"ANALYTICS_DATA","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: sendEvents
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: events
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/JsonNode'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EventsResponseModel'
+      x-pretty-name: sendEvents
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/events/v1_post
+  /rest/organizations/{organizationId}/events/v1/validate:
+    post:
+      tags:
+      - Event API
+      summary: Validate Events with Coveo Analytics.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"ANALYTICS_DATA","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: validateEvents
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: events
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/JsonNode'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClientValidateEventResponseModel'
+      x-pretty-name: validateEvents
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/events/v1/validate_post
+  /rest/organizations/{organizationId}/events/v1/requests/validate:
+    post:
+      tags:
+      - Event API
+      summary: Validate Coveo API Requests.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"ANALYTICS_DATA","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: validateRequest
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: The request type
+        required: true
+        schema:
+          type: string
+        example: commerce.recommendations
+      - name: version
+        in: query
+        description: The API version
+        required: true
+        schema:
+          type: integer
+          format: int32
+        example: 2
+      requestBody:
+        description: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonNode'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ClientValidateEventResponseModel'
+      x-pretty-name: validateRequest
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/events/v1/requests/validate_post
+  /rest/organizations/{organizationId}/events/v1/analytics/view/validate:
+    post:
+      tags:
+      - Usage Analytics Event Validation API
+      summary: Validate View Event
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"ANALYTICS_DATA","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: validateViewEvent
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: event
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonNode'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ClientValidateEventResponseModel'
+      x-pretty-name: validateViewEvent
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/events/v1/analytics/view/validate_post
+  /rest/organizations/{organizationId}/events/v1/analytics/searches/validate:
+    post:
+      tags:
+      - Usage Analytics Event Validation API
+      summary: Validate Search Events
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"ANALYTICS_DATA","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: validateSearchesEvent
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: event
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/JsonNode'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClientValidateEventResponseModel'
+      x-pretty-name: validateSearchesEvent
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/events/v1/analytics/searches/validate_post
+  /rest/organizations/{organizationId}/events/v1/analytics/search/validate:
+    post:
+      tags:
+      - Usage Analytics Event Validation API
+      summary: Validate Search Event
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"ANALYTICS_DATA","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: validateSearchEvent
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: event
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonNode'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ClientValidateEventResponseModel'
+      x-pretty-name: validateSearchEvent
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/events/v1/analytics/search/validate_post
+  /rest/organizations/{organizationId}/events/v1/analytics/custom/validate:
+    post:
+      tags:
+      - Usage Analytics Event Validation API
+      summary: Validate Custom Event
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"ANALYTICS_DATA","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: validateCustomEvent
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: event
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonNode'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ClientValidateEventResponseModel'
+      x-pretty-name: validateCustomEvent
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/events/v1/analytics/custom/validate_post
+  /rest/organizations/{organizationId}/events/v1/analytics/collect/validate:
+    post:
+      tags:
+      - Usage Analytics Event Validation API
+      summary: Validate Collect Event
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"ANALYTICS_DATA","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: validateCollectEvent
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: event
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonNode'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ClientValidateEventResponseModel'
+      x-pretty-name: validateCollectEvent
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/events/v1/analytics/collect/validate_post
+  /rest/organizations/{organizationId}/events/v1/analytics/click/validate:
+    post:
+      tags:
+      - Usage Analytics Event Validation API
+      summary: Validate Click Event
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"USAGE_ANALYTICS","targetDomain":"ANALYTICS_DATA","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: validateClickEvent
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: event
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonNode'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ClientValidateEventResponseModel'
+      x-pretty-name: validateClickEvent
+      x-required-privilege:
+        owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: USAGE_ANALYTICS
+        targetDomain: ANALYTICS_DATA
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/events/v1/analytics/click/validate_post
+components:
+  schemas:
+    JsonNode:
+      type: object
+    EventResponseModel:
+      type: object
+      properties:
+        accepted:
+          type: boolean
+          description: Whether the event has been accepted or not.
+        errorCode:
+          type: string
+          description: The error code for an individual rejected event.
+        errorMessage:
+          type: string
+          description: The error message for an individual rejected event.
+      description: The events associated with the request. The events are returned in the same order as they were in the request.
+    EventsResponseModel:
+      type: object
+      properties:
+        events:
+          type: array
+          description: The events associated with the request. The events are returned in the same order as they were in the
+            request.
+          items:
+            $ref: '#/components/schemas/EventResponseModel'
+      description: The response for the events sent to Coveo Analytics.
+    ClientValidateEventResponseModel:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: The validity of an individual event.
+        errors:
+          type: array
+          description: The validation errors of an individual event.
+          items:
+            $ref: '#/components/schemas/HumanReadableValidationMessage'
+    HumanReadableValidationMessage:
+      type: object
+      properties:
+        type:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+      description: The validation errors of an individual event.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

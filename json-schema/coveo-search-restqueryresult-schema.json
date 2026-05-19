@@ -1,0 +1,362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/coveo/main/json-schema/coveo-search-restqueryresult-schema.json",
+  "title": "Coveo Search RestQueryResult",
+  "required": [
+    "absentTerms",
+    "childResults",
+    "clickUri",
+    "excerpt",
+    "excerptHighlights",
+    "firstSentences",
+    "firstSentencesHighlights",
+    "flags",
+    "hasHtmlVersion",
+    "hasMobileHtmlVersion",
+    "isRecommendation",
+    "isTopResult",
+    "isUserActionView",
+    "parentResult",
+    "percentScore",
+    "printableUri",
+    "printableUriHighlights",
+    "rankingInfo",
+    "rating",
+    "raw",
+    "score",
+    "summary",
+    "summaryHighlights",
+    "title",
+    "titleHighlights",
+    "totalNumberOfChildResults",
+    "uniqueId",
+    "primaryid",
+    "uri"
+  ],
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "The item title.  \n  \n**Note:** When logging a **Click** usage analytics event for an opened query result item, the `documentTitle` field of that event should be set to the `title` value of the opened query result item.",
+      "example": "Differences between Coveo Cloud V2 and V1"
+    },
+    "uri": {
+      "type": "string",
+      "description": "The item URI.\n\n**Notes:**\n\n- Avoid using the `uri` value to create hyperlinks to the item. Use the `ClickUri` value instead.\n- When logging a **Click** usage analytics event for an opened query result item, the `documentUrl` field of that event should be set to the `uri` value of the opened query result item.",
+      "example": "https://example.com/Root:0/topic:898/post:2"
+    },
+    "printableUri": {
+      "type": "string",
+      "description": "The human readable item URI.\n\n**Note:** Avoid using the `printableUri` value to create hyperlinks to the item. Use the `ClickUri` value instead.",
+      "example": "https://example.com/topic:898/post:2"
+    },
+    "clickUri": {
+      "type": "string",
+      "description": "The hyperlinkable item URI.\n\n**Notes:**\n\n- Use the `clickUri` value when you want to create hyperlinks to the item, rather than the `uri` or `printableUri` value.\n- The `clickUri` value is not necessarily unique for each item.",
+      "example": "https://example.com/t/1/898/2"
+    },
+    "uniqueId": {
+      "type": "string",
+      "description": "The unique item identifier. You should consider the `uniqueId` value as an opaque string.",
+      "example": "84.72597$https://example.com/Root:0/Topic:898/Post:2"
+    },
+    "primaryid": {
+      "type": "string",
+      "nullable": true,
+      "description": "The primary identifier of the item. See [primaryid field](https://docs.coveo.com/en/pa9c0434) for more details.",
+      "example": "KVUVKMCSIZLEYVLVMNLGQ4JQK4XDMNBQGY4C4ZDFMZQXK3DU"
+    },
+    "excerpt": {
+      "type": "string",
+      "description": "The contextual excerpt generated for the item (see the `excerptLength` query parameter).",
+      "example": "... the new Coveo Cloud V2 and Coveo Cloud V1 ... the main differences between the two Coveo Cloud versions ..."
+    },
+    "firstSentences": {
+      "type": "string",
+      "nullable": true,
+      "description": "The first sentences retrieved from the item (see the `retrieveFirstSentences` query parameter).",
+      "example": "Hello, I know Coveo currently hosts organizations in two independent cloud platforms, the new Coveo Cloud V2 and Coveo Cloud V1, the original Coveo offering in the cloud. I would like to learn the main differences between the two Coveo Cloud versions ..."
+    },
+    "summary": {
+      "type": "string",
+      "nullable": true,
+      "description": "The item summary (see the `summaryLength` query parameter)."
+    },
+    "flags": {
+      "type": "string",
+      "description": "The flags that are set on the item by the index. Distinct values are separated by semicolons.",
+      "example": "HasHtmlVersion;HasMobileHtmlVersion"
+    },
+    "hasHtmlVersion": {
+      "type": "boolean",
+      "description": "Whether the index contains an HTML version of this item.",
+      "example": true
+    },
+    "hasMobileHtmlVersion": {
+      "type": "boolean",
+      "description": "Whether the index contains a mobile HTML version of this item.",
+      "example": true
+    },
+    "score": {
+      "type": "integer",
+      "description": "The total ranking score computed for the item (see the `sortCriteria` and `rankingFunctions` query parameters).",
+      "format": "int32",
+      "example": 1626
+    },
+    "percentScore": {
+      "type": "number",
+      "description": "The item ranking score expressed as a percentage (see the `sortCriteria` and `rankingFunctions` query parameters).",
+      "format": "double",
+      "example": 90.73539
+    },
+    "rankingInfo": {
+      "type": "string",
+      "nullable": true,
+      "description": "The raw debug information generated by the index to detail how the item was ranked. This property is `null` unless the `debug` query parameter is set to `true`.",
+      "example": "Document weights:\nTitle: 0; Quality: 180; Date: 596; Adjacency: 0; Source: 500; Custom: 350; Collaborative rating: 0; QRE: 0; Ranking functions: 0;\n\nTotal weight: 1626"
+    },
+    "rating": {
+      "type": "number",
+      "description": "**Note:** The value of this property is always `3`.",
+      "format": "double",
+      "example": 3
+    },
+    "isTopResult": {
+      "type": "boolean",
+      "description": "Whether the item score was boosted by a featured result rule in the query pipeline.",
+      "example": false
+    },
+    "isRecommendation": {
+      "type": "boolean",
+      "description": "Whether the item score was boosted as a Coveo ML recommendation.",
+      "example": false
+    },
+    "isUserActionView": {
+      "type": "boolean",
+      "description": "Whether the item score was boosted as a Coveo ML recommendation.",
+      "example": false
+    },
+    "rankingModifier": {
+      "type": "string",
+      "description": "If applicable, represents the type of ranking modification that was applied to this result.  \n  \n**Note:** When logging a **Click** usage analytics event for an opened query result item, the `rankingModifier` field of that event should be set to the `rankingModifier` value of the opened query result item, if available.",
+      "example": "TopResult"
+    },
+    "titleHighlights": {
+      "type": "array",
+      "description": "The length and offset of each word to highlight in the item `title` string.",
+      "items": {
+        "required": [
+          "length",
+          "offset"
+        ],
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "description": "The length (in number of characters) of the word to highlight.",
+            "format": "int64",
+            "example": 5
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The 0-based index position of the first character of the word to highlight in the string.",
+            "format": "int64",
+            "example": 15
+          }
+        }
+      }
+    },
+    "firstSentencesHighlights": {
+      "type": "array",
+      "description": "The length and offset of each word to highlight in the item `firstSentences` string.",
+      "items": {
+        "required": [
+          "length",
+          "offset"
+        ],
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "description": "The length (in number of characters) of the word to highlight.",
+            "format": "int64",
+            "example": 5
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The 0-based index position of the first character of the word to highlight in the string.",
+            "format": "int64",
+            "example": 15
+          }
+        }
+      }
+    },
+    "excerptHighlights": {
+      "type": "array",
+      "description": "The length and offset of each word to highlight in the item `excerpt` string.",
+      "items": {
+        "required": [
+          "length",
+          "offset"
+        ],
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "description": "The length (in number of characters) of the word to highlight.",
+            "format": "int64",
+            "example": 5
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The 0-based index position of the first character of the word to highlight in the string.",
+            "format": "int64",
+            "example": 15
+          }
+        }
+      }
+    },
+    "printableUriHighlights": {
+      "type": "array",
+      "description": "The length and offset of each word to highlight in the item `printableUri` string.",
+      "items": {
+        "required": [
+          "length",
+          "offset"
+        ],
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "description": "The length (in number of characters) of the word to highlight.",
+            "format": "int64",
+            "example": 5
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The 0-based index position of the first character of the word to highlight in the string.",
+            "format": "int64",
+            "example": 15
+          }
+        }
+      }
+    },
+    "summaryHighlights": {
+      "type": "array",
+      "description": "The length and offset of each word to highlight in the item `summary` string.",
+      "items": {
+        "required": [
+          "length",
+          "offset"
+        ],
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "description": "The length (in number of characters) of the word to highlight.",
+            "format": "int64",
+            "example": 5
+          },
+          "offset": {
+            "type": "integer",
+            "description": "The 0-based index position of the first character of the word to highlight in the string.",
+            "format": "int64",
+            "example": 15
+          }
+        }
+      }
+    },
+    "parentResult": {
+      "anyOf": [
+        {
+          "$ref": "#/components/schemas/RestQueryResult"
+        },
+        {
+          "type": "object",
+          "nullable": true
+        }
+      ]
+    },
+    "childResults": {
+      "type": "array",
+      "description": "An array of references to the children of this item, if result folding was applied (see the `filterField` query parameter). The query results contained in this field will have both their parent and child results set to `null`.",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/RestQueryResult"
+          }
+        ]
+      }
+    },
+    "totalNumberOfChildResults": {
+      "type": "integer",
+      "description": "The total number of children available in the index for this item, if result folding was applied (see the `filterField` query parameter).",
+      "format": "int64"
+    },
+    "absentTerms": {
+      "type": "array",
+      "description": "The basic query expression terms which this query result item does not match.\n\n**Note:**\n> This property is populated by terms from the query pipeline-processed `q` value (not from the original `q` value).",
+      "example": [
+        "platform",
+        "native",
+        "solution"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "raw": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "The values of the fields which were retrieved for this item (see the `fieldsToInclude` and `fieldsToExclude` query parameters).",
+      "example": {
+        "clickableuri": "https://example.com/t/1/898/2",
+        "author": "Anonymous",
+        "date": 1502796809427,
+        "filetype": "forumpost",
+        "language": [
+          "English"
+        ],
+        "conversationid": 898,
+        "messageid": 2,
+        "childid": 2,
+        "adjustednumberoflikes": 46
+      }
+    },
+    "Title": {
+      "type": "string",
+      "description": "> This property is deprecated; it should not be populated by Search API V2 searches.",
+      "deprecated": true
+    },
+    "Uri": {
+      "type": "string",
+      "description": "> This property is deprecated; it should not be populated by Search API V2 searches.",
+      "deprecated": true
+    },
+    "PrintableUri": {
+      "type": "string",
+      "description": "> This property is deprecated; it should not be populated by Search API V2 searches.",
+      "deprecated": true
+    },
+    "ClickUri": {
+      "type": "string",
+      "description": "> This property is deprecated; it should not be populated by Search API V2 searches.",
+      "deprecated": true
+    },
+    "UniqueId": {
+      "type": "string",
+      "description": "> This property is deprecated; it should not be populated by Search API V2 searches.",
+      "deprecated": true
+    },
+    "Excerpt": {
+      "type": "string",
+      "description": "> This property is deprecated; it should not be populated by Search API V2 searches.",
+      "deprecated": true
+    },
+    "FirstSentences": {
+      "type": "string",
+      "description": "> This property is deprecated; it should not be populated by Search API V2 searches.",
+      "deprecated": true
+    }
+  }
+}

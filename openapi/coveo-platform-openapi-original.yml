@@ -1,0 +1,3051 @@
+openapi: 3.0.1
+info:
+  title: Coveo Platform API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com/rest
+security:
+- oauth2:
+  - full
+paths:
+  /rest/organizations/{organizationId}:
+    get:
+      tags:
+      - Organizations
+      summary: Show Organization
+      description: 'Shows an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: additionalFields
+        in: query
+        description: A line-separated list of additional fields to include.</br>**Example:** `license`</br>`status`
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrganizationModel_Response'
+      x-pretty-name: getOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId_get
+    put:
+      tags:
+      - Organizations
+      summary: Update Organization
+      description: 'Updates an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The JSON configuration to update the target organization to.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationModel_Request'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: updateOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId_put
+    delete:
+      tags:
+      - Organizations
+      summary: Delete Organization
+      description: 'Delete an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: Delete an organization
+        url: https://docs.coveo.com/en/22/
+      operationId: deleteOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId_delete
+  /rest/organizations/{organizationId}/crawlingmodule/{crawlingModuleId}:
+    put:
+      tags:
+      - Crawling Module
+      summary: Report Crawling Module Deployment
+      description: 'Reports a crawling module deployment in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).</br>**Required
+        privilege:** On-Premise Administration - Edit or Crawling Module - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"EDIT","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: reportCrawlingModule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        description: 'The unique identifier of the target crawling module.</br>**Example:** mycoveocloudv2organization76kcam-1e7c13e2-afe7-4510-bd00-cd5fd8ba9b0d
+
+          '
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The JSON configuration of the crawling module.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportCrawlingModuleModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CrawlingModuleModel'
+      x-pretty-name: reportCrawlingModule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/paramId_put
+    delete:
+      tags:
+      - Crawling Module
+      summary: Remove a Crawling Module Deployment
+      description: 'Remove an inactive Crawling Module Deployment</br>**Required privilege:** On-Premise Administration -
+        Edit or Crawling Module - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"EDIT","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: removeCrawlingModule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        description: 'The unique identifier of the target crawling module.</br>**Example:** mycoveocloudv2organization76kcam-1e7c13e2-afe7-4510-bd00-cd5fd8ba9b0d
+
+          '
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: removeCrawlingModule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/paramId_delete
+  /rest/organizations/{organizationId}/configuration/servingExperiment:
+    put:
+      tags:
+      - Organizations
+      summary: Allow or Disallow Serving Experiments on the Organization. It Is Allowed by Default.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: setServingExperiment
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: allowed
+        in: query
+        description: Whether serving experiments are allowed
+        required: true
+        schema:
+          type: boolean
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: setServingExperiment
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/configuration/servingExperiment_put
+  /rest/crawlingmodule/upgradechannels/{upgradeChannel}/version/{version}:
+    put:
+      tags:
+      - Crawling Module
+      summary: Sets the Crawling Module Version for an Upgrade Channel
+      operationId: setCrawlingModuleUpgradeChannelVersion
+      parameters:
+      - name: upgradeChannel
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - INTERNAL
+          - LATEST
+          - STABLE
+      - name: version
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+      x-pretty-name: setCrawlingModuleUpgradeChannelVersion
+      x-ui-operation-id: /rest/crawlingmodule/upgradechannels/paramId/version/paramId_put
+  /rest/organizations:
+    get:
+      tags:
+      - Organizations
+      summary: List Organizations
+      description: Lists all [organizations](https://docs.coveo.com/en/185/) you have access to.
+      operationId: getOrganizations
+      parameters:
+      - name: additionalFields
+        in: query
+        description: A line-separated list of additional fields to include.</br>**Example:** `license`</br>`status`
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: filter
+        in: query
+        description: The free-form string to filter the returned list based on the values of the organization attributes.
+          Using spaces is not recommended as it will prevent correct filtering.
+        required: false
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: The type of organization to include in the returned list.</br>**Example:** `Test`</br>By default, organizations
+          of all types may be included in the response.
+        required: false
+        schema:
+          type: string
+      - name: sortBy
+        in: query
+        description: The field to sort the returned organizations by.</br>**Example:** `createdDate`</br>**Default:** `displayName`
+        required: false
+        schema:
+          type: string
+          default: displayName
+      - name: order
+        in: query
+        description: 'The `sortBy` order to list the organizations in.</br>**Allowed values:**</br> - `ASC`: Ascending order.</br>-
+          `DESC`: Descending order. </br>**Example:** `DESC`</br>**Default:** `ASC`'
+        required: false
+        schema:
+          type: string
+          default: asc
+      - name: page
+        in: query
+        description: The 0-based index number of the page to list.</br>**Example:** `5`</br>**Default:** `0`
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The maximum number of organizations to list per page.</br>**Example:** `50`</br>**Default:** `100`
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: productTypes
+        in: query
+        description: The license product types to filter the returned list by.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - INTERNAL
+            - SALES
+            - ALLIANCE
+            - SANDBOX
+            - STANDARD
+            - TRIAL
+            - TEST
+      - name: accountId
+        in: query
+        description: The license accountId to filter the returned list by.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelOrganizationModel_Response'
+      x-pretty-name: getOrganizations
+      x-ui-operation-id: /rest/organizations_get
+    post:
+      tags:
+      - Organizations
+      summary: Create Organization
+      description: Creates an [organization](https://docs.coveo.com/en/185/).
+      operationId: createOrganization
+      parameters:
+      - name: name
+        in: query
+        description: The name to assign to the new organization.
+        required: true
+        schema:
+          type: string
+      - name: owner
+        in: query
+        description: The email of the owner to assign to the new organization.
+        required: false
+        schema:
+          type: string
+          default: ''
+      - name: organizationTemplate
+        in: query
+        description: The name of the template to base the new organization on.
+        required: false
+        schema:
+          type: string
+          default: ''
+        example: TRIAL
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrganizationCreatedModel'
+      x-pretty-name: createOrganization
+      x-ui-operation-id: /rest/organizations_post
+  /rest/organizations/{organizationId}/resume:
+    post:
+      tags:
+      - Organizations
+      summary: Resume Organization
+      description: 'Resumes a paused [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: About inactive organizations
+        url: https://docs.coveo.com/en/2959#about-inactive-organizations
+      operationId: resumeOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ValueModelBoolean'
+      x-pretty-name: resumeOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/resume_post
+  /rest/organizations/{organizationId}/limits/reset/{sectionName}/{limitKey}:
+    post:
+      tags:
+      - Limits
+      summary: Manually Reset Limit Statuses for a Specific Section and Limit Key
+      description: 'Admin operation to manually trigger the reset job for a specific limit. This only resets LimitStatus last
+        updated before today. '
+      operationId: resetExpiredLimitStatuses
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sectionName
+        in: path
+        description: The name of the target license section.</br>**Example:** `content`
+        required: true
+        schema:
+          type: string
+      - name: limitKey
+        in: path
+        description: The unique identifier of the target [limit](https://docs.coveo.com/en/262/) status to show.<br>**Example:**`pushApiMaximumDailyDocumentLimit`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: resetExpiredLimitStatuses
+      x-ui-operation-id: /rest/organizations/paramId/limits/reset/paramId/paramId_post
+  /rest/organizations/{organizationId}/launchprovisioning:
+    post:
+      tags:
+      - Organizations
+      summary: Provision Organization
+      description: 'Launches the provisioning of an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: launchProvisioning
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: launchProvisioning
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/launchprovisioning_post
+  /rest/organizations/{organizationId}/crawlingmodule:
+    get:
+      tags:
+      - Crawling Module
+      summary: List Crawling Modules
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"VIEW","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModulesForOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrawlingModuleModel'
+      x-pretty-name: getCrawlingModulesForOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule_get
+    post:
+      tags:
+      - Crawling Module
+      summary: List Crawling Modules by Ids
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"VIEW","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModulesByIdsForOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrawlingModuleModel'
+      x-pretty-name: getCrawlingModulesByIdsForOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule_post
+  /rest/organizations/{organizationId}/status:
+    get:
+      tags:
+      - Organizations
+      summary: Show Organization Status
+      description: 'Shows the status of an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege
+        required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: About Coveo system issue notifications
+        url: https://docs.coveo.com/en/1684/
+      operationId: getOrganizationStatus
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrganizationStatusModel'
+      x-pretty-name: getOrganizationStatus
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/status_get
+  /rest/organizations/{organizationId}/limits:
+    get:
+      tags:
+      - Limits
+      summary: Show Organization Limits and Their Statuses
+      description: 'Shows an [organization''s](https://docs.coveo.com/en/185/) [limits](https://docs.coveo.com/en/262/) and
+        their statuses.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: Get the Organization Limit Status
+        url: https://docs.coveo.com/en/165/
+      operationId: getOrganizationLimits
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: limitType
+        in: query
+        description: The type of limit you are wishing to retrieve.
+        required: false
+        schema:
+          type: string
+          enum:
+          - TECHNICAL
+          - USAGE
+          - ENTITLEMENT
+          default: USAGE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  additionalProperties:
+                    $ref: '#/components/schemas/LimitStatusModel'
+      x-pretty-name: getOrganizationLimitsByType
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/limits_get
+  /rest/organizations/{organizationId}/limits/{sectionName}:
+    get:
+      tags:
+      - Limits
+      summary: List Section Limits and Their Statuses
+      description: 'Shows [limits](https://docs.coveo.com/en/262/) and their statuses for a specified license section of an
+        [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSectionLimits
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sectionName
+        in: path
+        description: The name of the target license section.</br>**Example:** `content`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/LimitStatusModel'
+      x-pretty-name: getSectionLimits
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/limits/paramId_get
+  /rest/organizations/{organizationId}/limits/{sectionName}/{limitKey}:
+    get:
+      tags:
+      - Limits
+      summary: Show Specific Limit Status
+      description: 'Shows the status of a specific [limit](https://docs.coveo.com/en/262/) in an [organization](https://docs.coveo.com/en/185/).<br
+        /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: Review your license and usage
+        url: https://docs.coveo.com/en/q2ik0227/manage-an-organization/review-your-license-and-usage
+      operationId: getLimit
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sectionName
+        in: path
+        description: The name of the target license section.</br>**Example:** `content`
+        required: true
+        schema:
+          type: string
+      - name: limitKey
+        in: path
+        description: The unique identifier of the target [limit](https://docs.coveo.com/en/262/) status to show.<br>**Example:**`pushApiMaximumDailyDocumentLimit`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LimitStatusModel'
+      x-pretty-name: getLimit
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/limits/paramId/paramId_get
+  /rest/organizations/{organizationId}/limits/{sectionName}/{limitKey}/history:
+    get:
+      tags:
+      - Limits
+      summary: Show Limit History
+      description: 'Shows the history of a specific [limit](https://docs.coveo.com/en/262/) for a given date range.<br /><br
+        /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getLimitHistory
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sectionName
+        in: path
+        description: The name of the target license section.</br>**Example:** `content`
+        required: true
+        schema:
+          type: string
+      - name: limitKey
+        in: path
+        description: The unique identifier of the target [limit](https://docs.coveo.com/en/262/) status to show.<br>**Example:**`pushApiMaximumDailyDocumentLimit`
+        required: true
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning of the date range for which to show limit history in [ISO 8601](https://www.w3.org/TR/NOTE-datetime)
+          format.</br>**Example:**`2022-05-08T01:30:00.000-05:00`
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        description: The ending of the date range for which to show limit history in [ISO 8601](https://www.w3.org/TR/NOTE-datetime)
+          format.</br>**Example:**`2022-05-10T01:30:00.000-05:00`
+        required: false
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LimitHistoryDataPointModel'
+      x-pretty-name: getLimitHistory
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/limits/paramId/paramId/history_get
+  /rest/organizations/{organizationId}/license:
+    get:
+      tags:
+      - License
+      summary: Show Organization License
+      description: 'Get the license of an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br
+        /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: Get the Organization License Information
+        url: https://docs.coveo.com/en/77/
+      operationId: getLicense
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LicenseModel'
+      x-pretty-name: getLicense
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/license_get
+  /rest/organizations/{organizationId}/license/{sectionName}:
+    get:
+      tags:
+      - License
+      summary: Show Organization License Section
+      description: 'Shows a section of the license of an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br
+        /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getLicenseSection
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sectionName
+        in: path
+        description: The name of the target license section.</br>**Example:** `content`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+      x-pretty-name: getLicenseSection
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/license/paramId_get
+  /rest/organizations/{organizationId}/license/entitlements:
+    get:
+      tags:
+      - License
+      summary: Show Organization Entitlements
+      description: 'Get the entitlements of an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br
+        /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: Get the Organization License Information
+        url: https://docs.coveo.com/en/77/
+      operationId: getEntitlements
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EntitlementModel'
+      x-pretty-name: getEntitlements
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/license/entitlements_get
+  /rest/organizations/{organizationId}/crawlingmodule/{crawlingModuleId}/update:
+    get:
+      tags:
+      - Crawling Module
+      summary: Get the Update Status
+      description: 'Get the update status of a crawling module for an organization.</br>**Required privilege:** Crawling Module
+        - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getUpdateStatus
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        description: 'The unique identifier of the target crawling module.</br>**Example:** mycoveocloudv2organization76kcam-1e7c13e2-afe7-4510-bd00-cd5fd8ba9b0d
+
+          '
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CrawlingModuleUpdateStatusModel'
+      x-pretty-name: getUpdateStatus
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/paramId/update_get
+  /rest/organizations/{organizationId}/crawlingmodule/versions/latest:
+    get:
+      tags:
+      - Crawling Module
+      summary: Gets the Latest Maestro Version
+      description: 'Gets the latest version of Maestro of an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).</br>**Required
+        privilege:** On-Premise Administration - View or Crawling Module - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"VIEW","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getLatestMaestroVersion
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CrawlingModuleVersionsModel'
+      x-pretty-name: getLatestMaestroVersion
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/versions/latest_get
+  /rest/organizations/{organizationId}/crawlingmodule/projectid:
+    get:
+      tags:
+      - Crawling Module
+      summary: List Crawling Modules by Project ID
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"VIEW","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModulesByProjectIdForOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrawlingModuleModel'
+      x-pretty-name: getCrawlingModulesByProjectIdForOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/projectid_get
+  /rest/organizations/{organizationId}/crawlingmodule/download:
+    get:
+      tags:
+      - Crawling Module
+      summary: Get the Download URL Prefix for Crawling Module Binaries.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModuleDownloadUrl
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+          `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+      x-pretty-name: getCrawlingModuleDownloadUrl
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/download_get
+  /rest/crawlingmodule/upgradechannels/{upgradeChannel}/version:
+    get:
+      tags:
+      - Crawling Module
+      summary: Gets the Crawling Module Version for an Upgrade Channel
+      operationId: getCrawlingModuleUpgradeChannelVersion
+      parameters:
+      - name: upgradeChannel
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - INTERNAL
+          - LATEST
+          - STABLE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ValueModelString'
+      x-pretty-name: getCrawlingModuleUpgradeChannelVersion
+      x-ui-operation-id: /rest/crawlingmodule/upgradechannels/paramId/version_get
+components:
+  schemas:
+    OrganizationModel_Request:
+      type: object
+      properties:
+        displayName:
+          maxLength: 255
+          type: string
+          description: The display name of the organization.
+        owner:
+          $ref: '#/components/schemas/OrganizationOwnerModel_Request'
+      description: An [organization](https://docs.coveo.com/en/185/).
+    OrganizationOwnerModel_Request:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email address of the organization owner.
+      description: The owner of the [organization](https://docs.coveo.com/en/185/).
+    CrawlingModuleVersionsModel:
+      type: object
+      properties:
+        maestroVersion:
+          type: string
+          description: The version of Maestro that is being used for the crawling module.</br>See [Updating Maestro](https://docs.coveo.com/en/3266/index-content/crawling-module-rest-api-reference#updating-maestro).</br>**Example:**
+            `0.9.33`
+      description: Various versions of a crawling module.
+    JsonNode:
+      type: object
+    ReportCrawlingModuleModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the crawling module.</br>**Example:** `Prod Crawling Module`
+        versions:
+          $ref: '#/components/schemas/CrawlingModuleVersionsModel'
+        status:
+          $ref: '#/components/schemas/JsonNode'
+      description: A crawling module report.
+    CrawlingModuleModel:
+      type: object
+      properties:
+        maestroVersion:
+          type: string
+          description: The version of Maestro that is being used for the crawling module.</br>See [Updating Maestro](https://docs.coveo.com/en/3266/index-content/crawling-module-rest-api-reference#updating-maestro).</br>**Example:**
+            `0.9.33`
+        createdDate:
+          type: string
+          description: The crawling module creation date in W3C format (see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime)).</br>**Example:**
+            `2018-05-22T23:36:30.589Z`
+          format: date-time
+        id:
+          type: string
+          description: The unique identifier of the crawling module.</br>**Example:** `crawlingmodulejvas70dt-d9c69mla-8912-6653-a90g-4ach953fd96b`
+        organizationId:
+          type: string
+          description: The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id)
+            the crawling module was created for.</br>**Example:** `mycoveocloudorganizationg8tp8wu3`
+        name:
+          type: string
+          description: The name of the crawling module.</br>**Example:** `Prod Crawling Module`
+        updatedDate:
+          type: string
+          description: The last update date of the crawling module in number of milliseconds since UNIX epoch.</br>**Example:**
+            `1556722921779`
+          format: date-time
+        lastHeartbeat:
+          type: string
+          description: The last heartbeat date of the crawling module in number of milliseconds since UNIX epoch.</br>**Example:**
+            `1556722921779`
+          format: date-time
+        lastVersionUpgrade:
+          type: string
+          description: The last version upgrade date of the crawling module in number of milliseconds since UNIX epoch.</br>**Example:**
+            `1556722921779`
+          format: date-time
+        disabled:
+          type: boolean
+          description: Whether the crawling module is disabled.
+        status:
+          $ref: '#/components/schemas/JsonNode'
+        projectIds:
+          type: array
+          items:
+            type: string
+      description: A crawling module.
+    AnalyticsConfigurationModel:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/EventModel'
+      description: The user information to send to Coveo Usage Analytics
+    ApiKeyAdditionalConfigurationModel:
+      type: object
+      properties:
+        commerce:
+          $ref: '#/components/schemas/CommerceApiKeyConfigurationModel'
+        search:
+          $ref: '#/components/schemas/SearchApiKeyConfigurationModel'
+        analytics:
+          $ref: '#/components/schemas/AnalyticsConfigurationModel'
+      description: The additional configuration to attach to the API key.
+    ApiKeyExposureReportReasonResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the exposure reason
+          example: 123e4567-e89b-12d3-a456-426614174000
+        reason:
+          type: string
+          description: Reason for the API key exposure
+          nullable: true
+          example: The API key was found on a public repository
+        source:
+          type: string
+          description: Source of the API key exposure reason
+          example: MANUAL
+          enum:
+          - GITHUB
+          - MANUAL
+        url:
+          type: string
+          description: URL where the API key was found
+          nullable: true
+          example: https://example.com
+        createdDate:
+          type: string
+          description: Date when the exposure reason was created
+          format: date-time
+          example: '2023-10-01T12:00:00Z'
+      description: Response containing the reason for API key exposure, it contain at least one of the reason or url
+      readOnly: true
+    ApiKeyExposureReportResponse:
+      type: object
+      properties:
+        apiKeyLoggerId:
+          type: string
+          description: The unique identifier of the API key.
+          readOnly: true
+          example: t4hk287bfj5sg6wskg64ckk5a
+        severity:
+          type: string
+          description: The severity of the exposure report.
+          readOnly: true
+          example: CRITICAL
+          enum:
+          - CRITICAL
+          - HIGH
+          - MEDIUM
+          - LOW
+          - WARN
+        deactivationDate:
+          type: string
+          description: The expected deactivation date of the API key according to the severity.
+          format: date-time
+          readOnly: true
+        creationType:
+          type: string
+          description: The creation type of the exposure report
+          readOnly: true
+          example: MANUAL
+          enum:
+          - MANUAL
+          - AUTOMATED
+        createdBy:
+          $ref: '#/components/schemas/UserModel'
+        reasons:
+          type: array
+          description: The reasons for the API key exposure.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ApiKeyExposureReportReasonResponse'
+        createdDate:
+          type: string
+          description: The date when the exposure report was created.
+          format: date-time
+          readOnly: true
+      description: An API key Exposure Report
+    ApiKeyModel:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        id:
+          type: string
+        tokenId:
+          type: string
+        value:
+          type: string
+        organizationId:
+          type: string
+        displayName:
+          type: string
+        description:
+          type: string
+        privileges:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        enabled:
+          type: boolean
+        createdDate:
+          type: string
+          format: date-time
+        createdBy:
+          $ref: '#/components/schemas/UserModel'
+        allowedIps:
+          type: array
+          items:
+            type: string
+        deniedIps:
+          type: array
+          items:
+            type: string
+        apiKeyTemplateId:
+          type: string
+        additionalConfiguration:
+          $ref: '#/components/schemas/ApiKeyAdditionalConfigurationModel'
+        lastUsedDate:
+          type: string
+          format: date-time
+        privacyLevel:
+          type: string
+          enum:
+          - PUBLIC
+          - PRIVATE
+        status:
+          type: string
+          enum:
+          - ENABLED
+          - SOON_TO_BE_EXPIRED
+          - SOON_TO_BE_DISABLED
+          - DISABLED
+          - DISABLED_FOR_INACTIVITY
+          - DISABLED_EXPOSED
+          - EXPIRED
+        expirationDate:
+          type: string
+          format: date-time
+        lifetimeDuration:
+          type: string
+        disabledDate:
+          type: string
+          format: date-time
+        activationDate:
+          type: string
+          format: date-time
+        exposureReport:
+          $ref: '#/components/schemas/ApiKeyExposureReportResponse'
+        rotationEnabled:
+          type: boolean
+        rotationSecret:
+          type: string
+        resourceId:
+          type: string
+        disabled:
+          type: boolean
+    CommerceApiKeyConfigurationModel:
+      type: object
+      properties:
+        catalogId:
+          type: string
+          description: The catalogId to enforce on the queries using the API key. </br>**Example:** `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
+      description: The commerce configuration to enforce on the queries using the API key.
+    EnforcedQueryPipelineConfigurationModel:
+      type: object
+      properties:
+        searchHub:
+          type: string
+          description: The search hub to enforce on the queries using the API key. </br>**Example:** `SupportHub`
+      description: The query pipeline configuration to enforce on the API key.
+    EventModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the user.
+        userDisplayName:
+          type: string
+          description: The display name of the user. **Example:** `Alice`
+      description: The user information to send along with usage analytics events.
+    IdAndDisplayNameModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+    ImpersonatedUserModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the security identity to impersonate.</br>**Example:** `asmith@example.com`
+        provider:
+          type: string
+          description: The security identity provider containing the security identity to impersonate.</br>**Example:** `Email
+            Security Provider`
+        type:
+          type: string
+          description: The type of the security identity to impersonate.</br>**Default:** `User`</br> **Allowed values:**
+            </br>- `User` </br>- `Group` </br>- `VirtualGroup` </br>- `Unknown`
+      description: The security identities to impersonate when authenticating queries with the API key. </br>**Note:** If
+        specified, the API key must have the `IMPERSONATE` privilege.
+    ImpersonationRestrictionsModel:
+      type: object
+      properties:
+        allowedUserIds:
+          uniqueItems: true
+          type: array
+          description: The security identities to impersonate.
+          items:
+            $ref: '#/components/schemas/ImpersonatedUserModel'
+      description: The security identities to impersonate when authenticating queries with the API key.
+    OrganizationCreatedModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id).</br>**Example:**
+            `mycoveocloudorganizationg8tp8wu3`
+        apiKey:
+          $ref: '#/components/schemas/ApiKeyModel'
+      description: Information pertaining to the newly created organization model.
+    PrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`)
+            will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
+      externalDocs:
+        description: Privilege reference
+        url: https://docs.coveo.com/en/1707/
+    RealmModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: A realm.
+    SearchApiKeyConfigurationModel:
+      type: object
+      properties:
+        enforcedQueryPipelineConfiguration:
+          $ref: '#/components/schemas/EnforcedQueryPipelineConfigurationModel'
+        impersonationRestrictions:
+          $ref: '#/components/schemas/ImpersonationRestrictionsModel'
+        apiKeyQueryAuthentication:
+          uniqueItems: true
+          type: array
+          description: The security identity used to authenticate queries with the API key.
+          items:
+            $ref: '#/components/schemas/ImpersonatedUserModel'
+      description: The Search API configuration to enforce in the API key.
+    UserModel:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the user.</br>**Example:** `jsmith@email.com-google`
+        name:
+          type: string
+          description: The full name of the user.</br>**Example:** `John Smith`
+          nullable: true
+        firstName:
+          type: string
+          description: The first name of the user.</br>**Example:** `John`
+          nullable: true
+        lastName:
+          type: string
+          description: The last name of the user.</br>**Example:** `Smith`
+          nullable: true
+        email:
+          type: string
+          description: The email address of the user.</br>**Example:**`jsmith@email.com`
+        emailConfirmed:
+          type: boolean
+          description: Whether the user has confirmed their email.
+        displayName:
+          type: string
+          description: The display name of the user.</br>**Example:** `John Smith`
+        country:
+          type: string
+          enum:
+          - UNDEFINED
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AQ
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AX
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BL
+          - BM
+          - BN
+          - BO
+          - BQ
+          - BR
+          - BS
+          - BT
+          - BU
+          - BV
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CC
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CP
+          - CR
+          - CS
+          - CU
+          - CV
+          - CW
+          - CX
+          - CY
+          - CZ
+          - DE
+          - DG
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EA
+          - EC
+          - EE
+          - EG
+          - EH
+          - ER
+          - ES
+          - ET
+          - EU
+          - EZ
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - FX
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GS
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HM
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IM
+          - IN
+          - IO
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MF
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NF
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NT
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PM
+          - PN
+          - PR
+          - PS
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SF
+          - SG
+          - SH
+          - SI
+          - SJ
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SU
+          - SV
+          - SX
+          - SY
+          - SZ
+          - TA
+          - TC
+          - TD
+          - TF
+          - TG
+          - TH
+          - TJ
+          - TK
+          - TL
+          - TM
+          - TN
+          - TO
+          - TP
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - UK
+          - UM
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WF
+          - WS
+          - XI
+          - XU
+          - XK
+          - YE
+          - YT
+          - YU
+          - ZA
+          - ZM
+          - ZR
+          - ZW
+        providerUsername:
+          type: string
+          description: The username of the user for the corresponding provider.</br>**Example:** `jsmith@email.com`
+          nullable: true
+        providerUserId:
+          type: string
+          description: The unique identifier of the user for the provider.</br>**Example:** `office365`
+        provider:
+          type: string
+          description: The provider of the user.
+          nullable: true
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the SAML identity provider the user is a part of.</br>**Example:** `myprovider`
+          nullable: true
+        realms:
+          type: array
+          description: The realms the user is a part of.
+          items:
+            $ref: '#/components/schemas/UserRealmModel'
+        socialUser:
+          type: boolean
+        expired:
+          type: boolean
+          description: Whether the user is expired.
+        locked:
+          type: boolean
+          description: Whether the user is locked.
+        credentialsExpired:
+          type: boolean
+          description: Whether the user's credentials have expired.
+        enabled:
+          type: boolean
+          description: Whether the user is enabled.
+        emailAliases:
+          uniqueItems: true
+          type: array
+          description: The email aliases of the user.
+          items:
+            type: string
+            description: The email aliases of the user.
+        additionalInformation:
+          type: object
+          additionalProperties:
+            type: string
+            description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen":
+              "v2.5652.11"}`</br>*Default:* `{}`'
+          description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen":
+            "v2.5652.11"}`</br>*Default:* `{}`'
+        lastUsedDate:
+          type: string
+          description: The last day the user has logged in into the platform
+          format: date-time
+          nullable: true
+      description: A user.
+      readOnly: true
+    UserRealmModel:
+      type: object
+      properties:
+        member:
+          type: boolean
+        realm:
+          $ref: '#/components/schemas/RealmModel'
+        realmModel:
+          $ref: '#/components/schemas/RealmModel'
+      description: The realms the user is a part of.
+    ValueModelBoolean:
+      type: object
+      properties:
+        value:
+          type: boolean
+    AllowedScheduleModel_Response:
+      type: object
+      properties:
+        refreshType:
+          type: string
+          description: The refresh type to use for a given connector.
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        scheduleFrequencies:
+          type: array
+          description: 'The frequency at which to refresh the connector.</br>**Allowed values:**</br>- `MINUTELY`: Once per
+            minute.</br>- `HOURLY`: Once per hour.</br>- `DAILY`: Once per day.</br>- `WEEKLY`: Once per week.</br>- `MONTHLY`:
+            Once per month.'
+          items:
+            type: string
+            description: 'The frequency at which to refresh the connector.</br>**Allowed values:**</br>- `MINUTELY`: Once
+              per minute.</br>- `HOURLY`: Once per hour.</br>- `DAILY`: Once per day.</br>- `WEEKLY`: Once per week.</br>-
+              `MONTHLY`: Once per month.'
+            enum:
+            - MINUTELY
+            - HOURLY
+            - DAILY
+            - WEEKLY
+            - MONTHLY
+      description: The schedule that is used by the [connector](https://docs.coveo.com/en/2734/).
+    BusinessAnalyticsModel_Response:
+      type: object
+      properties:
+        creationOrigin:
+          type: string
+          enum:
+          - ADMIN_UI
+          - API
+          - BUSINESS_CRM
+          - CLI
+          - TRAINING
+          - PARTNER_PROGRAM
+          - TEST
+          - WEBSITE
+          - SALESFORCE_INTEGRATION_TRIAL
+          - SERVICENOW_INTEGRATION_TRIAL
+          - SITECORE_INTEGRATION_TRIAL
+          - UNKNOWN
+        userCategory:
+          type: string
+          enum:
+          - INTERNAL
+          - PARTNER
+          - CUSTOMER
+        trackingAllowed:
+          type: boolean
+      description: The organization business analytics settings.
+    ConnectorInformationModel_Response:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of connector.
+          enum:
+          - AMAZONS3
+          - BOX_ENTERPRISE2
+          - CATALOG
+          - CONFLUENCE2
+          - CONFLUENCE2_HOSTED
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - FILE
+          - GENERIC_REST
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GRAPHQL
+          - JIRA2
+          - JIRA2_HOSTED
+          - JIVE
+          - JIVE_HOSTED
+          - LITHIUM
+          - KHOROS
+          - MICROSOFT_DYNAMICS
+          - PUSH
+          - RSS
+          - SALESFORCE
+          - SALESFORCE_SITES
+          - SAP
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE2
+          - SHOPIFY
+          - SITECORE
+          - SITEMAP
+          - SLACK
+          - WEB2
+          - YOUTUBE
+          - ZENDESK
+          - ADOBE_EXPERIENCE_MANAGER
+          - BOX
+          - BOX_ENTERPRISE
+          - CONFLUENCE
+          - DROPBOX
+          - GMAIL
+          - GMAIL_DOMAIN_WIDE
+          - SHAREPOINT_ONLINE
+        allowed:
+          type: boolean
+          description: Whether the connector is allowed to execute.
+        sourceVisibilities:
+          uniqueItems: true
+          type: array
+          description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>-
+            `SECURED`: Allowed users only</br>- `SHARED`: Any user'
+          items:
+            type: string
+            description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>-
+              `SECURED`: Allowed users only</br>- `SHARED`: Any user'
+            enum:
+            - PRIVATE
+            - SECURED
+            - SHARED
+        allowedSchedules:
+          type: array
+          description: A set of schedule models that are allowed to refresh the connector.
+          items:
+            $ref: '#/components/schemas/AllowedScheduleModel_Response'
+      description: Information for a connector.
+    EntitlementModel_Response:
+      type: object
+      properties:
+        id:
+          type: string
+        productId:
+          type: string
+        pricingUnit:
+          type: string
+        displayName:
+          type: string
+        productName:
+          type: string
+        useCase:
+          type: string
+        status:
+          type: string
+        itemLimit:
+          type: integer
+          format: int64
+        semanticSearchDocumentLimit:
+          type: integer
+          format: int64
+        semanticSearchQPMLimit:
+          type: integer
+          format: int64
+        lrpmLimit:
+          type: integer
+          format: int64
+        qpmLimit:
+          type: integer
+          format: int64
+        unlimitedQPM:
+          type: boolean
+        recommendationLimit:
+          type: integer
+          format: int64
+        unlimitedRecommendations:
+          type: boolean
+        userLimit:
+          type: integer
+          format: int64
+        unlimitedUsers:
+          type: boolean
+        passageRetrievalQPMLimit:
+          type: integer
+          format: int64
+        unlimitedPassageRetrievalQPM:
+          type: boolean
+        shouldShowInConsumptionDashboard:
+          type: boolean
+        expirationDate:
+          type: string
+          format: date-time
+        expirationStatus:
+          type: string
+          description: The expiration status indicating whether the license is active, about to expire, or expired.
+          enum:
+          - ACTIVE
+          - SOON_TO_BE_EXPIRED
+          - EXPIRED
+      description: A set of entitlements describing what the organization has access to.
+    LicenseModel_Response:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: The unique identifier of the account that created the organization.
+          example: My Organization Account ID
+        accountName:
+          type: string
+          description: The name of the account.
+          example: My Organization Account
+        connectors:
+          type: array
+          description: A set of connectors that the license has access to.
+          items:
+            $ref: '#/components/schemas/ConnectorInformationModel_Response'
+        createdDate:
+          type: string
+          description: The creation date in number of milliseconds since UNIX epoch.
+          format: date-time
+        department:
+          type: string
+          description: The department the organization was created for.
+          example: R&D
+        entitlements:
+          type: array
+          description: A set of entitlements describing what the organization has access to.
+          items:
+            $ref: '#/components/schemas/EntitlementModel_Response'
+        expirationDate:
+          type: string
+          description: The date at which the license will expire (in number of milliseconds since UNIX epoch).
+          format: date-time
+        expirationStatus:
+          type: string
+          description: The expiration status indicating whether the license is active, about to expire, or expired.
+          enum:
+          - ACTIVE
+          - SOON_TO_BE_EXPIRED
+          - EXPIRED
+        indexBackupType:
+          type: string
+          description: The index backup type.
+          enum:
+          - NONE
+          - REGULAR
+          - FULL
+        indexType:
+          type: string
+          description: The type of index that is used for all sources in an organization
+          enum:
+          - COVEO
+          - ELASTIC
+          - INDEX_LESS
+          - ON_PREMISES
+        machineLearningModels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/MachineLearningModelInformationModel_Response'
+          description: The Machine Learning Models configurations.
+        monitoringLevel:
+          type: string
+          description: The level of monitoring to apply to the license.
+          enum:
+          - NO_MONITORING
+          - BASIC_MONITORING
+          - REGULAR_MONITORING
+          - STRATEGIC_MONITORING
+          - CRITICAL_MONITORING
+        productEdition:
+          type: string
+          description: The edition in which the organization is registered as.
+          externalDocs:
+            description: Pricing plans
+            url: https://www.coveo.com/en/pricing
+          enum:
+          - ENTERPRISE
+          - FREE
+          - PRO
+          - STANDARD
+          - BASE
+        productName:
+          type: string
+          description: The product integration of which the organization has been registered.
+          enum:
+          - COVEO_CLOUD
+          - DYNAMICS
+          - SALESFORCE
+          - SERVICENOW
+          - SITECORE
+          - USAGE_ANALYTICS
+        productType:
+          type: string
+          description: The type of product integration in which the organization has been registered.
+          enum:
+          - INTERNAL
+          - SALES
+          - ALLIANCE
+          - SANDBOX
+          - STANDARD
+          - TRIAL
+          - TEST
+        properties:
+          type: object
+          additionalProperties:
+            type: object
+            description: Various properties/configuration settings that apply to the organization.
+          description: Various properties/configuration settings that apply to the organization.
+      description: The organization license.
+    LightProvisioningStatusModel_Response:
+      type: object
+      properties:
+        currentProvisioningProgress:
+          type: number
+          description: The progress, in percentage, of the ongoing provisioning.</br>**Example:** `100`
+          format: float
+        initialProvisioningDone:
+          type: boolean
+          description: Whether the initial provisioning has been completed.
+        lastProvisioningCompletedDate:
+          type: string
+          description: The last time provisioning was successfully completed in number of milliseconds since UNIX epoch.</br>**Example:**
+            `1556722921779`
+          format: date-time
+        ongoing:
+          type: boolean
+          description: Whether the provisioning is currently ongoing.
+        status:
+          type: string
+          description: 'The status of the last provisioning.</br>**Allowed values:**</br>- `ERROR`: The last provisioning
+            failed with an error.</br>- `HEALTHY`: The last provisioning finished successfully.'
+          enum:
+          - ERROR
+          - HEALTHY
+      description: The provisioning status of the [organization](https://docs.coveo.com/en/185/).</br>See [Understanding Organization
+        Provisioning](https://docs.coveo.com/en/2547/).
+    MachineLearningModelInformationModel_Response:
+      type: object
+      properties:
+        buildFrequency:
+          type: string
+        numberOfModelsLimit:
+          type: integer
+          format: int32
+        enabled:
+          type: boolean
+      description: The Machine Learning Models configurations.
+    OrganizationConfigurationModel_Response:
+      type: object
+      properties:
+        servingExperimentAllowed:
+          type: boolean
+    OrganizationModel_Response:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the organization.
+        displayName:
+          maxLength: 255
+          type: string
+          description: The display name of the organization.
+        createdDate:
+          type: string
+          description: The organization creation date in number of milliseconds since UNIX epoch.
+          format: date-time
+        license:
+          $ref: '#/components/schemas/LicenseModel_Response'
+        businessAnalytics:
+          $ref: '#/components/schemas/BusinessAnalyticsModel_Response'
+        owner:
+          $ref: '#/components/schemas/OrganizationOwnerModel_Response'
+        readOnly:
+          type: boolean
+          description: Whether the organization enforces all of its resources (e.g., query pipelines, sources, etc.) to be
+            read-only.
+        provisioningStatus:
+          $ref: '#/components/schemas/LightProvisioningStatusModel_Response'
+        adminUITimeoutInSeconds:
+          type: integer
+          format: int32
+        configuration:
+          $ref: '#/components/schemas/OrganizationConfigurationModel_Response'
+        organizationStatusModel:
+          $ref: '#/components/schemas/OrganizationStatusModel_Response'
+      description: An [organization](https://docs.coveo.com/en/185/).
+    OrganizationOwnerModel_Response:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email address of the organization owner.
+      description: The owner of the [organization](https://docs.coveo.com/en/185/).
+    OrganizationStatusModel_Response:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'The current status of the organization.</br>**Allowed values:**</br>- `HEALTHY`: The organization
+            is healthy and fully functional.</br>- `ERROR`: The organization has thrown an error and is currently inactive.'
+          enum:
+          - HEALTHY
+          - ERROR
+        lifeCycleState:
+          type: string
+          description: 'The life-cycle state of the organization.</br>**Allowed values**:</br>`ACTIVE`: The organization is
+            healthy and fully functional.</br>`PAUSED`: The organization is currently inactive.</br>`DELETING`: The organization
+            is currently in the process of being deleted.'
+          enum:
+          - ACTIVE
+          - PAUSED
+          - DELETING
+        errorCodes:
+          type: array
+          description: 'A list of error codes that are present in the organization at the time of the request.</br>**Allowed
+            values:**</br>- `SEARCH_ERROR`: An error occurred during a search.</br>- `PAUSING_FAILED`: An error occurred when
+            attempting to pause the organization.</br>- `RESUMING_FAILED`: An error occurred when attempting to resume the
+            organization.'
+          items:
+            type: string
+            description: 'A list of error codes that are present in the organization at the time of the request.</br>**Allowed
+              values:**</br>- `SEARCH_ERROR`: An error occurred during a search.</br>- `PAUSING_FAILED`: An error occurred
+              when attempting to pause the organization.</br>- `RESUMING_FAILED`: An error occurred when attempting to resume
+              the organization.'
+            enum:
+            - SEARCH_ERROR
+            - PAUSING_FAILED
+            - RESUMING_FAILED
+        provisioningStatus:
+          $ref: '#/components/schemas/LightProvisioningStatusModel_Response'
+        pauseState:
+          type: string
+          description: 'The pause state of the organization.</br>**Allowed values:**</br>- `ACTIVE`: The organization is active.</br>-
+            `IDLE`: The organization is inactive.</br>- `PAUSING`: The organization is transitioning to `PAUSED`.</br>- `PAUSED`:
+            The organization is paused.</br>- `RESUMING`: The organization is transitioning to `ACTIVE`.</br>- `PAUSING_FAILED`:
+            The organization threw an error while transitioning to `PAUSED`.</br>- `RESUMING_FAILED`: The organization threw
+            an error while transitioning to `ACTIVE`'
+          enum:
+          - ACTIVE
+          - IDLE
+          - PAUSING
+          - PAUSED
+          - RESUMING
+          - PAUSING_FAILED
+          - RESUMING_FAILED
+        readOnly:
+          type: boolean
+          description: Whether the organization enforces all of its resources (e.g., query pipelines, sources, etc.) to be
+            read-only.</br>**Note:** This parameter is typically only updated when an organization is inactive.
+          default: false
+        supportActivated:
+          type: boolean
+          description: Whether support has been activated for the organization.
+          externalDocs:
+            description: Coveo Customer Support and Success Guide
+            url: https://docs.coveo.com/en/1352/
+        paused:
+          type: boolean
+          description: Whether the organization is currently paused.
+          deprecated: true
+        resumable:
+          type: boolean
+      description: The status of an [organization](https://docs.coveo.com/en/185/).
+      externalDocs:
+        description: About Coveo system issue notifications
+        url: https://docs.coveo.com/en/1684/
+    PageModelOrganizationModel_Response:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationModel_Response'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    LightProvisioningStatusModel:
+      type: object
+      properties:
+        currentProvisioningProgress:
+          type: number
+          description: The progress, in percentage, of the ongoing provisioning.</br>**Example:** `100`
+          format: float
+        initialProvisioningDone:
+          type: boolean
+          description: Whether the initial provisioning has been completed.
+        lastProvisioningCompletedDate:
+          type: string
+          description: The last time provisioning was successfully completed in number of milliseconds since UNIX epoch.</br>**Example:**
+            `1556722921779`
+          format: date-time
+        ongoing:
+          type: boolean
+          description: Whether the provisioning is currently ongoing.
+        status:
+          type: string
+          description: 'The status of the last provisioning.</br>**Allowed values:**</br>- `ERROR`: The last provisioning
+            failed with an error.</br>- `HEALTHY`: The last provisioning finished successfully.'
+          enum:
+          - ERROR
+          - HEALTHY
+      description: The provisioning status of the [organization](https://docs.coveo.com/en/185/).</br>See [Understanding Organization
+        Provisioning](https://docs.coveo.com/en/2547/).
+    OrganizationStatusModel:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'The current status of the organization.</br>**Allowed values:**</br>- `HEALTHY`: The organization
+            is healthy and fully functional.</br>- `ERROR`: The organization has thrown an error and is currently inactive.'
+          enum:
+          - HEALTHY
+          - ERROR
+        lifeCycleState:
+          type: string
+          description: 'The life-cycle state of the organization.</br>**Allowed values**:</br>`ACTIVE`: The organization is
+            healthy and fully functional.</br>`PAUSED`: The organization is currently inactive.</br>`DELETING`: The organization
+            is currently in the process of being deleted.'
+          enum:
+          - ACTIVE
+          - PAUSED
+          - DELETING
+        errorCodes:
+          type: array
+          description: 'A list of error codes that are present in the organization at the time of the request.</br>**Allowed
+            values:**</br>- `SEARCH_ERROR`: An error occurred during a search.</br>- `PAUSING_FAILED`: An error occurred when
+            attempting to pause the organization.</br>- `RESUMING_FAILED`: An error occurred when attempting to resume the
+            organization.'
+          items:
+            type: string
+            description: 'A list of error codes that are present in the organization at the time of the request.</br>**Allowed
+              values:**</br>- `SEARCH_ERROR`: An error occurred during a search.</br>- `PAUSING_FAILED`: An error occurred
+              when attempting to pause the organization.</br>- `RESUMING_FAILED`: An error occurred when attempting to resume
+              the organization.'
+            enum:
+            - SEARCH_ERROR
+            - PAUSING_FAILED
+            - RESUMING_FAILED
+        provisioningStatus:
+          $ref: '#/components/schemas/LightProvisioningStatusModel'
+        pauseState:
+          type: string
+          description: 'The pause state of the organization.</br>**Allowed values:**</br>- `ACTIVE`: The organization is active.</br>-
+            `IDLE`: The organization is inactive.</br>- `PAUSING`: The organization is transitioning to `PAUSED`.</br>- `PAUSED`:
+            The organization is paused.</br>- `RESUMING`: The organization is transitioning to `ACTIVE`.</br>- `PAUSING_FAILED`:
+            The organization threw an error while transitioning to `PAUSED`.</br>- `RESUMING_FAILED`: The organization threw
+            an error while transitioning to `ACTIVE`'
+          enum:
+          - ACTIVE
+          - IDLE
+          - PAUSING
+          - PAUSED
+          - RESUMING
+          - PAUSING_FAILED
+          - RESUMING_FAILED
+        readOnly:
+          type: boolean
+          description: Whether the organization enforces all of its resources (e.g., query pipelines, sources, etc.) to be
+            read-only.</br>**Note:** This parameter is typically only updated when an organization is inactive.
+          default: false
+        supportActivated:
+          type: boolean
+          description: Whether support has been activated for the organization.
+          externalDocs:
+            description: Coveo Customer Support and Success Guide
+            url: https://docs.coveo.com/en/1352/
+        paused:
+          type: boolean
+          description: Whether the organization is currently paused.
+          deprecated: true
+        resumable:
+          type: boolean
+      description: The status of an [organization](https://docs.coveo.com/en/185/).
+      externalDocs:
+        description: About Coveo system issue notifications
+        url: https://docs.coveo.com/en/1684/
+    LimitStatusModel:
+      type: object
+      properties:
+        actualCount:
+          type: integer
+          description: The actual number of items or consumer services in the [organization](https://docs.coveo.com/en/185/).
+          format: int64
+          example: 12
+        limit:
+          type: integer
+          description: The [limit](https://docs.coveo.com/en/262/) value of the [organization](https://docs.coveo.com/en/185/).
+          format: int64
+          example: 20
+        lastUpdate:
+          type: string
+          description: The date when the status was last updated.
+          format: date
+          example: '2021-07-01'
+      description: The status of a limit.
+    LimitHistoryDataPointModel:
+      type: object
+      properties:
+        date:
+          type: number
+          description: The date at which the [limit](https://docs.coveo.com/en/262/) value was set in number of milliseconds
+            since UNIX epoch.
+          example: 1511049600000
+        limitValue:
+          type: integer
+          description: The [limit](https://docs.coveo.com/en/262/) value for the given date.
+          format: int64
+          example: 49624
+      description: The [limit](https://docs.coveo.com/en/262/) at a given date.
+    AllowedScheduleModel:
+      type: object
+      properties:
+        refreshType:
+          type: string
+          description: The refresh type to use for a given connector.
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        scheduleFrequencies:
+          type: array
+          description: 'The frequency at which to refresh the connector.</br>**Allowed values:**</br>- `MINUTELY`: Once per
+            minute.</br>- `HOURLY`: Once per hour.</br>- `DAILY`: Once per day.</br>- `WEEKLY`: Once per week.</br>- `MONTHLY`:
+            Once per month.'
+          items:
+            type: string
+            description: 'The frequency at which to refresh the connector.</br>**Allowed values:**</br>- `MINUTELY`: Once
+              per minute.</br>- `HOURLY`: Once per hour.</br>- `DAILY`: Once per day.</br>- `WEEKLY`: Once per week.</br>-
+              `MONTHLY`: Once per month.'
+            enum:
+            - MINUTELY
+            - HOURLY
+            - DAILY
+            - WEEKLY
+            - MONTHLY
+      description: The schedule that is used by the [connector](https://docs.coveo.com/en/2734/).
+    ConnectorInformationModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of connector.
+          enum:
+          - AMAZONS3
+          - BOX_ENTERPRISE2
+          - CATALOG
+          - CONFLUENCE2
+          - CONFLUENCE2_HOSTED
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - FILE
+          - GENERIC_REST
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GRAPHQL
+          - JIRA2
+          - JIRA2_HOSTED
+          - JIVE
+          - JIVE_HOSTED
+          - LITHIUM
+          - KHOROS
+          - MICROSOFT_DYNAMICS
+          - PUSH
+          - RSS
+          - SALESFORCE
+          - SALESFORCE_SITES
+          - SAP
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE2
+          - SHOPIFY
+          - SITECORE
+          - SITEMAP
+          - SLACK
+          - WEB2
+          - YOUTUBE
+          - ZENDESK
+          - ADOBE_EXPERIENCE_MANAGER
+          - BOX
+          - BOX_ENTERPRISE
+          - CONFLUENCE
+          - DROPBOX
+          - GMAIL
+          - GMAIL_DOMAIN_WIDE
+          - SHAREPOINT_ONLINE
+        allowed:
+          type: boolean
+          description: Whether the connector is allowed to execute.
+        sourceVisibilities:
+          uniqueItems: true
+          type: array
+          description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>-
+            `SECURED`: Allowed users only</br>- `SHARED`: Any user'
+          items:
+            type: string
+            description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>-
+              `SECURED`: Allowed users only</br>- `SHARED`: Any user'
+            enum:
+            - PRIVATE
+            - SECURED
+            - SHARED
+        allowedSchedules:
+          type: array
+          description: A set of schedule models that are allowed to refresh the connector.
+          items:
+            $ref: '#/components/schemas/AllowedScheduleModel'
+      description: Information for a connector.
+    EntitlementModel:
+      type: object
+      properties:
+        id:
+          type: string
+        productId:
+          type: string
+        pricingUnit:
+          type: string
+        displayName:
+          type: string
+        productName:
+          type: string
+        useCase:
+          type: string
+        status:
+          type: string
+        itemLimit:
+          type: integer
+          format: int64
+        semanticSearchDocumentLimit:
+          type: integer
+          format: int64
+        semanticSearchQPMLimit:
+          type: integer
+          format: int64
+        lrpmLimit:
+          type: integer
+          format: int64
+        qpmLimit:
+          type: integer
+          format: int64
+        unlimitedQPM:
+          type: boolean
+        recommendationLimit:
+          type: integer
+          format: int64
+        unlimitedRecommendations:
+          type: boolean
+        userLimit:
+          type: integer
+          format: int64
+        unlimitedUsers:
+          type: boolean
+        passageRetrievalQPMLimit:
+          type: integer
+          format: int64
+        unlimitedPassageRetrievalQPM:
+          type: boolean
+        shouldShowInConsumptionDashboard:
+          type: boolean
+        expirationDate:
+          type: string
+          format: date-time
+        expirationStatus:
+          type: string
+          description: The expiration status indicating whether the license is active, about to expire, or expired.
+          enum:
+          - ACTIVE
+          - SOON_TO_BE_EXPIRED
+          - EXPIRED
+      description: A set of entitlements describing what the organization has access to.
+    LicenseModel:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: The unique identifier of the account that created the organization.
+          example: My Organization Account ID
+        accountName:
+          type: string
+          description: The name of the account.
+          example: My Organization Account
+        connectors:
+          type: array
+          description: A set of connectors that the license has access to.
+          items:
+            $ref: '#/components/schemas/ConnectorInformationModel'
+        createdDate:
+          type: string
+          description: The creation date in number of milliseconds since UNIX epoch.
+          format: date-time
+        department:
+          type: string
+          description: The department the organization was created for.
+          example: R&D
+        entitlements:
+          type: array
+          description: A set of entitlements describing what the organization has access to.
+          items:
+            $ref: '#/components/schemas/EntitlementModel'
+        expirationDate:
+          type: string
+          description: The date at which the license will expire (in number of milliseconds since UNIX epoch).
+          format: date-time
+        expirationStatus:
+          type: string
+          description: The expiration status indicating whether the license is active, about to expire, or expired.
+          enum:
+          - ACTIVE
+          - SOON_TO_BE_EXPIRED
+          - EXPIRED
+        indexBackupType:
+          type: string
+          description: The index backup type.
+          enum:
+          - NONE
+          - REGULAR
+          - FULL
+        indexType:
+          type: string
+          description: The type of index that is used for all sources in an organization
+          enum:
+          - COVEO
+          - ELASTIC
+          - INDEX_LESS
+          - ON_PREMISES
+        machineLearningModels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/MachineLearningModelInformationModel'
+          description: The Machine Learning Models configurations.
+        monitoringLevel:
+          type: string
+          description: The level of monitoring to apply to the license.
+          enum:
+          - NO_MONITORING
+          - BASIC_MONITORING
+          - REGULAR_MONITORING
+          - STRATEGIC_MONITORING
+          - CRITICAL_MONITORING
+        productEdition:
+          type: string
+          description: The edition in which the organization is registered as.
+          externalDocs:
+            description: Pricing plans
+            url: https://www.coveo.com/en/pricing
+          enum:
+          - ENTERPRISE
+          - FREE
+          - PRO
+          - STANDARD
+          - BASE
+        productName:
+          type: string
+          description: The product integration of which the organization has been registered.
+          enum:
+          - COVEO_CLOUD
+          - DYNAMICS
+          - SALESFORCE
+          - SERVICENOW
+          - SITECORE
+          - USAGE_ANALYTICS
+        productType:
+          type: string
+          description: The type of product integration in which the organization has been registered.
+          enum:
+          - INTERNAL
+          - SALES
+          - ALLIANCE
+          - SANDBOX
+          - STANDARD
+          - TRIAL
+          - TEST
+        properties:
+          type: object
+          additionalProperties:
+            type: object
+            description: Various properties/configuration settings that apply to the organization.
+          description: Various properties/configuration settings that apply to the organization.
+      description: The organization license.
+    MachineLearningModelInformationModel:
+      type: object
+      properties:
+        buildFrequency:
+          type: string
+        numberOfModelsLimit:
+          type: integer
+          format: int32
+        enabled:
+          type: boolean
+      description: The Machine Learning Models configurations.
+    CrawlingModuleUpdateStatusModel:
+      type: object
+      properties:
+        updateAvailable:
+          type: boolean
+          description: If a specified crawling module has an update available.
+        updateCategory:
+          type: string
+          description: The update category for a specified crawling module.
+          enum:
+          - MINOR
+          - CRITICAL
+          - BREAKING
+          - ROLLBACK
+      description: A crawling module update status.
+    ValueModelString:
+      type: object
+      properties:
+        value:
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required
