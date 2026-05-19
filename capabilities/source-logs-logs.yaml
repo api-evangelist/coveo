@@ -1,0 +1,119 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Source Logs API — Logs
+  description: 'Coveo Source Logs API — Logs. 2 operations. Lead operation: Get Specified Source Document Logs. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Source Logs
+  - Logs
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: source-logs-logs
+    baseUri: https://api.cloud.coveo.com/push/v1
+    description: Coveo Source Logs API — Logs business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: organizations-organizationId
+      path: /organizations/{organizationId}
+      operations:
+      - name: get
+        method: GET
+        description: Get Specified Source Document Logs
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: sourceId
+          in: query
+          type: string
+        - name: documentId
+          in: query
+          type: string
+        - name: tasks
+          in: query
+          type: string
+        - name: operations
+          in: query
+          type: string
+        - name: results
+          in: query
+          type: string
+        - name: from
+          in: query
+          type: string
+          required: true
+        - name: to
+          in: query
+          type: string
+          required: true
+        - name: page
+          in: query
+          type: string
+        - name: perPage
+          in: query
+          type: string
+      - name: post
+        method: POST
+        description: Get Indexing Pipeline Logs
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target Coveo Cloud organization.
+          required: true
+        - name: from
+          in: query
+          type: string
+          description: The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+            corresponding to the beginning of the range for which to ret
+          required: true
+        - name: to
+          in: query
+          type: string
+          description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+            corresponding to the end of the range for which to retrieve '
+          required: true
+        - name: documentId
+          in: query
+          type: string
+          description: The filter string against which to match document `uri` field values. See the `documentIdMatching`
+            parameter to set the target kind of filter.<br />For example,
+        - name: documentIdMatching
+          in: query
+          type: string
+          description: 'The kind of filter to apply when matching the target `documentId` value against document `uri` field
+            values.<br />**Allowed values:**<br />- `EXACT`: the `docum'
+        - name: page
+          in: query
+          type: string
+          description: The 0-based index number of the page to retrieve.
+        - name: perPage
+          in: query
+          type: string
+          description: The number of indexing pipeline log entries to retrieve per page.
+        - name: body
+          in: body
+          type: string
+          description: The filters to apply when retrieving the indexing pipeline log entries.
+          required: true

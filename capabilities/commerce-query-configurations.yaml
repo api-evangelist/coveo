@@ -1,0 +1,134 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Commerce API — Query Configurations
+  description: 'Coveo Commerce API — Query Configurations. 4 operations. Lead operation: Get Query Configuration for a Solution.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Commerce
+  - Query Configurations
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: commerce-query-configurations
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Commerce API — Query Configurations business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationId-commerce-v2-configurations-query
+      path: /rest/organizations/{organizationId}/commerce/v2/configurations/query
+      operations:
+      - name: get1
+        method: GET
+        description: Get Query Configuration for a Solution
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: trackingId
+          in: query
+          type: string
+          description: The unique identifier of the tracking target.
+          required: true
+        - name: solutionType
+          in: query
+          type: string
+          description: The solution type for the rule. It can be either 'listing' or 'search' or 'recommendations'.
+          required: true
+        - name: targets
+          in: query
+          type: array
+          description: List of target identifiers e.g. listing page name, slot ID
+        - name: isGlobal
+          in: query
+          type: boolean
+          description: Whether the query configuration is globally applied.
+      - name: update1
+        method: PUT
+        description: Update Query Configuration for a Solution
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: create
+        method: POST
+        description: Create Query Configuration for a Solution
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: delete1
+        method: DELETE
+        description: Delete the Query Configuration of a Solution
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: trackingId
+          in: query
+          type: string
+          description: The unique identifier of the tracking target.
+          required: true
+        - name: solutionType
+          in: query
+          type: string
+          description: The solution type for the rule. It can be either 'listing' or 'search' or 'recommendations'.
+          required: true
+        - name: targets
+          in: query
+          type: array
+          description: List of target identifiers e.g. listing page name, slot ID
+        - name: isGlobal
+          in: query
+          type: boolean
+          description: Whether the query configuration is globally applied.

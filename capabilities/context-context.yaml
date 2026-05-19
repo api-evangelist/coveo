@@ -1,0 +1,46 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Context API — Context
+  description: 'Coveo Context API — Context. 1 operations. Lead operation: Get a Client''s Action History in Legacy Format.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Context
+  - Context
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: context-context
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Context API — Context business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationId-machinelearning-user-actions
+      path: /rest/organizations/{organizationId}/machinelearning/user/actions
+      operations:
+      - name: legacyactionhistory
+        method: POST
+        description: Get a Client's Action History in Legacy Format
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

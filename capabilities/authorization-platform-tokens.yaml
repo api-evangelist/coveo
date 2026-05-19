@@ -1,0 +1,49 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Platform Tokens
+  description: 'Coveo Authorization Server API — Platform Tokens. 1 operations. Lead operation: Platform Tokens. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Platform Tokens
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-platform-tokens
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Platform Tokens business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-tokens
+      path: /rest/organizations/{organizationId}/tokens
+      operations:
+      - name: generateplatformtoken
+        method: POST
+        description: ''
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: validityPeriod
+          in: query
+          type: string
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

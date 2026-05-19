@@ -1,0 +1,53 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Search Interface Service API — Search Interface
+  description: 'Coveo Search Interface Service API — Search Interface. 2 operations. Lead operation: Retrieve Search Interface.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Search Interface Service
+  - Search Interface
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: search-interface-search-interface
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Search Interface Service API — Search Interface business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationId-searchinterfaces-interfaceId-html
+      path: /rest/organizations/{organizationId}/searchinterfaces/{interfaceId}/html
+      operations:
+      - name: getinterfacehtml
+        method: GET
+        description: Retrieve Search Interface
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: rest-organizations-organizationId-searchinterfaces-interfaceId-manifest-v1
+      path: /rest/organizations/{organizationId}/searchinterfaces/{interfaceId}/manifest/v1
+      operations:
+      - name: postmanifest
+        method: POST
+        description: Retrieve Search Interface Manifest
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false

@@ -1,0 +1,52 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Push API — Source Status
+  description: 'Coveo Push API — Source Status. 1 operations. Lead operation: Set the Status of a Push Source. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Push
+  - Source Status
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: push-source-status
+    baseUri: https://api.cloud.coveo.com/push/v1
+    description: Coveo Push API — Source Status business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: organizations-organizationId-sources-sourceId-status
+      path: /organizations/{organizationId}/sources/{sourceId}/status
+      operations:
+      - name: post
+        method: POST
+        description: Set the Status of a Push Source
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: statusType
+          in: query
+          type: string
+          description: 'The status to set the Push source to.  '
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Push source (see [Creating a Push Source](https://developers.coveo.com/x/34s9Ag)).  '
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true

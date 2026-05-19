@@ -1,0 +1,222 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Security Cache API — Security Providers
+  description: 'Coveo Security Cache API — Security Providers. 9 operations. Lead operation: Get All Security Providers for
+    an Organization. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Security Cache
+  - Security Providers
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: security-cache-security-providers
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Security Cache API — Security Providers business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-securityproviders
+      path: /rest/organizations/{organizationId}/securityproviders
+      operations:
+      - name: getsecurityproviders
+        method: GET
+        description: Get All Security Providers for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+      - name: createsecurityprovider
+        method: POST
+        description: Create a Security Provider for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-securityproviders-batch-filter
+      path: /rest/organizations/{organizationId}/securityproviders/batch/filter
+      operations:
+      - name: getsecurityprovidersbyidswithfilter
+        method: POST
+        description: Get and Filter Security Providers by Ids for an Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: filter
+          in: query
+          type: string
+          description: The text to filter security providers by (applied to the id, and displayName properties).<br/>**Example:**
+            `Email Security Provider`
+        - name: page
+          in: query
+          type: integer
+        - name: perPage
+          in: query
+          type: integer
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-securityproviders-page
+      path: /rest/organizations/{organizationId}/securityproviders/page
+      operations:
+      - name: getsecurityprovidersbypage
+        method: GET
+        description: Get and Filter Security Providers by Page for an Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: filter
+          in: query
+          type: string
+          description: The text to filter security providers by (applied to the id, and displayName properties).<br/>**Example:**
+            `Email Security Provider`
+        - name: page
+          in: query
+          type: integer
+        - name: perPage
+          in: query
+          type: integer
+    - name: rest-organizations-organizationId-securityproviders-securityProviderId
+      path: /rest/organizations/{organizationId}/securityproviders/{securityProviderId}
+      operations:
+      - name: getsecurityprovider
+        method: GET
+        description: Get a Single Security Provider for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: securityProviderId
+          in: path
+          type: string
+          required: true
+      - name: createorupdatesecurityprovider
+        method: PUT
+        description: Update a Security Provider for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: securityProviderId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: removesecurityprovider
+        method: DELETE
+        description: Remove a Security Provider from an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: securityProviderId
+          in: path
+          type: string
+          required: true
+    - name: rest-organizations-organizationId-securityproviders-securityProviderId-raw
+      path: /rest/organizations/{organizationId}/securityproviders/{securityProviderId}/raw
+      operations:
+      - name: getsecurityproviderraw
+        method: GET
+        description: Get the Raw Configuration of a Security Provider for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: securityProviderId
+          in: path
+          type: string
+          required: true
+      - name: createorupdatesecurityproviderraw
+        method: PUT
+        description: Update the Raw Configuration of a Security Provider for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: securityProviderId
+          in: path
+          type: string
+          required: true
+        - name: forceUpdate
+          in: query
+          type: boolean
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

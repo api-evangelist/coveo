@@ -1,0 +1,224 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Organization API — Organizations
+  description: 'Coveo Organization API — Organizations. 9 operations. Lead operation: List Organizations. Self-contained Naftiko
+    capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Organization
+  - Organizations
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: organization-organizations
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Organization API — Organizations business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations
+      path: /rest/organizations
+      operations:
+      - name: getorganizations
+        method: GET
+        description: List Organizations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: additionalFields
+          in: query
+          type: array
+          description: A line-separated list of additional fields to include.</br>**Example:** `license`</br>`status`
+        - name: filter
+          in: query
+          type: string
+          description: 'The free-form string to filter the returned list based on the values of the organization attributes.
+            Using spaces is not recommended as it will prevent correct '
+        - name: type
+          in: query
+          type: string
+          description: The type of organization to include in the returned list.</br>**Example:** `Test`</br>By default, organizations
+            of all types may be included in the response.
+        - name: sortBy
+          in: query
+          type: string
+          description: The field to sort the returned organizations by.</br>**Example:** `createdDate`</br>**Default:** `displayName`
+        - name: order
+          in: query
+          type: string
+          description: 'The `sortBy` order to list the organizations in.</br>**Allowed values:**</br> - `ASC`: Ascending order.</br>-
+            `DESC`: Descending order. </br>**Example:** `DESC`'
+        - name: page
+          in: query
+          type: integer
+          description: The 0-based index number of the page to list.</br>**Example:** `5`</br>**Default:** `0`
+        - name: perPage
+          in: query
+          type: integer
+          description: The maximum number of organizations to list per page.</br>**Example:** `50`</br>**Default:** `100`
+      - name: createorganization
+        method: POST
+        description: Create Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: name
+          in: query
+          type: string
+          description: The name to assign to the new organization.
+          required: true
+        - name: owner
+          in: query
+          type: string
+          description: The email of the owner to assign to the new organization.
+        - name: organizationTemplate
+          in: query
+          type: string
+          description: The name of the template to base the new organization on.
+    - name: rest-organizations-organizationId
+      path: /rest/organizations/{organizationId}
+      operations:
+      - name: getorganization
+        method: GET
+        description: Show Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: additionalFields
+          in: query
+          type: array
+          description: A line-separated list of additional fields to include.</br>**Example:** `license`</br>`status`
+      - name: updateorganization
+        method: PUT
+        description: Update Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleteorganization
+        method: DELETE
+        description: Delete Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-configuration-servingExperiment
+      path: /rest/organizations/{organizationId}/configuration/servingExperiment
+      operations:
+      - name: setservingexperiment
+        method: PUT
+        description: Allow or Disallow Serving Experiments on the Organization. It Is Allowed by Default.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: allowed
+          in: query
+          type: boolean
+          description: Whether serving experiments are allowed
+          required: true
+    - name: rest-organizations-organizationId-launchprovisioning
+      path: /rest/organizations/{organizationId}/launchprovisioning
+      operations:
+      - name: launchprovisioning
+        method: POST
+        description: Provision Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-resume
+      path: /rest/organizations/{organizationId}/resume
+      operations:
+      - name: resumeorganization
+        method: POST
+        description: Resume Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-status
+      path: /rest/organizations/{organizationId}/status
+      operations:
+      - name: getorganizationstatus
+        method: GET
+        description: Show Organization Status
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true

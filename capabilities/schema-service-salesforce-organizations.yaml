@@ -1,0 +1,134 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Schema Service API — Salesforce Organizations
+  description: 'Coveo Schema Service API — Salesforce Organizations. 3 operations. Lead operation: Flushes the Cached Data
+    for a Salesforce Organization. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Schema Service
+  - Salesforce Organizations
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: schema-service-salesforce-organizations
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Schema Service API — Salesforce Organizations business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-salesforce-schema
+      path: /rest/salesforce/schema/
+      operations:
+      - name: flushcache
+        method: DELETE
+        description: Flushes the Cached Data for a Salesforce Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: instanceUri
+          in: query
+          type: string
+          description: The instance URI of the Salesforce organization
+          required: true
+        - name: sessionId
+          in: query
+          type: string
+          description: Deprecated, use the appropriate 'X-Salesforce-Session-ID' header instead
+          required: true
+        - name: version
+          in: query
+          type: string
+          description: 'The schema version to use. Allowed values: ["0" (CloudV1), "1" (Legacy), "2" (Current)]'
+        - name: presets
+          in: query
+          type: string
+          description: 'The schema presets to apply. Allowed values: ["servicecloud", "knowledge", "content", "chatter"]'
+        - name: X-Salesforce-Session-ID
+          in: header
+          type: string
+          description: The Salesforce session ID to use
+          required: true
+    - name: rest-salesforce-schema-objects
+      path: /rest/salesforce/schema/objects
+      operations:
+      - name: loadobjects
+        method: POST
+        description: Loads the Object Data for a List of Salesforce Objects.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: string
+          required: true
+        - name: instanceUri
+          in: query
+          type: string
+          description: The instance URI of the Salesforce organization
+          required: true
+        - name: sessionId
+          in: query
+          type: string
+          description: Deprecated, use the appropriate 'X-Salesforce-Session-ID' header instead
+          required: true
+        - name: version
+          in: query
+          type: string
+          description: 'The schema version to use. Allowed values: ["0" (CloudV1), "1" (Legacy), "2" (Current)]'
+        - name: presets
+          in: query
+          type: string
+          description: 'The schema presets to apply. Allowed values: ["servicecloud", "knowledge", "content", "chatter"]'
+        - name: X-Salesforce-Session-ID
+          in: header
+          type: string
+          description: The Salesforce session ID to use
+          required: true
+    - name: rest-salesforce-schema-organization
+      path: /rest/salesforce/schema/organization
+      operations:
+      - name: loadorganization
+        method: GET
+        description: Loads the Organization Data for a Salesforce Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: instanceUri
+          in: query
+          type: string
+          description: The instance URI of the Salesforce organization
+          required: true
+        - name: sessionId
+          in: query
+          type: string
+          description: Deprecated, use the appropriate 'X-Salesforce-Session-ID' header instead
+          required: true
+        - name: version
+          in: query
+          type: string
+          description: 'The schema version to use. Allowed values: ["0" (CloudV1), "1" (Legacy), "2" (Current)]'
+        - name: presets
+          in: query
+          type: string
+          description: 'The schema presets to apply. Allowed values: ["servicecloud", "knowledge", "content", "chatter"]'
+        - name: X-Salesforce-Session-ID
+          in: header
+          type: string
+          description: The Salesforce session ID to use
+          required: true

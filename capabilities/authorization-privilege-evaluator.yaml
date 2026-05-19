@@ -1,0 +1,59 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Privilege Evaluator
+  description: 'Coveo Authorization Server API — Privilege Evaluator. 2 operations. Lead operation: Evaluate a Privilege Request.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Privilege Evaluator
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-privilege-evaluator
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Privilege Evaluator business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-privilege-evaluate
+      path: /rest/privilege/evaluate
+      operations:
+      - name: evaluate
+        method: POST
+        description: Evaluate a Privilege Request
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-privilege-evaluate-general-access
+      path: /rest/privilege/evaluate/general-access
+      operations:
+      - name: evaluategeneralaccess
+        method: POST
+        description: Evaluate a Privilege Request
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

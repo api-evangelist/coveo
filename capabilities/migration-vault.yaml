@@ -1,0 +1,171 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Migration API — Vault
+  description: 'Coveo Migration API — Vault. 7 operations. Lead operation: Get All Vault Entries for an Organization. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Migration
+  - Vault
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: migration-vault
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Migration API — Vault business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-vaultentries
+      path: /rest/organizations/{organizationId}/vaultentries
+      operations:
+      - name: getallvaultentries
+        method: GET
+        description: Get All Vault Entries for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: page
+          in: query
+          type: integer
+        - name: pageSize
+          in: query
+          type: integer
+      - name: createvaultentry
+        method: POST
+        description: Create a Vault Entry
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-vaultentries-fetch
+      path: /rest/organizations/{organizationId}/vaultentries/fetch
+      operations:
+      - name: fetchvaultentries
+        method: PUT
+        description: Fetches Vault Entries Referenced in a Specific Snapshot from a Given Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: referenceSnapshotId
+          in: query
+          type: string
+          required: true
+        - name: sourceOrganizationId
+          in: query
+          type: string
+          required: true
+        - name: fetchStrategy
+          in: query
+          type: string
+    - name: rest-organizations-organizationId-vaultentries-missing
+      path: /rest/organizations/{organizationId}/vaultentries/missing
+      operations:
+      - name: getsnapshotvaultentrystate
+        method: GET
+        description: Retrieve State of Vault Entries for Specified Snapshot
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: snapshotId
+          in: query
+          type: string
+          required: true
+    - name: rest-organizations-organizationId-vaultentries-key
+      path: /rest/organizations/{organizationId}/vaultentries/{key}
+      operations:
+      - name: getvaultentry
+        method: GET
+        description: Get a Single Vault Entry
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: key
+          in: path
+          type: string
+          required: true
+      - name: updatevaultentry
+        method: PUT
+        description: Update a Vault Entry
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: key
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletevaultentry
+        method: DELETE
+        description: Delete a Vault Entry
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: key
+          in: path
+          type: string
+          required: true

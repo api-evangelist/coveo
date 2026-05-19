@@ -1,0 +1,333 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Api Keys
+  description: 'Coveo Authorization Server API — Api Keys. 13 operations. Lead operation: List API Keys. Self-contained Naftiko
+    capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Api Keys
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-api-keys
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Api Keys business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-apikeys
+      path: /rest/organizations/{organizationId}/apikeys
+      operations:
+      - name: getapikeys
+        method: GET
+        description: List API Keys
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the organization
+          required: true
+        - name: status
+          in: query
+          type: string
+          description: Optional filter for API key status
+      - name: createapikey
+        method: POST
+        description: Create API Key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: apiKeyTemplateId
+          in: query
+          type: string
+          description: The unique identifier of the template on which to base the API key.
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: rest-organizations-organizationId-apikeys-activate-bulk
+      path: /rest/organizations/{organizationId}/apikeys/activate/bulk
+      operations:
+      - name: bulkactivateapikey
+        method: PUT
+        description: Activate API Keys
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-apikeys-delete-bulk
+      path: /rest/organizations/{organizationId}/apikeys/delete/bulk
+      operations:
+      - name: bulkdeleteapikey
+        method: POST
+        description: Delete API Keys
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-apikeys-disable-bulk
+      path: /rest/organizations/{organizationId}/apikeys/disable/bulk
+      operations:
+      - name: bulkdisableapikey
+        method: PUT
+        description: Disable Multiple API Keys
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-apikeys-rotate
+      path: /rest/organizations/{organizationId}/apikeys/rotate
+      operations:
+      - name: rotateapikey
+        method: POST
+        description: Rotate API Key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-apikeys-apiKeyId
+      path: /rest/organizations/{organizationId}/apikeys/{apiKeyId}
+      operations:
+      - name: getapikey
+        method: GET
+        description: Show API Key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: apiKeyId
+          in: path
+          type: string
+          description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`
+          required: true
+      - name: updateapikey
+        method: PUT
+        description: Update API Key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: apiKeyId
+          in: path
+          type: string
+          description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting
+            the apiKeyId](https://docs.coveo.com/en/38/).
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleteapikey
+        method: DELETE
+        description: Delete API Key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: apiKeyId
+          in: path
+          type: string
+          description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting
+            the apiKeyId](https://docs.coveo.com/en/38/).
+          required: true
+    - name: rest-organizations-organizationId-apikeys-apiKeyId-activate
+      path: /rest/organizations/{organizationId}/apikeys/{apiKeyId}/activate
+      operations:
+      - name: activateapikey
+        method: PUT
+        description: Activate API Key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: apiKeyId
+          in: path
+          type: string
+          description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting
+            the apiKeyId](https://docs.coveo.com/en/38/).
+          required: true
+    - name: rest-organizations-organizationId-apikeys-apiKeyId-activation-extend
+      path: /rest/organizations/{organizationId}/apikeys/{apiKeyId}/activation/extend
+      operations:
+      - name: extendactivation
+        method: PUT
+        description: Extend API Key Activation
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: apiKeyId
+          in: path
+          type: string
+          description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting
+            the apiKeyId](https://docs.coveo.com/en/38/).
+          required: true
+    - name: rest-organizations-organizationId-apikeys-apiKeyId-disable
+      path: /rest/organizations/{organizationId}/apikeys/{apiKeyId}/disable
+      operations:
+      - name: disableapikey
+        method: PUT
+        description: Disable API Key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: apiKeyId
+          in: path
+          type: string
+          description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting
+            the apiKeyId](https://docs.coveo.com/en/38/).
+          required: true
+    - name: rest-organizations-organizationId-apikeys-sourceApiKeyId-duplicate
+      path: /rest/organizations/{organizationId}/apikeys/{sourceApiKeyId}/duplicate
+      operations:
+      - name: duplicateapikey
+        method: PUT
+        description: Duplicate API Key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: sourceApiKeyId
+          in: path
+          type: string
+          description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting
+            the apiKeyId](https://docs.coveo.com/en/38/).
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false

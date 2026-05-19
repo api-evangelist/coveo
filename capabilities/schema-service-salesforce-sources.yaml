@@ -1,0 +1,46 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Schema Service API — Salesforce Sources
+  description: 'Coveo Schema Service API — Salesforce Sources. 1 operations. Lead operation: Retrieves the Default Objects
+    for a Salesforce Source. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Schema Service
+  - Salesforce Sources
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: schema-service-salesforce-sources
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Schema Service API — Salesforce Sources business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-salesforce-defaultObjectsToGet
+      path: /rest/organizations/{organizationId}/salesforce/defaultObjectsToGet
+      operations:
+      - name: getsalesforcedefaultobjectstoget
+        method: GET
+        description: Retrieves the Default Objects for a Salesforce Source
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: preset
+          in: query
+          type: string
+          description: 'The preset name of default objects to get (Value: "B2BProduct")'
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true

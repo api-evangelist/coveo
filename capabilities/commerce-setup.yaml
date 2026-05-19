@@ -1,0 +1,48 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Commerce API — Setup
+  description: 'Coveo Commerce API — Setup. 1 operations. Lead operation: Create CMH Scaffolding. Self-contained Naftiko capability
+    covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Commerce
+  - Setup
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: commerce-setup
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Commerce API — Setup business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationId-commerce-v2-setup
+      path: /rest/organizations/{organizationId}/commerce/v2/setup
+      operations:
+      - name: setup
+        method: POST
+        description: Create CMH Scaffolding
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

@@ -1,0 +1,112 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Organization API — Organization Endpoints Monitoring
+  description: 'Coveo Organization API — Organization Endpoints Monitoring. 4 operations. Lead operation: Get the Customer
+    Endpoint Usage Status for an Organization.. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Organization
+  - Organization Endpoints Monitoring
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: organization-organization-endpoints-monitoring
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Organization API — Organization Endpoints Monitoring business capability. Self-contained, no shared
+      references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-monitoring-global-organizations-organizationId-endpoints-readiness
+      path: /rest/monitoring/global/organizations/{organizationId}/endpoints/readiness
+      operations:
+      - name: getcustomerendpointusagestatus
+        method: GET
+        description: Get the Customer Endpoint Usage Status for an Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: numberOfDaysToInclude
+          in: query
+          type: integer
+    - name: rest-monitoring-global-organizations-organizationId-endpoints-usage
+      path: /rest/monitoring/global/organizations/{organizationId}/endpoints/usage
+      operations:
+      - name: getendpointusage
+        method: GET
+        description: Get the Endpoints Usage for an Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: numberOfDaysToInclude
+          in: query
+          type: integer
+    - name: rest-monitoring-global-organizations-organizationId-search-hubs-usage
+      path: /rest/monitoring/global/organizations/{organizationId}/search-hubs/usage
+      operations:
+      - name: getsearchhubusage
+        method: GET
+        description: Get the Search Hubs Usage for an Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: hostname
+          in: query
+          type: string
+          required: true
+        - name: numberOfDaysToInclude
+          in: query
+          type: integer
+        - name: page
+          in: query
+          type: integer
+        - name: perPage
+          in: query
+          type: integer
+    - name: rest-monitoring-global-organizations-organizationId-usage-regions
+      path: /rest/monitoring/global/organizations/{organizationId}/usage/regions
+      operations:
+      - name: getregionusage
+        method: GET
+        description: Get Usage Per Region for an Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: numberOfDaysToInclude
+          in: query
+          type: integer

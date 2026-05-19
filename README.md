@@ -23,13 +23,14 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Activity, Audit, REST
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-activity-openapi-original.yml)
+- [Naftiko Capability](capabilities/activity-activities.yaml)
 
 ### Coveo Analytics Admin API
 
@@ -37,13 +38,14 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/365/](https://docs.coveo.com/en/365/)
 
-**Base URL:** `https://analytics.cloud.coveo.com/rest/ua`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Administration, Analytics, REST
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/365/)
 - [OpenAPI](openapi/coveo-analytics-admin-openapi-original.yml)
+- [Naftiko Capability](capabilities/analytics-admin-property-api.yaml)
 
 ### Coveo Authorization Server API
 
@@ -51,13 +53,32 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/56/](https://docs.coveo.com/en/56/)
 
-**Base URL:** `https://platform.cloud.coveo.com/oauth`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Authentication, OAuth, REST, Tokens
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/56/)
 - [OpenAPI](openapi/coveo-authorization-openapi-original.yml)
+- [Naftiko Capability](capabilities/authorization-api-keys.yaml)
+- [Naftiko Capability](capabilities/authorization-built-in-groups.yaml)
+- [Naftiko Capability](capabilities/authorization-group-invites.yaml)
+- [Naftiko Capability](capabilities/authorization-group-members.yaml)
+- [Naftiko Capability](capabilities/authorization-group-realms.yaml)
+- [Naftiko Capability](capabilities/authorization-groups.yaml)
+- [Naftiko Capability](capabilities/authorization-invites.yaml)
+- [Naftiko Capability](capabilities/authorization-organization-access.yaml)
+- [Naftiko Capability](capabilities/authorization-organization-api-keys-templates.yaml)
+- [Naftiko Capability](capabilities/authorization-organization-invites.yaml)
+- [Naftiko Capability](capabilities/authorization-organization-members.yaml)
+- [Naftiko Capability](capabilities/authorization-organization-privileges.yaml)
+- [Naftiko Capability](capabilities/authorization-organization-realms.yaml)
+- [Naftiko Capability](capabilities/authorization-platform-tokens.yaml)
+- [Naftiko Capability](capabilities/authorization-privilege-evaluator.yaml)
+- [Naftiko Capability](capabilities/authorization-saml-identity-providers.yaml)
+- [Naftiko Capability](capabilities/authorization-temporary-access.yaml)
+- [Naftiko Capability](capabilities/authorization-token-certificates.yaml)
+- [Naftiko Capability](capabilities/authorization-users.yaml)
 
 ### Coveo Catalog Management API
 
@@ -65,7 +86,7 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/3343/](https://docs.coveo.com/en/3343/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Catalog, Commerce, Products, REST
 
@@ -73,6 +94,10 @@ API for Coveo Platform
 - [Documentation](https://docs.coveo.com/en/3343/)
 - [OpenAPI](openapi/coveo-catalog-management-openapi-original.yml)
 - [JSON-LD](json-ld/coveo-commerce-context.jsonld)
+- [Naftiko Capability](capabilities/catalog-management-catalog-configurations.yaml)
+- [Naftiko Capability](capabilities/catalog-management-catalog-filter.yaml)
+- [Naftiko Capability](capabilities/catalog-management-catalogs.yaml)
+- [Naftiko Capability](capabilities/catalog-management-view-definitions.yaml)
 
 ### Coveo Commerce API
 
@@ -80,7 +105,7 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/3343/](https://docs.coveo.com/en/3343/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Catalog, Commerce, Personalization, Product Discovery, REST
 
@@ -88,6 +113,23 @@ API for Coveo Platform
 - [Documentation](https://docs.coveo.com/en/3343/)
 - [OpenAPI](openapi/coveo-commerce-openapi-original.yml)
 - [JSON-LD](json-ld/coveo-commerce-context.jsonld)
+- [Naftiko Capability](capabilities/commerce-badges.yaml)
+- [Naftiko Capability](capabilities/commerce-context-mapping-configurations.yaml)
+- [Naftiko Capability](capabilities/commerce-facet-field-configurations.yaml)
+- [Naftiko Capability](capabilities/commerce-facet.yaml)
+- [Naftiko Capability](capabilities/commerce-listing-configurations.yaml)
+- [Naftiko Capability](capabilities/commerce-listing-rule-preview.yaml)
+- [Naftiko Capability](capabilities/commerce-listings.yaml)
+- [Naftiko Capability](capabilities/commerce-product-suggest-configurations.yaml)
+- [Naftiko Capability](capabilities/commerce-public-listing-page-api.yaml)
+- [Naftiko Capability](capabilities/commerce-query-configurations.yaml)
+- [Naftiko Capability](capabilities/commerce-recommendations-configuration.yaml)
+- [Naftiko Capability](capabilities/commerce-recommendations.yaml)
+- [Naftiko Capability](capabilities/commerce-search-configurations.yaml)
+- [Naftiko Capability](capabilities/commerce-search.yaml)
+- [Naftiko Capability](capabilities/commerce-setup.yaml)
+- [Naftiko Capability](capabilities/commerce-synonym-preview.yaml)
+- [Naftiko Capability](capabilities/commerce-synonym.yaml)
 
 ### Coveo Connectivity API
 
@@ -95,13 +137,16 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/3265/](https://docs.coveo.com/en/3265/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Connectivity, Crawlers, REST
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/3265/)
 - [OpenAPI](openapi/coveo-connectivity-openapi-original.yml)
+- [Naftiko Capability](capabilities/connectivity-atlassian-connect-app.yaml)
+- [Naftiko Capability](capabilities/connectivity-crawling-module.yaml)
+- [Naftiko Capability](capabilities/connectivity-diagnostic-logs.yaml)
 
 ### Coveo Context API
 
@@ -109,13 +154,14 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/context`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Context, Personalization, REST
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-context-openapi-original.yml)
+- [Naftiko Capability](capabilities/context-context.yaml)
 
 ### Coveo Customer Service API Service
 
@@ -123,13 +169,17 @@ Documentation for Coveo Customer Service API Service
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Customer Service, REST, Support
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-customer-service-openapi-original.yml)
+- [Naftiko Capability](capabilities/customer-service-answer.yaml)
+- [Naftiko Capability](capabilities/customer-service-case-assist.yaml)
+- [Naftiko Capability](capabilities/customer-service-crga-for-cases.yaml)
+- [Naftiko Capability](capabilities/customer-service-insight-panel.yaml)
 
 ### Coveo Event API
 
@@ -137,13 +187,15 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Events, REST, Webhooks
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-event-openapi-original.yml)
+- [Naftiko Capability](capabilities/event-event-api.yaml)
+- [Naftiko Capability](capabilities/event-usage-analytics-event-validation-api.yaml)
 
 ### Coveo Extension API
 
@@ -151,13 +203,14 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Extensions, Indexing Pipeline, REST
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-extension-openapi-original.yml)
+- [Naftiko Capability](capabilities/extension-indexing-pipeline-extensions.yaml)
 
 ### Coveo Field API
 
@@ -165,13 +218,14 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Fields, Indexing, REST, Schema
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-field-openapi-original.yml)
+- [Naftiko Capability](capabilities/field-fields.yaml)
 
 ### Coveo Knowledge Generative AI API
 
@@ -179,13 +233,15 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Generative AI, Knowledge, LLM, REST
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-knowledge-genai-openapi-original.yml)
+- [Naftiko Capability](capabilities/knowledge-genai-agent-configuration-api.yaml)
+- [Naftiko Capability](capabilities/knowledge-genai-agent-orchestration-api.yaml)
 
 ### Coveo Machine Learning API
 
@@ -193,13 +249,16 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/1727/](https://docs.coveo.com/en/1727/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** AI, Machine Learning, Recommendations, Relevance
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/1727/)
 - [OpenAPI](openapi/coveo-machine-learning-openapi-original.yml)
+- [Naftiko Capability](capabilities/machine-learning-advanced-model-configurations.yaml)
+- [Naftiko Capability](capabilities/machine-learning-machine-learning-models.yaml)
+- [Naftiko Capability](capabilities/machine-learning-streaming-model-response.yaml)
 
 ### Coveo Migration API
 
@@ -207,13 +266,18 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Backup, Migration, REST
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-migration-openapi-original.yml)
+- [Naftiko Capability](capabilities/migration-link.yaml)
+- [Naftiko Capability](capabilities/migration-snapshot-access.yaml)
+- [Naftiko Capability](capabilities/migration-snapshot-synchronization.yaml)
+- [Naftiko Capability](capabilities/migration-snapshot.yaml)
+- [Naftiko Capability](capabilities/migration-vault.yaml)
 
 ### Coveo Machine Learning Configuration API
 
@@ -221,13 +285,22 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/1727/](https://docs.coveo.com/en/1727/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Machine Learning, Models, REST
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/1727/)
 - [OpenAPI](openapi/coveo-ml-config-openapi-original.yml)
+- [Naftiko Capability](capabilities/ml-config-case-classification-configuration.yaml)
+- [Naftiko Capability](capabilities/ml-config-dynamic-navigation-experience-configuration.yaml)
+- [Naftiko Capability](capabilities/ml-config-model-associations.yaml)
+- [Naftiko Capability](capabilities/ml-config-model-detailed-info.yaml)
+- [Naftiko Capability](capabilities/ml-config-model-listing.yaml)
+- [Naftiko Capability](capabilities/ml-config-predictive-query-suggest-configuration.yaml)
+- [Naftiko Capability](capabilities/ml-config-relevance-generative-answering-configuration.yaml)
+- [Naftiko Capability](capabilities/ml-config-semantic-encoder-configuration.yaml)
+- [Naftiko Capability](capabilities/ml-config-smart-snippets-configuration.yaml)
 
 ### Coveo Notification API
 
@@ -235,13 +308,14 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Alerts, Notification, REST, Subscriptions
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-notification-openapi-original.yml)
+- [Naftiko Capability](capabilities/notification-subscription.yaml)
 
 ### Coveo Organization API
 
@@ -249,13 +323,17 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Administration, Organizations, REST
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-organization-openapi-original.yml)
+- [Naftiko Capability](capabilities/organization-organization-endpoints-monitoring.yaml)
+- [Naftiko Capability](capabilities/organization-organization-global-configuration.yaml)
+- [Naftiko Capability](capabilities/organization-organizations.yaml)
+- [Naftiko Capability](capabilities/organization-region-configuration.yaml)
 
 ### Coveo Platform API
 
@@ -263,13 +341,17 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Administration, Organizations, Platform, REST
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-platform-openapi-original.yml)
+- [Naftiko Capability](capabilities/platform-crawling-module.yaml)
+- [Naftiko Capability](capabilities/platform-license.yaml)
+- [Naftiko Capability](capabilities/platform-limits.yaml)
+- [Naftiko Capability](capabilities/platform-organizations.yaml)
 
 ### Push API - prd
 
@@ -284,6 +366,11 @@ The Push API allows you to *push* items and security identities, as opposed to l
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/68/)
 - [OpenAPI](openapi/coveo-push-openapi-original.yml)
+- [Naftiko Capability](capabilities/push-file-container.yaml)
+- [Naftiko Capability](capabilities/push-item.yaml)
+- [Naftiko Capability](capabilities/push-security-identity.yaml)
+- [Naftiko Capability](capabilities/push-source-status.yaml)
+- [Naftiko Capability](capabilities/push-stream.yaml)
 
 ### Coveo Schema Service
 
@@ -291,13 +378,17 @@ Documentation for Coveo Schema Service
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/schema`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** REST, Schema, Validation
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-schema-service-openapi-original.yml)
+- [Naftiko Capability](capabilities/schema-service-salesforce-organizations.yaml)
+- [Naftiko Capability](capabilities/schema-service-salesforce-sources.yaml)
+- [Naftiko Capability](capabilities/schema-service-salesforce-trial.yaml)
+- [Naftiko Capability](capabilities/schema-service-sources.yaml)
 
 ### Search Interface Service
 
@@ -305,13 +396,21 @@ Documentation for Search Interface Service
 
 **Human URL:** [https://docs.coveo.com/en/nbhe0427/](https://docs.coveo.com/en/nbhe0427/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Interface, REST, Search UI
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/nbhe0427/)
 - [OpenAPI](openapi/coveo-search-interface-openapi-original.yml)
+- [Naftiko Capability](capabilities/search-interface-configuration.yaml)
+- [Naftiko Capability](capabilities/search-interface-general.yaml)
+- [Naftiko Capability](capabilities/search-interface-hosted-page.yaml)
+- [Naftiko Capability](capabilities/search-interface-insight-panel.yaml)
+- [Naftiko Capability](capabilities/search-interface-ipx-configuration.yaml)
+- [Naftiko Capability](capabilities/search-interface-ipx-loader.yaml)
+- [Naftiko Capability](capabilities/search-interface-search-interface.yaml)
+- [Naftiko Capability](capabilities/search-interface-search-page-configuration.yaml)
 
 ### Coveo Search API
 
@@ -319,7 +418,7 @@ Documentation for Coveo Search API
 
 **Human URL:** [https://docs.coveo.com/en/52/](https://docs.coveo.com/en/52/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/search/v2`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Facets, Query Pipelines, REST, Search
 
@@ -366,6 +465,19 @@ Documentation for Coveo Search API
 - [Example](examples/coveo-search-searchusingpostv3-example.json)
 - [Example](examples/coveo-search-valuespost-example.json)
 - [JSON-LD](json-ld/coveo-context.jsonld)
+- [Naftiko Capability](capabilities/search-analysis-v3.yaml)
+- [Naftiko Capability](capabilities/search-conditions.yaml)
+- [Naftiko Capability](capabilities/search-machine-learning-associations.yaml)
+- [Naftiko Capability](capabilities/search-organizations.yaml)
+- [Naftiko Capability](capabilities/search-passages-alpha.yaml)
+- [Naftiko Capability](capabilities/search-passages-v3.yaml)
+- [Naftiko Capability](capabilities/search-pipelines.yaml)
+- [Naftiko Capability](capabilities/search-result-rankings.yaml)
+- [Naftiko Capability](capabilities/search-search-v2.yaml)
+- [Naftiko Capability](capabilities/search-search-v3.yaml)
+- [Naftiko Capability](capabilities/search-statement-groups.yaml)
+- [Naftiko Capability](capabilities/search-statements-v1.yaml)
+- [Naftiko Capability](capabilities/search-statements-v2.yaml)
 
 ### Coveo Search Pages API
 
@@ -373,13 +485,16 @@ Service in charge of CRUD operations for Coveo Cloud hosted search pages
 
 **Human URL:** [https://docs.coveo.com/en/2986/](https://docs.coveo.com/en/2986/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Hosted Pages, REST, Search UI
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/2986/)
 - [OpenAPI](openapi/coveo-search-pages-openapi-original.yml)
+- [Naftiko Capability](capabilities/search-pages-in-app.yaml)
+- [Naftiko Capability](capabilities/search-pages-search-pages.yaml)
+- [Naftiko Capability](capabilities/search-pages-zendesk.yaml)
 
 ### Coveo Search Usage Metrics Service
 
@@ -387,13 +502,18 @@ Documentation for Coveo Search Usage Metrics Service
 
 **Human URL:** [https://docs.coveo.com/en/365/](https://docs.coveo.com/en/365/)
 
-**Base URL:** `https://analytics.cloud.coveo.com/rest/ua`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Analytics, Metrics, REST, Search
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/365/)
 - [OpenAPI](openapi/coveo-search-usage-metrics-openapi-original.yml)
+- [Naftiko Capability](capabilities/search-usage-metrics-license-metrics.yaml)
+- [Naftiko Capability](capabilities/search-usage-metrics-query-logs.yaml)
+- [Naftiko Capability](capabilities/search-usage-metrics-raw-metrics.yaml)
+- [Naftiko Capability](capabilities/search-usage-metrics-search-hub-entitlement-sync.yaml)
+- [Naftiko Capability](capabilities/search-usage-metrics-search-hubs.yaml)
 
 ### Coveo Security Cache API
 
@@ -401,13 +521,16 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Identities, REST, Security
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-security-cache-openapi-original.yml)
+- [Naftiko Capability](capabilities/security-cache-security-cache.yaml)
+- [Naftiko Capability](capabilities/security-cache-security-providers-schedules.yaml)
+- [Naftiko Capability](capabilities/security-cache-security-providers.yaml)
 
 ### Source Logs - prd
 
@@ -415,13 +538,15 @@ The Source Logs API allows you to retrieve indexing pipeline logs for an organiz
 
 **Human URL:** [https://docs.coveo.com/en/68/](https://docs.coveo.com/en/68/)
 
-**Base URL:** `https://api.cloud.coveo.com/push/v1/sources`
+**Base URL:** `https://api.cloud.coveo.com/push/v1`
 
 **Tags:** Indexing, Logs, REST, Sources
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/68/)
 - [OpenAPI](openapi/coveo-source-logs-openapi-original.yml)
+- [Naftiko Capability](capabilities/source-logs-facets.yaml)
+- [Naftiko Capability](capabilities/source-logs-logs.yaml)
 
 ### Coveo Source API
 
@@ -429,13 +554,19 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/1719/](https://docs.coveo.com/en/1719/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** Connectors, Indexing, REST, Sources
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/1719/)
 - [OpenAPI](openapi/coveo-source-openapi-original.yml)
+- [Naftiko Capability](capabilities/source-mappings.yaml)
+- [Naftiko Capability](capabilities/source-metadata.yaml)
+- [Naftiko Capability](capabilities/source-salesforce-source-configuration.yaml)
+- [Naftiko Capability](capabilities/source-source-extension-configurations.yaml)
+- [Naftiko Capability](capabilities/source-source-item-types.yaml)
+- [Naftiko Capability](capabilities/source-sources.yaml)
 
 ### Coveo Tailgate API
 
@@ -443,13 +574,15 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** REST, Tailgate, Telemetry
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-tailgate-openapi-original.yml)
+- [Naftiko Capability](capabilities/tailgate-catalog-content.yaml)
+- [Naftiko Capability](capabilities/tailgate-ingestion-content.yaml)
 
 ### Usage Analytics Read API
 
@@ -457,7 +590,7 @@ Usage Analytics Read API
 
 **Human URL:** [https://docs.coveo.com/en/365/](https://docs.coveo.com/en/365/)
 
-**Base URL:** `https://analytics.cloud.coveo.com/rest/ua/v15`
+**Base URL:** `https://analytics.cloud.coveo.com/rest/ua`
 
 **Tags:** Analytics, Events, REST, Reporting
 
@@ -465,6 +598,26 @@ Usage Analytics Read API
 - [Documentation](https://docs.coveo.com/en/365/)
 - [OpenAPI](openapi/coveo-usage-analytics-read-openapi-original.yml)
 - [JSON-LD](json-ld/coveo-analytics-context.jsonld)
+- [Naftiko Capability](capabilities/usage-analytics-read-administration-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-data-health-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-dimensions-api-version-14.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-dimensions-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-exports-api-version-14.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-exports-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-filters-api-version-14.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-filters-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-groups-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-metrics-api-version-14.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-metrics-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-reader-account-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-reports-api-version-14.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-reports-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-secure-data-sharing-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-statistics-api-version-14.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-statistics-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-user-statistics-api-version-15.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-users-api-version-14.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-read-users-api-version-15.yaml)
 
 ### Usage Analytics Write API
 
@@ -472,7 +625,7 @@ The [Coveo Cloud](https://docs.coveo.com/en/186/) [Usage Analytics](https://docs
 
 **Human URL:** [https://docs.coveo.com/en/365/](https://docs.coveo.com/en/365/)
 
-**Base URL:** `https://analytics.cloud.coveo.com/rest/ua/v15`
+**Base URL:** `https://analytics.cloud.coveo.com/rest/ua`
 
 **Tags:** Analytics, Click Events, REST, Search Events
 
@@ -480,6 +633,8 @@ The [Coveo Cloud](https://docs.coveo.com/en/186/) [Usage Analytics](https://docs
 - [Documentation](https://docs.coveo.com/en/365/)
 - [OpenAPI](openapi/coveo-usage-analytics-write-openapi-original.yml)
 - [JSON-LD](json-ld/coveo-analytics-context.jsonld)
+- [Naftiko Capability](capabilities/usage-analytics-write-analytics-api-version-14.yaml)
+- [Naftiko Capability](capabilities/usage-analytics-write-analytics-api-version-15.yaml)
 
 ### Coveo Workspace API
 
@@ -487,13 +642,15 @@ API for Coveo Platform
 
 **Human URL:** [https://docs.coveo.com/en/124/](https://docs.coveo.com/en/124/)
 
-**Base URL:** `https://platform.cloud.coveo.com/rest/organizations`
+**Base URL:** `https://platform.cloud.coveo.com`
 
 **Tags:** REST, Workspaces
 
 **Properties:**
 - [Documentation](https://docs.coveo.com/en/124/)
 - [OpenAPI](openapi/coveo-workspace-openapi-original.yml)
+- [Naftiko Capability](capabilities/workspace-projects.yaml)
+- [Naftiko Capability](capabilities/workspace-resources.yaml)
 
 ## Common Properties
 
@@ -529,19 +686,6 @@ API for Coveo Platform
 
 ### MCPServer
 - [MCP Server](https://www.coveo.com/blog/conversational-analytics/)
-
-### Naftiko Capability
-- [Naftiko Capabilities](capabilities/search-analytics-loop.yaml)
-- [Naftiko Capabilities (shared)](capabilities/shared/catalog-management.yaml)
-- [Naftiko Capabilities (shared)](capabilities/shared/commerce.yaml)
-- [Naftiko Capabilities (shared)](capabilities/shared/knowledge-genai.yaml)
-- [Naftiko Capabilities (shared)](capabilities/shared/machine-learning.yaml)
-- [Naftiko Capabilities (shared)](capabilities/shared/platform.yaml)
-- [Naftiko Capabilities (shared)](capabilities/shared/push.yaml)
-- [Naftiko Capabilities (shared)](capabilities/shared/search.yaml)
-- [Naftiko Capabilities (shared)](capabilities/shared/source.yaml)
-- [Naftiko Capabilities (shared)](capabilities/shared/usage-analytics-read.yaml)
-- [Naftiko Capabilities (shared)](capabilities/shared/usage-analytics-write.yaml)
 
 ### Plans Pricing
 - [Plans Pricing](plans/coveo-plans-pricing.yml)
@@ -708,26 +852,259 @@ API for Coveo Platform
 
 - [coveo-finops.yml](finops/coveo-finops.yml)
 
-## Capabilities
+## Naftiko Capabilities (157)
 
-Naftiko capabilities organized as shared per-API definitions composed into customer-facing workflows.
+Each file below is a **self-contained Naftiko capability** — one business surface from one Coveo API, with auth + every operation under that surface inlined. No `import`/`location` cross-references; you can read or run any single file in isolation.
 
-### Shared Per-API Definitions
+### Coveo Activity API (1 capabilities)
 
-- [catalog-management.yaml](capabilities/shared/catalog-management.yaml) — 19 operations
-- [commerce.yaml](capabilities/shared/commerce.yaml) — 63 operations
-- [knowledge-genai.yaml](capabilities/shared/knowledge-genai.yaml) — 7 operations
-- [machine-learning.yaml](capabilities/shared/machine-learning.yaml) — 13 operations
-- [platform.yaml](capabilities/shared/platform.yaml) — 27 operations
-- [push.yaml](capabilities/shared/push.yaml) — 23 operations
-- [search.yaml](capabilities/shared/search.yaml) — 134 operations
-- [source.yaml](capabilities/shared/source.yaml) — 85 operations
-- [usage-analytics-read.yaml](capabilities/shared/usage-analytics-read.yaml) — 189 operations
-- [usage-analytics-write.yaml](capabilities/shared/usage-analytics-write.yaml) — 18 operations
+- [Coveo Activity API — Activities](capabilities/activity-activities.yaml) — 7 operations
 
-### Workflow Capabilities
+### Coveo Analytics Admin API (1 capabilities)
 
-- [Coveo AI Search and Analytics Loop](capabilities/search-analytics-loop.yaml) — Composed capability that issues queries against the Coveo Search API, records search/click usage events via the Usage Analytics Write API, reads back usage data via the Usage Analytics Read API, and pushes documents into a Coveo Push source — covering the search → measure → improve loop that powers Coveo Machine Learning.
+- [Coveo Analytics Admin API — Property API](capabilities/analytics-admin-property-api.yaml) — 6 operations
+
+### Coveo Authorization Server API (19 capabilities)
+
+- [Coveo Authorization Server API — Api Keys](capabilities/authorization-api-keys.yaml) — 13 operations
+- [Coveo Authorization Server API — Built-in Groups](capabilities/authorization-built-in-groups.yaml) — 1 operations
+- [Coveo Authorization Server API — Group Invites](capabilities/authorization-group-invites.yaml) — 5 operations
+- [Coveo Authorization Server API — Group Members](capabilities/authorization-group-members.yaml) — 4 operations
+- [Coveo Authorization Server API — Group Realms](capabilities/authorization-group-realms.yaml) — 4 operations
+- [Coveo Authorization Server API — Groups](capabilities/authorization-groups.yaml) — 6 operations
+- [Coveo Authorization Server API — Invites](capabilities/authorization-invites.yaml) — 1 operations
+- [Coveo Authorization Server API — Organization Access](capabilities/authorization-organization-access.yaml) — 2 operations
+- [Coveo Authorization Server API — Organization Api Keys Templates](capabilities/authorization-organization-api-keys-templates.yaml) — 3 operations
+- [Coveo Authorization Server API — Organization Invites](capabilities/authorization-organization-invites.yaml) — 1 operations
+- [Coveo Authorization Server API — Organization Members](capabilities/authorization-organization-members.yaml) — 7 operations
+- [Coveo Authorization Server API — Organization Privileges](capabilities/authorization-organization-privileges.yaml) — 6 operations
+- [Coveo Authorization Server API — Organization Realms](capabilities/authorization-organization-realms.yaml) — 3 operations
+- [Coveo Authorization Server API — Platform Tokens](capabilities/authorization-platform-tokens.yaml) — 1 operations
+- [Coveo Authorization Server API — Privilege Evaluator](capabilities/authorization-privilege-evaluator.yaml) — 2 operations
+- [Coveo Authorization Server API — Saml Identity Providers](capabilities/authorization-saml-identity-providers.yaml) — 7 operations
+- [Coveo Authorization Server API — Temporary Access](capabilities/authorization-temporary-access.yaml) — 12 operations
+- [Coveo Authorization Server API — Token Certificates](capabilities/authorization-token-certificates.yaml) — 1 operations
+- [Coveo Authorization Server API — Users](capabilities/authorization-users.yaml) — 3 operations
+
+### Coveo Catalog Management API (4 capabilities)
+
+- [Coveo Catalog Management API — Catalog Configurations](capabilities/catalog-management-catalog-configurations.yaml) — 6 operations
+- [Coveo Catalog Management API — Catalog Filter](capabilities/catalog-management-catalog-filter.yaml) — 2 operations
+- [Coveo Catalog Management API — Catalogs](capabilities/catalog-management-catalogs.yaml) — 9 operations
+- [Coveo Catalog Management API — View Definitions](capabilities/catalog-management-view-definitions.yaml) — 2 operations
+
+### Coveo Commerce API (17 capabilities)
+
+- [Coveo Commerce API — Badges](capabilities/commerce-badges.yaml) — 1 operations
+- [Coveo Commerce API — Context Mapping Configurations](capabilities/commerce-context-mapping-configurations.yaml) — 5 operations
+- [Coveo Commerce API — Facet Field Configurations](capabilities/commerce-facet-field-configurations.yaml) — 3 operations
+- [Coveo Commerce API — Facet](capabilities/commerce-facet.yaml) — 1 operations
+- [Coveo Commerce API — Listing Configurations](capabilities/commerce-listing-configurations.yaml) — 10 operations
+- [Coveo Commerce API — Listing Rule Preview](capabilities/commerce-listing-rule-preview.yaml) — 3 operations
+- [Coveo Commerce API — Listings](capabilities/commerce-listings.yaml) — 1 operations
+- [Coveo Commerce API — Product Suggest Configurations](capabilities/commerce-product-suggest-configurations.yaml) — 4 operations
+- [Coveo Commerce API — Public Listing Page API](capabilities/commerce-public-listing-page-api.yaml) — 4 operations
+- [Coveo Commerce API — Query Configurations](capabilities/commerce-query-configurations.yaml) — 4 operations
+- [Coveo Commerce API — Recommendations Configuration](capabilities/commerce-recommendations-configuration.yaml) — 12 operations
+- [Coveo Commerce API — Recommendations](capabilities/commerce-recommendations.yaml) — 2 operations
+- [Coveo Commerce API — Search Configurations](capabilities/commerce-search-configurations.yaml) — 2 operations
+- [Coveo Commerce API — Search](capabilities/commerce-search.yaml) — 4 operations
+- [Coveo Commerce API — Setup](capabilities/commerce-setup.yaml) — 1 operations
+- [Coveo Commerce API — Synonym Preview](capabilities/commerce-synonym-preview.yaml) — 1 operations
+- [Coveo Commerce API — Synonym](capabilities/commerce-synonym.yaml) — 5 operations
+
+### Coveo Connectivity API (3 capabilities)
+
+- [Coveo Connectivity API — Atlassian Connect App](capabilities/connectivity-atlassian-connect-app.yaml) — 3 operations
+- [Coveo Connectivity API — Crawling Module](capabilities/connectivity-crawling-module.yaml) — 6 operations
+- [Coveo Connectivity API — Diagnostic Logs](capabilities/connectivity-diagnostic-logs.yaml) — 2 operations
+
+### Coveo Context API (1 capabilities)
+
+- [Coveo Context API — Context](capabilities/context-context.yaml) — 1 operations
+
+### Coveo Customer Service API Service (4 capabilities)
+
+- [Coveo Customer Service API — Answer](capabilities/customer-service-answer.yaml) — 1 operations
+- [Coveo Customer Service API — Case Assist](capabilities/customer-service-case-assist.yaml) — 10 operations
+- [Coveo Customer Service API — CRGA For Cases](capabilities/customer-service-crga-for-cases.yaml) — 4 operations
+- [Coveo Customer Service API — Insight Panel](capabilities/customer-service-insight-panel.yaml) — 11 operations
+
+### Coveo Event API (2 capabilities)
+
+- [Coveo Event API — Event API](capabilities/event-event-api.yaml) — 3 operations
+- [Coveo Event API — Usage Analytics Event Validation API](capabilities/event-usage-analytics-event-validation-api.yaml) — 6 operations
+
+### Coveo Extension API (1 capabilities)
+
+- [Coveo Extension API — Indexing Pipeline Extensions](capabilities/extension-indexing-pipeline-extensions.yaml) — 18 operations
+
+### Coveo Field API (1 capabilities)
+
+- [Coveo Field API — Fields](capabilities/field-fields.yaml) — 11 operations
+
+### Coveo Knowledge Generative AI API (2 capabilities)
+
+- [Coveo Knowledge Generative AI API — Agent Configuration API](capabilities/knowledge-genai-agent-configuration-api.yaml) — 5 operations
+- [Coveo Knowledge Generative AI API — Agent Orchestration API](capabilities/knowledge-genai-agent-orchestration-api.yaml) — 2 operations
+
+### Coveo Machine Learning API (3 capabilities)
+
+- [Coveo Machine Learning API — Advanced Model Configurations](capabilities/machine-learning-advanced-model-configurations.yaml) — 4 operations
+- [Coveo Machine Learning API — Machine Learning Models](capabilities/machine-learning-machine-learning-models.yaml) — 8 operations
+- [Coveo Machine Learning API — Streaming Model Response](capabilities/machine-learning-streaming-model-response.yaml) — 1 operations
+
+### Coveo Migration API (5 capabilities)
+
+- [Coveo Migration API — Link](capabilities/migration-link.yaml) — 9 operations
+- [Coveo Migration API — Snapshot Access](capabilities/migration-snapshot-access.yaml) — 3 operations
+- [Coveo Migration API — Snapshot Synchronization](capabilities/migration-snapshot-synchronization.yaml) — 5 operations
+- [Coveo Migration API — Snapshot](capabilities/migration-snapshot.yaml) — 12 operations
+- [Coveo Migration API — Vault](capabilities/migration-vault.yaml) — 7 operations
+
+### Coveo Machine Learning Configuration API (9 capabilities)
+
+- [Coveo Machine Learning Configuration API — Case Classification Configuration](capabilities/ml-config-case-classification-configuration.yaml) — 4 operations
+- [Coveo Machine Learning Configuration API — Dynamic Navigation Experience Configuration](capabilities/ml-config-dynamic-navigation-experience-configuration.yaml) — 9 operations
+- [Coveo Machine Learning Configuration API — Model Associations](capabilities/ml-config-model-associations.yaml) — 1 operations
+- [Coveo Machine Learning Configuration API — Model Detailed Info](capabilities/ml-config-model-detailed-info.yaml) — 1 operations
+- [Coveo Machine Learning Configuration API — Model Listing](capabilities/ml-config-model-listing.yaml) — 2 operations
+- [Coveo Machine Learning Configuration API — Predictive Query Suggest Configuration](capabilities/ml-config-predictive-query-suggest-configuration.yaml) — 1 operations
+- [Coveo Machine Learning Configuration API — Relevance Generative Answering Configuration](capabilities/ml-config-relevance-generative-answering-configuration.yaml) — 1 operations
+- [Coveo Machine Learning Configuration API — Semantic Encoder Configuration](capabilities/ml-config-semantic-encoder-configuration.yaml) — 1 operations
+- [Coveo Machine Learning Configuration API — Smart Snippets Configuration](capabilities/ml-config-smart-snippets-configuration.yaml) — 3 operations
+
+### Coveo Notification API (1 capabilities)
+
+- [Coveo Notification API — Subscription](capabilities/notification-subscription.yaml) — 16 operations
+
+### Coveo Organization API (4 capabilities)
+
+- [Coveo Organization API — Organization Endpoints Monitoring](capabilities/organization-organization-endpoints-monitoring.yaml) — 4 operations
+- [Coveo Organization API — Organization Global Configuration](capabilities/organization-organization-global-configuration.yaml) — 2 operations
+- [Coveo Organization API — Organizations](capabilities/organization-organizations.yaml) — 9 operations
+- [Coveo Organization API — Region Configuration](capabilities/organization-region-configuration.yaml) — 2 operations
+
+### Coveo Platform API (4 capabilities)
+
+- [Coveo Platform API — Crawling Module](capabilities/platform-crawling-module.yaml) — 10 operations
+- [Coveo Platform API — License](capabilities/platform-license.yaml) — 3 operations
+- [Coveo Platform API — Limits](capabilities/platform-limits.yaml) — 5 operations
+- [Coveo Platform API — Organizations](capabilities/platform-organizations.yaml) — 9 operations
+
+### Push API - prd (5 capabilities)
+
+- [Coveo Push API — File Container](capabilities/push-file-container.yaml) — 1 operations
+- [Coveo Push API — Item](capabilities/push-item.yaml) — 4 operations
+- [Coveo Push API — Security Identity](capabilities/push-security-identity.yaml) — 5 operations
+- [Coveo Push API — Source Status](capabilities/push-source-status.yaml) — 1 operations
+- [Coveo Push API — Stream](capabilities/push-stream.yaml) — 12 operations
+
+### Coveo Schema Service (4 capabilities)
+
+- [Coveo Schema Service API — Salesforce Organizations](capabilities/schema-service-salesforce-organizations.yaml) — 3 operations
+- [Coveo Schema Service API — Salesforce Sources](capabilities/schema-service-salesforce-sources.yaml) — 1 operations
+- [Coveo Schema Service API — Salesforce Trial](capabilities/schema-service-salesforce-trial.yaml) — 2 operations
+- [Coveo Schema Service API — Sources](capabilities/schema-service-sources.yaml) — 8 operations
+
+### Coveo Search API (13 capabilities)
+
+- [Coveo Search API — Analysis V3](capabilities/search-analysis-v3.yaml) — 2 operations
+- [Coveo Search API — Conditions](capabilities/search-conditions.yaml) — 10 operations
+- [Coveo Search API — Machine learning associations](capabilities/search-machine-learning-associations.yaml) — 10 operations
+- [Coveo Search API — Organizations](capabilities/search-organizations.yaml) — 15 operations
+- [Coveo Search API — Passages Alpha](capabilities/search-passages-alpha.yaml) — 1 operations
+- [Coveo Search API — Passages V3](capabilities/search-passages-v3.yaml) — 1 operations
+- [Coveo Search API — Pipelines](capabilities/search-pipelines.yaml) — 11 operations
+- [Coveo Search API — Result rankings](capabilities/search-result-rankings.yaml) — 11 operations
+- [Coveo Search API — Search V2](capabilities/search-search-v2.yaml) — 23 operations
+- [Coveo Search API — Search V3](capabilities/search-search-v3.yaml) — 14 operations
+- [Coveo Search API — Statement groups](capabilities/search-statement-groups.yaml) — 12 operations
+- [Coveo Search API — Statements V1](capabilities/search-statements-v1.yaml) — 11 operations
+- [Coveo Search API — Statements V2](capabilities/search-statements-v2.yaml) — 13 operations
+
+### Search Interface Service (8 capabilities)
+
+- [Coveo Search Interface Service API — Configuration](capabilities/search-interface-configuration.yaml) — 11 operations
+- [Coveo Search Interface Service API — General](capabilities/search-interface-general.yaml) — 6 operations
+- [Coveo Search Interface Service API — Hosted Page](capabilities/search-interface-hosted-page.yaml) — 7 operations
+- [Coveo Search Interface Service API — Insight Panel](capabilities/search-interface-insight-panel.yaml) — 9 operations
+- [Coveo Search Interface Service API — IPX Configuration](capabilities/search-interface-ipx-configuration.yaml) — 15 operations
+- [Coveo Search Interface Service API — IPX loader](capabilities/search-interface-ipx-loader.yaml) — 1 operations
+- [Coveo Search Interface Service API — Search Interface](capabilities/search-interface-search-interface.yaml) — 2 operations
+- [Coveo Search Interface Service API — Search Page Configuration](capabilities/search-interface-search-page-configuration.yaml) — 14 operations
+
+### Coveo Search Pages API (3 capabilities)
+
+- [Coveo Search Pages API — In-App](capabilities/search-pages-in-app.yaml) — 6 operations
+- [Coveo Search Pages API — Search Pages](capabilities/search-pages-search-pages.yaml) — 17 operations
+- [Coveo Search Pages API — Zendesk](capabilities/search-pages-zendesk.yaml) — 1 operations
+
+### Coveo Search Usage Metrics Service (5 capabilities)
+
+- [Coveo Search Usage Metrics API — License Metrics](capabilities/search-usage-metrics-license-metrics.yaml) — 6 operations
+- [Coveo Search Usage Metrics API — Query Logs](capabilities/search-usage-metrics-query-logs.yaml) — 2 operations
+- [Coveo Search Usage Metrics API — Raw Metrics](capabilities/search-usage-metrics-raw-metrics.yaml) — 4 operations
+- [Coveo Search Usage Metrics API — Search Hub Entitlement Sync](capabilities/search-usage-metrics-search-hub-entitlement-sync.yaml) — 1 operations
+- [Coveo Search Usage Metrics API — Search Hubs](capabilities/search-usage-metrics-search-hubs.yaml) — 6 operations
+
+### Coveo Security Cache API (3 capabilities)
+
+- [Coveo Security Cache API — Security Cache](capabilities/security-cache-security-cache.yaml) — 19 operations
+- [Coveo Security Cache API — Security Providers Schedules](capabilities/security-cache-security-providers-schedules.yaml) — 2 operations
+- [Coveo Security Cache API — Security Providers](capabilities/security-cache-security-providers.yaml) — 9 operations
+
+### Source Logs - prd (2 capabilities)
+
+- [Coveo Source Logs API — Facets](capabilities/source-logs-facets.yaml) — 2 operations
+- [Coveo Source Logs API — Logs](capabilities/source-logs-logs.yaml) — 2 operations
+
+### Coveo Source API (6 capabilities)
+
+- [Coveo Source API — Mappings](capabilities/source-mappings.yaml) — 22 operations
+- [Coveo Source API — Metadata](capabilities/source-metadata.yaml) — 3 operations
+- [Coveo Source API — Salesforce Source Configuration](capabilities/source-salesforce-source-configuration.yaml) — 10 operations
+- [Coveo Source API — Source Extension Configurations](capabilities/source-source-extension-configurations.yaml) — 2 operations
+- [Coveo Source API — Source Item Types](capabilities/source-source-item-types.yaml) — 1 operations
+- [Coveo Source API — Sources](capabilities/source-sources.yaml) — 47 operations
+
+### Coveo Tailgate API (2 capabilities)
+
+- [Coveo Tailgate API — Catalog Content](capabilities/tailgate-catalog-content.yaml) — 3 operations
+- [Coveo Tailgate API — Ingestion Content](capabilities/tailgate-ingestion-content.yaml) — 3 operations
+
+### Usage Analytics Read API (20 capabilities)
+
+- [Coveo Usage Analytics Read API — Administration API - Version 15](capabilities/usage-analytics-read-administration-api-version-15.yaml) — 3 operations
+- [Coveo Usage Analytics Read API — Data Health API - Version 15](capabilities/usage-analytics-read-data-health-api-version-15.yaml) — 9 operations
+- [Coveo Usage Analytics Read API — Dimensions API - Version 14](capabilities/usage-analytics-read-dimensions-api-version-14.yaml) — 14 operations
+- [Coveo Usage Analytics Read API — Dimensions API - Version 15](capabilities/usage-analytics-read-dimensions-api-version-15.yaml) — 15 operations
+- [Coveo Usage Analytics Read API — Exports API - Version 14](capabilities/usage-analytics-read-exports-api-version-14.yaml) — 9 operations
+- [Coveo Usage Analytics Read API — Exports API - Version 15](capabilities/usage-analytics-read-exports-api-version-15.yaml) — 19 operations
+- [Coveo Usage Analytics Read API — Filters API - Version 14](capabilities/usage-analytics-read-filters-api-version-14.yaml) — 14 operations
+- [Coveo Usage Analytics Read API — Filters API - Version 15](capabilities/usage-analytics-read-filters-api-version-15.yaml) — 16 operations
+- [Coveo Usage Analytics Read API — Groups API - Version 15](capabilities/usage-analytics-read-groups-api-version-15.yaml) — 8 operations
+- [Coveo Usage Analytics Read API — Metrics API - Version 14](capabilities/usage-analytics-read-metrics-api-version-14.yaml) — 4 operations
+- [Coveo Usage Analytics Read API — Metrics API - Version 15](capabilities/usage-analytics-read-metrics-api-version-15.yaml) — 4 operations
+- [Coveo Usage Analytics Read API — Reader Account API - Version 15](capabilities/usage-analytics-read-reader-account-api-version-15.yaml) — 13 operations
+- [Coveo Usage Analytics Read API — Reports API - Version 14](capabilities/usage-analytics-read-reports-api-version-14.yaml) — 9 operations
+- [Coveo Usage Analytics Read API — Reports API - Version 15](capabilities/usage-analytics-read-reports-api-version-15.yaml) — 13 operations
+- [Coveo Usage Analytics Read API — Secure Data Sharing API - Version 15](capabilities/usage-analytics-read-secure-data-sharing-api-version-15.yaml) — 4 operations
+- [Coveo Usage Analytics Read API — Statistics API - Version 14](capabilities/usage-analytics-read-statistics-api-version-14.yaml) — 8 operations
+- [Coveo Usage Analytics Read API — Statistics API - Version 15](capabilities/usage-analytics-read-statistics-api-version-15.yaml) — 11 operations
+- [Coveo Usage Analytics Read API — User Statistics API - Version 15](capabilities/usage-analytics-read-user-statistics-api-version-15.yaml) — 2 operations
+- [Coveo Usage Analytics Read API — Users API - Version 14](capabilities/usage-analytics-read-users-api-version-14.yaml) — 7 operations
+- [Coveo Usage Analytics Read API — Users API - Version 15](capabilities/usage-analytics-read-users-api-version-15.yaml) — 7 operations
+
+### Usage Analytics Write API (2 capabilities)
+
+- [Coveo Usage Analytics Write API — Analytics API - Version 14](capabilities/usage-analytics-write-analytics-api-version-14.yaml) — 8 operations
+- [Coveo Usage Analytics Write API — Analytics API - Version 15](capabilities/usage-analytics-write-analytics-api-version-15.yaml) — 10 operations
+
+### Coveo Workspace API (2 capabilities)
+
+- [Coveo Workspace API — Projects](capabilities/workspace-projects.yaml) — 14 operations
+- [Coveo Workspace API — Resources](capabilities/workspace-resources.yaml) — 1 operations
 
 ## Spectral Rules
 

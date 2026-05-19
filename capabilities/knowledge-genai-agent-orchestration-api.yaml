@@ -1,0 +1,80 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Knowledge Generative AI API — Agent Orchestration API
+  description: 'Coveo Knowledge Generative AI API — Agent Orchestration API. 2 operations. Lead operation: Generates an Answer
+    for the Given Configuration. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Knowledge Generative AI
+  - Agent Orchestration API
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: knowledge-genai-agent-orchestration-api
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Knowledge Generative AI API — Agent Orchestration API business capability. Self-contained, no shared
+      references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: api-preview-organizations-organizationId-agents-agentId-answer
+      path: /api/preview/organizations/{organizationId}/agents/{agentId}/answer
+      operations:
+      - name: answer
+        method: POST
+        description: Generates an Answer for the Given Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization id
+          required: true
+        - name: agentId
+          in: path
+          type: string
+          description: The agent id
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-preview-organizations-organizationId-agents-agentId-follow-up
+      path: /api/preview/organizations/{organizationId}/agents/{agentId}/follow-up
+      operations:
+      - name: followup
+        method: POST
+        description: Generates an Answer to the Follow-Up Question for the Given Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization id
+          required: true
+        - name: agentId
+          in: path
+          type: string
+          description: The agent id
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

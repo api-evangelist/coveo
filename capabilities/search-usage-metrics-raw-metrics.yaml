@@ -1,0 +1,142 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Search Usage Metrics API — Raw Metrics
+  description: 'Coveo Search Usage Metrics API — Raw Metrics. 4 operations. Lead operation: Lists the Available Metrics for
+    Assignment. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Search Usage Metrics
+  - Raw Metrics
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: search-usage-metrics-raw-metrics
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Search Usage Metrics API — Raw Metrics business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationId-searchusagemetrics-raw-all
+      path: /rest/organizations/{organizationId}/searchusagemetrics/raw/all
+      operations:
+      - name: listrawmetrics
+        method: GET
+        description: Lists the Available Metrics for Assignment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+    - name: rest-organizations-organizationId-searchusagemetrics-raw-monthly
+      path: /rest/organizations/{organizationId}/searchusagemetrics/raw/monthly
+      operations:
+      - name: getrawmetricsformonth
+        method: GET
+        description: Gets Raw Metric Values for a Specific Month
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: minimumQueries
+          in: query
+          type: string
+          description: The minimum number of queries required for a search hub to be listed
+        - name: month
+          in: query
+          type: string
+          description: The month to report for
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+    - name: rest-organizations-organizationId-searchusagemetrics-raw-searchhubs-searchHub-da
+      path: /rest/organizations/{organizationId}/searchusagemetrics/raw/searchhubs/{searchHub}/daily/{metric}
+      operations:
+      - name: getdailyrawmetrics
+        method: GET
+        description: Gets Daily Raw Values for a Specific Search Hub and Metric
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: to
+          in: query
+          type: string
+          description: The last day to report for
+          required: true
+        - name: from
+          in: query
+          type: string
+          description: The first day to report for
+          required: true
+        - name: metric
+          in: path
+          type: string
+          description: The raw metric to report on
+          required: true
+        - name: searchHub
+          in: path
+          type: string
+          description: The name of the search hub to report on
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+    - name: rest-organizations-organizationId-searchusagemetrics-raw-searchhubs-searchHub-mo
+      path: /rest/organizations/{organizationId}/searchusagemetrics/raw/searchhubs/{searchHub}/monthly/{metric}
+      operations:
+      - name: getmonthlyrawmetrics
+        method: GET
+        description: Gets Monthly Raw Values for a Specific Search Hub and Metric
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: to
+          in: query
+          type: string
+          description: The last month to report for
+          required: true
+        - name: from
+          in: query
+          type: string
+          description: The first month to report for
+          required: true
+        - name: metric
+          in: path
+          type: string
+          description: The raw metric to report on
+          required: true
+        - name: searchHub
+          in: path
+          type: string
+          description: The name of the search hub to report on
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true

@@ -1,0 +1,40 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Invites
+  description: 'Coveo Authorization Server API — Invites. 1 operations. Lead operation: List Groups Current User Is Invited
+    to. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Invites
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-invites
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Invites business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-invites
+      path: /rest/invites
+      operations:
+      - name: getinvites1
+        method: GET
+        description: List Groups Current User Is Invited to
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: invite_code
+          in: cookie
+          type: string

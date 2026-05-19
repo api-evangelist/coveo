@@ -1,0 +1,43 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Built-in Groups
+  description: 'Coveo Authorization Server API — Built-in Groups. 1 operations. Lead operation: List Built-in Groups. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Built-in Groups
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-built-in-groups
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Built-in Groups business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-defaultgroups
+      path: /rest/organizations/{organizationId}/defaultgroups
+      operations:
+      - name: getdefaultgroups
+        method: GET
+        description: List Built-in Groups
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true

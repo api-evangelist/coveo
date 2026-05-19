@@ -1,0 +1,49 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Machine Learning Configuration API — Model Detailed Info
+  description: 'Coveo Machine Learning Configuration API — Model Detailed Info. 1 operations. Lead operation: Fetch Model.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Machine Learning Configuration
+  - Model Detailed Info
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: ml-config-model-detailed-info
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Machine Learning Configuration API — Model Detailed Info business capability. Self-contained, no shared
+      references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-machinelearning-configuration-modeldetailedinf
+      path: /rest/organizations/{organizationId}/machinelearning/configuration/modeldetailedinfo/{modelId}
+      operations:
+      - name: getmodeldetailedinfo
+        method: GET
+        description: Fetch Model
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: modelId
+          in: path
+          type: string
+          description: The unique identifier of the target machine learning model.<br />**Example:** `My_Model_ID`
+          required: true

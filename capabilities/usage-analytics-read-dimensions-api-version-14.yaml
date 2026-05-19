@@ -1,0 +1,357 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Usage Analytics Read API — Dimensions API - Version 14
+  description: 'Coveo Usage Analytics Read API — Dimensions API - Version 14. 14 operations. Lead operation: Get All the Dimensions.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Usage Analytics Read
+  - Dimensions API - Version 14
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: usage-analytics-read-dimensions-api-version-14
+    baseUri: https://analytics.cloud.coveo.com/rest/ua
+    description: Coveo Usage Analytics Read API — Dimensions API - Version 14 business capability. Self-contained, no shared
+      references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: v14-dimensions
+      path: /v14/dimensions
+      operations:
+      - name: getv14dimensions
+        method: GET
+        description: Get All the Dimensions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: includeOnlyParents
+          in: query
+          type: boolean
+          description: This will filter out dimensions which are covered by others. Only parent/master dimensions will be
+            output
+        - name: includeCustom
+          in: query
+          type: boolean
+          description: Whether to include custom dimensions within the results.
+    - name: v14-dimensions-custom
+      path: /v14/dimensions/custom
+      operations:
+      - name: getv14dimensionscustom
+        method: GET
+        description: Get All the Custom Dimensions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: includeOnlyParents
+          in: query
+          type: boolean
+          description: This will filter out dimensions which are covered by others. Only parent/master dimensions will be
+            output
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+      - name: postv14dimensionscustom
+        method: POST
+        description: Create a Custom Dimension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: name
+          in: query
+          type: string
+          description: The name of the custom dimension. It should start with the 'c_' prefix. If not present, the prefix
+            will be added automatically.
+        - name: event
+          in: query
+          type: array
+          description: The types of event where this dimension will be added.
+          required: true
+        - name: updatePastEvents
+          in: query
+          type: boolean
+          description: Whether to update the custom dimension in past events.
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v14-dimensions-custom-monitoring-health
+      path: /v14/dimensions/custom/monitoring/health
+      operations:
+      - name: getv14dimensionscustommonitoringhealth
+        method: GET
+        description: Health Check for the Custom Dimensions Service
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v14-dimensions-custom-status
+      path: /v14/dimensions/custom/status
+      operations:
+      - name: getv14dimensionscustomstatus
+        method: GET
+        description: Get the Custom Dimensions Service Status
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v14-dimensions-custom-apiName
+      path: /v14/dimensions/custom/{apiName}
+      operations:
+      - name: getv14dimensionscustomapiname
+        method: GET
+        description: Get a Custom Dimension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: apiName
+          in: path
+          type: string
+          description: Format must be `EVENT.DIMENSION` where EVENT is the event type and DIMENSION is the name of the dimension.
+          required: true
+      - name: putv14dimensionscustomapiname
+        method: PUT
+        description: Create or Edit a Custom Dimension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: apiName
+          in: path
+          type: string
+          description: Format must be `EVENT.DIMENSION` where EVENT is the event type and DIMENSION is the name of the dimension.
+          required: true
+        - name: updatePastEvents
+          in: query
+          type: boolean
+          description: Whether to update the custom dimension in past events.
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletev14dimensionscustomapiname
+        method: DELETE
+        description: Get a Custom Dimension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: apiName
+          in: path
+          type: string
+          description: Format must be `EVENT.DIMENSION` where EVENT is the event type and DIMENSION is the name of the dimension.
+          required: true
+    - name: v14-dimensions-custom-dimension-values
+      path: /v14/dimensions/custom/{dimension}/values
+      operations:
+      - name: getv14dimensionscustomdimensionvalues
+        method: GET
+        description: Get the Values for a Custom Dimension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: from
+          in: query
+          type: string
+          description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+          required: true
+        - name: to
+          in: query
+          type: string
+          description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+          required: true
+        - name: tz
+          in: query
+          type: string
+          description: Timezone used for calculations.
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: dimension
+          in: path
+          type: string
+          description: The dimensions to fetch.
+          required: true
+        - name: f
+          in: query
+          type: array
+          description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with
+            the AND operator.
+        - name: p
+          in: query
+          type: integer
+          description: The response's page to access, starting at 1.
+        - name: n
+          in: query
+          type: integer
+          description: The number of result to include in a page.
+    - name: v14-dimensions-custom-event-suggestions
+      path: /v14/dimensions/custom/{event}/suggestions
+      operations:
+      - name: getv14dimensionscustomeventsuggestions
+        method: GET
+        description: Get a List of Dimensions That Have Data but Are Not Created Yet
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: from
+          in: query
+          type: string
+          description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        - name: to
+          in: query
+          type: string
+          description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        - name: event
+          in: path
+          type: string
+          description: The type of event for which to look for suggestions.
+          required: true
+        - name: includeValueSamples
+          in: query
+          type: boolean
+          description: Whether value samples should be included in the response.
+        - name: depth
+          in: query
+          type: integer
+          description: The number of events to look at when getting suggestions. A larger depth means more suggestions but
+            also slower performance.
+    - name: v14-dimensions-monitoring-health
+      path: /v14/dimensions/monitoring/health
+      operations:
+      - name: getv14dimensionsmonitoringhealth
+        method: GET
+        description: Health Check for the Dimensions Service
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v14-dimensions-status
+      path: /v14/dimensions/status
+      operations:
+      - name: getv14dimensionsstatus
+        method: GET
+        description: Get the Dimensions Service Status
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v14-dimensions-apiName
+      path: /v14/dimensions/{apiName}
+      operations:
+      - name: getv14dimensionsapiname
+        method: GET
+        description: Get a Dimension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v14-dimensions-dimension-values
+      path: /v14/dimensions/{dimension}/values
+      operations:
+      - name: getv14dimensionsdimensionvalues
+        method: GET
+        description: Get the Values for a Dimension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: from
+          in: query
+          type: string
+          description: from
+        - name: to
+          in: query
+          type: string
+          description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        - name: tz
+          in: query
+          type: string
+          description: Timezone used for calculations.
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: dimension
+          in: path
+          type: string
+          description: The dimensions to fetch.
+          required: true
+        - name: f
+          in: query
+          type: array
+          description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with
+            the AND operator.
+        - name: p
+          in: query
+          type: integer
+          description: The response's page to access, starting at 1.
+        - name: n
+          in: query
+          type: integer
+          description: The number of result to include in a page.

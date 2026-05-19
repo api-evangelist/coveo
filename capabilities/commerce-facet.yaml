@@ -1,0 +1,52 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Commerce API — Facet
+  description: 'Coveo Commerce API — Facet. 1 operations. Lead operation: Executes a Facet Search Query. Self-contained Naftiko
+    capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Commerce
+  - Facet
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: commerce-facet
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Commerce API — Facet business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationId-commerce-v2-facet
+      path: /rest/organizations/{organizationId}/commerce/v2/facet
+      operations:
+      - name: facet
+        method: POST
+        description: Executes a Facet Search Query
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: type
+          in: query
+          type: string
+          description: 'Solution type. Possible values are: LISTING, SEARCH.'
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

@@ -1,0 +1,164 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Catalog Management API — Catalog Configurations
+  description: 'Coveo Catalog Management API — Catalog Configurations. 6 operations. Lead operation: List Catalog Configurations.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Catalog Management
+  - Catalog Configurations
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: catalog-management-catalog-configurations
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Catalog Management API — Catalog Configurations business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-catalogconfigurations
+      path: /rest/organizations/{organizationId}/catalogconfigurations
+      operations:
+      - name: getcatalogconfigurations
+        method: GET
+        description: List Catalog Configurations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: page
+          in: query
+          type: integer
+          description: The 0-based index number of the page of catalog configurations to retrieve.</br>**Minimum:** `0`</br>**Default:**
+            `0`
+        - name: pageSize
+          in: query
+          type: integer
+          description: The number of catalog configurations to list per page.</br>**Minimum:** `1`</br>**Maximum:** `1000`</br>**Default:**
+            `10`
+      - name: createcatalogconfiguration
+        method: POST
+        description: Create Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-catalogconfigurations-source-sourceId
+      path: /rest/organizations/{organizationId}/catalogconfigurations/source/{sourceId}
+      operations:
+      - name: getcatalogconfigurationfromsource
+        method: GET
+        description: Show Catalog Configuration from a Source ID
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: A source containing the product content of the catalog
+          required: true
+    - name: rest-organizations-organizationId-catalogconfigurations-configurationId
+      path: /rest/organizations/{organizationId}/catalogconfigurations/{configurationId}
+      operations:
+      - name: getcatalogconfiguration
+        method: GET
+        description: Show Catalog Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: configurationId
+          in: path
+          type: string
+          description: The unique identifier of the catalog configuration to show.<br />**Example:** `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
+          required: true
+      - name: updatecatalogconfiguration
+        method: PUT
+        description: Update Catalog Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: configurationId
+          in: path
+          type: string
+          description: The unique identifier of the catalog configuration to update.<br />**Example:** `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletecatalogconfiguration
+        method: DELETE
+        description: Delete Catalog Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: configurationId
+          in: path
+          type: string
+          description: The unique identifier of the catalog configuration to delete.<br />**Example:** `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
+          required: true

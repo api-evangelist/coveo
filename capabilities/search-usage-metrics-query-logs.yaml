@@ -1,0 +1,89 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Search Usage Metrics API — Query Logs
+  description: 'Coveo Search Usage Metrics API — Query Logs. 2 operations. Lead operation: Retrieves the Query Logs for a
+    Search Hub. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Search Usage Metrics
+  - Query Logs
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: search-usage-metrics-query-logs
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Search Usage Metrics API — Query Logs business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationId-searchusagemetrics-hubs-logs
+      path: /rest/organizations/{organizationId}/searchusagemetrics/hubs/logs
+      operations:
+      - name: getquerylogs
+        method: POST
+        description: Retrieves the Query Logs for a Search Hub
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: to
+          in: query
+          type: string
+          description: The last day to retrieve
+          required: true
+        - name: from
+          in: query
+          type: string
+          description: The first day to retrieve
+          required: true
+        - name: hubName
+          in: query
+          type: string
+          description: The search hub name
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+    - name: rest-organizations-organizationId-searchusagemetrics-hubs-hubName-logs
+      path: /rest/organizations/{organizationId}/searchusagemetrics/hubs/{hubName}/logs
+      operations:
+      - name: getquerylogswithpathparam
+        method: POST
+        description: Retrieves the Query Logs for a Search Hub
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+        - name: hubName
+          in: path
+          type: string
+          description: The search hub name
+          required: true
+        - name: from
+          in: query
+          type: string
+          description: The first day to retrieve
+          required: true
+        - name: to
+          in: query
+          type: string
+          description: The last day to retrieve
+          required: true

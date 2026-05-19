@@ -1,0 +1,64 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Schema Service API — Salesforce Trial
+  description: 'Coveo Schema Service API — Salesforce Trial. 2 operations. Lead operation: Retrieves the License Status for
+    an Organization. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Schema Service
+  - Salesforce Trial
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: schema-service-salesforce-trial
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Schema Service API — Salesforce Trial business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-salesforce-trial-licenseStatus
+      path: /rest/organizations/{organizationId}/salesforce/trial/licenseStatus
+      operations:
+      - name: getlicensestatus
+        method: GET
+        description: Retrieves the License Status for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+    - name: rest-organizations-organizationId-salesforce-trial-provisioningStatus
+      path: /rest/organizations/{organizationId}/salesforce/trial/provisioningStatus
+      operations:
+      - name: getprovisioningstatus
+        method: GET
+        description: Retrieves the Provisioning Status for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: salesforceOrganizationId
+          in: query
+          type: string
+          description: The ID of the Salesforce organization.
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true

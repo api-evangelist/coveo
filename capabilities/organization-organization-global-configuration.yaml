@@ -1,0 +1,60 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Organization API — Organization Global Configuration
+  description: 'Coveo Organization API — Organization Global Configuration. 2 operations. Lead operation: Get All Organization
+    Global Configurations. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Organization
+  - Organization Global Configuration
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: organization-organization-global-configuration
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Organization API — Organization Global Configuration business capability. Self-contained, no shared
+      references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-global-organizations
+      path: /rest/global/organizations
+      operations:
+      - name: getorganizationglobalconfigurations
+        method: GET
+        description: Get All Organization Global Configurations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: page
+          in: query
+          type: integer
+        - name: perPage
+          in: query
+          type: integer
+    - name: rest-global-organizations-organizationId
+      path: /rest/global/organizations/{organizationId}
+      operations:
+      - name: getorganizationglobalconfiguration
+        method: GET
+        description: Get Organization Global Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true

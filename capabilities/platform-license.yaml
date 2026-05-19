@@ -1,0 +1,84 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Platform API — License
+  description: 'Coveo Platform API — License. 3 operations. Lead operation: Show Organization License. Self-contained Naftiko
+    capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Platform
+  - License
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: platform-license
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Platform API — License business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-license
+      path: /rest/organizations/{organizationId}/license
+      operations:
+      - name: getlicense
+        method: GET
+        description: Show Organization License
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-license-entitlements
+      path: /rest/organizations/{organizationId}/license/entitlements
+      operations:
+      - name: getentitlements
+        method: GET
+        description: Show Organization Entitlements
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-license-sectionName
+      path: /rest/organizations/{organizationId}/license/{sectionName}
+      operations:
+      - name: getlicensesection
+        method: GET
+        description: Show Organization License Section
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: sectionName
+          in: path
+          type: string
+          description: The name of the target license section.</br>**Example:** `content`
+          required: true

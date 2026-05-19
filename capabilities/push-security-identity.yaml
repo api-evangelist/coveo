@@ -1,0 +1,184 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Push API — Security Identity
+  description: 'Coveo Push API — Security Identity. 5 operations. Lead operation: Add or Update an Alias. Self-contained Naftiko
+    capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Push
+  - Security Identity
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: push-security-identity
+    baseUri: https://api.cloud.coveo.com/push/v1
+    description: Coveo Push API — Security Identity business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: organizations-organizationId-providers-providerId-mappings
+      path: /organizations/{organizationId}/providers/{providerId}/mappings
+      operations:
+      - name: put
+        method: PUT
+        description: Add or Update an Alias
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: providerId
+          in: path
+          type: string
+          description: The unique identifier of the target security identity provider (see [Create a security provider](https://docs.coveo.com/en/85/index-content/create-or-update-a-s
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: orderingId
+          in: query
+          type: string
+          description: 'A value indicating the order of arrival of the Push operation in the Coveo Cloud V2 indexing pipeline.
+            A lower value corresponds to an older operation.  '
+        - name: mappedIdentityBody
+          in: body
+          type: string
+          description: The security identity alias definition.
+          required: true
+    - name: organizations-organizationId-providers-providerId-permissions
+      path: /organizations/{organizationId}/providers/{providerId}/permissions
+      operations:
+      - name: delete
+        method: DELETE
+        description: Delete a Security Identity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: providerId
+          in: path
+          type: string
+          description: The unique identifier of the target security identity provider (see [Create a security provider](https://docs.coveo.com/en/85/index-content/create-or-update-a-s
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: orderingId
+          in: query
+          type: string
+          description: 'A value indicating the order of arrival of the Push operation in the Coveo Cloud V2 indexing pipeline.
+            A lower value corresponds to an older operation.  '
+        - name: baseIdentityBody
+          in: body
+          type: string
+          description: The security identity to delete.
+          required: true
+      - name: put
+        method: PUT
+        description: Add or Update a Security Identity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: providerId
+          in: path
+          type: string
+          description: The unique identifier of the target security identity provider (see [Create a security provider](https://docs.coveo.com/en/85/index-content/create-or-update-a-s
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: orderingId
+          in: query
+          type: string
+          description: 'A value indicating the order of arrival of the Push operation in the Coveo Cloud V2 indexing pipeline.
+            A lower value corresponds to an older operation.  '
+        - name: identityBody
+          in: body
+          type: string
+          description: The security identity to add or update.
+          required: true
+    - name: organizations-organizationId-providers-providerId-permissions-batch
+      path: /organizations/{organizationId}/providers/{providerId}/permissions/batch
+      operations:
+      - name: put
+        method: PUT
+        description: Add, Update, and/or Delete a Batch of Security Identities
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: providerId
+          in: path
+          type: string
+          description: The unique identifier of the target security identity provider (see [Create a security provider](https://docs.coveo.com/en/85/index-content/create-or-update-a-s
+          required: true
+        - name: fileId
+          in: query
+          type: string
+          description: The unique identifier of the Amazon S3 file container into which the JSON definition of the security
+            identity update was previously uploaded (see [Create a file
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: orderingId
+          in: query
+          type: string
+          description: 'A value indicating the order of arrival of the Push operation in the Coveo Cloud V2 indexing pipeline.
+            A lower value corresponds to an older operation.  '
+    - name: organizations-organizationId-providers-providerId-permissions-olderthan
+      path: /organizations/{organizationId}/providers/{providerId}/permissions/olderthan
+      operations:
+      - name: delete
+        method: DELETE
+        description: Delete Old Security Identities
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: providerId
+          in: path
+          type: string
+          description: The unique identifier of the target security identity provider (see [Create a security provider](https://docs.coveo.com/en/85/index-content/create-or-update-a-s
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: orderingId
+          in: query
+          type: string
+          description: 'The lowest Push API operation timestamp value a security identity must be associated to in order not
+            to be deleted from the security identity provider.  '
+          required: true
+        - name: queueDelay
+          in: query
+          type: string
+          description: A grace period (in minutes) whose purpose is to give the Coveo Cloud V2 indexing pipeline enough time
+            to finish processing any previously enqueued operation tha

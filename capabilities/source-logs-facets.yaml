@@ -1,0 +1,113 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Source Logs API — Facets
+  description: 'Coveo Source Logs API — Facets. 2 operations. Lead operation: Get Facets. Self-contained Naftiko capability
+    covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Source Logs
+  - Facets
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: source-logs-facets
+    baseUri: https://api.cloud.coveo.com/push/v1
+    description: Coveo Source Logs API — Facets business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: organizations-organizationId-facets
+      path: /organizations/{organizationId}/facets
+      operations:
+      - name: post
+        method: POST
+        description: Get Facets
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target Coveo Cloud organization.
+          required: true
+        - name: from
+          in: query
+          type: string
+          description: The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+            corresponding to the beginning of the range for which to ret
+          required: true
+        - name: to
+          in: query
+          type: string
+          description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+            corresponding to the end of the range for which to retrieve '
+          required: true
+        - name: documentId
+          in: query
+          type: string
+          description: The filter string against which to match document `uri` field values. See the `documentIdMatching`
+            parameter to set the target kind of filter.<br />For example,
+        - name: documentIdMatching
+          in: query
+          type: string
+          description: 'The kind of filter to apply when matching the target `documentId` value against document `uri` field
+            values.<br />**Allowed values:**<br />- `EXACT`: the `docum'
+        - name: body
+          in: body
+          type: string
+          description: The filters to apply when retrieving the facets.
+          required: true
+    - name: organizations-organizationId-facetsStats
+      path: /organizations/{organizationId}/facetsStats
+      operations:
+      - name: post
+        method: POST
+        description: Get Facets with Counts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target Coveo Cloud organization.
+          required: true
+        - name: from
+          in: query
+          type: string
+          description: The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+            corresponding to the beginning of the range for which to ret
+          required: true
+        - name: to
+          in: query
+          type: string
+          description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime))
+            corresponding to the end of the range for which to retrieve '
+          required: true
+        - name: documentId
+          in: query
+          type: string
+          description: The filter string against which to match document `uri` field values. See the `documentIdMatching`
+            parameter to set the target kind of filter.<br />For example,
+        - name: documentIdMatching
+          in: query
+          type: string
+          description: 'The kind of filter to apply when matching the target `documentId` value against document `uri` field
+            values.<br />**Allowed values:**<br />- `EXACT`: the `docum'
+        - name: body
+          in: body
+          type: string
+          description: The filters to apply when retrieving the facets.
+          required: true

@@ -1,0 +1,61 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Workspace API — Resources
+  description: 'Coveo Workspace API — Resources. 1 operations. Lead operation: Get Resources. Self-contained Naftiko capability
+    covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Workspace
+  - Resources
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: workspace-resources
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Workspace API — Resources business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-resources-resourceType
+      path: /rest/organizations/{organizationId}/resources/{resourceType}
+      operations:
+      - name: getallresourcesdetailsbyresourcetype
+        method: GET
+        description: Get Resources
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: resourceType
+          in: path
+          type: string
+          description: The type of the [resource](https://docs.coveo.com/2820).<br/>**Example:** `SOURCE`
+          required: true
+        - name: filter
+          in: query
+          type: string
+          description: The text to filter resources by (applied to the resource id and name properties).<br/>**Example:**
+            `My Web source`
+        - name: page
+          in: query
+          type: integer
+          description: The 0-based number of the results page to fetch.<br/>**Default:** `0`
+        - name: perPage
+          in: query
+          type: integer
+          description: The number of results to fetch per page.<br/>**Default:** `50`

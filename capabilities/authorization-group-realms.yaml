@@ -1,0 +1,126 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Group Realms
+  description: 'Coveo Authorization Server API — Group Realms. 4 operations. Lead operation: List Realms. Self-contained Naftiko
+    capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Group Realms
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-group-realms
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Group Realms business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-groups-groupId-realms
+      path: /rest/organizations/{organizationId}/groups/{groupId}/realms
+      operations:
+      - name: getgrouprealms
+        method: GET
+        description: List Realms
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: groupId
+          in: path
+          type: string
+          description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+          required: true
+      - name: addgrouprealm
+        method: POST
+        description: Add Realm
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: groupId
+          in: path
+          type: string
+          description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-groups-groupId-realms-realmId
+      path: /rest/organizations/{organizationId}/groups/{groupId}/realms/{realmId}
+      operations:
+      - name: getgrouprealm
+        method: GET
+        description: Show Realm
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: groupId
+          in: path
+          type: string
+          description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+          required: true
+        - name: realmId
+          in: path
+          type: string
+          description: The unique identifier of the realm to show.</br>**Example:** `website-domain-coveo.com`
+          required: true
+      - name: deletegrouprealm
+        method: DELETE
+        description: Destroy Realm
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: realmId
+          in: path
+          type: string
+          description: The unique identifier of  the realm to delete.</br>**Example:** `website-domain-coveo.com`
+          required: true
+        - name: groupId
+          in: path
+          type: string
+          description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+          required: true

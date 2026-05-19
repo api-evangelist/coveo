@@ -1,0 +1,98 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Event API — Event API
+  description: 'Coveo Event API — Event API. 3 operations. Lead operation: Send Events to Coveo Analytics.. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Event
+  - Event API
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: event-event-api
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Event API — Event API business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-events-v1
+      path: /rest/organizations/{organizationId}/events/v1
+      operations:
+      - name: sendevents
+        method: POST
+        description: Send Events to Coveo Analytics.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-events-v1-requests-validate
+      path: /rest/organizations/{organizationId}/events/v1/requests/validate
+      operations:
+      - name: validaterequest
+        method: POST
+        description: Validate Coveo API Requests.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: type
+          in: query
+          type: string
+          description: The request type
+          required: true
+        - name: version
+          in: query
+          type: integer
+          description: The API version
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-events-v1-validate
+      path: /rest/organizations/{organizationId}/events/v1/validate
+      operations:
+      - name: validateevents
+        method: POST
+        description: Validate Events with Coveo Analytics.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

@@ -1,0 +1,105 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Search Interface Service API — Hosted Page
+  description: 'Coveo Search Interface Service API — Hosted Page. 7 operations. Lead operation: List Hosted Pages. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Search Interface Service
+  - Hosted Page
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: search-interface-hosted-page
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Search Interface Service API — Hosted Page business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationId-hostedpages
+      path: /rest/organizations/{organizationId}/hostedpages
+      operations:
+      - name: getallhostedpages
+        method: GET
+        description: List Hosted Pages
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createhostedpage
+        method: POST
+        description: Create Hosted Page
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-hostedpages-projects-pages
+      path: /rest/organizations/{organizationId}/hostedpages/projects/pages
+      operations:
+      - name: getprojecthostedpages
+        method: GET
+        description: List Hosted Pages in a Project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: rest-organizations-organizationId-hostedpages-pageId
+      path: /rest/organizations/{organizationId}/hostedpages/{pageId}
+      operations:
+      - name: gethostedpage
+        method: GET
+        description: Retrieve Hosted Page Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: updatehostedpage
+        method: PUT
+        description: Update Hosted Page
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletehostedpage
+        method: DELETE
+        description: Delete Hosted Page
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: rest-organizations-organizationId-hostedpages-pageId-html-v1
+      path: /rest/organizations/{organizationId}/hostedpages/{pageId}/html/v1
+      operations:
+      - name: gethostedpagehtml
+        method: GET
+        description: Show Hosted Page
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.

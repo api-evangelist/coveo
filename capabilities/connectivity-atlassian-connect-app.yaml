@@ -1,0 +1,78 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Connectivity API — Atlassian Connect App
+  description: 'Coveo Connectivity API — Atlassian Connect App. 3 operations. Lead operation: Atlassian Connect App. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Connectivity
+  - Atlassian Connect App
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: connectivity-atlassian-connect-app
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Connectivity API — Atlassian Connect App business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-atlassian-connectapp-atlassian-connect.json
+      path: /rest/atlassian/connectapp/atlassian-connect.json
+      operations:
+      - name: atlassianconnectappdescriptor
+        method: GET
+        description: ''
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: rest-atlassian-connectapp-installed
+      path: /rest/atlassian/connectapp/installed
+      operations:
+      - name: addorupdateconnectapp
+        method: POST
+        description: ''
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-atlassian-connectapp-uninstalled
+      path: /rest/atlassian/connectapp/uninstalled
+      operations:
+      - name: removeconnectapp
+        method: POST
+        description: ''
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

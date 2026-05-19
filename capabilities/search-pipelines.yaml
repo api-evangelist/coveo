@@ -1,0 +1,198 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Search API — Pipelines
+  description: 'Coveo Search API — Pipelines. 11 operations. Lead operation: List Query Pipelines. Self-contained Naftiko
+    capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Search
+  - Pipelines
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: search-pipelines
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Search API — Pipelines business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-search-v1-admin-pipelines
+      path: /rest/search/v1/admin/pipelines
+      operations:
+      - name: listquerypipelinesv1
+        method: GET
+        description: List Query Pipelines
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: perPage
+          in: query
+          type: integer
+          description: The number of results to include per page.
+        - name: enablePagination
+          in: query
+          type: boolean
+          description: Whether to receive the pipelines in a paginated format.
+      - name: createquerypipelinev1
+        method: POST
+        description: Create Query Pipeline
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v1-admin-pipelines-bulkGet
+      path: /rest/search/v1/admin/pipelines/bulkGet
+      operations:
+      - name: bulkgetpipelines
+        method: POST
+        description: List Query Pipelines
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: perPage
+          in: query
+          type: integer
+          description: The number of results to include per page.
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v1-admin-pipelines-validate
+      path: /rest/search/v1/admin/pipelines/validate
+      operations:
+      - name: validatepipelineoperation
+        method: POST
+        description: Validate a Single Pipeline Operation.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v1-admin-pipelines-validate-batch
+      path: /rest/search/v1/admin/pipelines/validate/batch
+      operations:
+      - name: validatepipelineoperations
+        method: POST
+        description: Validate Batch of Pipeline Operations.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v1-admin-pipelines-pipelineId
+      path: /rest/search/v1/admin/pipelines/{pipelineId}
+      operations:
+      - name: getquerypipelinev1
+        method: GET
+        description: Get Query Pipeline
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: updatequerypipeline
+        method: PUT
+        description: Update Query Pipeline
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletequerypipeline
+        method: DELETE
+        description: Delete Query Pipeline
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: rest-search-v1-admin-pipelines-pipelineId-duplicate
+      path: /rest/search/v1/admin/pipelines/{pipelineId}/duplicate
+      operations:
+      - name: v1copyquerypipeline
+        method: POST
+        description: Copy Query Pipeline
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: rest-search-v1-admin-pipelines-pipelineId-statements-import
+      path: /rest/search/v1/admin/pipelines/{pipelineId}/statements/import
+      operations:
+      - name: importquerypipelinestatements
+        method: POST
+        description: Import Query Pipeline Statements
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: rest-search-v1-admin-pipelines-pipelineId-swap
+      path: /rest/search/v1/admin/pipelines/{pipelineId}/swap
+      operations:
+      - name: swapquerypipelinenames
+        method: POST
+        description: Swap Query Pipeline Names
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: other
+          in: query
+          type: string
+          description: The unique identifier of the query pipeline to swap names with.
+          required: true

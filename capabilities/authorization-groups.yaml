@@ -1,0 +1,166 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Groups
+  description: 'Coveo Authorization Server API — Groups. 6 operations. Lead operation: List Groups. Self-contained Naftiko
+    capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Groups
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-groups
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Groups business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-groups
+      path: /rest/organizations/{organizationId}/groups
+      operations:
+      - name: getgroups
+        method: GET
+        description: List Groups
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+      - name: creategroup
+        method: POST
+        description: Create Group
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: sendEmailToInvitedUsers
+          in: query
+          type: boolean
+          description: Whether to send an invitation email alongside the invite.
+        - name: canEditItself
+          in: query
+          type: boolean
+          description: Whether the new [group](https://docs.coveo.com/en/2867/) can edit itself.
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-groups-groupId
+      path: /rest/organizations/{organizationId}/groups/{groupId}
+      operations:
+      - name: getgroup
+        method: GET
+        description: Show Group Details
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: groupId
+          in: path
+          type: string
+          description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+          required: true
+      - name: updategroup
+        method: PUT
+        description: Update Group
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: groupId
+          in: path
+          type: string
+          description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+          required: true
+        - name: sendEmailToInvitedUsers
+          in: query
+          type: boolean
+          description: Whether to send an email to the users that are invited to the [group](https://docs.coveo.com/en/2867/).
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletegroup
+        method: DELETE
+        description: Delete Group
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: groupId
+          in: path
+          type: string
+          description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+          required: true
+    - name: rest-organizations-organizationId-groups-groupId-privileges-exclusive-me
+      path: /rest/organizations/{organizationId}/groups/{groupId}/privileges/exclusive/me
+      operations:
+      - name: getgroupexclusiveprivileges
+        method: GET
+        description: List Privileges Granted by Group to Current User
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: groupId
+          in: path
+          type: string
+          description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+          required: true

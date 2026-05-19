@@ -1,0 +1,72 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Usage Analytics Read API — User Statistics API - Version 15
+  description: 'Coveo Usage Analytics Read API — User Statistics API - Version 15. 2 operations. Lead operation: Delete the
+    User Data. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Usage Analytics Read
+  - User Statistics API - Version 15
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: usage-analytics-read-user-statistics-api-version-15
+    baseUri: https://analytics.cloud.coveo.com/rest/ua
+    description: Coveo Usage Analytics Read API — User Statistics API - Version 15 business capability. Self-contained, no
+      shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: v15-users-userId-alldata
+      path: /v15/users/{userId}/alldata
+      operations:
+      - name: deletev15usersuseridalldata
+        method: DELETE
+        description: Delete the User Data
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: userId
+          in: path
+          type: string
+          description: The unique identifier of a user.
+          required: true
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+    - name: v15-users-userId-overview
+      path: /v15/users/{userId}/overview
+      operations:
+      - name: getv15usersuseridoverview
+        method: GET
+        description: Get the Stats of a User
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: userId
+          in: path
+          type: string
+          description: The unique identifier of a user.
+          required: true
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: cached
+          in: query
+          type: string
+          description: cached

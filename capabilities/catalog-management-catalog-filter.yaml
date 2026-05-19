@@ -1,0 +1,73 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Catalog Management API — Catalog Filter
+  description: 'Coveo Catalog Management API — Catalog Filter. 2 operations. Lead operation: Get Filter for a Catalog. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Catalog Management
+  - Catalog Filter
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: catalog-management-catalog-filter
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Catalog Management API — Catalog Filter business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: api-preview-organizations-organizationId-catalog-management-catalogs-catalogId-f
+      path: /api/preview/organizations/{organizationId}/catalog-management/catalogs/{catalogId}/filter
+      operations:
+      - name: getcatalogfilter
+        method: GET
+        description: Get Filter for a Catalog
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: catalogId
+          in: path
+          type: string
+          description: The unique identifier of the [catalog](https://docs.coveo.com/en/3143/).
+          required: true
+      - name: putcatalogfilter
+        method: PUT
+        description: Create or Update the Filter for a Catalog
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: catalogId
+          in: path
+          type: string
+          description: The unique identifier of the [catalog](https://docs.coveo.com/en/3143/).
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

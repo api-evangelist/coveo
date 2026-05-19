@@ -1,0 +1,315 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Catalog Management API — Catalogs
+  description: 'Coveo Catalog Management API — Catalogs. 9 operations. Lead operation: List Catalogs. Self-contained Naftiko
+    capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Catalog Management
+  - Catalogs
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: catalog-management-catalogs
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Catalog Management API — Catalogs business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-catalogs
+      path: /rest/organizations/{organizationId}/catalogs
+      operations:
+      - name: getcatalogs
+        method: GET
+        description: List Catalogs
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: filter
+          in: query
+          type: string
+          description: Filter that will be matched against the catalog id, name, description and its configuration name..<br
+            />**Example:** `catalogName`
+        - name: catalogIds
+          in: query
+          type: array
+          description: List of the unique identifiers of the [catalog](https://docs.coveo.com/en/3143/) to show.<br />**Example:**
+            `[644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b]`
+        - name: sourceIds
+          in: query
+          type: array
+          description: List of the unique identifiers of the sources
+        - name: page
+          in: query
+          type: integer
+          description: The 0-based index number of the page of catalogs to retrieve.</br>**Minimum:** `0`</br>**Default:**
+            `0`
+        - name: pageSize
+          in: query
+          type: integer
+          description: The number of catalogs to list per page.</br>**Minimum:** `1`</br>**Maximum:** `1000`</br>**Default:**
+            `10`
+        - name: enrichWithFields
+          in: query
+          type: boolean
+          description: If true, catalog will be enriched with field suggestions. This requires a call to SearchAPI
+        - name: catalogSortingType
+          in: query
+          type: string
+          description: The field to sort the returned catalogs by.</br>**Default:** `name`
+        - name: sortingDirection
+          in: query
+          type: string
+          description: The `sortingType` order to list the catalogs in.</br>**Default:** `ASC`
+      - name: createcatalog
+        method: POST
+        description: Create Catalog
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-catalogs-fieldsSuggestions
+      path: /rest/organizations/{organizationId}/catalogs/fieldsSuggestions
+      operations:
+      - name: getfieldssuggestions
+        method: POST
+        description: Suggest Fields
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-catalogs-ids
+      path: /rest/organizations/{organizationId}/catalogs/ids
+      operations:
+      - name: getcatalogswithidsbody
+        method: POST
+        description: List Catalogs Using Catalog Ids as a Body for Filtering.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: filter
+          in: query
+          type: string
+          description: Filter that will be matched against the catalog id, name, description and its configuration name..<br
+            />**Example:** `catalogName`
+        - name: sourceIds
+          in: query
+          type: array
+          description: List of the unique identifiers of the sources
+        - name: page
+          in: query
+          type: integer
+          description: The 0-based index number of the page of catalogs to retrieve.</br>**Minimum:** `0`</br>**Default:**
+            `0`
+        - name: pageSize
+          in: query
+          type: integer
+          description: The number of catalogs to list per page.</br>**Minimum:** `1`</br>**Maximum:** `1000`</br>**Default:**
+            `10`
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-catalogs-project
+      path: /rest/organizations/{organizationId}/catalogs/project
+      operations:
+      - name: getcatalogswithprojectid
+        method: GET
+        description: List Catalogs Within Specified Project and According to the Specified Filter.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: filter
+          in: query
+          type: string
+          description: Filter that will be matched against the catalog id, name, description and its configuration name..<br
+            />**Example:** `catalogName`
+        - name: projectId
+          in: query
+          type: string
+          description: Id of the project for which we want to retrieve the catalogs
+        - name: sourceIds
+          in: query
+          type: array
+          description: List of the unique identifiers of the sources
+        - name: page
+          in: query
+          type: integer
+          description: The 0-based index number of the page of catalogs to retrieve.</br>**Minimum:** `0`</br>**Default:**
+            `0`
+        - name: pageSize
+          in: query
+          type: integer
+          description: The number of catalogs to list per page.</br>**Minimum:** `1`</br>**Maximum:** `1000`</br>**Default:**
+            `10`
+        - name: enrichWithFields
+          in: query
+          type: boolean
+          description: If true, catalog will be enriched with field suggestions. This requires a call to SearchAPI
+        - name: catalogSortingType
+          in: query
+          type: string
+          description: The field to sort the returned catalogs by.</br>**Default:** `name`
+        - name: sortingDirection
+          in: query
+          type: string
+          description: The `sortingType` order to list the catalogs in.</br>**Default:** `ASC`
+    - name: rest-organizations-organizationId-catalogs-catalogId
+      path: /rest/organizations/{organizationId}/catalogs/{catalogId}
+      operations:
+      - name: getcatalog
+        method: GET
+        description: Show Catalog
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: catalogId
+          in: path
+          type: string
+          description: The unique identifier of the [catalog](https://docs.coveo.com/en/3143/) to show.<br />**Example:**
+            `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
+          required: true
+      - name: updatecatalog
+        method: PUT
+        description: Update Catalog
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: catalogId
+          in: path
+          type: string
+          description: The unique identifier of the [catalog](https://docs.coveo.com/en/3143/) to update.<br />**Example:**
+            `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletecatalog
+        method: DELETE
+        description: Delete Catalog
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: catalogId
+          in: path
+          type: string
+          description: The unique identifier of the [catalog](https://docs.coveo.com/en/3143/) to delete.<br />**Example:**
+            `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
+          required: true
+    - name: rest-organizations-organizationId-catalogs-catalogId-fieldStats
+      path: /rest/organizations/{organizationId}/catalogs/{catalogId}/fieldStats
+      operations:
+      - name: getfieldstats
+        method: GET
+        description: Show Field Stats
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: catalogId
+          in: path
+          type: string
+          description: The unique identifier of the [catalog](https://docs.coveo.com/en/3143/).
+          required: true
+        - name: forceRefresh
+          in: query
+          type: boolean
+          description: If true, the database cache will be refreshed and the most up-to-date fields data returned.

@@ -1,0 +1,78 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Source API — Source Extension Configurations
+  description: 'Coveo Source API — Source Extension Configurations. 2 operations. Lead operation: List Extension Configurations.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Source
+  - Source Extension Configurations
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: source-source-extension-configurations
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Source API — Source Extension Configurations business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-sources-sourceId-extensions
+      path: /rest/organizations/{organizationId}/sources/{sourceId}/extensions
+      operations:
+      - name: getsourceextensions
+        method: GET
+        description: List Extension Configurations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+          required: true
+      - name: setsourceextensions
+        method: PUT
+        description: Update Extension Configurations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+          required: true
+        - name: rebuild
+          in: query
+          type: boolean
+          description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:**
+            `false`
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

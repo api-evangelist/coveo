@@ -1,0 +1,48 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Machine Learning API — Streaming Model Response
+  description: 'Coveo Machine Learning API — Streaming Model Response. 1 operations. Lead operation: Get Model Response Events
+    for a Query Stream. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Machine Learning
+  - Streaming Model Response
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: machine-learning-streaming-model-response
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Machine Learning API — Streaming Model Response business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-machinelearning-streaming-streamId
+      path: /rest/organizations/{organizationId}/machinelearning/streaming/{streamId}
+      operations:
+      - name: getquerystreamevents
+        method: GET
+        description: Get Model Response Events for a Query Stream
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target Coveo Cloud organization
+          required: true
+        - name: streamId
+          in: path
+          type: string
+          description: Unique Identifier for the response stream. For details on how to obtain the streamId for this response,
+            refer to [Streaming model responses](https://docs.coveo.
+          required: true

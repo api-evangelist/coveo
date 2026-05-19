@@ -1,0 +1,300 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Search API — Search V3
+  description: 'Coveo Search API — Search V3. 14 operations. Lead operation: Send Search Request. Self-contained Naftiko capability
+    covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Search
+  - Search V3
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: search-search-v3
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Search API — Search V3 business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-search-v3
+      path: /rest/search/v3
+      operations:
+      - name: searchusingpostv3
+        method: POST
+        description: Send Search Request
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: rest-search-v3-datastream
+      path: /rest/search/v3/datastream
+      operations:
+      - name: datastreamv3
+        method: GET
+        description: Get Item Data Stream
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: dataStream
+          in: query
+          type: string
+          description: The name of the data stream to request.
+          required: true
+        - name: primaryId
+          in: query
+          type: string
+          description: The primary ID of the document.
+        - name: uniqueId
+          in: query
+          type: string
+          description: '**Deprecated:** Use `primaryId` instead.'
+        - name: contentType
+          in: query
+          type: string
+          description: The MIME type of the data stream to request.
+    - name: rest-search-v3-document
+      path: /rest/search/v3/document
+      operations:
+      - name: documentv3
+        method: GET
+        description: Get Item in JSON Format
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: primaryId
+          in: query
+          type: string
+          description: The primary ID of the document.
+        - name: uniqueId
+          in: query
+          type: string
+          description: '**Deprecated:** Use `primaryId` instead.'
+    - name: rest-search-v3-facet
+      path: /rest/search/v3/facet
+      operations:
+      - name: facetsearchv3
+        method: POST
+        description: Send Facet Search Request
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v3-fields
+      path: /rest/search/v3/fields
+      operations:
+      - name: fieldsv3
+        method: GET
+        description: List All Fields
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: rest-search-v3-fields-find
+      path: /rest/search/v3/fields/find
+      operations:
+      - name: findfieldsfromexpressionv3
+        method: POST
+        description: Find Fields from Results of a Query Expression
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: rest-search-v3-html
+      path: /rest/search/v3/html
+      operations:
+      - name: htmlpostv3
+        method: POST
+        description: Get HTML Item Preview
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: uniqueId
+          in: query
+          type: string
+          description: The uniqueId of the document. Exactly one of uniqueId or primaryId is required.
+        - name: primaryId
+          in: query
+          type: string
+          description: The primaryId of the document. Exactly one of uniqueId or primaryId is required.
+        - name: findNext
+          in: query
+          type: integer
+        - name: findPrevious
+          in: query
+          type: integer
+        - name: page
+          in: query
+          type: integer
+        - name: enableNavigation
+          in: query
+          type: boolean
+        - name: requestedOutputSize
+          in: query
+          type: integer
+          description: The approximate number of bytes to request in the HTML response. **Default:** `0`, meaning that the
+            entire HTML document is requested.
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v3-login-provider
+      path: /rest/search/v3/login/{provider}
+      operations:
+      - name: loginproviderpostv3
+        method: POST
+        description: Log in to Authentication Provider
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: provider
+          in: path
+          type: string
+          description: The name of the Search API authentication provider to log in to.
+          required: true
+    - name: rest-search-v3-plan
+      path: /rest/search/v3/plan
+      operations:
+      - name: plansearchusingpostv3
+        method: POST
+        description: Plan Search Execution
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: rest-search-v3-querySuggest
+      path: /rest/search/v3/querySuggest
+      operations:
+      - name: querysuggestpostv3
+        method: POST
+        description: Request Query Suggestions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: rest-search-v3-text
+      path: /rest/search/v3/text
+      operations:
+      - name: textv3
+        method: GET
+        description: Get Item in Text Format
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: primaryId
+          in: query
+          type: string
+          description: The primary ID of the document.
+        - name: uniqueId
+          in: query
+          type: string
+          description: '**Deprecated:** Use `primaryId` instead.'
+    - name: rest-search-v3-token
+      path: /rest/search/v3/token
+      operations:
+      - name: tokenv3
+        method: POST
+        description: Create Search Token
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v3-values
+      path: /rest/search/v3/values
+      operations:
+      - name: valuespostv3
+        method: POST
+        description: Get Values for One Field
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v3-values-batch
+      path: /rest/search/v3/values/batch
+      operations:
+      - name: valuesbatchpostv3
+        method: POST
+        description: Get Values for Several Field
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

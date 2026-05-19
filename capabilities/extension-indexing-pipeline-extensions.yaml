@@ -1,0 +1,455 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Extension API — Indexing Pipeline Extensions
+  description: 'Coveo Extension API — Indexing Pipeline Extensions. 18 operations. Lead operation: List Extensions. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Extension
+  - Indexing Pipeline Extensions
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: extension-indexing-pipeline-extensions
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Extension API — Indexing Pipeline Extensions business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-extensions
+      path: /rest/organizations/{organizationId}/extensions
+      operations:
+      - name: getextensions
+        method: GET
+        description: List Extensions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+      - name: createextension
+        method: POST
+        description: Create Extension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-extensions-ids
+      path: /rest/organizations/{organizationId}/extensions/ids
+      operations:
+      - name: getextensionsbyids
+        method: POST
+        description: Get a Subset of Extensions by Ids for an Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: page
+          in: query
+          type: integer
+        - name: perPage
+          in: query
+          type: integer
+        - name: filter
+          in: query
+          type: string
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-extensions-page
+      path: /rest/organizations/{organizationId}/extensions/page
+      operations:
+      - name: getextensionsbypage
+        method: GET
+        description: List Extensions by Page with Filter.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: page
+          in: query
+          type: integer
+        - name: perPage
+          in: query
+          type: integer
+        - name: filter
+          in: query
+          type: string
+    - name: rest-organizations-organizationId-extensions-project
+      path: /rest/organizations/{organizationId}/extensions/project
+      operations:
+      - name: getextensionsbyprojectid
+        method: GET
+        description: Get Extensions Associated with Specified Project.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: projectId
+          in: query
+          type: string
+        - name: page
+          in: query
+          type: integer
+        - name: perPage
+          in: query
+          type: integer
+        - name: filter
+          in: query
+          type: string
+    - name: rest-organizations-organizationId-extensions-test-compile
+      path: /rest/organizations/{organizationId}/extensions/test/compile
+      operations:
+      - name: compileextension
+        method: POST
+        description: Try to Compile Code for an Extension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-extensions-extensionId
+      path: /rest/organizations/{organizationId}/extensions/{extensionId}
+      operations:
+      - name: getextension
+        method: GET
+        description: Show Extension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          description: The unique identifier of the extension to show.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3n-vwlyqfbtjkotxqkmrxqjcbcpoy`
+          required: true
+      - name: updateextension
+        method: PUT
+        description: Update Extension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          description: The unique identifier of the extension to update.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleteextension
+        method: DELETE
+        description: Delete Extension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          description: The unique identifier of the extension to delete.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+          required: true
+    - name: rest-organizations-organizationId-extensions-extensionId-code
+      path: /rest/organizations/{organizationId}/extensions/{extensionId}/code
+      operations:
+      - name: getextensioncode
+        method: GET
+        description: Show Extension Code
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          required: true
+      - name: updateextensioncode
+        method: PUT
+        description: Update Extension Code
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-extensions-extensionId-disable
+      path: /rest/organizations/{organizationId}/extensions/{extensionId}/disable
+      operations:
+      - name: disableextension
+        method: POST
+        description: Disable Extension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          description: The unique identifier of the extension to disable.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-extensions-extensionId-enable
+      path: /rest/organizations/{organizationId}/extensions/{extensionId}/enable
+      operations:
+      - name: enableextension
+        method: POST
+        description: Enable Extension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          description: The unique identifier of the extension to enable.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+          required: true
+    - name: rest-organizations-organizationId-extensions-extensionId-test
+      path: /rest/organizations/{organizationId}/extensions/{extensionId}/test
+      operations:
+      - name: testextension
+        method: POST
+        description: Test Extension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          description: The unique identifier of the extension to test.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-extensions-extensionId-test-datastream
+      path: /rest/organizations/{organizationId}/extensions/{extensionId}/test/datastream
+      operations:
+      - name: generatetestdatastreamuploaduri
+        method: POST
+        description: Create Test Data Stream Upload URI
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          description: The unique identifier of the extension for which to create an upload URI.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+          required: true
+    - name: rest-organizations-organizationId-extensions-extensionId-timeouts
+      path: /rest/organizations/{organizationId}/extensions/{extensionId}/timeouts
+      operations:
+      - name: updateextensiontimeout
+        method: PUT
+        description: Set Timeout for a Given Extension for an Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-extensions-extensionId-versions
+      path: /rest/organizations/{organizationId}/extensions/{extensionId}/versions
+      operations:
+      - name: getextensionversions
+        method: GET
+        description: List Extension Versions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          description: The unique identifier of the target extension.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+          required: true
+    - name: rest-organizations-organizationId-extensions-extensionId-versions-versionId
+      path: /rest/organizations/{organizationId}/extensions/{extensionId}/versions/{versionId}
+      operations:
+      - name: getextensionversion
+        method: GET
+        description: Show Extension Version
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b>
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: extensionId
+          in: path
+          type: string
+          description: The unique identifier of the target extension.<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+          required: true
+        - name: versionId
+          in: path
+          type: string
+          description: The unique identifier of the extension version to show.<br /><b>Example</b>:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`
+          required: true

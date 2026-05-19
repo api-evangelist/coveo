@@ -1,0 +1,429 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Workspace API — Projects
+  description: 'Coveo Workspace API — Projects. 14 operations. Lead operation: Get Projects. Self-contained Naftiko capability
+    covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Workspace
+  - Projects
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: workspace-projects
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Workspace API — Projects business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-projects
+      path: /rest/organizations/{organizationId}/projects
+      operations:
+      - name: getprojects
+        method: GET
+        description: Get Projects
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: filter
+          in: query
+          type: string
+          description: The text to filter projects by (applied to the project id, name, and pointsOfContact properties).<br/>**Example:**
+            `Project123`
+        - name: sortBy
+          in: query
+          type: string
+          description: The property to sort the results by.<br/>**Example:** `NAME`
+        - name: order
+          in: query
+          type: string
+          description: The sorting order of the results.<br/>**Default:** `DESC`
+        - name: page
+          in: query
+          type: integer
+          description: The 0-based number of the results page to fetch.<br/>**Default:** `0`
+        - name: perPage
+          in: query
+          type: integer
+          description: The number of results to fetch per page.<br/>**Default:** `50`
+      - name: createproject
+        method: POST
+        description: Create Project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-projects-resources-ids
+      path: /rest/organizations/{organizationId}/projects/resources/ids
+      operations:
+      - name: getresourcesbyprojectid
+        method: GET
+        description: Get Resources of Specified Type Within a Project.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: resourceType
+          in: query
+          type: string
+          description: The type of the [resource](https://docs.coveo.com/2820).
+          required: true
+        - name: projectId
+          in: query
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).
+          required: true
+      - name: getresourcesbyresourceids
+        method: POST
+        description: Get Project Ids Associated with Provided Resource Ids and Type.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: resourceType
+          in: query
+          type: string
+          description: The type of the [resource](https://docs.coveo.com/2820).
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-projects-resources-ids-page
+      path: /rest/organizations/{organizationId}/projects/resources/ids/page
+      operations:
+      - name: getresourcesbyprojectidbypage
+        method: GET
+        description: Get Paginated Resources of Specified Type Within a Project.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: resourceType
+          in: query
+          type: string
+          description: The type of the [resource](https://docs.coveo.com/2820).
+          required: true
+        - name: projectId
+          in: query
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).
+          required: true
+        - name: page
+          in: query
+          type: integer
+          description: The 0-based number of the results page to fetch.<br/>**Default:** `0`
+        - name: perPage
+          in: query
+          type: integer
+          description: The number of results to fetch per page.<br/>**Default:** `50`
+    - name: rest-organizations-organizationId-projects-resources-resourceId-projectids
+      path: /rest/organizations/{organizationId}/projects/resources/{resourceId}/projectids
+      operations:
+      - name: setresourceprojectids
+        method: POST
+        description: Set the Project Ids Associated with Provided Resource of Type.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: resourceType
+          in: query
+          type: string
+          description: The type of the [resource](https://docs.coveo.com/2820).
+          required: true
+        - name: resourceId
+          in: path
+          type: string
+          description: The unique identifier of a [resource](https://docs.coveo.com/2820).
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-projects-projectId
+      path: /rest/organizations/{organizationId}/projects/{projectId}
+      operations:
+      - name: getproject
+        method: GET
+        description: Get Project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: projectId
+          in: path
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).<br/>**Example:** `uwthtvihpqjbzktjdfexk3covi`
+          required: true
+      - name: updateproject
+        method: PUT
+        description: Update Project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: projectId
+          in: path
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).<br/>**Example:** `uwthtvihpqjbzktjdfexk3covi`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleteproject
+        method: DELETE
+        description: Delete Project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: projectId
+          in: path
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).<br/>**Example:** `uwthtvihpqjbzktjdfexk3covi`
+          required: true
+    - name: rest-organizations-organizationId-projects-projectId-resources
+      path: /rest/organizations/{organizationId}/projects/{projectId}/resources
+      operations:
+      - name: getprojectresourcesbystatus
+        method: GET
+        description: Get Resource Ids Grouped by Resource Status.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: projectId
+          in: path
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).<br/>**Example:** `uwthtvihpqjbzktjdfexk3covi`
+          required: true
+    - name: rest-organizations-organizationId-projects-projectId-resources-resourceType
+      path: /rest/organizations/{organizationId}/projects/{projectId}/resources/{resourceType}
+      operations:
+      - name: getprojectresourcesdetailsbyresourcetype
+        method: GET
+        description: Get Resource Details by Type.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: projectId
+          in: path
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).<br/>**Example:** `uwthtvihpqjbzktjdfexk3covi`
+          required: true
+        - name: resourceType
+          in: path
+          type: string
+          description: The type of the [resource](https://docs.coveo.com/2820).<br/>**Example:** `SOURCE`
+          required: true
+        - name: filter
+          in: query
+          type: string
+          description: The text to filter resources by (applied to the resource id and name properties).<br/>**Example:**
+            `My Web source`
+        - name: page
+          in: query
+          type: integer
+          description: The 0-based number of the results page to fetch.<br/>**Default:** `0`
+        - name: perPage
+          in: query
+          type: integer
+          description: The number of results to fetch per page.<br/>**Default:** `50`
+    - name: rest-organizations-organizationId-projects-projectId-resources-resourceType-ids
+      path: /rest/organizations/{organizationId}/projects/{projectId}/resources/{resourceType}/ids
+      operations:
+      - name: getallprojectresourceidsoftype
+        method: GET
+        description: Get All Resource Ids of Specified Type Within a Project.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: projectId
+          in: path
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).<br/>**Example:** `uwthtvihpqjbzktjdfexk3covi`
+          required: true
+        - name: resourceType
+          in: path
+          type: string
+          description: The type of the [resource](https://docs.coveo.com/2820).<br/>**Example:** `SOURCE`
+          required: true
+    - name: rest-organizations-organizationId-projects-projectId-resources-resourceType-reso
+      path: /rest/organizations/{organizationId}/projects/{projectId}/resources/{resourceType}/{resourceId}
+      operations:
+      - name: addresourcetoproject
+        method: PUT
+        description: Add a Single Resource to a Project.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: projectId
+          in: path
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).<br/>**Example:** `uwthtvihpqjbzktjdfexk3covi`
+          required: true
+        - name: resourceType
+          in: path
+          type: string
+          description: The type of the [resource](https://docs.coveo.com/2820).
+          required: true
+        - name: resourceId
+          in: path
+          type: string
+          description: The unique identifier of a [resource](https://docs.coveo.com/2820).
+          required: true
+      - name: removeresourcefromproject
+        method: DELETE
+        description: Remove a Specific Resource from a Project.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:**
+            `startingorganizationg8tp8wu3`
+          required: true
+        - name: projectId
+          in: path
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).<br/>**Example:** `uwthtvihpqjbzktjdfexk3covi`
+          required: true
+        - name: resourceType
+          in: path
+          type: string
+          description: The type of the [resource](https://docs.coveo.com/2820).
+          required: true
+        - name: resourceId
+          in: path
+          type: string
+          description: The unique identifier of a [resource](https://docs.coveo.com/2820).
+          required: true

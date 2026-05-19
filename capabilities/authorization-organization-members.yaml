@@ -1,0 +1,176 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Organization Members
+  description: 'Coveo Authorization Server API — Organization Members. 7 operations. Lead operation: List Members. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Organization Members
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-organization-members
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Organization Members business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-members
+      path: /rest/organizations/{organizationId}/members
+      operations:
+      - name: getorganizationmembers
+        method: GET
+        description: List Members
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+      - name: updateorganizationmembers
+        method: PUT
+        description: Update Organization Members
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: sendEmailToInvitedUsers
+          in: query
+          type: boolean
+          description: Whether to send an invitation email alongside the invite(s).</br>**Default:** `true`
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-members-privileges
+      path: /rest/organizations/{organizationId}/members/privileges
+      operations:
+      - name: getorganizationmemberprivileges2
+        method: GET
+        description: List Privileges of Current User
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-members-username
+      path: /rest/organizations/{organizationId}/members/{username}
+      operations:
+      - name: getorganizationmember
+        method: GET
+        description: Show Member
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: username
+          in: path
+          type: string
+          description: The username of the member to show.</br>**Example:** `jsmith@email.com-google`
+          required: true
+      - name: updateorganizationmember
+        method: PUT
+        description: Update Member
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: username
+          in: path
+          type: string
+          description: The username of the member to update.</br>**Example:** `jsmith@email.com-google`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleteorganizationmember
+        method: DELETE
+        description: Delete Member
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: username
+          in: path
+          type: string
+          description: The username of the member to delete.</br>**Example:** `jsmith@email.com-google`
+          required: true
+    - name: rest-organizations-organizationId-members-username-groups
+      path: /rest/organizations/{organizationId}/members/{username}/groups
+      operations:
+      - name: getmembergroups
+        method: GET
+        description: List Groups for Organization Member
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: username
+          in: path
+          type: string
+          description: The username of the user for which to list groups.</br>**Example:** `jsmith@email.com-google`
+          required: true

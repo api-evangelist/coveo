@@ -1,0 +1,152 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Saml Identity Providers
+  description: 'Coveo Authorization Server API — Saml Identity Providers. 7 operations. Lead operation: List Manageable Identity
+    Providers. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Saml Identity Providers
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-saml-identity-providers
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Saml Identity Providers business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-saml-availables
+      path: /rest/organizations/{organizationId}/saml/availables
+      operations:
+      - name: getavailablesamlidentityproviders
+        method: GET
+        description: List Manageable Identity Providers
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-saml-enabled
+      path: /rest/organizations/{organizationId}/saml/enabled
+      operations:
+      - name: issamlidentityproviderenabled
+        method: GET
+        description: Check If Any Identity Provider Exists
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-saml-identityprovider
+      path: /rest/organizations/{organizationId}/saml/identityprovider
+      operations:
+      - name: getidentityprovider
+        method: GET
+        description: Show Identity Provider
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id)
+            for which to show the identity '
+          required: true
+      - name: updateidentityprovider
+        method: PUT
+        description: Update Identity Provider
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: createidentityprovider
+        method: POST
+        description: Create Identity Provider
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deleteidentityprovider
+        method: DELETE
+        description: Delete Identity Provider
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id)
+            for which to delete the SAML id
+          required: true
+    - name: rest-organizations-organizationId-saml-identityprovider-realms
+      path: /rest/organizations/{organizationId}/saml/identityprovider/realms
+      operations:
+      - name: getrealmsforsamlidentityprovider
+        method: GET
+        description: List Identity Provider Realms
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id)
+            for which to list realms.</br>*
+          required: true

@@ -1,0 +1,57 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Machine Learning Configuration API — Model Associations
+  description: 'Coveo Machine Learning Configuration API — Model Associations. 1 operations. Lead operation: Lists Associations.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Machine Learning Configuration
+  - Model Associations
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: ml-config-model-associations
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Machine Learning Configuration API — Model Associations business capability. Self-contained, no shared
+      references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-machinelearning-configuration-querypipelines-p
+      path: /rest/organizations/{organizationId}/machinelearning/configuration/querypipelines/{pipelineId}/associations
+      operations:
+      - name: getassociations
+        method: GET
+        description: Lists Associations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: pipelineId
+          in: path
+          type: string
+          required: true
+        - name: page
+          in: query
+          type: integer
+          description: 'The 0-based number of the page of results to list.<br />Minimum: `0`<br />**Default:** `0`'
+        - name: pageSize
+          in: query
+          type: integer
+          description: The maximum number of results to include per page.<br />**Must be in range:** `[1, 1000]`<br />**Default:**
+            `100`

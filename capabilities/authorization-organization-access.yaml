@@ -1,0 +1,93 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Organization Access
+  description: 'Coveo Authorization Server API — Organization Access. 2 operations. Lead operation: List API Keys with Privilege
+    Access Level. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Organization Access
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-organization-access
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Organization Access business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-access-apikeys
+      path: /rest/organizations/{organizationId}/access/apikeys
+      operations:
+      - name: getapikeyswithspecificprivilegeaccesslevels
+        method: GET
+        description: List API Keys with Privilege Access Level
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: privilegeOwner
+          in: query
+          type: string
+          description: The `owner` value an API key must have to be included in the response.
+          required: true
+        - name: privilegeTargetDomain
+          in: query
+          type: string
+          description: The `targetDomain` value an API key must have to be included in response.
+          required: true
+        - name: accessLevel
+          in: query
+          type: array
+          description: 'The [access level](https://docs.coveo.com/en/2818/) an API key must have to be included in the response.</br>**Allowed
+            values:**</br>- `EDIT_ALL`: API key can e'
+          required: true
+    - name: rest-organizations-organizationId-access-groups
+      path: /rest/organizations/{organizationId}/access/groups
+      operations:
+      - name: getgroupswithspecificprivilegeaccesslevels
+        method: GET
+        description: List Groups with Privilege Access Level
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: privilegeOwner
+          in: query
+          type: string
+          description: The `owner` value the groups privileges must match to be included in the response.
+          required: true
+        - name: privilegeTargetDomain
+          in: query
+          type: string
+          description: The `targetDomain` value the groups privileges must match to be included in the response.
+          required: true
+        - name: accessLevel
+          in: query
+          type: array
+          description: 'The [access level](https://docs.coveo.com/en/2818/) the groups privileges must match to be included
+            in the response.</br>**Allowed values:**</br>- `EDIT_ALL`: G'
+          required: true

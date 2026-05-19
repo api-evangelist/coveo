@@ -1,0 +1,107 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Source API — Metadata
+  description: 'Coveo Source API — Metadata. 3 operations. Lead operation: Retrieve Metadata Report for a Source. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Source
+  - Metadata
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: source-metadata
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Source API — Metadata business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-sources-sourceId-metadata
+      path: /rest/organizations/{organizationId}/sources/{sourceId}/metadata
+      operations:
+      - name: getsourcemetadatareport
+        method: GET
+        description: Retrieve Metadata Report for a Source
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+          required: true
+        - name: page
+          in: query
+          type: integer
+        - name: perPage
+          in: query
+          type: integer
+        - name: filter
+          in: query
+          type: string
+          description: Optional filter string. Must be at least 2 characters long to be applied.
+        - name: sortBy
+          in: query
+          type: string
+        - name: order
+          in: query
+          type: string
+      - name: createmetadatareport
+        method: POST
+        description: Create Metadata Report for a Source
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+          required: true
+    - name: rest-organizations-organizationId-sources-sourceId-metadata-status
+      path: /rest/organizations/{organizationId}/sources/{sourceId}/metadata/status
+      operations:
+      - name: getsourcemetadatastatus
+        method: GET
+        description: Get the Status of Metadata Reports for a Source
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+          required: true

@@ -1,0 +1,189 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Commerce API — Synonym
+  description: 'Coveo Commerce API — Synonym. 5 operations. Lead operation: List Synonym Rules. Self-contained Naftiko capability
+    covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Commerce
+  - Synonym
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: commerce-synonym
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Commerce API — Synonym business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationId-commerce-v2-search-synonyms
+      path: /rest/organizations/{organizationId}/commerce/v2/search/synonyms
+      operations:
+      - name: listsynonyms
+        method: GET
+        description: List Synonym Rules
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: trackingId
+          in: query
+          type: string
+          description: The unique identifier of the tracking target.
+          required: true
+        - name: language
+          in: query
+          type: string
+          description: An ISO 639-1 language code.
+        - name: country
+          in: query
+          type: string
+          description: An ISO 3166-1 alpha-2 country code.
+        - name: currency
+          in: query
+          type: string
+          description: An ISO 4217 currency code.
+        - name: query
+          in: query
+          type: string
+          description: Filter on search term (query expression) when requesting rules.
+        - name: action
+          in: query
+          type: string
+          description: 'The synonym rule type. Possible values are: one-way, two-way, and one-way-reverse.'
+        - name: sort
+          in: query
+          type: string
+          description: property.direction to sort by.
+        - name: page
+          in: query
+          type: integer
+          description: The 0-based index number of the page of rules to retrieve.</br>**Minimum:** `0`</br>**Default:** `0`
+        - name: perPage
+          in: query
+          type: integer
+          description: The number of rules to list per page.</br>**Minimum:** `1`</br>**Maximum:** `1000`</br>**Default:**
+            `10`
+      - name: createsynonym
+        method: POST
+        description: Create a Synonym Rule
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: trackingId
+          in: query
+          type: string
+          description: The unique identifier of the tracking target.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-commerce-v2-search-synonyms-synonymId
+      path: /rest/organizations/{organizationId}/commerce/v2/search/synonyms/{synonymId}
+      operations:
+      - name: getsynonym
+        method: GET
+        description: Get a Synonym Rule.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: trackingId
+          in: query
+          type: string
+          description: The unique identifier of the tracking target.
+          required: true
+        - name: synonymId
+          in: path
+          type: string
+          description: A UUID identifying the synonym rule.
+          required: true
+      - name: editsynonym
+        method: PUT
+        description: Edit Synonym Rule
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: trackingId
+          in: query
+          type: string
+          description: The unique identifier of the tracking target.
+          required: true
+        - name: synonymId
+          in: path
+          type: string
+          description: A UUID identifying the synonym rule.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletesynonym
+        method: DELETE
+        description: Delete Synonym Rule.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: trackingId
+          in: query
+          type: string
+          description: The unique identifier of the tracking target.
+          required: true
+        - name: synonymId
+          in: path
+          type: string
+          description: A UUID identifying the synonym rule.
+          required: true

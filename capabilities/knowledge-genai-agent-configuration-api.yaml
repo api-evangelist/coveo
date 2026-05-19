@@ -1,0 +1,133 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Knowledge Generative AI API — Agent Configuration API
+  description: 'Coveo Knowledge Generative AI API — Agent Configuration API. 5 operations. Lead operation: List Agents. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Knowledge Generative AI
+  - Agent Configuration API
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: knowledge-genai-agent-configuration-api
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Knowledge Generative AI API — Agent Configuration API business capability. Self-contained, no shared
+      references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: api-preview-organizations-organizationId-agents
+      path: /api/preview/organizations/{organizationId}/agents
+      operations:
+      - name: getbypage
+        method: GET
+        description: List Agents
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: page
+          in: query
+          type: integer
+          description: The zero-based index of the results page to retrieve
+        - name: perPage
+          in: query
+          type: integer
+          description: The number of items to return per page
+      - name: create
+        method: POST
+        description: Create an Agent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: X-Skip-Provisioning
+          in: header
+          type: boolean
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-preview-organizations-organizationId-agents-agentId
+      path: /api/preview/organizations/{organizationId}/agents/{agentId}
+      operations:
+      - name: get
+        method: GET
+        description: Get an Agent by agentId
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: agentId
+          in: path
+          type: string
+          required: true
+      - name: delete
+        method: DELETE
+        description: Delete an Agent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: agentId
+          in: path
+          type: string
+          required: true
+      - name: update
+        method: PATCH
+        description: Update an Agent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: agentId
+          in: path
+          type: string
+          required: true
+        - name: X-Skip-Provisioning
+          in: header
+          type: boolean
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

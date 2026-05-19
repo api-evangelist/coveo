@@ -1,0 +1,114 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Tailgate API — Ingestion Content
+  description: 'Coveo Tailgate API — Ingestion Content. 3 operations. Lead operation: Return Metadata Names for a Source.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Tailgate
+  - Ingestion Content
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: tailgate-ingestion-content
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Tailgate API — Ingestion Content business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-ingestioncontent-source-sourceId-metadata
+      path: /rest/organizations/{organizationId}/ingestioncontent/source/{sourceId}/metadata
+      operations:
+      - name: getmetadatanames
+        method: GET
+        description: Return Metadata Names for a Source
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: The unique identifier of the target [source](https://docs.coveo.com/en/246/glossary/source).<br />**Example:**
+            `acmecorporation8tp8wu3-upggxcxbquuzbsn6l3ir3wcoi
+          required: true
+        - name: objectType
+          in: query
+          type: string
+          required: true
+        - name: filter
+          in: query
+          type: string
+        - name: version
+          in: query
+          type: integer
+        - name: page
+          in: query
+          type: integer
+        - name: perPage
+          in: query
+          type: integer
+    - name: rest-organizations-organizationId-ingestioncontent-source-sourceId-metadatavalue
+      path: /rest/organizations/{organizationId}/ingestioncontent/source/{sourceId}/metadatavalues
+      operations:
+      - name: getmetadatavalues
+        method: GET
+        description: Return a List of Metadata Names and Values for a Source
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `acmecorporation8tp8wu3`
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: The unique identifier of the target [source](https://docs.coveo.com/en/246/glossary/source).<br />**Example:**
+            `acmecorporation8tp8wu3-upggxcxbquuzbsn6l3ir3wcoi
+          required: true
+        - name: objectType
+          in: query
+          type: string
+          required: true
+    - name: rest-organizations-organizationId-ingestioncontent-source-sourceId-objecttypes
+      path: /rest/organizations/{organizationId}/ingestioncontent/source/{sourceId}/objecttypes
+      operations:
+      - name: getobjecttypes
+        method: GET
+        description: Return Objecttype and Ingestion Content Status for a Source
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: '[organization](https://docs.coveo.com/en/185/)'
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          required: true

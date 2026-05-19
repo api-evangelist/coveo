@@ -1,0 +1,77 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Users
+  description: 'Coveo Authorization Server API — Users. 3 operations. Lead operation: Show User. Self-contained Naftiko capability
+    covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Users
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-users
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Users business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-users-username
+      path: /rest/users/{username}
+      operations:
+      - name: getuser
+        method: GET
+        description: Show User
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: username
+          in: path
+          type: string
+          description: The username of the user to show.</br>**Example:** `jsmith@email.com-google`
+          required: true
+      - name: updateuseradditionalinformation
+        method: PUT
+        description: Update User Additional Information
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: username
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-users-username-realms
+      path: /rest/users/{username}/realms
+      operations:
+      - name: getallexistingrealmsforuser
+        method: GET
+        description: List User Realms
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: username
+          in: path
+          type: string
+          description: The username of the user for which to list realms.</br>**Example:** `jsmith@email.com-google`
+          required: true

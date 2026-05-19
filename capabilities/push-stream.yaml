@@ -1,0 +1,363 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Push API — Stream
+  description: 'Coveo Push API — Stream. 12 operations. Lead operation: Delete Old Documents. Self-contained Naftiko capability
+    covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Push
+  - Stream
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: push-stream
+    baseUri: https://api.cloud.coveo.com/push/v1
+    description: Coveo Push API — Stream business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: organizations-organizationId-data-collections-dataCollectionId-stream-deleteolde
+      path: /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/deleteolderthan/{epochMilliseconds}
+      operations:
+      - name: post
+        method: POST
+        description: Delete Old Documents
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: dataCollectionId
+          in: path
+          type: string
+          description: 'The unique identifier of the data collection.  '
+          required: true
+        - name: epochMilliseconds
+          in: path
+          type: string
+          description: 'The epoch milliseconds timestamp limit used to delete documents indexed before it.  '
+          required: true
+        - name: queueDelay
+          in: query
+          type: string
+          description: A grace period (in minutes) whose purpose is to give the Coveo Cloud V2 indexing pipeline enough time
+            to finish processing any previously enqueued operation tha
+    - name: organizations-organizationId-data-collections-dataCollectionId-stream-merge
+      path: /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/merge
+      operations:
+      - name: put
+        method: PUT
+        description: Merge Entities of a Data Collection
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: dataCollectionId
+          in: path
+          type: string
+          description: 'The unique identifier of the data collection.  '
+          required: true
+        - name: fileId
+          in: query
+          type: string
+          description: The unique identifier of the Amazon S3 file container into which the JSON definition of the content
+            update was previously uploaded (see [Create a file container
+          required: true
+    - name: organizations-organizationId-data-collections-dataCollectionId-stream-open
+      path: /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/open
+      operations:
+      - name: post
+        method: POST
+        description: Open a Stream
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: dataCollectionId
+          in: path
+          type: string
+          description: 'The unique identifier of the data collection.  '
+          required: true
+    - name: organizations-organizationId-data-collections-dataCollectionId-stream-update
+      path: /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/update
+      operations:
+      - name: put
+        method: PUT
+        description: Update Entities of a Data Collection
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: dataCollectionId
+          in: path
+          type: string
+          description: 'The unique identifier of the data collection.  '
+          required: true
+        - name: fileId
+          in: query
+          type: string
+          description: The unique identifier of the Amazon S3 file container into which the JSON definition of the content
+            update was previously uploaded (see [Create a file container
+          required: true
+        - name: shard
+          in: path
+          type: string
+          description: '**Experimental** An identifier to process the JSON payload by groups. The shard must be a string from
+            1 to 10 alphanumeric characters.'
+    - name: organizations-organizationId-data-collections-dataCollectionId-stream-streamId-c
+      path: /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/{streamId}/chunk
+      operations:
+      - name: post
+        method: POST
+        description: Get a New Chunk for a Stream
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: dataCollectionId
+          in: path
+          type: string
+          description: 'The unique identifier of the data collection.  '
+          required: true
+        - name: streamId
+          in: path
+          type: string
+          description: 'The unique identifier of the stream.  '
+          required: true
+    - name: organizations-organizationId-data-collections-dataCollectionId-stream-streamId-c
+      path: /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/{streamId}/close
+      operations:
+      - name: post
+        method: POST
+        description: Close a Stream
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: dataCollectionId
+          in: path
+          type: string
+          description: 'The unique identifier of the data collection.  '
+          required: true
+        - name: streamId
+          in: path
+          type: string
+          description: 'The unique identifier of the stream.  '
+          required: true
+    - name: organizations-organizationId-sources-sourceId-stream-deleteolderthan-epochMillis
+      path: /organizations/{organizationId}/sources/{sourceId}/stream/deleteolderthan/{epochMilliseconds}
+      operations:
+      - name: post
+        method: POST
+        description: Delete Old Documents
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: 'The unique identifier of the target source.  '
+          required: true
+        - name: epochMilliseconds
+          in: path
+          type: string
+          description: 'The epoch milliseconds timestamp limit used to delete documents indexed before it.  '
+          required: true
+        - name: queueDelay
+          in: query
+          type: string
+          description: A grace period (in minutes) whose purpose is to give the Coveo Cloud V2 indexing pipeline enough time
+            to finish processing any previously enqueued operation tha
+    - name: organizations-organizationId-sources-sourceId-stream-merge
+      path: /organizations/{organizationId}/sources/{sourceId}/stream/merge
+      operations:
+      - name: put
+        method: PUT
+        description: Merge Documents of a Catalog Stream Source
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Push source (see [Creating a Push Source](https://developers.coveo.com/x/34s9Ag)).  '
+          required: true
+        - name: fileId
+          in: query
+          type: string
+          description: The unique identifier of the Amazon S3 file container into which the JSON definition of the content
+            update was previously uploaded (see [Create a file container
+          required: true
+    - name: organizations-organizationId-sources-sourceId-stream-open
+      path: /organizations/{organizationId}/sources/{sourceId}/stream/open
+      operations:
+      - name: post
+        method: POST
+        description: Open a Stream
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: 'The unique identifier of the target source.  '
+          required: true
+    - name: organizations-organizationId-sources-sourceId-stream-update
+      path: /organizations/{organizationId}/sources/{sourceId}/stream/update
+      operations:
+      - name: put
+        method: PUT
+        description: Update a Catalog Stream Source
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Push source (see [Creating a Push Source](https://developers.coveo.com/x/34s9Ag)).  '
+          required: true
+        - name: fileId
+          in: query
+          type: string
+          description: The unique identifier of the Amazon S3 file container into which the JSON definition of the content
+            update was previously uploaded (see [Create a file container
+          required: true
+        - name: shard
+          in: path
+          type: string
+          description: '**Experimental** An identifier to process the JSON payload by groups. The shard must be a string from
+            1 to 10 alphanumeric characters.'
+    - name: organizations-organizationId-sources-sourceId-stream-streamId-chunk
+      path: /organizations/{organizationId}/sources/{sourceId}/stream/{streamId}/chunk
+      operations:
+      - name: post
+        method: POST
+        description: Get a New Chunk for a Stream
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: 'The unique identifier of the target source.  '
+          required: true
+        - name: streamId
+          in: path
+          type: string
+          description: 'The unique identifier of the stream.  '
+          required: true
+    - name: organizations-organizationId-sources-sourceId-stream-streamId-close
+      path: /organizations/{organizationId}/sources/{sourceId}/stream/{streamId}/close
+      operations:
+      - name: post
+        method: POST
+        description: Close a Stream
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: 'The unique identifier of the target Coveo Cloud V2 organization.  '
+          required: true
+        - name: sourceId
+          in: path
+          type: string
+          description: 'The unique identifier of the target source.  '
+          required: true
+        - name: streamId
+          in: path
+          type: string
+          description: 'The unique identifier of the stream.  '
+          required: true

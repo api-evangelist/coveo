@@ -1,0 +1,85 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Usage Analytics Read API — Metrics API - Version 14
+  description: 'Coveo Usage Analytics Read API — Metrics API - Version 14. 4 operations. Lead operation: Get All the Metrics.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Usage Analytics Read
+  - Metrics API - Version 14
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: usage-analytics-read-metrics-api-version-14
+    baseUri: https://analytics.cloud.coveo.com/rest/ua
+    description: Coveo Usage Analytics Read API — Metrics API - Version 14 business capability. Self-contained, no shared
+      references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: v14-metrics
+      path: /v14/metrics
+      operations:
+      - name: getv14metrics
+        method: GET
+        description: Get All the Metrics
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+    - name: v14-metrics-monitoring-health
+      path: /v14/metrics/monitoring/health
+      operations:
+      - name: getv14metricsmonitoringhealth
+        method: GET
+        description: Health Check for the Metrics Service
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v14-metrics-status
+      path: /v14/metrics/status
+      operations:
+      - name: getv14metricsstatus
+        method: GET
+        description: Get the Metrics Service Status
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v14-metrics-metricName
+      path: /v14/metrics/{metricName}
+      operations:
+      - name: getv14metricsmetricname
+        method: GET
+        description: Get a Metric
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: metricName
+          in: path
+          type: string
+          description: metricName
+          required: true

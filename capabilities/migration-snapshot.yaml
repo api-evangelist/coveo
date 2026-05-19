@@ -1,0 +1,401 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Migration API — Snapshot
+  description: 'Coveo Migration API — Snapshot. 12 operations. Lead operation: List Snapshots. Self-contained Naftiko capability
+    covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Migration
+  - Snapshot
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: migration-snapshot
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Migration API — Snapshot business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-snapshots
+      path: /rest/organizations/{organizationId}/snapshots
+      operations:
+      - name: getallsnapshots
+        method: GET
+        description: List Snapshots
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: includeReports
+          in: query
+          type: boolean
+          description: Whether to include snapshot reports in the response.<br/>**Default:** `true`
+        - name: filter
+          in: query
+          type: string
+        - name: sortingOrder
+          in: query
+          type: string
+        - name: sortingType
+          in: query
+          type: string
+      - name: createsnapshot
+        method: POST
+        description: Create Snapshot from Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-snapshots-file
+      path: /rest/organizations/{organizationId}/snapshots/file
+      operations:
+      - name: createsnapshotfromfile
+        method: POST
+        description: Create Snapshot from File
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotFileType
+          in: query
+          type: string
+          description: 'The type of the file containing the configuration.<br/>**Possible values:**<br/> - `JSON`: the configuration
+            is in one single JSON file.<br/> - `ZIP`: the confi'
+          required: true
+        - name: developerNotes
+          in: query
+          type: string
+          description: A note you can attach to your snapshot.<br/>**Example:** `pipeline snapshot`
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: rest-organizations-organizationId-snapshots-self
+      path: /rest/organizations/{organizationId}/snapshots/self
+      operations:
+      - name: createsnapshotfromself
+        method: POST
+        description: Create Organization Snapshot
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: targetOrganizationId
+          in: query
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/) where to send the snapshot.<br/>**Example:**
+            `destinationorganizationg7dg3gd`<br/>By
+        - name: developerNotes
+          in: query
+          type: string
+          description: A note you can attach to your snapshot.<br/>**Example:** `pipeline snapshot`
+        - name: includeChildrenResources
+          in: query
+          type: boolean
+          description: Whether to include child resources in the snapshot.<br/>For example, when creating a snapshot of a
+            query pipeline resource, if the `includeChildrenResources` pa
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-snapshots-snapshotId
+      path: /rest/organizations/{organizationId}/snapshots/{snapshotId}
+      operations:
+      - name: getsnapshot
+        method: GET
+        description: Show Snapshot
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotId
+          in: path
+          type: string
+          description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+          required: true
+        - name: includeReports
+          in: query
+          type: boolean
+          description: Whether to include reports with the snapshot.<br/>**Default:** `true`
+        - name: reportInclusion
+          in: query
+          type: string
+          description: 'The level of detail of the report.<br/>**Possible values:**<br/> - `NONE`: no report.<br/> - `SUMMARY`:
+            only report on the latest operation of every kind (dry r'
+      - name: deletesnapshot
+        method: DELETE
+        description: Delete Snapshot
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotId
+          in: path
+          type: string
+          description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+          required: true
+    - name: rest-organizations-organizationId-snapshots-snapshotId-apply
+      path: /rest/organizations/{organizationId}/snapshots/{snapshotId}/apply
+      operations:
+      - name: apply
+        method: PUT
+        description: Apply Snapshot
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotId
+          in: path
+          type: string
+          description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+          required: true
+        - name: deleteMissingResources
+          in: query
+          type: boolean
+          description: Whether to delete organization resources not present in the snapshot.<br/>**Default:** `false`
+        - name: deletionScope
+          in: query
+          type: string
+          description: '**Note:** only applies when `deleteMissingResources` is set to `true`.<br/>The scope of the resources
+            on which to calculate deletions.<br/>**Default:** `ONLY_TY'
+        - name: isTransient
+          in: query
+          type: boolean
+          description: Whether to delete the snapshot after it has been applied.<br/>**Default:** `false`
+        - name: validationRequired
+          in: query
+          type: boolean
+          description: Whether to check the effects of applying the snapshot before actually applying it.When this parameter
+            is set to true, if an operation is found to be invalid dur
+        - name: performAutoSynchronization
+          in: query
+          type: boolean
+          description: Whether to automatically synchronize resources in the snapshot with corresponding organization resources.<br/>**Default:**
+            `true`
+        - name: autoSynchronizationThreshold
+          in: query
+          type: number
+          description: 'If autoSynchronization is set to true, this score controls how lenient the pairing of values will
+            be.<br/>The value should be set to 1.00 or lower.  A value of '
+    - name: rest-organizations-organizationId-snapshots-snapshotId-content
+      path: /rest/organizations/{organizationId}/snapshots/{snapshotId}/content
+      operations:
+      - name: getarchivedsnapshotcontent
+        method: GET
+        description: Retrieve Snapshot Content
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotId
+          in: path
+          type: string
+          description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+          required: true
+        - name: contentFormat
+          in: query
+          type: string
+          description: The format of the snapshot content.<br> **FLAT:** Content unified into a single file<br>**SPLIT_PER_TYPE:**
+            Content split into one file per resource type
+    - name: rest-organizations-organizationId-snapshots-snapshotId-diff
+      path: /rest/organizations/{organizationId}/snapshots/{snapshotId}/diff
+      operations:
+      - name: diff
+        method: GET
+        description: Show Snapshot Diff Report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotId
+          in: path
+          type: string
+          description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+          required: true
+        - name: relativeReportId
+          in: query
+          type: string
+          description: The unique identifier of the dry-run operation report associated with the target diff report.
+          required: true
+        - name: numberOfLinesMax
+          in: query
+          type: integer
+          description: Maximum number of lines before the diff is downloaded to a file.
+    - name: rest-organizations-organizationId-snapshots-snapshotId-dryrun
+      path: /rest/organizations/{organizationId}/snapshots/{snapshotId}/dryrun
+      operations:
+      - name: dryrun
+        method: PUT
+        description: Validate Snapshot
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotId
+          in: path
+          type: string
+          description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+          required: true
+        - name: deleteMissingResources
+          in: query
+          type: boolean
+          description: Whether to simulate the deletion of organization resources not present in the snapshot.<br/>**Default:**
+            `false`
+        - name: deletionScope
+          in: query
+          type: string
+          description: '**Note:** only applies when `deleteMissingResources` is set to `true`.<br/>The scope of the resources
+            on which to calculate deletions.<br/>**Default:** `ONLY_TY'
+        - name: performAutoSynchronization
+          in: query
+          type: boolean
+          description: Whether to automatically synchronize resources in the snapshot with corresponding organization resources.<br/>**Default:**
+            `true`
+        - name: autoSynchronizationThreshold
+          in: query
+          type: number
+          description: 'If autoSynchronization is set to true, this score controls how lenient the pairing of values will
+            be.<br/>The value should be set to 1.00 or lower.  A value of '
+    - name: rest-organizations-organizationId-snapshots-snapshotId-push
+      path: /rest/organizations/{organizationId}/snapshots/{snapshotId}/push
+      operations:
+      - name: pushsnapshot
+        method: PUT
+        description: Push Snapshot to Target Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotId
+          in: path
+          type: string
+          description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+          required: true
+        - name: targetOrganizationId
+          in: query
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/) where to send the snapshot.<br/>**Example:**
+            `destinationorganizationg7dg3gd`
+          required: true
+        - name: developerNotes
+          in: query
+          type: string
+          description: A note you can attach to your snapshot.<br/>**Example:** `pipeline snapshot`
+    - name: rest-organizations-organizationId-snapshots-snapshotId-url
+      path: /rest/organizations/{organizationId}/snapshots/{snapshotId}/url
+      operations:
+      - name: generatepresignedurl
+        method: GET
+        description: Create URL to Retrieve Snapshot Content
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotId
+          in: path
+          type: string
+          description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+          required: true
+        - name: contentType
+          in: query
+          type: string
+          description: 'The version of the snapshot to show.<br/>**Possible values:**<br/> - `PRIMARY`: The actual snapshot
+            content.<br/> - `CURRENT_STATE`: The resources targeted by t'

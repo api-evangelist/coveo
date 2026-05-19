@@ -1,0 +1,154 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Analytics Admin API — Property API
+  description: 'Coveo Analytics Admin API — Property API. 6 operations. Lead operation: Get All Properties for an Organization..
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Analytics Admin
+  - Property API
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: analytics-admin-property-api
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Analytics Admin API — Property API business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-analyticsadmin-v1-properties
+      path: /rest/organizations/{organizationId}/analyticsadmin/v1/properties
+      operations:
+      - name: listproperties
+        method: GET
+        description: Get All Properties for an Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: params
+          in: query
+          type: string
+          required: true
+      - name: queryproperties
+        method: POST
+        description: Query Properties for an Organization.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-organizations-organizationId-analyticsadmin-v1-properties-trackingId
+      path: /rest/organizations/{organizationId}/analyticsadmin/v1/properties/{trackingId}
+      operations:
+      - name: getproperty
+        method: GET
+        description: Get a Specific Property.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: trackingId
+          in: path
+          type: string
+          required: true
+      - name: updateproperty
+        method: PUT
+        description: Update All Values of a Property.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: trackingId
+          in: path
+          type: string
+          required: true
+        - name: displayName
+          in: query
+          type: string
+          required: true
+        - name: defaultTimeZone
+          in: query
+          type: string
+        - name: defaultCurrency
+          in: query
+          type: string
+      - name: createproperty
+        method: POST
+        description: Create a New Property.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: trackingId
+          in: path
+          type: string
+          required: true
+        - name: displayName
+          in: query
+          type: string
+          required: true
+        - name: defaultTimeZone
+          in: query
+          type: string
+        - name: defaultCurrency
+          in: query
+          type: string
+      - name: deleteproperty
+        method: DELETE
+        description: Delete a Property.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: trackingId
+          in: path
+          type: string
+          required: true

@@ -1,0 +1,184 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Search API — Machine learning associations
+  description: 'Coveo Search API — Machine learning associations. 10 operations. Lead operation: Returns the Version of ML
+    Models Supported by the Organization in the Request.. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Search
+  - Machine learning associations
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: search-machine-learning-associations
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Search API — Machine learning associations business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-search-v2-admin-pipelines-ml-version
+      path: /rest/search/v2/admin/pipelines/ml/version
+      operations:
+      - name: mlversion
+        method: GET
+        description: Returns the Version of ML Models Supported by the Organization in the Request.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: rest-search-v2-admin-pipelines-pipelineId-ml-model-associations
+      path: /rest/search/v2/admin/pipelines/{pipelineId}/ml/model/associations
+      operations:
+      - name: listassociationsofpipeline
+        method: GET
+        description: List Query Pipeline ML Model Associations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: Filter associations by model display name or description (case-insensitive substring match).
+      - name: associatemodel
+        method: POST
+        description: Associate an Existing Machine Learning Model with an Existing Pipeline.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: rest-search-v2-admin-pipelines-pipelineId-ml-model-associations-bulkGet
+      path: /rest/search/v2/admin/pipelines/{pipelineId}/ml/model/associations/bulkGet
+      operations:
+      - name: bulkgetassociationsofpipeline
+        method: POST
+        description: List Query Pipeline ML Model Associations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v2-admin-pipelines-pipelineId-ml-model-associations-validate
+      path: /rest/search/v2/admin/pipelines/{pipelineId}/ml/model/associations/validate
+      operations:
+      - name: validatemlassociationoperation
+        method: POST
+        description: Validate a Single ML Model Association Operation.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v2-admin-pipelines-pipelineId-ml-model-associations-validate-batch
+      path: /rest/search/v2/admin/pipelines/{pipelineId}/ml/model/associations/validate/batch
+      operations:
+      - name: validatemlassociationoperations
+        method: POST
+        description: Validate a Batch of ML Model Association Operations.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: rest-search-v2-admin-pipelines-pipelineId-ml-model-associations-associationId
+      path: /rest/search/v2/admin/pipelines/{pipelineId}/ml/model/associations/{associationId}
+      operations:
+      - name: getassociation
+        method: GET
+        description: Get a ML Model Association
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: associationId
+          in: path
+          type: string
+          required: true
+      - name: updateassociation
+        method: PUT
+        description: Update ML Model Association
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: associationId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: disassociate
+        method: DELETE
+        description: Remove Query Pipeline ML Model Association
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: associationId
+          in: path
+          type: string
+          required: true
+    - name: rest-search-v2-admin-pipelines-pipelineId-ml-model-associations-associationId-po
+      path: /rest/search/v2/admin/pipelines/{pipelineId}/ml/model/associations/{associationId}/position
+      operations:
+      - name: updateassociationposition
+        method: PUT
+        description: Update ML Model Association Position
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: associationId
+          in: path
+          type: string
+          required: true
+        - name: position
+          in: query
+          type: integer
+          required: true

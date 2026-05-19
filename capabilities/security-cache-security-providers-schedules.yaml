@@ -1,0 +1,74 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Security Cache API — Security Providers Schedules
+  description: 'Coveo Security Cache API — Security Providers Schedules. 2 operations. Lead operation: Get Security Provider
+    Schedules. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Security Cache
+  - Security Providers Schedules
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: security-cache-security-providers-schedules
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Security Cache API — Security Providers Schedules business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-securityproviders-securityProviderId-schedules
+      path: /rest/organizations/{organizationId}/securityproviders/{securityProviderId}/schedules
+      operations:
+      - name: getschedules
+        method: GET
+        description: Get Security Provider Schedules
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: securityProviderId
+          in: path
+          type: string
+          required: true
+    - name: rest-organizations-organizationId-securityproviders-securityProviderId-schedules
+      path: /rest/organizations/{organizationId}/securityproviders/{securityProviderId}/schedules/{scheduleId}
+      operations:
+      - name: updateschedule
+        method: PUT
+        description: Update a Security Provider Schedule
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+        - name: securityProviderId
+          in: path
+          type: string
+          required: true
+        - name: scheduleId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true

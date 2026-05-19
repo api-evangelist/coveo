@@ -1,0 +1,52 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Organization API — Region Configuration
+  description: 'Coveo Organization API — Region Configuration. 2 operations. Lead operation: List Region Configurations. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Organization
+  - Region Configuration
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: organization-region-configuration
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Organization API — Region Configuration business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-global-regions
+      path: /rest/global/regions
+      operations:
+      - name: getallregionconfigurations
+        method: GET
+        description: List Region Configurations
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: rest-global-regions-region
+      path: /rest/global/regions/{region}
+      operations:
+      - name: getregionconfiguration
+        method: GET
+        description: Show Region Configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: region
+          in: path
+          type: string
+          required: true

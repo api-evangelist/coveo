@@ -1,0 +1,169 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Search Pages API — In-App
+  description: 'Coveo Search Pages API — In-App. 6 operations. Lead operation: Create InAppWidget. Self-contained Naftiko
+    capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Search Pages
+  - In-App
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: search-pages-in-app
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Search Pages API — In-App business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationID-pages-inappwidget
+      path: /rest/organizations/{organizationID}/pages/inappwidget
+      operations:
+      - name: post
+        method: POST
+        description: Create InAppWidget
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationID
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+          required: true
+        - name: body
+          in: body
+          type: string
+          description: The configuration to use for the new InAppWidget.
+          required: true
+    - name: rest-organizations-organizationID-pages-inappwidget-pageID
+      path: /rest/organizations/{organizationID}/pages/inappwidget/{pageID}
+      operations:
+      - name: put
+        method: PUT
+        description: Update InAppWidget
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationID
+          in: path
+          type: string
+          description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g.,
+            'mycoveocloudv2organizationg8tp8wu3').
+          required: true
+        - name: pageID
+          in: path
+          type: string
+          description: The unique identifier of the search page whose corresponding InAppWidget should be updated (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+          required: true
+        - name: body
+          in: body
+          type: string
+          description: The new configuration to use for the updated InAppWidget.
+          required: true
+    - name: rest-organizations-organizationID-pages-inappwidgets
+      path: /rest/organizations/{organizationID}/pages/inappwidgets
+      operations:
+      - name: get
+        method: GET
+        description: List InAppWidgets
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationID
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+          required: true
+        - name: name
+          in: query
+          type: string
+          description: The 'name' metadata value of the search page whose corresponding InAppWidget should be retrieved (e.g.,
+            'mysearchpage').
+    - name: rest-organizations-organizationID-pages-inappwidgets-ids
+      path: /rest/organizations/{organizationID}/pages/inappwidgets/ids
+      operations:
+      - name: post
+        method: POST
+        description: List InAppWidgets by Ids
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationID
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+          required: true
+        - name: payload
+          in: body
+          type: array
+          description: The list of ids
+          required: true
+    - name: rest-organizations-organizationID-pages-inappwidgets-projectid
+      path: /rest/organizations/{organizationID}/pages/inappwidgets/projectid
+      operations:
+      - name: get
+        method: GET
+        description: List InAppWidgets by Project ID
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationID
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+          required: true
+        - name: projectid
+          in: query
+          type: string
+          description: The project id
+    - name: rest-organizations-organizationID-pages-pageID-inappwidget-loader
+      path: /rest/organizations/{organizationID}/pages/{pageID}/inappwidget/loader
+      operations:
+      - name: get
+        method: GET
+        description: Get InAppWidget Loader
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationID
+          in: path
+          type: string
+          description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) whose
+            InAppWidget loader should be retrieved (e.g., 'mycoveocloudv
+          required: true
+        - name: pageID
+          in: path
+          type: string
+          description: The unique identifier of the search page whose corresponding InAppWidget loader should be retrieved
+            (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+          required: true
+        - name: access_token
+          in: query
+          type: string
+          description: <p>An access token (e.g., [search token](https://docs.coveo.com/en/1346/) or API key) the loader should
+            initialize the InAppWidget with.</p><p>If provided, this

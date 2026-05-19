@@ -1,0 +1,96 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Migration API — Snapshot Access
+  description: 'Coveo Migration API — Snapshot Access. 3 operations. Lead operation: Show Resource Access. Self-contained
+    Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Migration
+  - Snapshot Access
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: migration-snapshot-access
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Migration API — Snapshot Access business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-snapshots-access-resource
+      path: /rest/organizations/{organizationId}/snapshots/access/resource
+      operations:
+      - name: getaccessibleresourcetypes
+        method: GET
+        description: Show Resource Access
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-snapshots-snapshotId-access
+      path: /rest/organizations/{organizationId}/snapshots/{snapshotId}/access
+      operations:
+      - name: gethasresourcesaccess
+        method: GET
+        description: Show Access
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotId
+          in: path
+          type: string
+          description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+          required: true
+        - name: snapshotAccessType
+          in: query
+          type: string
+          description: The resource access level to verify.<br/>**Allowed values:**<br/> - `READ`<br/> - `WRITE`
+          required: true
+    - name: rest-organizations-organizationId-snapshots-snapshotId-access-resources
+      path: /rest/organizations/{organizationId}/snapshots/{snapshotId}/access/resources
+      operations:
+      - name: getmissingprivilegeaccess
+        method: GET
+        description: Show Resources Access
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+          required: true
+        - name: snapshotId
+          in: path
+          type: string
+          description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+          required: true
+        - name: snapshotAccessType
+          in: query
+          type: string
+          description: The resource access level to verify.<br/>**Allowed values:**<br/> - `READ`<br/> - `WRITE`
+          required: true

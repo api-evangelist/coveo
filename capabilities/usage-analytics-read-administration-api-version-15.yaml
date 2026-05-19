@@ -1,0 +1,99 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Usage Analytics Read API — Administration API - Version 15
+  description: 'Coveo Usage Analytics Read API — Administration API - Version 15. 3 operations. Lead operation: Get an Account.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Usage Analytics Read
+  - Administration API - Version 15
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: usage-analytics-read-administration-api-version-15
+    baseUri: https://analytics.cloud.coveo.com/rest/ua
+    description: Coveo Usage Analytics Read API — Administration API - Version 15 business capability. Self-contained, no
+      shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: v15-admin-account
+      path: /v15/admin/account
+      operations:
+      - name: getv15adminaccount
+        method: GET
+        description: Get an Account
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+      - name: putv15adminaccount
+        method: PUT
+        description: Edit an Account
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: v15-admin-account-strictValidationTest
+      path: /v15/admin/account/strictValidationTest
+      operations:
+      - name: getv15adminaccountstrictvalidationtest
+        method: GET
+        description: Get Example Values That Would Be Rejected by Strict Validation for the Specified Dimension
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: from
+          in: query
+          type: string
+          description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+          required: true
+        - name: to
+          in: query
+          type: string
+          description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+          required: true
+        - name: d
+          in: query
+          type: string
+          description: The dimension to fetch.
+          required: true
+        - name: p
+          in: query
+          type: integer
+          description: The response's page to access, starting at 1.
+        - name: n
+          in: query
+          type: integer
+          description: The number of results to include in a page.
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)

@@ -1,0 +1,169 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Search Usage Metrics API — Search Hubs
+  description: 'Coveo Search Usage Metrics API — Search Hubs. 6 operations. Lead operation: Creates a Search Hub in the Organization.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Search Usage Metrics
+  - Search Hubs
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_SEARCH_TOKEN: COVEO_SEARCH_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: search-usage-metrics-search-hubs
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Search Usage Metrics API — Search Hubs business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_SEARCH_TOKEN}}'
+    resources:
+    - name: rest-organizations-organizationId-searchusagemetrics-hubs
+      path: /rest/organizations/{organizationId}/searchusagemetrics/hubs/
+      operations:
+      - name: createsearchhub
+        method: POST
+        description: Creates a Search Hub in the Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: hub
+          in: body
+          type: string
+          description: The search hub data
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+      - name: listsearchhubs
+        method: GET
+        description: Lists the Search Hubs for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: minimumQueries
+          in: query
+          type: string
+          description: The minimum number of queries required for a search hub to be listed
+        - name: filter
+          in: query
+          type: string
+          description: The free-form string to filter the returned list based on the values of the search hub attributes.
+        - name: pageSize
+          in: query
+          type: string
+          description: The maximum number of organizations to list per page.
+        - name: page
+          in: query
+          type: string
+          description: The 0-based index number of the page to list.
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+    - name: rest-organizations-organizationId-searchusagemetrics-hubs-hubName
+      path: /rest/organizations/{organizationId}/searchusagemetrics/hubs/{hubName}
+      operations:
+      - name: deletesearchhub
+        method: DELETE
+        description: Deletes a Search Hub for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: hubName
+          in: path
+          type: string
+          description: The search hub name
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+      - name: getsearchhub
+        method: GET
+        description: Gets a Specific Search Hub for an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: hubName
+          in: path
+          type: string
+          description: The search hub name
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+      - name: updatesearchhub
+        method: PUT
+        description: Updates a Search Hub in an Organization
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: hub
+          in: body
+          type: string
+          description: The search hub data
+          required: true
+        - name: hubName
+          in: path
+          type: string
+          description: The search hub name
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true
+    - name: rest-organizations-organizationId-searchusagemetrics-hubs-hubName-bucket
+      path: /rest/organizations/{organizationId}/searchusagemetrics/hubs/{hubName}/bucket
+      operations:
+      - name: updatesearchhubbucket
+        method: PUT
+        description: Updates a Search Hub Bucket in an Organization, Creating the Hub If Required
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: bucket
+          in: query
+          type: string
+          description: The search hub bucket
+          required: true
+        - name: hubName
+          in: path
+          type: string
+          description: The search hub name
+          required: true
+        - name: organizationId
+          in: path
+          type: string
+          description: The organization ID
+          required: true

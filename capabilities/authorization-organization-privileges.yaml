@@ -1,0 +1,143 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Organization Privileges
+  description: 'Coveo Authorization Server API — Organization Privileges. 6 operations. Lead operation: List Possible Privileges.
+    Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Organization Privileges
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-organization-privileges
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Organization Privileges business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-privileges
+      path: /rest/organizations/{organizationId}/privileges
+      operations:
+      - name: getorganizationprivileges
+        method: GET
+        description: List Possible Privileges
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-privileges-apikeys
+      path: /rest/organizations/{organizationId}/privileges/apikeys
+      operations:
+      - name: getapikeyprivileges
+        method: GET
+        description: List Possible API Key Privileges
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: filter
+          in: query
+          type: string
+          description: Filter for privileges
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-privileges-me
+      path: /rest/organizations/{organizationId}/privileges/me
+      operations:
+      - name: getorganizationmemberprivileges1
+        method: GET
+        description: List Privileges for Current Member
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-privileges-platformtokens
+      path: /rest/organizations/{organizationId}/privileges/platformtokens
+      operations:
+      - name: getplatformtokenprivileges
+        method: GET
+        description: List Possible Platform Token Privileges
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-privileges-token
+      path: /rest/organizations/{organizationId}/privileges/token
+      operations:
+      - name: getorganizationmemberprivileges
+        method: GET
+        description: List Privileges for Access Token
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: accessToken
+          in: query
+          type: string
+          description: The access token for which to list privileges.
+      - name: getorganizationmemberprivilegesusingpost
+        method: POST
+        description: List Privileges for Access Token
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: accessToken
+          in: query
+          type: string
+          description: The access token for which to list privileges.
+          required: true

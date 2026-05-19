@@ -1,0 +1,83 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Authorization Server API — Organization Api Keys Templates
+  description: 'Coveo Authorization Server API — Organization Api Keys Templates. 3 operations. Lead operation: List API Key
+    Templates. Self-contained Naftiko capability covering one Coveo business surface.'
+  tags:
+  - Coveo
+  - Authorization Server
+  - Organization Api Keys Templates
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: authorization-organization-api-keys-templates
+    baseUri: https://platform.cloud.coveo.com
+    description: Coveo Authorization Server API — Organization Api Keys Templates business capability. Self-contained, no
+      shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: rest-organizations-organizationId-templates-apikeys
+      path: /rest/organizations/{organizationId}/templates/apikeys
+      operations:
+      - name: getorganizationapikeytemplates
+        method: GET
+        description: List API Key Templates
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+    - name: rest-organizations-organizationId-templates-apikeys-privileges-eligibility
+      path: /rest/organizations/{organizationId}/templates/apikeys/privileges/eligibility
+      operations:
+      - name: getapikeytemplateseligibility
+        method: GET
+        description: Get All API Key Templates' Eligibility for the Current User
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          required: true
+    - name: rest-organizations-organizationId-templates-apikeys-organizationApiKeyTemplateId
+      path: /rest/organizations/{organizationId}/templates/apikeys/{organizationApiKeyTemplateId}
+      operations:
+      - name: getorganizationapikeytemplate
+        method: GET
+        description: Show API Key Template
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: organizationId
+          in: path
+          type: string
+          description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:**
+            `mycoveocloudv2organizationg8tp8wu3`
+          required: true
+        - name: organizationApiKeyTemplateId
+          in: path
+          type: string
+          description: The unique identifier of the API key template.
+          required: true

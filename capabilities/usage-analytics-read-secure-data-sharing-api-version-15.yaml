@@ -1,0 +1,100 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Coveo Usage Analytics Read API — Secure Data Sharing API - Version 15
+  description: 'Coveo Usage Analytics Read API — Secure Data Sharing API - Version 15. 4 operations. Lead operation: Retrieve
+    Snowflake Accounts Currently Associated in Secure Data Sharing. Self-contained Naftiko capability covering one Coveo business
+    surface.'
+  tags:
+  - Coveo
+  - Usage Analytics Read
+  - Secure Data Sharing API - Version 15
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    COVEO_API_KEY: COVEO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: usage-analytics-read-secure-data-sharing-api-version-15
+    baseUri: https://analytics.cloud.coveo.com/rest/ua
+    description: Coveo Usage Analytics Read API — Secure Data Sharing API - Version 15 business capability. Self-contained,
+      no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.COVEO_API_KEY}}'
+    resources:
+    - name: v15-admin-snowflake-securedatasharing-accounts
+      path: /v15/admin/snowflake/securedatasharing/accounts
+      operations:
+      - name: getv15adminsnowflakesecuredatasharingaccounts
+        method: GET
+        description: Retrieve Snowflake Accounts Currently Associated in Secure Data Sharing
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+      - name: postv15adminsnowflakesecuredatasharingaccounts
+        method: POST
+        description: Add a Snowflake Account to Secure Data Sharing
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: deletev15adminsnowflakesecuredatasharingaccounts
+        method: DELETE
+        description: Removes a Snowflake Account from Secure Data Sharing
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
+        - name: accountLocator
+          in: query
+          type: string
+          description: The Snowflake account locator.
+          required: true
+        - name: snowflakeRegion
+          in: query
+          type: string
+          description: The Snowflake region.
+          required: true
+    - name: v15-admin-snowflake-securedatasharing-regions
+      path: /v15/admin/snowflake/securedatasharing/regions
+      operations:
+      - name: getv15adminsnowflakesecuredatasharingregions
+        method: GET
+        description: Retrieve Allowed Snowflake Regions for Secure Data Sharing
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: org
+          in: query
+          type: string
+          description: The name of the organization (Coveo Cloud V2 only)
