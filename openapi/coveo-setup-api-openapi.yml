@@ -1,0 +1,283 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Setup API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Setup
+paths:
+  /rest/organizations/{organizationId}/commerce/v2/setup:
+    post:
+      tags:
+      - Setup
+      summary: Create CMH Scaffolding
+      description: 'Creates the resources recommended to [setup](https://docs.coveo.com/en/o25a0034) Coveo for Commerce in a [organization](https://docs.coveo.com/en/185/).</br></br>**Required privilege:** Merchandising Hub - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"MERCHANDISING_HUB","type":"EDIT","targetId":"{body.trackingId}"}
+
+        ```
+
+        </details>'
+      operationId: setup
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetupRequestModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SetupResponseModel'
+      x-pretty-name: setup
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: MERCHANDISING_HUB
+        type: EDIT
+        targetId: '{body.trackingId}'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: MERCHANDISING_HUB
+        type: EDIT
+        targetId: '{body.trackingId}'
+      x-ui-operation-id: /rest/organizations/paramId/commerce/v2/setup_post
+components:
+  schemas:
+    TrackingIdToCatalogMappingCatalogModelCatalogConfiguration:
+      type: object
+      properties:
+        product:
+          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfigurationProduct'
+        available:
+          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfigurationAvailability'
+      description: The configuration of the catalog
+    SetupResponseModel:
+      type: object
+      properties:
+        queryPipelines:
+          type: array
+          description: The list of query pipeline configurations created or modified.
+          items:
+            $ref: '#/components/schemas/QueryPipelineConfigurationModel'
+        globalConfigurationUpdated:
+          type: array
+          description: The list of updated global configurations.
+          items:
+            $ref: '#/components/schemas/GlobalConfigurationUpdatedModel'
+        trackingIdToCatalogMapping:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingIdToCatalogMappingModel'
+    GlobalConfigurationUpdatedModel:
+      type: object
+      properties:
+        productGrouping:
+          type: string
+          description: 'Indicates whether the product grouping configuration was updated by the setup request. Possible values: `QUERY_PIPELINE` or `NONE`.'
+          example: NONE
+          enum:
+          - none
+          - query_pipeline
+        pipelineId:
+          type: string
+          description: The query pipelines updated by the setup request.
+          example: pipelineId
+      description: The list of updated global configurations.
+    ProductGrouping:
+      required:
+      - trackingId
+      type: object
+      properties:
+        trackingId:
+          type: string
+          description: The tracking id which we wish to applied global grouping to.
+          example: MyTrackingID
+        globalProductGroupingEnabled:
+          type: boolean
+      description: Indicates whether the pipeline should be grouped. Use this option to control the aggregation behavior of the pipeline. If null, the grouping will not be changed.
+    TrackingIdToCatalogMappingCatalogModelCatalogConfigurationAvailability:
+      type: object
+      properties:
+        idField:
+          type: string
+          description: The unique identifier of this availability in the catalog
+          example: availabilityid
+    SetupRequestModel:
+      required:
+      - trackingIdToCatalogMapping
+      type: object
+      properties:
+        trackingId:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The unique identifier of the tracking target.
+          example: acmecorporation_ca
+        trackingIdToCatalogMapping:
+          type: array
+          description: The mappings related to the supplied tracking IDs
+          items:
+            $ref: '#/components/schemas/TrackingIdToCatalogMappingSetupModel'
+        pipelineSetups:
+          type: array
+          description: List of pipeline setups to configure
+          items:
+            $ref: '#/components/schemas/PipelineSetup'
+      description: The scaffolding to setup.
+    PipelineSetup:
+      required:
+      - pipelineId
+      type: object
+      properties:
+        pipelineId:
+          minLength: 1
+          type: string
+          description: The identifier of the pipeline used to process the query.
+          example: 9716d88a-f02b-480e-bf44-ab1b1af165a8
+        pipelineProductGrouping:
+          $ref: '#/components/schemas/ProductGrouping'
+        deactivateRankingFactor:
+          type: boolean
+          description: Indicates whether the ranking factors should be deactivated for the pipeline. If null, the ranking factors will not be changed.
+          example: false
+      description: List of pipeline setups to configure
+    TrackingIdToCatalogMappingSetupModel:
+      required:
+      - catalogName
+      - country
+      - currency
+      - language
+      type: object
+      properties:
+        catalogName:
+          type: string
+          description: The name of the catalog for this mapping
+          example: MyCatalog
+        language:
+          pattern: ^[a-z]{2}$
+          type: string
+          description: Language code that must conform to the ISO 639-1 language code specification
+          example: en
+        country:
+          pattern: ^[A-Z]{2}$
+          type: string
+          description: Country code that must conform to the ISO 3166-1 country code specification
+          example: GB
+        currency:
+          pattern: ^[A-Z]{3}$
+          type: string
+          description: Currency code that must conform to the ISO 4217 currency code specification
+          example: USD
+      description: The mappings related to the supplied tracking IDs
+    TrackingIdToCatalogMappingCatalogModelCatalogConfigurationProduct:
+      type: object
+      properties:
+        idField:
+          type: string
+          description: The unique identifier of this product in the catalog
+          example: productid
+    QueryPipelineConfigurationModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the pipeline in UUID format.
+          readOnly: true
+          example: 9a0914c9-08d4-42f6-ba37-44c8c3d4c196
+        name:
+          type: string
+          description: The unique identifier of the pipeline in UUID format.
+          readOnly: true
+          example: 9a0914c9-08d4-42f6-ba37-44c8c3d4c196
+        deactivateRankingFactor:
+          type: boolean
+        pipelineProductGroupingEnabled:
+          type: boolean
+      description: The list of query pipeline configurations created or modified.
+    TrackingIdToCatalogMappingModel:
+      required:
+      - catalogName
+      - country
+      - currency
+      - language
+      - primary
+      type: object
+      properties:
+        catalogName:
+          type: string
+          description: The name of the catalog for this mapping
+          example: MyCatalog
+        language:
+          pattern: ^[a-z]{2}$
+          type: string
+          description: Language code that must conform to the ISO 639-1 language code specification
+          example: en
+        country:
+          pattern: ^[A-Z]{2}$
+          type: string
+          description: Country code that must conform to the ISO 3166-1 country code specification
+          example: GB
+        currency:
+          pattern: ^[A-Z]{3}$
+          type: string
+          description: Currency code that must conform to the ISO 4217 currency code specification
+          example: USD
+        primary:
+          type: boolean
+          description: Determines if this mapping is the primary one for a specific tracking id
+          example: true
+        catalog:
+          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModel'
+    TrackingIdToCatalogMappingCatalogModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of this catalog
+          format: uuid
+          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
+        name:
+          type: string
+          description: The name of the catalog
+        sourceName:
+          type: string
+          description: The source name of the catalog
+          example: acmecorporation8tp8wu3-qwpdaajjq3ahak5wlq7adhciuq
+        availabilitySourceName:
+          type: string
+          description: The source name containing the availability for the catalog
+          example: availabilitysource
+        catalogConfiguration:
+          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfiguration'
+      description: This will contain the full catalog info as per the catalog resource
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,229 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Region Configuration API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Region Configuration
+paths:
+  /rest/global/regions:
+    get:
+      tags:
+      - Region Configuration
+      summary: List Region Configurations
+      description: Lists all available region configurations to access Coveo Cloud.
+      operationId: getAllRegionConfigurations
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RegionConfigurationModel'
+      x-pretty-name: getAllRegionConfigurations
+      x-ui-operation-id: /rest/global/regions_get
+  /rest/global/regions/{region}:
+    get:
+      tags:
+      - Region Configuration
+      summary: Show Region Configuration
+      description: Shows the configuration of a specific region.
+      operationId: getRegionConfiguration
+      parameters:
+      - name: region
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - ca-central-1
+          - ca-west-1
+          - us-gov-west-1
+          - us-gov-east-1
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - sa-east-1
+          - eu-north-1
+          - eu-south-1
+          - eu-south-2
+          - eu-central-1
+          - eu-central-2
+          - eu-west-1
+          - eu-west-2
+          - eu-west-3
+          - me-south-1
+          - me-central-1
+          - ap-northeast-1
+          - ap-northeast-2
+          - ap-northeast-3
+          - ap-south-1
+          - ap-south-2
+          - ap-southeast-1
+          - ap-southeast-2
+          - ap-southeast-3
+          - ap-southeast-4
+          - ap-southeast-5
+          - ap-southeast-6
+          - ap-southeast-7
+          - ap-east-1
+          - ap-east-2
+          - cn-north-1
+          - cn-northwest-1
+          - af-south-1
+          - il-central-1
+          - mx-central-1
+          - unknown-region
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RegionConfigurationModel'
+      x-pretty-name: getRegionConfiguration
+      x-ui-operation-id: /rest/global/regions/paramId_get
+components:
+  schemas:
+    RegionConfigurationModel:
+      required:
+      - region
+      - regionEndpoint
+      - regionName
+      - regionType
+      type: object
+      properties:
+        regionName:
+          type: string
+          description: The AWS region location name.</br>**Example:** United States
+        region:
+          type: string
+          description: The AWS region identifier.</br>**Example:** us-east-1
+          enum:
+          - ca-central-1
+          - ca-west-1
+          - us-gov-west-1
+          - us-gov-east-1
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - sa-east-1
+          - eu-north-1
+          - eu-south-1
+          - eu-south-2
+          - eu-central-1
+          - eu-central-2
+          - eu-west-1
+          - eu-west-2
+          - eu-west-3
+          - me-south-1
+          - me-central-1
+          - ap-northeast-1
+          - ap-northeast-2
+          - ap-northeast-3
+          - ap-south-1
+          - ap-south-2
+          - ap-southeast-1
+          - ap-southeast-2
+          - ap-southeast-3
+          - ap-southeast-4
+          - ap-southeast-5
+          - ap-southeast-6
+          - ap-southeast-7
+          - ap-east-1
+          - ap-east-2
+          - cn-north-1
+          - cn-northwest-1
+          - af-south-1
+          - il-central-1
+          - mx-central-1
+          - unknown-region
+        regionEndpoint:
+          type: string
+          description: The endpoint in which requests bypass geo-balancing to reach the region directly. This endpoint is intended for internal use only.</br>**Example:** `platformdev-us.cloud.coveo.com`
+        regionType:
+          type: string
+          description: 'The type of the region.</br>**Allowed values:**</br>- `PRIMARY`: Region where all Coveo functionalities are available.</br>- `SECONDARY`: Region where only the search functionalities are available.'
+          enum:
+          - PRIMARY
+          - PAIRED
+          - SECONDARY
+        mainEndpoint:
+          type: string
+          description: The endpoint which always directs requests to the current region.</br>**Example:** `platform-us.cloud.coveo.com`
+        hostedSearchPagesEndpoint:
+          type: string
+          description: The endpoint for the hosted search pages of the current region.</br>**Example:** `search.cloud.coveo.com`
+        apiEndpoint:
+          type: string
+          description: The endpoint for the Push API and Source Logs API of the current region.</br>**Example:** `api.cloud.coveo.com`
+        analyticsEndpoint:
+          type: string
+          description: The endpoint for the Usage Analytics API of the current region.</br>**Example:** `analytics.cloud.coveo.com`
+        pairedPrimaryRegion:
+          type: string
+          description: The paired primary AWS region identifier.</br>**Example:** us-east-1
+          enum:
+          - ca-central-1
+          - ca-west-1
+          - us-gov-west-1
+          - us-gov-east-1
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - sa-east-1
+          - eu-north-1
+          - eu-south-1
+          - eu-south-2
+          - eu-central-1
+          - eu-central-2
+          - eu-west-1
+          - eu-west-2
+          - eu-west-3
+          - me-south-1
+          - me-central-1
+          - ap-northeast-1
+          - ap-northeast-2
+          - ap-northeast-3
+          - ap-south-1
+          - ap-south-2
+          - ap-southeast-1
+          - ap-southeast-2
+          - ap-southeast-3
+          - ap-southeast-4
+          - ap-southeast-5
+          - ap-southeast-6
+          - ap-southeast-7
+          - ap-east-1
+          - ap-east-2
+          - cn-north-1
+          - cn-northwest-1
+          - af-south-1
+          - il-central-1
+          - mx-central-1
+          - unknown-region
+      description: A region configuration.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

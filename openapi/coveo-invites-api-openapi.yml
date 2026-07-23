@@ -1,0 +1,76 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Invites API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Invites
+paths:
+  /rest/invites:
+    get:
+      tags:
+      - Invites
+      summary: List Groups Current User Is Invited to
+      description: Lists all groups that the current user is currently invited to.
+      operationId: getInvites_1
+      parameters:
+      - name: invite_code
+        in: cookie
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LightGroupModel'
+      x-pretty-name: getInvites
+      x-ui-operation-id: /rest/invites_get
+components:
+  schemas:
+    LightGroupModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the [group](https://docs.coveo.com/en/2867/).
+        displayName:
+          type: string
+          description: The display name of the [group](https://docs.coveo.com/en/2867/).
+        organizations:
+          type: array
+          description: The organizations that the group has access to.
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+      description: The display name and unique identifier of a group.
+    IdAndDisplayNameModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+      description: The unique identifiers of the organizations by which the SAML identity provider is used.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

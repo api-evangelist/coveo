@@ -1,0 +1,861 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Data Health API - Version 15 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Data Health API - Version 15
+paths:
+  /v15/datahealth/events/payload:
+    get:
+      tags:
+      - Data Health API - Version 15
+      summary: Get the Payload of an Event.
+      operationId: get__v15_datahealth_events_payload
+      parameters:
+      - name: timestamp
+        in: query
+        description: The timestamp of the event. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: eventId
+        in: query
+        description: The id of the event for which to return information.
+        required: true
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEventPayloadResponseV15'
+  /v15/datahealth/events/problems:
+    get:
+      tags:
+      - Data Health API - Version 15
+      summary: Get Problems About Events
+      operationId: get__v15_datahealth_events_problems
+      parameters:
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: eventType
+        in: query
+        description: A set of event types for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: searchHub
+        in: query
+        description: A set of search hubs for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: trackingId
+        in: query
+        description: The tracking IDs for which the results should be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: page
+        in: query
+        description: The response's page to access, starting at 0.
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The number of results to include in a page.
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventProblemsResponseV15'
+        '404':
+          description: PAGE_NOT_FOUND
+  /v15/datahealth/criteria/failedInstances:
+    get:
+      tags:
+      - Data Health API - Version 15
+      summary: Get Failed Instances for a Data Health Criterion
+      operationId: get__v15_datahealth_criteria_failedInstances
+      parameters:
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: criterionId
+        in: query
+        description: The data health criterion for which the failed instances should be returned.
+        required: true
+        schema:
+          type: string
+      - name: group
+        in: query
+        description: The group for which data health information should be returned.
+        required: true
+        schema:
+          type: string
+      - name: scopeValue
+        in: query
+        description: The value of the criterion scope for which failed instances should be returned. For example, if the scope of a rule is 'EVENT', the scope value could be 'Click', 'Search', etc. The failed instances would contain sample events of the specified type.
+        schema:
+          type: string
+      - name: trackingId
+        in: query
+        description: The tracking IDs for which the results should be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: page
+        in: query
+        description: The response's page to access, starting at 0.
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The number of results to include in a page.
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailedInstancesResponseV15'
+  /v15/datahealth/groups/detail:
+    get:
+      tags:
+      - Data Health API - Version 15
+      summary: Get Detailed Information About a Data Health Group
+      operationId: get__v15_datahealth_groups_detail
+      parameters:
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: group
+        in: query
+        description: The group for which data health information should be returned.
+        required: true
+        schema:
+          type: string
+      - name: category
+        in: query
+        description: The categories of rules for which data health should be displayed.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: feature
+        in: query
+        description: The feature for which data health should be computed.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: trackingId
+        in: query
+        description: The tracking IDs for which the results should be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupDetailResponseV15'
+  /v15/datahealth/groups:
+    get:
+      tags:
+      - Data Health API - Version 15
+      summary: Get a Listing of Data Health Groups
+      operationId: get__v15_datahealth_groups
+      parameters:
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: category
+        in: query
+        description: The categories of rules for which data health should be displayed.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: feature
+        in: query
+        description: The feature for which data health should be computed.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: trackingId
+        in: query
+        description: The tracking IDs for which the results should be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: page
+        in: query
+        description: The response's page to access, starting at 0.
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The number of results to include in a page.
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: showEmptyGroups
+        in: query
+        description: Whether or not groups with zero event validated should be shown
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupListingResponseV15'
+  /v15/datahealth/overview:
+    get:
+      tags:
+      - Data Health API - Version 15
+      summary: Get the Data Health Overview
+      operationId: get__v15_datahealth_overview
+      parameters:
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: category
+        in: query
+        description: The categories of rules for which data health should be displayed.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: feature
+        in: query
+        description: The feature for which data health should be computed.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: trackingId
+        in: query
+        description: The tracking IDs for which the results should be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OverviewResponseV15'
+  /v15/datahealth/status:
+    get:
+      tags:
+      - Data Health API - Version 15
+      summary: Get the Data Health Service Status
+      operationId: get__v15_datahealth_status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+  /v15/datahealth/events:
+    get:
+      tags:
+      - Data Health API - Version 15
+      summary: Get Health Information About Events
+      operationId: get__v15_datahealth_events
+      parameters:
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: clientId
+        in: query
+        description: A set of client IDs for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: visitId
+        in: query
+        description: A set of visit IDs for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: eventSource
+        in: query
+        description: A set of event sources for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: eventType
+        in: query
+        description: A set of event types for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: searchHub
+        in: query
+        description: A set of search hubs for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: trackingId
+        in: query
+        description: The tracking IDs for which the results should be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: healthStatus
+        in: query
+        description: A health status for which the events will be returned.
+        schema:
+          type: string
+          enum:
+          - VALID
+          - INVALID
+      - name: page
+        in: query
+        description: The response's page to access, starting at 0.
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The number of results to include in a page.
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEventsResponseV15'
+        '404':
+          description: PAGE_NOT_FOUND
+  /v15/datahealth/facets:
+    get:
+      tags:
+      - Data Health API - Version 15
+      summary: List Facet Values for Event Browser
+      operationId: get__v15_datahealth_facets
+      parameters:
+      - name: facet
+        in: query
+        description: The facet for which the values should be listed
+        required: true
+        schema:
+          type: string
+          enum:
+          - EVENT_SOURCE
+          - EVENT_TYPE
+          - HEALTH_STATUS
+          - SEARCH_HUB
+          - TRACKING_ID
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: clientId
+        in: query
+        description: A set of client IDs for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: visitId
+        in: query
+        description: A set of visit IDs for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: eventSource
+        in: query
+        description: A set of event sources for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: eventType
+        in: query
+        description: A set of event types for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: searchHub
+        in: query
+        description: A set of search hubs for which the events will be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: trackingId
+        in: query
+        description: The tracking IDs for which the results should be returned.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: healthStatus
+        in: query
+        description: A health status for which the events will be returned.
+        schema:
+          type: string
+          enum:
+          - VALID
+          - INVALID
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListFacetValuesResponseV15'
+components:
+  schemas:
+    OverviewResponseV15:
+      type: object
+      properties:
+        score:
+          type: number
+          description: The overall score.
+        totalValidations:
+          type: integer
+          description: The total number of validations performed.
+        failedValidations:
+          type: integer
+          description: The number of validations that failed.
+        severityBreakdown:
+          type: object
+          additionalProperties:
+            type: integer
+            description: A breakdown of the proportion of failures associated with different rule severities.
+          description: A breakdown of the proportion of failures associated with different rule severities.
+      description: An overview of the data health of an organization.
+    FacetValueV15:
+      required:
+      - count
+      - value
+      type: object
+      properties:
+        value:
+          type: object
+          description: A facet value.
+        count:
+          type: integer
+          description: The count for this facet value.
+          format: int64
+      description: A facet value and the associated count.
+    GroupDetailListItemV15:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The criterion's identifier.
+        category:
+          type: string
+          description: The criterion's category.
+        severity:
+          type: string
+          description: The criterion's severity.
+          enum:
+          - LOW
+          - MEDIUM
+          - HIGH
+          - CRITICAL
+        score:
+          type: number
+          description: The score for the criterion.
+        scope:
+          type: string
+          description: The scope of the criterion.
+        scopeValue:
+          type: string
+          description: The value associated with that criterion's scope.
+        totalValidations:
+          type: integer
+          description: The total number of validations performed.
+        failedValidations:
+          type: integer
+          description: The number of validations that failed.
+      description: A list of groups.
+    GroupListingListItemV15:
+      type: object
+      properties:
+        group:
+          type: string
+          description: The group's name.
+        score:
+          type: number
+          description: The overall score.
+        totalValidations:
+          type: integer
+          description: The total number of validations performed.
+        failedValidations:
+          type: integer
+          description: The number of validations that failed.
+        severityBreakdown:
+          type: object
+          additionalProperties:
+            type: integer
+            description: A breakdown of the proportion of failures associated with different rule severities.
+          description: A breakdown of the proportion of failures associated with different rule severities.
+      description: An entry in a list of groups.
+    ListEventsListItemV15:
+      required:
+      - clientId
+      - eventId
+      - searchHub
+      - source
+      - timestamp
+      - trackingId
+      - type
+      - visitId
+      type: object
+      properties:
+        source:
+          type: string
+          description: The source of the event.
+        type:
+          type: string
+          description: The type of the event.
+        searchHub:
+          type: string
+          description: The search hub of the event.
+        trackingId:
+          type: string
+          description: The tracking ID of the event.
+        timestamp:
+          type: string
+          description: The timestamp of the event, in ISO8601 format.
+        visitId:
+          type: string
+          description: The visitId of the event.
+        clientId:
+          type: string
+          description: The clientId of the event.
+        eventId:
+          type: string
+          description: The id of the event.
+        validationErrors:
+          type: array
+          description: The validation errors of the event
+          items:
+            $ref: '#/components/schemas/ValidationErrorV15'
+      description: An entry in a list of events.
+    FailedInstancesResponseV15:
+      type: object
+      properties:
+        failedInstances:
+          type: array
+          description: The failed instances.
+          items:
+            $ref: '#/components/schemas/FailedInstancesListItemV15'
+      description: A list of failed instances.
+    ListFacetValuesResponseV15:
+      required:
+      - values
+      type: object
+      properties:
+        values:
+          type: array
+          description: The values for this facet
+          items:
+            $ref: '#/components/schemas/FacetValueV15'
+      description: The values available for the facet
+    GroupListingResponseV15:
+      type: object
+      properties:
+        groups:
+          type: array
+          description: The groups.
+          items:
+            $ref: '#/components/schemas/GroupListingListItemV15'
+      description: A list of groups.
+    ValidationErrorV15:
+      required:
+      - code
+      - message
+      - path
+      type: object
+      properties:
+        code:
+          type: string
+          description: The error code.
+        path:
+          type: string
+          description: The path of the parameter causing the error.
+        message:
+          type: string
+          description: A description of the error.
+      description: A validation error found on an event.
+    EventProblemsResponseV15:
+      required:
+      - pagination
+      type: object
+      properties:
+        problems:
+          type: array
+          description: The problems.
+          items:
+            $ref: '#/components/schemas/EventProblemsListItemV15'
+      description: A list of events problems.
+    FailedInstancesListItemV15:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The failed instance's timestamp, in ISO 8601 format.
+        eventId:
+          type: string
+          description: The failed instance's eventId.
+        visitId:
+          type: string
+          description: The failed instance's visitId.
+        clientId:
+          type: string
+          description: The failed instance's clientId
+        scope:
+          type: string
+          description: The scope of the failed instance.
+          enum:
+          - EVENT
+          - VISIT
+      description: A failed instance.
+    GetEventPayloadResponseV15:
+      type: object
+      properties:
+        eventId:
+          type: string
+          description: The ID of the event.
+        timestamp:
+          type: string
+          description: The timestamp of the event, in ISO8601 format.
+        eventPayload:
+          type: object
+          description: The raw payload of the event.
+      description: An event's payload.
+    ListEventsResponseV15:
+      type: object
+      properties:
+        events:
+          type: array
+          description: The events.
+          items:
+            $ref: '#/components/schemas/ListEventsListItemV15'
+      description: A list of events.
+    StatusResponse:
+      type: object
+      description: Service's status information
+    GroupDetailResponseV15:
+      type: object
+      properties:
+        criteria:
+          type: array
+          description: The criteria.
+          items:
+            $ref: '#/components/schemas/GroupDetailListItemV15'
+      description: A list of criteria detail information.
+    EventProblemsListItemV15:
+      type: object
+      properties:
+        eventType:
+          type: string
+          description: The type of the event.
+        trackingId:
+          type: string
+          description: The tracking ID of the event.
+        searchHub:
+          type: string
+          description: The search hub of the event.
+        failedEvents:
+          type: integer
+          description: The total number of events that are failing with the specified problems.
+        totalEvents:
+          type: integer
+          description: The total number of events for that event type, tracking ID and search hub combination.
+        validationErrors:
+          type: array
+          description: The validation errors of the event
+          items:
+            $ref: '#/components/schemas/ValidationErrorV15'
+        sampleEvents:
+          type: array
+          description: A list of sample events ids
+          items:
+            type: string
+            description: A list of sample events ids
+        sampleEventsTimestamps:
+          type: array
+          description: A list of timestamps associated with the sampleEvents
+          items:
+            type: string
+            description: A list of timestamps associated with the sampleEvents
+      description: An entry in a list of events problems.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

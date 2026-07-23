@@ -1,0 +1,1437 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Listings API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Listings
+paths:
+  /rest/organizations/{organizationId}/commerce/v2/listing:
+    post:
+      tags:
+      - Listings
+      summary: Get a Listing Page
+      description: 'Shows products linked to a [product listing](https://docs.coveo.com/en/m1sf3187/) URL.</br></br>**Required privilege:** Execute Query<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"SEARCH_API","targetDomain":"EXECUTE_QUERY","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getListing
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListingRequestModel_V2ProductView'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ListingResponseModel_V2ProductView'
+      x-pretty-name: getListing
+      x-required-privilege:
+        owner: SEARCH_API
+        targetDomain: EXECUTE_QUERY
+        targetId: '*'
+      x-required-privileges:
+      - owner: SEARCH_API
+        targetDomain: EXECUTE_QUERY
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/commerce/v2/listing_post
+components:
+  schemas:
+    DateRangeFacetResultValue_V2ProductView:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+          - idle
+          - selected
+        numberOfResults:
+          type: integer
+          format: int64
+        isAutoSelected:
+          type: boolean
+        isSuggested:
+          type: boolean
+        moreValuesAvailable:
+          type: boolean
+        start:
+          type: string
+        end:
+          type: string
+        endInclusive:
+          type: boolean
+    NumericalRangeFacetResult_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AbstractFacetResultObject_V2ProductView'
+      - type: object
+        properties:
+          values:
+            type: array
+            items:
+              $ref: '#/components/schemas/NumericalRangeFacetResultValue_V2ProductView'
+          moreValuesAvailable:
+            type: boolean
+          fromAutoSelect:
+            type: boolean
+          domain:
+            $ref: '#/components/schemas/RangeDomain_V2ProductView'
+          interval:
+            type: string
+            enum:
+            - continuous
+            - discrete
+            - even
+            - equiprobable
+          isFieldExpanded:
+            type: boolean
+            description: 'The value received in the `isFieldExpanded` property of the request.  If the facet was
+
+              not part of the request, `false` is returned.
+
+              '
+    RegularFacetModel_V2ProductView:
+      required:
+      - field
+      - values
+      type: object
+      description: Regular (single string value) facet.
+      example:
+        facetId: ec_brand
+        field: ec_brand
+        displayNames:
+        - value: Brand
+          language: en
+        - value: Marque
+          language: fr
+        values:
+        - state: selected
+          preventAutoSelect: false
+          value: Aqua Sports
+        - state: idle
+          preventAutoSelect: false
+          value: Aqua Marina
+        - state: idle
+          preventAutoSelect: false
+          value: HO Sports
+        numberOfValues: 3
+        preventAutoSelect: false
+        sortCriteria: score
+        isFieldExpanded: true
+        type: regular
+        customOrder:
+        - string
+      allOf:
+      - $ref: '#/components/schemas/RequestFacetBaseObject_V2ProductView'
+      - type: object
+        properties:
+          values:
+            minItems: 1
+            type: array
+            description: The values displayed by the facet in the search interface at the moment of the request.
+            items:
+              $ref: '#/components/schemas/RegularValueModel_V2ProductView'
+          preventAutoSelect:
+            type: boolean
+            description: Whether to prevent Coveo ML from automatically selecting facet values.
+          sortCriteria:
+            type: string
+            description: The criterion to use for sorting returned facet values.
+            enum:
+            - score
+            - alphanumericNatural
+            - alphanumeric
+            - occurrences
+          customOrder:
+            type: array
+            description: A custom sort order for the facet values.
+            items:
+              type: string
+          freezeCurrentValues:
+            type: boolean
+            description: Should always be set to `false` except when selecting/unselecting facet values. See [here](https://docs.coveo.com/en/3199/build-a-search-ui/implement-facets#toggle-facet-values) for more guidance.
+          resultsMustMatch:
+            type: string
+            description: Specifies how a result must match the selected values.
+            default: atLeastOneValue
+            enum:
+            - atLeastOneValue
+            - allValues
+          isFieldExpanded:
+            type: boolean
+            description: The value provided is only copied back in the `isFieldExpanded` property of the response. It does not affect the behaviour of the Commerce Service in any way.
+    RegularValueModel_V2ProductView:
+      required:
+      - value
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting facet values.
+        value:
+          minLength: 1
+          type: string
+          description: The facet value name.
+      description: The values displayed by the facet in the search interface at the moment of the request.
+    ListingResponseModel_V2ProductView:
+      type: object
+      properties:
+        responseId:
+          type: string
+          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        products:
+          type: array
+          description: The subset of products returned by the query.
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/Product_V2ProductView'
+            - $ref: '#/components/schemas/ChildProduct_V2ProductView'
+            - $ref: '#/components/schemas/ProductForPreview_V2ProductView'
+        results:
+          type: array
+          description: List of results including products and spotlight content
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/ChildProduct_V2ProductView'
+            - $ref: '#/components/schemas/ProductForPreview_V2ProductView'
+            - $ref: '#/components/schemas/Product_V2ProductView'
+            - $ref: '#/components/schemas/SpotlightContentModel_V2ProductView'
+        facets:
+          type: array
+          description: The available facets. Note that this array will always be empty in the '/productSuggest' endpoint.
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/DateRangeFacetResult_V2ProductView'
+            - $ref: '#/components/schemas/HierarchicalFacetResult_V2ProductView'
+            - $ref: '#/components/schemas/NumericalRangeFacetResult_V2ProductView'
+            - $ref: '#/components/schemas/RegularFacetResult_V2ProductView'
+        pagination:
+          $ref: '#/components/schemas/PaginationResponseModel_V2ProductView'
+        sort:
+          $ref: '#/components/schemas/SortResponseModel_V2ProductView'
+        triggers:
+          type: array
+          description: The actions for the client to perform based on the Trigger statements defined.
+          example:
+          - type: redirect
+            content: https://www.example.com
+          items:
+            $ref: '#/components/schemas/TriggerModel_V2ProductView'
+    LegacyFacetOptions_V2ProductView:
+      type: object
+      properties:
+        freezeFacetOrder:
+          type: boolean
+          description: 'Default: `false`<br/>Whether facets should be returned in the same order in which they were requested.'
+      description: Facet Options for legacy (v1) facets.
+    NumericalRangeValueModel_V2ProductView:
+      required:
+      - end
+      - start
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting facet values.
+        start:
+          type: number
+          description: The value to start the range at.
+        end:
+          type: number
+          description: The value to end the range at. Must be greater (or later) than the start value.
+        endInclusive:
+          type: boolean
+          description: Whether to include the end value in the range. It should typically be set to the value last received in the `endInclusive` property of the facet response.
+      description: The values displayed by the facet in the search interface at the moment of the request.
+    BadgeViewModel_V2ProductView:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The localized text displayed on the badge.
+          example: Bestseller!
+        backgroundColor:
+          type: string
+          description: The badge background color in the format `#RRGGBB`.
+          example: '#FFFFFF'
+        textColor:
+          type: string
+          description: The badge text color in the format `#RRGGBB`.
+          example: '#000000'
+        iconUrl:
+          type: string
+          description: The url of an icon to render with the badge text.
+          example: https://example.com/icon.png
+      description: The list of badges associated with this placement
+    ContextModel_V2ProductView:
+      required:
+      - view
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserModel_V2ProductView'
+        view:
+          $ref: '#/components/schemas/ViewModel_V2ProductView'
+        cart:
+          type: array
+          description: The cart information.
+          items:
+            $ref: '#/components/schemas/CartItemModel_V2ProductView'
+        source:
+          type: array
+          description: Defines one or more client side libraries that generated the analytics event. The format should be the library's name followed by '@', and then the version. For example, '[custom.library.js@2.0.0]'.
+          example:
+          - '@coveo/headless@2.61.0'
+          - custom.library.js@2.0.0
+          items:
+            minLength: 1
+            pattern: ^[^@]*@.*$
+            type: string
+            description: A context source
+            example: '@coveo/headless@2.61.0'
+        capture:
+          type: boolean
+          description: Whether the request should be tracked for analytics and machine learning purposes. When set to `true`, this will trigger a server-side event to be logged. When set to `false`, the server-side event will not be logged.
+          example: true
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+            description: Deprecated - The context labels.
+            example: '{"category":"garden > garden-tools > chainsaws","brand":"ACME"}'
+          description: Deprecated - The context labels.
+          example:
+            category: garden > garden-tools > chainsaws
+            brand: ACME
+        custom:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom context values under context.custom. Use this for context mapping.
+            example:
+              fitmentProducts:
+              - sku_123
+              - sku_456
+          description: Custom context values under context.custom. Use this for context mapping.
+          example:
+            fitmentProducts:
+            - sku_123
+            - sku_456
+      description: Contextual information about the query.
+    Product_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Result_V2ProductView'
+      - type: object
+        properties:
+          additionalFields:
+            type: object
+            additionalProperties:
+              type: object
+              description: The product additional fields.
+              example:
+                size: M
+                material: cotton
+            description: The product additional fields.
+            example:
+              size: M
+              material: cotton
+          queryPinned:
+            type: boolean
+            description: Indicates whether the product was pinned by a reserved position rule.
+            example: true
+          badgePlacements:
+            type: array
+            description: The list of badge placements associated with this product.
+            items:
+              $ref: '#/components/schemas/BadgePlacementViewModel_V2ProductView'
+          ec_name:
+            type: string
+            description: The product name.
+            example: ACME T-Shirt.
+          ec_description:
+            type: string
+            description: The product description.
+            example: A very nice T-Shirt. Comes in blue and green colors.
+          ec_shortdesc:
+            type: string
+            description: The product short description.
+            example: A very nice T-Shirt.
+          ec_brand:
+            type: string
+            description: The product brand.
+            example: ACME
+          ec_category:
+            type: array
+            description: The product category.
+            example:
+            - T-Shirts
+            items:
+              type: string
+              description: The product category.
+              example: '["T-Shirts"]'
+          ec_thumbnails:
+            type: array
+            description: The product thumbnails.
+            example:
+            - https://example.com/thumbnail1.jpg
+            - https://example.com/thumbnail2.jpg
+            items:
+              type: string
+              description: The product thumbnails.
+              example: '["https://example.com/thumbnail1.jpg","https://example.com/thumbnail2.jpg"]'
+          ec_images:
+            type: array
+            description: The product images.
+            example:
+            - https://example.com/image1.jpg
+            - https://example.com/image2.jpg
+            items:
+              type: string
+              description: The product images.
+              example: '["https://example.com/image1.jpg","https://example.com/image2.jpg"]'
+          ec_price:
+            type: number
+            description: The product price.
+            format: double
+            example: 19.99
+          ec_promo_price:
+            type: number
+            description: The product promotional price.
+            format: double
+            example: 14.99
+          ec_in_stock:
+            type: boolean
+            description: The product availability.
+            example: true
+          ec_item_group_id:
+            type: string
+            description: The product item group identifier.
+            example: '0000003035'
+          ec_rating:
+            type: number
+            description: The product rating.
+            format: double
+            example: 4.5
+          ec_product_id:
+            type: string
+            description: The product identifier.
+            example: 0000003035-45
+          ec_gender:
+            type: string
+            description: The intended gender of the product user.
+            example: M
+          ec_color:
+            type: string
+            description: The product color.
+            example: Blue
+          ec_listing:
+            type: string
+            description: The product listing.
+            example: T-Shirt
+          clickUri:
+            type: string
+            description: The product click URI.
+            example: https://example.com/product/0000003035-45
+          permanentid:
+            type: string
+            description: The product permanent identifier.
+            example: 0000003035-45
+          children:
+            type: array
+            description: The product child results.
+            items:
+              $ref: '#/components/schemas/ChildProduct_V2ProductView'
+          totalNumberOfChildren:
+            type: integer
+            description: The total number of child results.
+            format: int32
+            example: 2
+    DateRangeFacetResult_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AbstractFacetResultObject_V2ProductView'
+      - type: object
+        properties:
+          values:
+            type: array
+            items:
+              $ref: '#/components/schemas/DateRangeFacetResultValue_V2ProductView'
+          moreValuesAvailable:
+            type: boolean
+          fromAutoSelect:
+            type: boolean
+          isFieldExpanded:
+            type: boolean
+            description: 'The value received in the `isFieldExpanded` property of the request.  If the facet was
+
+              not part of the request, `false` is returned.
+
+              '
+    SortResponseModel_V2ProductView:
+      type: object
+      properties:
+        appliedSort:
+          oneOf:
+          - $ref: '#/components/schemas/SortByFieldsRequestResponseModel_V2ProductView'
+          - $ref: '#/components/schemas/SortByRelevanceRequestResponseModel_V2ProductView'
+        availableSorts:
+          type: array
+          description: The list of available sorting methods.
+          example:
+          - sortCriteria: relevance
+          - sortCriteria: fields
+            fields:
+            - field: ec_price
+              direction: desc
+              displayName: Price
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/SortByFieldsRequestResponseModel_V2ProductView'
+            - $ref: '#/components/schemas/SortByRelevanceRequestResponseModel_V2ProductView'
+      description: The applied and available sort options for the query.
+      example:
+        appliedSort:
+          sortCriteria: fields
+          fields:
+          - field: ec_brand
+            direction: asc
+            displayName: Brand
+        availableSorts:
+        - sortCriteria: relevance
+        - sortCriteria: fields
+          fields:
+          - field: ec_price
+            direction: desc
+            displayName: Price
+    HierarchicalFacetModel_V2ProductView:
+      required:
+      - field
+      - values
+      type: object
+      description: Hierarchical (tree-like) facet.
+      example:
+        facetId: ec_category
+        field: ec_category
+        displayNames:
+        - value: Category
+          language: en
+        - value: Catégorie
+          language: fr
+        values:
+        - state: selected
+          preventAutoSelect: true
+          value: Canoes & Kayaks
+          children:
+          - state: selected
+            preventAutoSelect: true
+            value: Kayaks
+            children:
+            - state: selected
+              preventAutoSelect: true
+              value: Folding Kayaks
+          - state: idle
+            preventAutoSelect: true
+            value: Sea Kayaks
+        - state: selected
+          preventAutoSelect: false
+          value: Canoes
+        numberOfValues: 5
+        preventAutoSelect: true
+        sortCriteria: score
+        isFieldExpanded: true
+        type: hierarchical
+        delimitingCharacter: '|'
+        basePath:
+        - Boats
+        filterByBasePath: true
+      allOf:
+      - $ref: '#/components/schemas/RequestFacetBaseObject_V2ProductView'
+      - type: object
+        properties:
+          values:
+            minItems: 1
+            type: array
+            description: The values displayed by the facet in the search interface at the moment of the request.
+            items:
+              $ref: '#/components/schemas/HierarchicalValueModel_V2ProductView'
+          preventAutoSelect:
+            type: boolean
+            description: Whether to prevent Coveo ML from automatically selecting facet values.
+          sortCriteria:
+            type: string
+            description: The criterion to use for sorting returned facet values.
+            enum:
+            - score
+            - alphanumericNatural
+            - alphanumeric
+            - occurrences
+          delimitingCharacter:
+            type: string
+            description: The character to use to split field values into a hierarchical sequence.
+          filterByBasePath:
+            type: boolean
+            description: Whether to use basePath as a filter for the results.
+          retrieveCount:
+            type: object
+            properties:
+              empty:
+                type: boolean
+              present:
+                type: boolean
+              asInt:
+                type: integer
+                format: int32
+            description: The maximum number of children to retrieve for this hierarchical facet values.
+          isFieldExpanded:
+            type: boolean
+            description: The value provided is only copied back in the `isFieldExpanded` property of the response. It does not affect the behaviour of the Commerce Service in any way.
+    SortByFieldRequestResponseModel_V2ProductView:
+      required:
+      - field
+      type: object
+      properties:
+        field:
+          minLength: 1
+          type: string
+          description: The name of a field to sort by.
+        direction:
+          type: string
+          description: 'Sort order:<br/>Default: `ascending`<br/><ul><li>`asc` - Ascending, from A to Z</li><li>`desc` - Descending, from Z to A</li></ul>'
+          enum:
+          - asc
+          - desc
+        displayName:
+          type: string
+          description: The display name of a field.
+      description: Defines the fields and, optionally, their sort order.
+    RangeDomain_V2ProductView:
+      required:
+      - max
+      - min
+      type: object
+      properties:
+        min:
+          minimum: 0
+          type: integer
+          format: int32
+        max:
+          maximum: 1000000
+          type: integer
+          format: int32
+        increment:
+          maximum: 1000000
+          minimum: 0
+          type: integer
+          format: int32
+      description: Limits the range values to the specified domain.
+    UserModel_V2ProductView:
+      type: object
+      properties:
+        userAgent:
+          type: string
+          description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.\n\n**Note**: This information is required when endpoints are behind a proxy.'
+          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
+      description: The user information.
+    NumericalRangeFacetResultValue_V2ProductView:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+          - idle
+          - selected
+        numberOfResults:
+          type: integer
+          format: int64
+        isAutoSelected:
+          type: boolean
+        isSuggested:
+          type: boolean
+        moreValuesAvailable:
+          type: boolean
+        start:
+          type: number
+        end:
+          type: number
+        endInclusive:
+          type: boolean
+    HierarchicalFacetResultValue_V2ProductView:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+          - idle
+          - selected
+        numberOfResults:
+          type: integer
+          format: int64
+        isAutoSelected:
+          type: boolean
+        isSuggested:
+          type: boolean
+        moreValuesAvailable:
+          type: boolean
+          description: Whether additional facet values matching the request are available.
+        value:
+          type: string
+          description: This represents a single path segment.
+        path:
+          type: array
+          items:
+            type: string
+        isLeafValue:
+          type: boolean
+        children:
+          type: array
+          description: The children of this hierarchical facet value.
+          items:
+            $ref: '#/components/schemas/HierarchicalFacetResultValue_V2ProductView'
+    AbstractSortRequestResponseModel_V2ProductView:
+      type: object
+      properties:
+        sortCriteria:
+          type: string
+          description: The criterion to use for sorting the results.
+          enum:
+          - relevance
+          - fields
+      description: Determines the order in which to retrieve the results.
+      example:
+      - sortCriteria: fields
+        fields:
+        - field: ec_price
+          direction: asc
+          displayNames:
+          - value: Price
+            language: en
+          - value: Prix
+            language: fr
+      discriminator:
+        propertyName: sortCriteria
+      default: relevance
+    AbstractFacetResultObject_V2ProductView:
+      required:
+      - type
+      type: object
+      properties:
+        facetId:
+          type: string
+        field:
+          type: string
+        displayName:
+          type: string
+        values:
+          type: array
+          items:
+            type: object
+        numberOfValues:
+          type: integer
+          description: 'The number of values that were requested to the index for this facet. When the facet
+
+            is part of the request and the `numberOfValues` request parameter is not null, the returned value
+
+            will be equal to the value found in the request. Otherwise, the returned value will be equal to
+
+            the default number of values configured for this facet.
+
+            <br/>
+
+            <br/>
+
+            <b>Note:</b> This value can be greater than the number of values returned in the `values` array.
+
+            '
+          format: int32
+        type:
+          type: string
+      description: The available facets. Note that this array will always be empty in the '/productSuggest' endpoint.
+      discriminator:
+        propertyName: type
+    RequestFacetBaseObject_V2ProductView:
+      required:
+      - field
+      - values
+      type: object
+      properties:
+        facetId:
+          type: string
+          description: Name of the field to execute the facet search request against.
+          example: color
+        field:
+          minLength: 1
+          type: string
+          description: The facet field name.
+          example: ec_brand
+        displayName:
+          type: string
+          description: The facet display name.
+          example: Brand
+        values:
+          minItems: 1
+          type: array
+          description: The values displayed by the facet in the search interface at the moment of the request.
+          items:
+            type: object
+            description: The values displayed by the facet in the search interface at the moment of the request.
+        numberOfValues:
+          type: object
+          properties:
+            empty:
+              type: boolean
+            present:
+              type: boolean
+            asInt:
+              type: integer
+              format: int32
+          description: 'The maximum number of facet values to fetch. It should typically be set to the value last received
+
+            in the `numberOfValues` property of the facet response.
+
+            <br/>
+
+            <br/>
+
+            An exception to this guideline is the case where the last response had
+
+            `moreValuesAvailable=true` and the user asks to see more values for this facet. In this case,
+
+            the front-end is expected to send a value greater than the `numberOfValues` that it last received
+
+            in the response. This ensures that more values are fetched from the index.
+
+            <br/>
+
+            <br/>
+
+            When not provided, the default number of values configured for this facet is used.
+
+            '
+        type:
+          type: string
+          description: 'One of: `regular`, `dateRange`, `numericalRange`, `hierarchical`. For more information, see the [facet types](https://docs.coveo.com/en/p3oa0420#facet-types) documentation.'
+          enum:
+          - regular
+          - dateRange
+          - numericalRange
+          - hierarchical
+          - regular
+      description: The facet operations to perform on the query. Note that this parameter is ignored in the '/productSuggest' endpoint.
+      example:
+      - field: ec_category
+        type: regular
+        values:
+        - value: shoes
+          state: idle
+      discriminator:
+        propertyName: type
+    ViewModel_V2ProductView:
+      required:
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: The URL used to retrieve the products. Used as `documentLocation` for analytics purposes, which indicates the URL of the resource where the request originated.
+          example: https://acme.com/summersale
+        referrer:
+          type: string
+          description: Typically the URL of the page that linked to the interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Used as `documentReferrer` for analytics purposes.
+          nullable: true
+          example: https://example.com/
+      description: 'A collection of data points describing the view. Note: The term ''view'' is used instead of ''page'' to accommodate usage in contexts such as mobile apps.'
+    DateRangeValueModel_V2ProductView:
+      required:
+      - end
+      - start
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting facet values.
+        start:
+          minLength: 1
+          type: string
+          description: The value to start the range at.
+        end:
+          minLength: 1
+          type: string
+          description: The value to end the range at. Must be greater (or later) than the start value.
+        endInclusive:
+          type: boolean
+          description: Whether to include the end value in the range.
+      description: The values displayed by the facet in the search interface at the moment of the request.
+    HierarchicalValueModel_V2ProductView:
+      required:
+      - value
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting facet values.
+        value:
+          minLength: 1
+          type: string
+          description: This represents a single path segment.
+        children:
+          type: array
+          description: The children of this hierarchical facet value.
+          items:
+            $ref: '#/components/schemas/HierarchicalValueModel_V2ProductView'
+        retrieveCount:
+          type: integer
+          description: The maximum number of children to retrieve for this hierarchical facet value. Ignored if retrieveChildren is false.
+          format: int32
+      description: The values displayed by the facet in the search interface at the moment of the request.
+    DateRangeFacetModel_V2ProductView:
+      required:
+      - field
+      - values
+      type: object
+      description: Date range facet.
+      example:
+        facetId: year
+        field: year
+        displayNames:
+        - value: Year
+          language: en
+        - value: Année
+          language: fr
+        values:
+        - state: idle
+          preventAutoSelect: false
+          start: 2023/10/01@00:00:00
+          end: 2023/10/31@23:59:59
+          endInclusive: true
+        - state: idle
+          preventAutoSelect: true
+          start: 2023/11/01@00:00:00
+          end: 2023/11/30@23:59:59
+          endInclusive: false
+        - state: selected
+          preventAutoSelect: true
+          start: 2023/12/01@00:00:00
+          end: 2023/12/31@23:59:59
+          endInclusive: true
+        numberOfValues: 3
+        preventAutoSelect: false
+        sortCriteria: score
+        isFieldExpanded: true
+        type: dateRange
+        generateAutomaticRanges: true
+      allOf:
+      - $ref: '#/components/schemas/RequestFacetBaseObject_V2ProductView'
+      - type: object
+        properties:
+          values:
+            minItems: 1
+            type: array
+            description: The values displayed by the facet in the search interface at the moment of the request.
+            items:
+              $ref: '#/components/schemas/DateRangeValueModel_V2ProductView'
+          preventAutoSelect:
+            type: boolean
+            description: Whether to prevent Coveo ML from automatically selecting facet values.
+          sortCriteria:
+            type: string
+            description: The criterion to use for sorting returned facet values.
+            enum:
+            - score
+            - alphanumericNatural
+            - alphanumeric
+            - occurrences
+          generateAutomaticRanges:
+            type: boolean
+            description: Whether to automatically generate range values for this facet.
+          freezeCurrentValues:
+            type: boolean
+            description: Should always be set to `false` except when selecting/unselecting facet values. See [here](https://docs.coveo.com/en/3199/build-a-search-ui/implement-facets#toggle-facet-values) for more guidance.
+          isFieldExpanded:
+            type: boolean
+            description: The value provided is only copied back in the `isFieldExpanded` property of the response. It does not affect the behaviour of the Commerce Service in any way.
+    RegularFacetResultValue_V2ProductView:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+          - idle
+          - selected
+        numberOfResults:
+          type: integer
+          format: int64
+        isAutoSelected:
+          type: boolean
+        isSuggested:
+          type: boolean
+        moreValuesAvailable:
+          type: boolean
+        value:
+          type: string
+    Result_V2ProductView:
+      required:
+      - resultType
+      type: object
+      properties:
+        resultType:
+          type: string
+      description: List of results including products and spotlight content
+      discriminator:
+        propertyName: resultType
+    HierarchicalFacetResult_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AbstractFacetResultObject_V2ProductView'
+      - type: object
+        properties:
+          values:
+            type: array
+            items:
+              $ref: '#/components/schemas/HierarchicalFacetResultValue_V2ProductView'
+          delimitingCharacter:
+            type: string
+          moreValuesAvailable:
+            type: boolean
+          fromAutoSelect:
+            type: boolean
+          isFieldExpanded:
+            type: boolean
+            description: 'The value received in the `isFieldExpanded` property of the request.  If the facet was
+
+              not part of the request, `false` is returned.
+
+              '
+    ChildProduct_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Product_V2ProductView'
+      - $ref: '#/components/schemas/Result_V2ProductView'
+    CartItemModel_V2ProductView:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The id of the product.
+          example: shoe-a1-red
+        quantity:
+          type: integer
+          description: The product quantity.
+          format: int32
+          example: 2
+      description: A purchased item.
+    RegularFacetResult_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AbstractFacetResultObject_V2ProductView'
+      - type: object
+        properties:
+          values:
+            type: array
+            items:
+              $ref: '#/components/schemas/RegularFacetResultValue_V2ProductView'
+          moreValuesAvailable:
+            type: boolean
+          fromAutoSelect:
+            type: boolean
+          isFieldExpanded:
+            type: boolean
+            description: 'The value received in the `isFieldExpanded` property of the request.  If the facet was
+
+              not part of the request, `false` is returned.
+
+              '
+    TriggerModel_V2ProductView:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of trigger.
+          example: redirect
+          enum:
+          - execute
+          - notify
+          - redirect
+          - query
+        content:
+          type: string
+          description: The content of the trigger.
+          example: https://www.example.com
+      description: The actions for the client to perform based on the Trigger statements defined.
+      example:
+      - type: redirect
+        content: https://www.example.com
+    SpotlightContentModel_V2ProductView:
+      required:
+      - clickUri
+      - desktopImage
+      type: object
+      description: Spotlight Content
+      allOf:
+      - $ref: '#/components/schemas/Result_V2ProductView'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier of the spotlight content
+            format: uuid
+            readOnly: true
+            example: 123e4567-e89b-12d3-a456-426614174000
+          name:
+            maxLength: 255
+            minLength: 1
+            type: string
+            description: The name of the spotlight content
+            example: Summer Sale
+          description:
+            maxLength: 255
+            minLength: 1
+            type: string
+            description: The description of the spotlight content
+            example: Get up to 50% off on summer items
+          clickUri:
+            maxLength: 1024
+            minLength: 1
+            type: string
+            description: The click URI for the spotlight content
+            example: https://example.com/summer-sale
+          desktopImage:
+            maxLength: 1024
+            minLength: 1
+            type: string
+            description: The desktop image URL for the spotlight content
+            example: https://example.com/images/summer-sale-desktop.jpg
+          mobileImage:
+            maxLength: 1024
+            minLength: 1
+            type: string
+            description: The mobile image URL for the spotlight content
+            example: https://example.com/images/summer-sale-mobile.jpg
+          nameFontColor:
+            type: string
+            description: The font color for the name text in the format `#RRGGBB`.
+            example: '#000000'
+          descriptionFontColor:
+            type: string
+            description: The font color for the description text in the format `#RRGGBB`.
+            example: '#000000'
+          altText:
+            maxLength: 255
+            minLength: 1
+            type: string
+            description: The alt text for the spotlight content image for accessibility
+            example: Summer sale promotional banner
+    BadgePlacementViewModel_V2ProductView:
+      type: object
+      properties:
+        placementId:
+          type: string
+          description: The placement unique identifier.
+          format: uuid
+          example: 36164bca-b489-4c42-8574-e1325d56d0be
+        badges:
+          type: array
+          description: The list of badges associated with this placement
+          items:
+            $ref: '#/components/schemas/BadgeViewModel_V2ProductView'
+      description: The list of badge placements associated with this product.
+    PaginationResponseModel_V2ProductView:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: The page of products to request.
+          format: int32
+          example: 7
+        perPage:
+          type: integer
+          description: The number of products per page. Note that a value greater than 100 may be rejected in the future.
+          format: int32
+          example: 30
+        totalEntries:
+          type: integer
+          description: The total number of results that match the query.
+          format: int32
+          example: 100
+        totalPages:
+          type: integer
+          description: The total number of pages of items available.
+          format: int32
+          example: 10
+        totalProducts:
+          type: integer
+          description: The total number of products that match the query.
+          format: int32
+          example: 90
+        totalSpotlightContent:
+          type: integer
+          description: The total number of spotlight content that match the query.
+          format: int32
+          example: 10
+      description: Contextual pagination information about the query.
+      example:
+        page: 1
+        perPage: 10
+        totalPages: 10
+        totalEntries: 100
+    ListingRequestModel_V2ProductView:
+      required:
+      - context
+      - country
+      - currency
+      - language
+      - trackingId
+      type: object
+      properties:
+        trackingId:
+          minLength: 1
+          type: string
+          description: The unique identifier of the tracking target.
+          example: acmecorporation_ca
+        language:
+          minLength: 1
+          type: string
+          description: An ISO 639-1 language code.
+          example: en
+        country:
+          minLength: 1
+          type: string
+          description: An ISO 3166-1 alpha-2 country code.
+          example: US
+        currency:
+          minLength: 1
+          type: string
+          description: An ISO 4217 currency code.
+          example: USD
+        clientId:
+          type: string
+          description: A GUID which represents the current client.\n\nIf your implementation uses the Atomic or Headless libraries, then the [client ID](https://docs.coveo.com/en/masb0234/) is generated automatically in client-side code.\n\nIf you have a custom Coveo implementation, you will have to generate a [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)>)-formatted GUID. You will need to send this ID in every request that is sent to the Commerce API.\n\nCoveo Machine Learning models may use this information to provide contextually relevant output.
+          example: 58bb4b98-1daa-4767-8c15-90a0ea67645c
+        facets:
+          type: array
+          description: The facet operations to perform on the query. Note that this parameter is ignored in the '/productSuggest' endpoint.
+          example:
+          - field: ec_category
+            type: regular
+            values:
+            - value: shoes
+              state: idle
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/DateRangeFacetModel_V2ProductView'
+            - $ref: '#/components/schemas/HierarchicalFacetModel_V2ProductView'
+            - $ref: '#/components/schemas/NumericalRangeFacetModel_V2ProductView'
+            - $ref: '#/components/schemas/RegularFacetModel_V2ProductView'
+        page:
+          minimum: 0
+          type: integer
+          description: The page of products to request.
+          format: int32
+          example: 7
+        perPage:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          description: The number of products per page. Note that a value greater than 100 may be rejected in the future.
+          format: int32
+          example: 30
+        sort:
+          oneOf:
+          - $ref: '#/components/schemas/SortByFieldsRequestResponseModel_V2ProductView'
+          - $ref: '#/components/schemas/SortByRelevanceRequestResponseModel_V2ProductView'
+        debug:
+          type: boolean
+          description: Whether to include the execution report on a successful response.
+          example: true
+        context:
+          $ref: '#/components/schemas/ContextModel_V2ProductView'
+        legacyFacetOptions:
+          $ref: '#/components/schemas/LegacyFacetOptions_V2ProductView'
+        enableResults:
+          type: boolean
+          description: Enable spotlight content in the results. When enabled, the products list in the response will always be empty and the results list should be used instead.
+      description: The listing query to be executed.
+    SortByRelevanceRequestResponseModel_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AbstractSortRequestResponseModel_V2ProductView'
+    ProductForPreview_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Product_V2ProductView'
+      - type: object
+        properties:
+          score:
+            type: integer
+            description: The total ranking score computed for the product.
+            format: int32
+            example: 1292
+          scoreDifference:
+            type: integer
+            description: Score difference between the cached and previewed rules for a product.
+            format: int32
+            example: 1292
+          positionDifference:
+            type: integer
+            description: Position difference between the cached and previewed rules for a product.
+            format: int32
+            example: 9
+          included:
+            type: boolean
+            description: Whether the product has been included or not after applying a rule.
+          pinned:
+            type: boolean
+            description: Whether the product has been pinned or not after applying a rule.
+          reservedPosition:
+            type: boolean
+            description: Whether the product is in a position that is reserved for a query-time pin.
+      - $ref: '#/components/schemas/Result_V2ProductView'
+    SortByFieldsRequestResponseModel_V2ProductView:
+      required:
+      - fields
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AbstractSortRequestResponseModel_V2ProductView'
+      - type: object
+        properties:
+          fields:
+            minItems: 1
+            type: array
+            description: Defines the fields and, optionally, their sort order.
+            items:
+              $ref: '#/components/schemas/SortByFieldRequestResponseModel_V2ProductView'
+    NumericalRangeFacetModel_V2ProductView:
+      required:
+      - field
+      - values
+      type: object
+      description: Numerical range facet.
+      example:
+        facetId: ec_price
+        field: ec_price
+        displayNames:
+        - value: Price
+          language: en
+        - value: Prix
+          language: fr
+        values:
+        - state: idle
+          preventAutoSelect: true
+          start: '0'
+          end: '999'
+          endInclusive: 'true'
+        - state: selected
+          preventAutoSelect: true
+          start: '1000'
+          end: '2000'
+          endInclusive: 'false'
+        - state: selected
+          preventAutoSelect: true
+          start: '2001'
+          end: '3000'
+          endInclusive: 'false'
+        numberOfValues: 3
+        preventAutoSelect: true
+        sortCriteria: score
+        isFieldExpanded: true
+        type: numericalRange
+      allOf:
+      - $ref: '#/components/schemas/RequestFacetBaseObject_V2ProductView'
+      - type: object
+        properties:
+          values:
+            minItems: 1
+            type: array
+            description: The values displayed by the facet in the search interface at the moment of the request.
+            items:
+              $ref: '#/components/schemas/NumericalRangeValueModel_V2ProductView'
+          preventAutoSelect:
+            type: boolean
+            description: Whether to prevent Coveo ML from automatically selecting facet values.
+          sortCriteria:
+            type: string
+            description: The criterion to use for sorting returned facet values.
+            enum:
+            - score
+            - alphanumericNatural
+            - alphanumeric
+            - occurrences
+          interval:
+            type: string
+            description: Determines the range interval type. Default is `continuous`.
+            default: continuous
+            enum:
+            - continuous
+            - discrete
+            - even
+            - equiprobable
+          domain:
+            $ref: '#/components/schemas/RangeDomain_V2ProductView'
+          freezeCurrentValues:
+            type: boolean
+            description: Should always be set to `false` except when selecting/unselecting facet values. See [here](https://docs.coveo.com/en/3199/build-a-search-ui/implement-facets#toggle-facet-values) for more guidance.
+          isFieldExpanded:
+            type: boolean
+            description: The value provided is only copied back in the `isFieldExpanded` property of the response. It does not affect the behaviour of the Commerce Service in any way.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,1159 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Conditions API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Conditions
+  x-displayName: Conditions
+paths:
+  /rest/search/v1/admin/pipelines/statements:
+    get:
+      tags:
+      - Conditions
+      summary: List Condition Statements
+      description: 'Gets a sorted page of condition statements matching certain criteria.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: listConditions
+      parameters:
+      - name: filter
+        in: query
+        description: 'The query filter to match.
+
+
+          This allows you to search through query pipeline condition definitions, descriptions, and users who modified them.
+
+
+          By default, results are not required to match a specific query filter.'
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      - name: sortBy
+        in: query
+        description: The sort criteria to apply on the results.
+        schema:
+          type: string
+          enum:
+          - definition
+          - description
+          - lastModification
+          - totalAssociationCount
+      - $ref: '#/components/parameters/IsOrderAscending'
+      - name: expand
+        schema:
+          type: boolean
+          default: false
+        required: false
+        in: query
+        description: Whether to include additional information such as the number of resources associated to the condition.
+      - name: associationFilter
+        schema:
+          type: string
+          enum:
+          - all
+          - notAssociated
+          - isAssociated
+          default: all
+        required: false
+        in: query
+        description: Only includes conditions with a certain number of associated resources.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingConditions'
+      security:
+      - oauth2:
+        - full
+    post:
+      tags:
+      - Conditions
+      summary: Create Condition Statement
+      description: 'Creates a new condition statement.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createCondition
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      requestBody:
+        description: The condition statement information.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncomingCondition'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingCondition'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/statements/{statementId}:
+    get:
+      tags:
+      - Conditions
+      summary: Get Condition Statement
+      description: 'Gets a single condition statement.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCondition
+      parameters:
+      - $ref: '#/components/parameters/StatementIdPath'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingCondition'
+      security:
+      - oauth2:
+        - full
+    put:
+      tags:
+      - Conditions
+      summary: Update Condition Statement
+      description: 'Updates a single condition statement.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateCondition
+      parameters:
+      - $ref: '#/components/parameters/StatementIdPath'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      requestBody:
+        description: The updated condition statement information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncomingCondition'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingCondition'
+      security:
+      - oauth2:
+        - full
+    delete:
+      tags:
+      - Conditions
+      summary: Delete Condition Statement
+      description: 'Deletes a single condition statement.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: deleteCondition
+      parameters:
+      - $ref: '#/components/parameters/StatementIdPath'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      responses:
+        '204':
+          description: No content
+          content: {}
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/statements/{statementId}/associations:
+    get:
+      tags:
+      - Conditions
+      summary: List of Associations of a Condition
+      description: 'Gets the list of all objects associated with a condition.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: listConditionAssociations
+      parameters:
+      - $ref: '#/components/parameters/StatementIdPath'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      - $ref: '#/components/parameters/AssociationTypeParam'
+      - $ref: '#/components/parameters/PipelineStatementTypeParam'
+      - $ref: '#/components/parameters/PipelineNameParam'
+      - name: sortBy
+        in: query
+        description: 'The sort criteria to apply on the results.
+
+
+          **Default:** `associationType, associationId`'
+        schema:
+          type: string
+          enum:
+          - pipelineName
+      - $ref: '#/components/parameters/IsOrderAscending'
+      responses:
+        '200':
+          description: Objects associated with the condition.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConditionAssociationListResponse'
+              examples:
+                sample:
+                  value:
+                    conditionId: 0befc717-dfd7-4962-9b85-28f5c26fd23b
+                    totalEntries: 6
+                    totalPages: 1
+                    items:
+                    - associationType: pipelines
+                      id: pipe-123
+                      pipelineId: pipe-123
+                      pipelineName: Default Pipeline
+                    - associationType: pipelineStatements
+                      id: stmt-001
+                      pipelineId: pipe-123
+                      pipelineName: Default Pipeline
+                      pipelineStatementType: thesaurus
+                    - associationType: pipelineStatementGroups
+                      id: psg-42
+                      pipelineId: pipe-123
+                      pipelineName: Default Pipeline
+                    - associationType: pipelineStatements
+                      id: fr-9
+                      pipelineId: pipe-123
+                      pipelineName: Default Pipeline
+                      pipelineStatementType: featuredResult
+                    - associationType: pipelineStatements
+                      id: rr-11
+                      pipelineId: pipe-123
+                      pipelineName: Default Pipeline
+                      pipelineStatementType: rankingExpression
+                    - associationType: pipelineStatements
+                      id: uml-777
+                      pipelineId: pipe-123
+                      pipelineName: Default Pipeline
+                      pipelineStatementType: unmanagedMlStatement
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          description: Condition not found
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/statements/bulkGet:
+    post:
+      tags:
+      - Conditions
+      summary: List Condition Statements
+      description: 'Gets a sorted page of condition statements matching certain criteria.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: bulkGetConditions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      - $ref: '#/components/parameters/IsOrderAscending'
+      - $ref: '#/components/parameters/Filter'
+      - $ref: '#/components/parameters/SortBy'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      requestBody:
+        description: A set of parameters to customize the results.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestBulkGetRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingConditions'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/statements/bulkDelete:
+    post:
+      tags:
+      - Conditions
+      summary: Bulk Delete of Condition Statements
+      description: 'Bulk delete of condition statements
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"EDIT","targetId":"{pipelineId}"}
+
+        ```
+
+        </details>'
+      operationId: bulkDeleteConditions
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      requestBody:
+        description: The query pipeline conditions to delete
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkDeleteConditionsRequest'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/statements/validate:
+    post:
+      tags:
+      - Conditions
+      summary: Validate a Single Pipeline Condition Operation.
+      description: 'Validate that a specific operation would be accepted by our API and executed.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: validatePipelineConditionOperation
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      requestBody:
+        description: An object that describes the operation to validate, the resource to target, and the model payload to use.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestSingleOperationValidationRequestIncomingCondition'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestSingleOperationValidationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/statements/validate/batch:
+    post:
+      tags:
+      - Conditions
+      summary: Validate Batch of Pipeline Condition Operations.
+      description: "\r\n Validate that a list of operations would be accepted by our API and executed.\r\n A maximum of 15 can be processed per request.\n<details>\n<summary>Privilege(s) required</summary>\n\n```json\n{\"level\":\"NORMAL\",\"owner\":\"SEARCH_API\",\"targetDomain\":\"QUERY_PIPELINE\",\"type\":\"VIEW\",\"targetId\":\"*\"}\n```\n</details>"
+      operationId: validatePipelineConditionOperations
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      requestBody:
+        description: An object that contains the list of operations to validate.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestBatchOperationValidationRequestIncomingCondition'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestBatchOperationValidationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+      security:
+      - oauth2:
+        - full
+components:
+  schemas:
+    ConditionPipelineAssociation:
+      allOf:
+      - $ref: '#/components/schemas/AssociationItemBase'
+      - type: object
+        properties:
+          associationType:
+            type: string
+            enum:
+            - pipelines
+        description: For pipeline associations, `pipelineId` will equal `id`.
+    RestOperationValidationRequestIncomingCondition:
+      required:
+      - operationType
+      type: object
+      properties:
+        operationType:
+          type: string
+          description: 'The type of operation to validate. Each operation type has specific validation rules.
+
+
+            Additional request parameters are required based on the type of operation to validate:
+
+            - `CREATE`: You must provide a `model`.
+
+            - `UPDATE`: You must provide a `model` and a `resourceId`.
+
+            - `DELETE`: You must provide a `resourceId`.
+
+            '
+          example: CREATE
+          enum:
+          - CREATE
+          - UPDATE
+          - DELETE
+        model:
+          $ref: '#/components/schemas/IncomingCondition'
+        resourceId:
+          type: string
+          description: 'The identifier of the resource. '
+          example: id
+    RestBatchOperationValidationResponse:
+      required:
+      - results
+      type: object
+      properties:
+        results:
+          type: array
+          description: The list of operation validation results.
+          items:
+            $ref: '#/components/schemas/RestOperationValidationResponse'
+    RestBulkGetRequest:
+      type: object
+      properties:
+        ids:
+          type: array
+          description: A list of resource identifiers to get. A maximum of **1000** can be sent.
+          items:
+            type: string
+            maxItems: 1000
+    ConditionPipelineStatementAssociation:
+      allOf:
+      - $ref: '#/components/schemas/AssociationItemBase'
+      - type: object
+        required:
+        - pipelineStatementType
+        properties:
+          associationType:
+            type: string
+            enum:
+            - pipelineStatements
+          pipelineStatementType:
+            description: The type of `pipelineStatements` association.
+            $ref: '#/components/schemas/ConditionAssociationPipelineStatementType'
+    ConditionDetailed:
+      type: object
+      required:
+      - condition
+      properties:
+        condition:
+          $ref: '#/components/schemas/BooleanExpression'
+    OutgoingConditionBase:
+      required:
+      - childrenCount
+      - definition
+      - detailed
+      - feature
+      - id
+      - position
+      - ready
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of this statement.
+          example: 45a7892e-a63f-4c8e-8795-ab38c8c18d7e
+        description:
+          type: string
+          description: The intended purpose of this statement in an actual implementation.
+          example: If the query originates from the community site...
+        definition:
+          type: string
+          description: The query pipeline language expression that defines this statement (see [Query Pipeline Language (QPL)](https://docs.coveo.com/en/1449/)).
+          example: when $searchhub is "community"
+        detailed:
+          $ref: '#/components/schemas/ConditionDetailed'
+        modifiedBy:
+          type: string
+          description: The identifier of the Coveo Cloud platform user who last modified this.
+          example: bjones@example.com
+        modifiedAt:
+          type: string
+          format: date-time
+          description: The last time this was modified.
+          example: '2021-02-16T15:15:17Z'
+        childrenCount:
+          type: integer
+          description: '> This property is exposed for backward compatibility reasons.'
+          format: int32
+          deprecated: true
+        feature:
+          $ref: '#/components/schemas/OutgoingConditionFeature'
+        parent:
+          type: string
+          description: '> This property is exposed for backward compatibility reasons.'
+          deprecated: true
+        condition:
+          type: string
+          description: '> This property is exposed for backward compatibility reasons.'
+          deprecated: true
+        position:
+          type: integer
+          description: '> This property is exposed for backward compatibility reasons.'
+          format: int32
+          deprecated: true
+        ready:
+          type: boolean
+          description: '> This property is exposed for backward compatibility reasons.'
+          deprecated: true
+    ListConditionsResponseItemExpanded:
+      type: object
+      properties:
+        associations:
+          type: object
+          required:
+          - total
+          properties:
+            total:
+              type: integer
+              minimum: 0
+    BulkDeleteConditionsRequest:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
+          type: array
+          description: A list of resource identifiers to delete. A maximum of **100** can be sent.
+          maxItems: 100
+          items:
+            type: string
+            maxLength: 38
+    ListConditionsResponseItem:
+      allOf:
+      - $ref: '#/components/schemas/OutgoingConditionBase'
+      - $ref: '#/components/schemas/ListConditionsResponseItemExpanded'
+    ConditionAssociationListResponse:
+      type: object
+      required:
+      - items
+      - totalEntries
+      - totalPages
+      properties:
+        conditionId:
+          type: string
+          description: The condition ID used for the lookup.
+        items:
+          type: array
+          description: The matching associations on the current results page.
+          items:
+            $ref: '#/components/schemas/ConditionAssociationItemUnion'
+        totalEntries:
+          type: integer
+          format: int32
+          description: The total number of matching associations across all results pages.
+          example: 1
+        totalPages:
+          type: integer
+          format: int32
+          description: The total number of available results pages.
+          example: 1
+    OutgoingConditionFeature:
+      type: string
+      description: '> This property is exposed for backward compatibility reasons.'
+      deprecated: true
+      enum:
+      - when
+    BooleanExpression:
+      oneOf:
+      - $ref: '#/components/schemas/CompoundBooleanExpression'
+      - $ref: '#/components/schemas/OperatorExpression'
+      - $ref: '#/components/schemas/IsBetweenOperator'
+      - type: boolean
+    RestSingleOperationValidationResponse:
+      required:
+      - result
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/RestOperationValidationResponse'
+    ErrorMessage:
+      type: object
+      additionalProperties: true
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        errorCode:
+          type: string
+          example: ORGANIZATION_DOES_NOT_EXIST
+        message:
+          type: string
+          example: The organization does not exist in the search api.
+    CompoundBooleanExpression:
+      type: object
+      required:
+      - operator
+      - left
+      properties:
+        operator:
+          type: string
+        left:
+          $ref: '#/components/schemas/BooleanExpression'
+        right:
+          $ref: '#/components/schemas/BooleanExpression'
+    OperatorRightHandSide:
+      oneOf:
+      - type: string
+      - type: number
+      - type: integer
+        format: int32
+      - type: boolean
+    RestBatchOperationValidationRequestIncomingCondition:
+      required:
+      - operations
+      type: object
+      properties:
+        operations:
+          type: array
+          description: A list of operations to validate.
+          example:
+          - operationType: CREATE
+            model: {}
+          - operationType: UPDATE
+            model: {}
+            resourceId: resource-id
+          - operationType: DELETE
+            resourceId: resource-id
+          items:
+            $ref: '#/components/schemas/RestOperationValidationRequestIncomingCondition'
+    IncomingCondition:
+      required:
+      - definition
+      type: object
+      properties:
+        description:
+          type: string
+          description: The intended purpose of this statement in an actual implementation.
+          example: If the query originates from the community site...
+        definition:
+          type: string
+          description: The query pipeline language expression that defines this statement (see [Query Pipeline Language (QPL)](https://docs.coveo.com/en/1449/)).
+          maxLength: 10000
+          example: when $searchhub is "community"
+    RestOperationValidationResponse:
+      required:
+      - operationType
+      - operationValid
+      type: object
+      properties:
+        operationType:
+          type: string
+          description: The type of operation that has been validated.
+          example: CREATE
+        operationValid:
+          type: boolean
+          description: Whether the operation to validate was successful or not.
+          example: true
+        resourceId:
+          type: string
+          description: 'The identifier of the resource. '
+          example: id
+        validationErrors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/RestOperationValidationError'
+          description: If the operation failed, the `validationError` will contains the error message.
+          example: Access Denied. You don't have the required privileges to perform  this operation.
+    ConditionPipelineStatementGroupAssociation:
+      allOf:
+      - $ref: '#/components/schemas/AssociationItemBase'
+      - type: object
+        properties:
+          associationType:
+            type: string
+            enum:
+            - pipelineStatementGroups
+    ConditionAssociationType:
+      type: string
+      enum:
+      - pipelines
+      - pipelineStatements
+      - pipelineStatementGroups
+    OperatorExpression:
+      type: object
+      required:
+      - operator
+      - left
+      properties:
+        operator:
+          type: string
+        left:
+          $ref: '#/components/schemas/OperatorLeftHandSide'
+        right:
+          $ref: '#/components/schemas/OperatorRightHandSide'
+    RestSingleOperationValidationRequestIncomingCondition:
+      required:
+      - operation
+      type: object
+      properties:
+        operation:
+          $ref: '#/components/schemas/RestOperationValidationRequestIncomingCondition'
+    RestOperationValidationError:
+      required:
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+    IsBetweenOperator:
+      type: object
+      required:
+      - operator
+      - left
+      - from
+      - to
+      properties:
+        operator:
+          type: string
+          enum:
+          - isBetween
+        left:
+          $ref: '#/components/schemas/OperatorLeftHandSide'
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+    ConditionAssociationPipelineStatementType:
+      type: string
+      enum:
+      - filter
+      - queryParamOverride
+      - rankingweight
+      - stopWord
+      - thesaurus
+      - trigger
+      - featuredResult
+      - rankingExpression
+      - unmanagedMlStatement
+    OperatorLeftHandSide:
+      type: object
+      required:
+      - object
+      properties:
+        object:
+          type: string
+        key:
+          type: string
+        keys:
+          type: array
+          items:
+            type: string
+    OutgoingCondition:
+      allOf:
+      - $ref: '#/components/schemas/OutgoingConditionBase'
+    OutgoingConditions:
+      required:
+      - statements
+      - totalCount
+      - totalEntries
+      - totalPages
+      type: object
+      properties:
+        statements:
+          type: array
+          description: The matching statements in the current page of results.
+          items:
+            $ref: '#/components/schemas/ListConditionsResponseItem'
+        totalEntries:
+          type: integer
+          description: The total number of matching statements across all pages of results.
+          format: int32
+          example: 1
+        totalCount:
+          type: integer
+          description: '> This property is exposed for backward compatibility reasons. Use the `totalEntries` property instead.
+
+
+            The total number of matching entries across all pages of results.'
+          deprecated: true
+          format: int32
+          example: 1
+        totalPages:
+          type: integer
+          description: The total number of available pages of results.
+          format: int32
+          example: 1
+    ConditionAssociationItemUnion:
+      oneOf:
+      - $ref: '#/components/schemas/ConditionPipelineAssociation'
+      - $ref: '#/components/schemas/ConditionPipelineStatementAssociation'
+      - $ref: '#/components/schemas/ConditionPipelineStatementGroupAssociation'
+      discriminator:
+        propertyName: associationType
+        mapping:
+          pipelines: '#/components/schemas/ConditionPipelineAssociation'
+          pipelineStatements: '#/components/schemas/ConditionPipelineStatementAssociation'
+          pipelineStatementGroups: '#/components/schemas/ConditionPipelineStatementGroupAssociation'
+    AssociationItemBase:
+      type: object
+      required:
+      - associationType
+      - id
+      - pipelineId
+      - pipelineName
+      properties:
+        associationType:
+          $ref: '#/components/schemas/ConditionAssociationType'
+        id:
+          type: string
+          format: uuid
+          description: Primary key of the associated entity.
+        pipelineId:
+          type: string
+          description: Pipeline ID the row belongs to.
+        pipelineName:
+          type: string
+          description: Human-readable name of the pipeline.
+  parameters:
+    PipelineNameParam:
+      in: query
+      name: pipelineName
+      description: Optional filter to match the pipeline name of the object associated with this condition.
+      schema:
+        type: string
+    SortBy:
+      name: sortBy
+      in: query
+      description: 'The sort criteria to apply on the results.
+
+
+        **Allowed values:** `definition`, `description`, and `position`.
+
+
+        **Default:** `position`'
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      description: The 0-based number of the page of results to get.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+    IsOrderAscending:
+      name: isOrderAscending
+      in: query
+      description: Whether to sort the results in ascending order.
+      schema:
+        type: boolean
+        default: true
+    StatementIdPath:
+      name: statementId
+      in: path
+      description: The unique identifier of the target statement.
+      required: true
+      schema:
+        type: string
+    PerPage:
+      name: perPage
+      in: query
+      description: The number of results to include per page.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 200
+        default: 20
+    Filter:
+      name: filter
+      in: query
+      description: 'The query filter to match.
+
+
+        This allows you to search within query pipeline statement definitions and descriptions.
+
+
+        By default, results are not required to match a specific query filter.'
+      schema:
+        type: string
+    AssociationTypeParam:
+      name: associationTypes
+      in: query
+      description: Optional filter of association types to include. If you leave this parameter undefined or empty, all association types are included.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ConditionAssociationType'
+    OrganizationIdQuery:
+      name: organizationId
+      in: query
+      description: 'The unique identifier of the target Coveo Cloud organization.
+
+
+        Specifying a value for this parameter is only necessary when you are authenticating the API call with an OAuth2 token.'
+      example: mycoveocloudv2organization
+      schema:
+        type: string
+    PipelineStatementTypeParam:
+      in: query
+      name: pipelineStatementType
+      description: 'Optional filter to include only associations whose `associationType` is `pipelineStatements` and whose `pipelineStatementType` matches the specified value.
+
+        Must be used in conjunction with `associationTypes= ["pipelineStatements"]`.'
+      schema:
+        $ref: '#/components/schemas/ConditionAssociationPipelineStatementType'
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            BadRequest:
+              summary: 'Bad Request (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-bad_request)'
+              value:
+                statusCode: 400
+                message: Invalid JSON format in request body.
+            NoRegisteredEndpoint:
+              summary: 'No Registered Endpoint (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-no_registered_endpoint)'
+              value:
+                statusCode: 400
+                message: No registered endpoint found for this organization.
+                errorCode: NO_REGISTERED_ENDPOINT
+            QueryPipelineInterrupted:
+              summary: 'Query Pipeline Interrupted (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-query_pipeline_interrupted)'
+              value:
+                statusCode: 400
+                message: Failed to evaluate your query as some conditions in your pipeline took too much time.
+                errorCode: QUERY_PIPELINE_INTERRUPTED
+    TooManyRequests:
+      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 429
+            message: Too many requests.
+    ServiceUnavailable:
+      description: 'Service Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#5xx)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            ServiceUnavailable:
+              summary: 'Server Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-server_unavailable)'
+              value:
+                statusCode: 503
+                message: The server is currently unavailable due to overload or index unavailability.
+                errorCode: SERVER_UNAVAILABLE
+            OrganizationPaused:
+              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-organization_paused)'
+              value:
+                statusCode: 503
+                message: The organization is paused due to inactivity.
+                errorCode: ORGANIZATION_PAUSED
+    AuthenticationTimeout:
+      description: Authentication Timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 419
+            message: Authentication timeout.
+    Forbidden:
+      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 403
+            message: Access denied. API key does not have sufficient privileges.
+            errorCode: FORBIDDEN
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 422
+            message: Unprocessable entity.
+    Unauthorized:
+      description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 401
+            message: Invalid access token.
+            errorCode: UNAUTHORIZED
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

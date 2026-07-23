@@ -1,0 +1,207 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Organization Realms API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Organization Realms
+paths:
+  /rest/organizations/{organizationId}/realms/{realmId}:
+    put:
+      tags:
+      - Organization Realms
+      summary: Update Realm
+      description: 'Updates a realm of an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateRealmsInGroups
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: realmId
+        in: path
+        description: The unique identifier of the realm to update.</br>**Example:** `website-domain-coveo.com`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The JSON configuration to update the target realm to.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationRealmModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrganizationRealmModel'
+      x-pretty-name: updateRealmsInGroups
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/realms/paramId_put
+  /rest/organizations/{organizationId}/realms:
+    get:
+      tags:
+      - Organization Realms
+      summary: List Realms
+      description: 'Lists the realms of an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getOrganizationRealms
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationRealmModel'
+      x-pretty-name: getOrganizationRealms
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/realms_get
+    post:
+      tags:
+      - Organization Realms
+      summary: Add Realm for Groups
+      description: 'Adds a realm for a set of groups in an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: addRealmsToGroups
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The realms to add to an [organization](https://docs.coveo.com/en/185/).
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/OrganizationRealmModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+      x-pretty-name: addRealmsToGroups
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/realms_post
+components:
+  schemas:
+    IdAndDisplayNameModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+      description: The unique identifiers of the organizations by which the SAML identity provider is used.
+    OrganizationRealmModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+        groups:
+          type: array
+          description: The groups that are affected by the realm.
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+      description: A realm of an organization.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,177 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Secure Data Sharing API - Version 15 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Secure Data Sharing API - Version 15
+paths:
+  /v15/admin/snowflake/securedatasharing/accounts:
+    get:
+      tags:
+      - Secure Data Sharing API - Version 15
+      summary: Retrieve Snowflake Accounts Currently Associated in Secure Data Sharing
+      operationId: get__v15_admin_snowflake_securedatasharing_accounts
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnowflakeDataSharingAccountResponseV15'
+    post:
+      tags:
+      - Secure Data Sharing API - Version 15
+      summary: Add a Snowflake Account to Secure Data Sharing
+      operationId: post__v15_admin_snowflake_securedatasharing_accounts
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      requestBody:
+        description: The Snowflake account to which data should be shared.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnowflakeDataSharingAccountModelV15'
+      responses:
+        '204':
+          description: No content
+    delete:
+      tags:
+      - Secure Data Sharing API - Version 15
+      summary: Removes a Snowflake Account from Secure Data Sharing
+      operationId: delete__v15_admin_snowflake_securedatasharing_accounts
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: accountLocator
+        in: query
+        description: The Snowflake account locator.
+        required: true
+        schema:
+          type: string
+      - name: snowflakeRegion
+        in: query
+        description: The Snowflake region.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+  /v15/admin/snowflake/securedatasharing/regions:
+    get:
+      tags:
+      - Secure Data Sharing API - Version 15
+      summary: Retrieve Allowed Snowflake Regions for Secure Data Sharing
+      operationId: get__v15_admin_snowflake_securedatasharing_regions
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnowflakeDataSharingRegionsResponseV15'
+components:
+  schemas:
+    SnowflakeDataSharingAccountResponseV15:
+      required:
+      - locator
+      - region
+      type: object
+      properties:
+        locator:
+          type: string
+          description: The Snowflake account locator.
+        region:
+          type: string
+          description: The region the Snowflake account resides in.
+        createdAt:
+          type: string
+          description: The date and time at which the share was initiated.
+          format: date-time
+        status:
+          type: string
+          description: The share status of the account.
+          enum:
+          - UNKNOWN
+          - PENDING
+          - ACTIVE
+          - INVALID
+          - UNKNOWN
+          - PENDING
+          - ACTIVE
+          - INVALID
+        errorMessage:
+          type: string
+          description: The error message in case of an 'UNKNOWN' or 'INVALID' status.
+      description: The details of a Snowflake account for Secure Data Sharing.
+    SnowflakeDataSharingRegionsResponseV15:
+      required:
+      - primaryRegion
+      - secondaryRegions
+      type: object
+      properties:
+        primaryRegion:
+          type: string
+          description: The primary Snowflake region.
+        secondaryRegions:
+          uniqueItems: true
+          type: array
+          description: Other supported Snowflake regions.
+          items:
+            type: string
+            description: Other supported Snowflake regions.
+      description: The Snowflake regions supported for Secure Data Sharing.
+    SnowflakeDataSharingAccountModelV15:
+      required:
+      - accountLocator
+      - snowflakeRegion
+      type: object
+      properties:
+        accountLocator:
+          type: string
+          description: The Snowflake account locator.
+        snowflakeRegion:
+          type: string
+          description: The Snowflake region identifier.
+      description: Snowflake account information for Secure Data Sharing.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

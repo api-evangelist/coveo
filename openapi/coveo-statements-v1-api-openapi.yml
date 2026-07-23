@@ -1,0 +1,1245 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Statements V1 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Statements V1
+  x-displayName: Statements
+paths:
+  /rest/search/v1/admin/pipelines/{pipelineId}/statements:
+    get:
+      tags:
+      - Statements V1
+      summary: List Query Pipeline Statements
+      description: 'Gets a sorted page of query pipeline statements matching certain criteria from a specific query pipeline.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: listQueryPipelineStatements
+      parameters:
+      - $ref: '#/components/parameters/PipelineIdPath'
+      - $ref: '#/components/parameters/IsOrderAscending'
+      - $ref: '#/components/parameters/Filter'
+      - $ref: '#/components/parameters/SortBy'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/Feature'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingStatements'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+    post:
+      tags:
+      - Statements V1
+      summary: Create Query Pipeline Statement
+      description: 'Creates a new query pipeline statement in a specific query pipeline.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"EDIT","targetId":"{pipelineId}"}
+
+        ```
+
+        </details>'
+      operationId: createQueryPipelineStatement
+      parameters:
+      - $ref: '#/components/parameters/PipelineIdPath'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      requestBody:
+        description: The query pipeline statement information.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncomingStatement'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingStatement'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingStatement'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/{pipelineId}/statements/{statementId}:
+    get:
+      tags:
+      - Statements V1
+      summary: Get Query Pipeline Statement
+      description: 'Gets a single query pipeline statement from a specific query pipeline.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getQueryPipelineStatement
+      parameters:
+      - $ref: '#/components/parameters/PipelineIdPath'
+      - $ref: '#/components/parameters/StatementIdPath'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingStatement'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+    put:
+      tags:
+      - Statements V1
+      summary: Update Query Pipeline Statement
+      description: 'Updates a single query pipeline statement in a specific query pipeline.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"{pipelineId}"},
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"EDIT","targetId":"{pipelineId}"}
+
+        ```
+
+        </details>'
+      operationId: updateQueryPipelineStatementV1
+      parameters:
+      - $ref: '#/components/parameters/PipelineIdPath'
+      - $ref: '#/components/parameters/StatementIdPath'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      requestBody:
+        description: The updated query pipeline statement information.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncomingStatement'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingStatement'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+    delete:
+      tags:
+      - Statements V1
+      summary: Delete Query Pipeline Statement
+      description: 'Deletes a single query pipeline statement from a specific query pipeline.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"{pipelineId}"},
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"EDIT","targetId":"{pipelineId}"}
+
+        ```
+
+        </details>'
+      operationId: deleteQueryPipelineStatement
+      parameters:
+      - $ref: '#/components/parameters/PipelineIdPath'
+      - $ref: '#/components/parameters/StatementIdPath'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        '204':
+          description: No content
+          content: {}
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/{pipelineId}/statements/{statementId}/move:
+    put:
+      tags:
+      - Statements V1
+      summary: Move Query Pipeline Statement
+      description: 'Sets the position of a query pipeline statement in a specific query pipeline and updates other statement positions as appropriate.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"EDIT","targetId":"{pipelineId}"}
+
+        ```
+
+        </details>'
+      operationId: moveQueryPipelineStatement
+      parameters:
+      - $ref: '#/components/parameters/PipelineIdPath'
+      - $ref: '#/components/parameters/StatementIdPath'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      requestBody:
+        description: The move operation to perform.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncomingMoveStatement'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingStatements'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/{pipelineId}/statements/bulkGet:
+    post:
+      tags:
+      - Statements V1
+      summary: List Query Pipeline Statements
+      description: 'Gets a sorted page of query pipeline statements matching certain criteria from a specific query pipeline.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: bulkGetStatementsOperationV1
+      parameters:
+      - $ref: '#/components/parameters/PipelineIdPath'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      - $ref: '#/components/parameters/IsOrderAscending'
+      - $ref: '#/components/parameters/Filter'
+      - $ref: '#/components/parameters/SortBy'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/Feature'
+      requestBody:
+        description: A set of parameters to customize the results.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestBulkGetRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingStatements'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/{pipelineId}/statements/copy:
+    post:
+      tags:
+      - Statements V1
+      summary: Copy Query Pipeline Statements
+      description: 'Copies specific statements from an origin to a target query pipeline. Using the same pipeline as origin and target will duplicate the specified statements in that pipeline.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"{pipelineId}"},
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"EDIT","targetId":"{pipelineId}"}
+
+        ```
+
+        </details>'
+      operationId: v1CopyQueryPipelineStatements
+      parameters:
+      - $ref: '#/components/parameters/PipelineIdPath'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      requestBody:
+        description: The copy operation to perform.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncomingCopyStatements'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingStatements'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingStatement'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/{pipelineId}/statements/export:
+    get:
+      tags:
+      - Statements V1
+      summary: Export Query Pipeline Statements
+      description: 'Exports the definition, condition, and description of statements from a specific query pipeline to a CSV file.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: v1ExportQueryPipelineStatements
+      parameters:
+      - $ref: '#/components/parameters/PipelineIdPath'
+      - $ref: '#/components/parameters/Feature'
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/csv:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/{pipelineId}/statements/validate:
+    post:
+      tags:
+      - Statements V1
+      summary: Validate a Single Statement Operation.
+      description: 'Validate that a specific operation would be accepted by our API and executed.
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"QUERY_PIPELINE","type":"EDIT","targetId":"{pipelineId}"}
+
+        ```
+
+        </details>'
+      operationId: validateStatementOperationV1
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      - $ref: '#/components/parameters/PipelineIdPath'
+      requestBody:
+        description: An object that contains an operation to validate.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestSingleOperationValidationRequestIncomingStatement'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestSingleOperationValidationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      security:
+      - oauth2:
+        - full
+  /rest/search/v1/admin/pipelines/{pipelineId}/statements/validate/batch:
+    post:
+      tags:
+      - Statements V1
+      summary: Validate a Batch of Statement Operations.
+      description: "\r\n Validate that a list of operations would be accepted by our API and executed.\r\n A maximum of 15 can be processed per request.\n<details>\n<summary>Privilege(s) required</summary>\n\n```json\n{\"level\":\"NORMAL\",\"owner\":\"SEARCH_API\",\"targetDomain\":\"QUERY_PIPELINE\",\"type\":\"VIEW\",\"targetId\":\"{pipelineId}\"}\n```\n</details>"
+      operationId: validateStatementsOperationsV1
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdQuery'
+      - $ref: '#/components/parameters/PipelineIdPath'
+      requestBody:
+        description: An object that contains the list of operations to validate.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestBatchOperationValidationRequestIncomingStatement'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestBatchOperationValidationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '419':
+          $ref: '#/components/responses/AuthenticationTimeout'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+      security:
+      - oauth2:
+        - full
+components:
+  schemas:
+    RestSingleOperationValidationRequestIncomingStatement:
+      required:
+      - operation
+      type: object
+      properties:
+        operation:
+          $ref: '#/components/schemas/RestOperationValidationRequestIncomingStatement'
+    RestBatchOperationValidationResponse:
+      required:
+      - results
+      type: object
+      properties:
+        results:
+          type: array
+          description: The list of operation validation results.
+          items:
+            $ref: '#/components/schemas/RestOperationValidationResponse'
+    RestBulkGetRequest:
+      type: object
+      properties:
+        ids:
+          type: array
+          description: A list of resource identifiers to get. A maximum of **1000** can be sent.
+          items:
+            type: string
+            maxItems: 1000
+    RestOperationValidationRequestIncomingStatement:
+      required:
+      - operationType
+      type: object
+      properties:
+        operationType:
+          $ref: '#/components/schemas/ValidationOperationType'
+        model:
+          $ref: '#/components/schemas/IncomingStatement'
+        resourceId:
+          type: string
+          description: The identifier of the resource when `operationType` is `UPDATE` or `DELETE`.
+          example: id
+    ConditionDetailed:
+      type: object
+      required:
+      - condition
+      properties:
+        condition:
+          $ref: '#/components/schemas/BooleanExpression'
+    OutgoingConditionBase:
+      required:
+      - childrenCount
+      - definition
+      - detailed
+      - feature
+      - id
+      - position
+      - ready
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of this statement.
+          example: 45a7892e-a63f-4c8e-8795-ab38c8c18d7e
+        description:
+          type: string
+          description: The intended purpose of this statement in an actual implementation.
+          example: If the query originates from the community site...
+        definition:
+          type: string
+          description: The query pipeline language expression that defines this statement (see [Query Pipeline Language (QPL)](https://docs.coveo.com/en/1449/)).
+          example: when $searchhub is "community"
+        detailed:
+          $ref: '#/components/schemas/ConditionDetailed'
+        modifiedBy:
+          type: string
+          description: The identifier of the Coveo Cloud platform user who last modified this.
+          example: bjones@example.com
+        modifiedAt:
+          type: string
+          format: date-time
+          description: The last time this was modified.
+          example: '2021-02-16T15:15:17Z'
+        childrenCount:
+          type: integer
+          description: '> This property is exposed for backward compatibility reasons.'
+          format: int32
+          deprecated: true
+        feature:
+          $ref: '#/components/schemas/OutgoingConditionFeature'
+        parent:
+          type: string
+          description: '> This property is exposed for backward compatibility reasons.'
+          deprecated: true
+        condition:
+          type: string
+          description: '> This property is exposed for backward compatibility reasons.'
+          deprecated: true
+        position:
+          type: integer
+          description: '> This property is exposed for backward compatibility reasons.'
+          format: int32
+          deprecated: true
+        ready:
+          type: boolean
+          description: '> This property is exposed for backward compatibility reasons.'
+          deprecated: true
+    OutgoingConditionFeature:
+      type: string
+      description: '> This property is exposed for backward compatibility reasons.'
+      deprecated: true
+      enum:
+      - when
+    BooleanExpression:
+      oneOf:
+      - $ref: '#/components/schemas/CompoundBooleanExpression'
+      - $ref: '#/components/schemas/OperatorExpression'
+      - $ref: '#/components/schemas/IsBetweenOperator'
+      - type: boolean
+    RestSingleOperationValidationResponse:
+      required:
+      - result
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/RestOperationValidationResponse'
+    ErrorMessage:
+      type: object
+      additionalProperties: true
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        errorCode:
+          type: string
+          example: ORGANIZATION_DOES_NOT_EXIST
+        message:
+          type: string
+          example: The organization does not exist in the search api.
+    CompoundBooleanExpression:
+      type: object
+      required:
+      - operator
+      - left
+      properties:
+        operator:
+          type: string
+        left:
+          $ref: '#/components/schemas/BooleanExpression'
+        right:
+          $ref: '#/components/schemas/BooleanExpression'
+    OperatorRightHandSide:
+      oneOf:
+      - type: string
+      - type: number
+      - type: integer
+        format: int32
+      - type: boolean
+    OutgoingStatement:
+      required:
+      - childrenCount
+      - definition
+      - detailed
+      - feature
+      - id
+      - position
+      - ready
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of this statement.
+          example: 0befc717-dfd7-4962-9b85-28f5c26fd23b
+        description:
+          type: string
+          description: The intended purpose of this statement in an actual implementation.
+          example: Spotlight the Coveo brand in query results.
+        feature:
+          type: string
+          description: The query pipeline feature expressed by this statement (see [Query Pipeline Language (QPL)](https://docs.coveo.com/en/1449/)).
+          example: ranking
+          enum:
+          - filter
+          - trigger
+          - ranking
+          - stop
+          - thesaurus
+          - top
+          - topClicks
+          - querySuggest
+          - rankingweight
+          - recommendation
+          - queryParamOverride
+        definition:
+          type: string
+          description: The query pipeline language expression that defines this statement (see [Query Pipeline Language (QPL)](https://docs.coveo.com/en/1449/)).
+          example: boost `coveo` by 100
+        parent:
+          $ref: '#/components/schemas/OutgoingCondition'
+        condition:
+          $ref: '#/components/schemas/OutgoingCondition'
+        position:
+          type: integer
+          description: 'The 1-based position of this statement relative to other statements in the same query pipeline.
+
+
+            Query pipeline statements are evaluated sequentially from the lowest to the highest position, which implies that higher-positioned statements can override or complement lower-positioned ones.
+
+
+            **Example:**
+
+
+            If a query pipeline contains the following statements:
+
+            - `replace dog cat` (position 1)
+
+            - `replace cat feline` (position 2)
+
+
+            That pipeline will replace the keyword `dog` in a query by the keyword `feline`.'
+          format: int32
+          example: 2
+        ready:
+          type: boolean
+          description: 'Whether the underlying Coveo Machine Learning model is ready.
+
+
+            This property only has a meaning with `recommendation`, `topClicks`, and `querySuggest` statements.'
+          example: false
+        detailed: {}
+        warnings:
+          type: array
+          description: The warning messages that apply to this query pipeline statement.
+          example:
+          - The Salesforce index does not support the use of keywords in a ranking expression.
+          items:
+            type: string
+        displayName:
+          type: string
+          description: 'The display name for this Machine Learning model.
+
+
+            This property only has a meaning with `recommendation`, `topClicks`, and `querySuggest` statements.'
+          example: ''
+        modifiedBy:
+          type: string
+          description: The identifier of the Coveo Cloud platform user who last modified this.
+          example: bjones@example.com
+        modifiedAt:
+          type: string
+          format: date-time
+          description: The last time this was modified.
+          example: '2021-02-16T15:15:17Z'
+        childrenCount:
+          type: integer
+          description: '> This property is exposed for backward compatibility reasons.'
+          format: int32
+          deprecated: true
+        statementGroupId:
+          deprecated: true
+          type: string
+          description: Deprecated. Do not use.
+    RestOperationValidationResponse:
+      required:
+      - operationType
+      - operationValid
+      type: object
+      properties:
+        operationType:
+          type: string
+          description: The type of operation that has been validated.
+          example: CREATE
+        operationValid:
+          type: boolean
+          description: Whether the operation to validate was successful or not.
+          example: true
+        resourceId:
+          type: string
+          description: 'The identifier of the resource. '
+          example: id
+        validationErrors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/RestOperationValidationError'
+          description: If the operation failed, the `validationError` will contains the error message.
+          example: Access Denied. You don't have the required privileges to perform  this operation.
+    IncomingStatement:
+      required:
+      - definition
+      - feature
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of this statement.
+        description:
+          type: string
+          description: The intended purpose of this statement in an actual implementation.
+          example: Spotlight the Coveo brand in query results.
+        feature:
+          type: string
+          description: The query pipeline feature expressed by this statement (see [Query Pipeline Language (QPL)](https://docs.coveo.com/en/1449/)).
+          example: ranking
+          enum:
+          - filter
+          - trigger
+          - ranking
+          - stop
+          - thesaurus
+          - top
+          - topClicks
+          - querySuggest
+          - rankingweight
+          - recommendation
+          - queryParamOverride
+        definition:
+          type: string
+          description: The query pipeline language expression that defines this statement (see [Query Pipeline Language (QPL)](https://docs.coveo.com/en/1449/)).
+          example: boost `coveo` by 100
+        parent:
+          type: string
+          description: The unique identifier of the condition that must be met for this statement to apply.
+          example: 45a7892e-a63f-4c8e-8795-ab38c8c18d7e
+    IncomingMoveStatement:
+      type: object
+      properties:
+        position:
+          type: integer
+          description: 'The 1-based position of this statement relative to other statements in the target query pipeline.
+
+
+            Use either this property or the `after` property (not both) to move this statement.'
+          format: int32
+        after:
+          type: string
+          description: 'The unique identifier of the statement after which to move this statement in the target query pipeline.
+
+
+            Use either this property or the `position` property (not both) to move this statement.'
+          example: 0befc717-dfd7-4962-9b85-28f5c26fd23b
+        pageSize:
+          type: integer
+          description: '> This parameter is exposed for backward compatibility reasons only.'
+          format: int32
+          deprecated: true
+    RestBatchOperationValidationRequestIncomingStatement:
+      required:
+      - operations
+      type: object
+      properties:
+        operations:
+          type: array
+          description: A list of operations to validate.
+          example:
+          - operationType: CREATE
+            model: {}
+          - operationType: UPDATE
+            model: {}
+            resourceId: resource-id
+          - operationType: DELETE
+            resourceId: resource-id
+          items:
+            $ref: '#/components/schemas/RestOperationValidationRequestIncomingStatement'
+    OutgoingStatements:
+      required:
+      - statements
+      - totalCount
+      - totalEntries
+      - totalPages
+      type: object
+      properties:
+        statements:
+          type: array
+          description: The matching statements in the current page of results.
+          items:
+            $ref: '#/components/schemas/OutgoingStatement'
+        totalEntries:
+          type: integer
+          description: The total number of matching statements across all pages of results.
+          format: int32
+          example: 1
+        totalPages:
+          type: integer
+          description: The total number of available pages of results.
+          format: int32
+          example: 1
+        totalCount:
+          type: integer
+          description: '> This property is exposed for backward compatibility reasons. Use the `totalEntries` property instead.
+
+
+            The total number of matching entries across all pages of results.'
+          format: int32
+          example: 1
+          deprecated: true
+    OperatorExpression:
+      type: object
+      required:
+      - operator
+      - left
+      properties:
+        operator:
+          type: string
+        left:
+          $ref: '#/components/schemas/OperatorLeftHandSide'
+        right:
+          $ref: '#/components/schemas/OperatorRightHandSide'
+    IncomingCopyStatements:
+      required:
+      - destinationPipelineId
+      - statementIds
+      type: object
+      properties:
+        statementIds:
+          type: array
+          description: The unique identifiers of the query pipeline statements to copy.
+          example:
+          - 4f0a9531-4fab-45fd-a1e3-eb07a5aceccb
+          items:
+            type: string
+        destinationPipelineId:
+          type: string
+          description: The unique identifier of the query pipeline to copy the statements to.
+          example: 120deecf-7822-4d7b-885f-53f184a3a76
+    RestOperationValidationError:
+      required:
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+    IsBetweenOperator:
+      type: object
+      required:
+      - operator
+      - left
+      - from
+      - to
+      properties:
+        operator:
+          type: string
+          enum:
+          - isBetween
+        left:
+          $ref: '#/components/schemas/OperatorLeftHandSide'
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+    OperatorLeftHandSide:
+      type: object
+      required:
+      - object
+      properties:
+        object:
+          type: string
+        key:
+          type: string
+        keys:
+          type: array
+          items:
+            type: string
+    OutgoingCondition:
+      allOf:
+      - $ref: '#/components/schemas/OutgoingConditionBase'
+    ValidationOperationType:
+      type: string
+      description: 'The type of operation to validate. Each operation type has specific validation rules.
+
+
+        Additional request parameters are required based on the type of operation to validate:
+
+        - `CREATE`: You must provide a `model`.
+
+        - `UPDATE`: You must provide a `model` and a `resourceId`.
+
+        - `DELETE`: You must provide a `resourceId`.
+
+        '
+      example: CREATE
+      enum:
+      - CREATE
+      - UPDATE
+      - DELETE
+  parameters:
+    SortBy:
+      name: sortBy
+      in: query
+      description: 'The sort criteria to apply on the results.
+
+
+        **Allowed values:** `definition`, `description`, and `position`.
+
+
+        **Default:** `position`'
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      description: The 0-based number of the page of results to get.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+    IsOrderAscending:
+      name: isOrderAscending
+      in: query
+      description: Whether to sort the results in ascending order.
+      schema:
+        type: boolean
+        default: true
+    StatementIdPath:
+      name: statementId
+      in: path
+      description: The unique identifier of the target statement.
+      required: true
+      schema:
+        type: string
+    PerPage:
+      name: perPage
+      in: query
+      description: The number of results to include per page.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 200
+        default: 20
+    Filter:
+      name: filter
+      in: query
+      description: 'The query filter to match.
+
+
+        This allows you to search within query pipeline statement definitions and descriptions.
+
+
+        By default, results are not required to match a specific query filter.'
+      schema:
+        type: string
+    OrganizationIdQuery:
+      name: organizationId
+      in: query
+      description: 'The unique identifier of the target Coveo Cloud organization.
+
+
+        Specifying a value for this parameter is only necessary when you are authenticating the API call with an OAuth2 token.'
+      example: mycoveocloudv2organization
+      schema:
+        type: string
+    Feature:
+      name: feature
+      in: query
+      description: 'The query pipeline feature to match.
+
+
+        **Allowed values:** `when`, `filter`, `trigger`, `stop`, `thesaurus`, `topClicks`, `querySuggest`, `rankingweight`, `recommendation`, and `queryParamOverride`.
+
+
+        By default, results are not required to match a specific query pipeline feature.'
+      schema:
+        type: string
+    PipelineIdPath:
+      name: pipelineId
+      in: path
+      description: The unique identifier of the target query pipeline.
+      required: true
+      schema:
+        type: string
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            BadRequest:
+              summary: 'Bad Request (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-bad_request)'
+              value:
+                statusCode: 400
+                message: Invalid JSON format in request body.
+            NoRegisteredEndpoint:
+              summary: 'No Registered Endpoint (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-no_registered_endpoint)'
+              value:
+                statusCode: 400
+                message: No registered endpoint found for this organization.
+                errorCode: NO_REGISTERED_ENDPOINT
+            QueryPipelineInterrupted:
+              summary: 'Query Pipeline Interrupted (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-query_pipeline_interrupted)'
+              value:
+                statusCode: 400
+                message: Failed to evaluate your query as some conditions in your pipeline took too much time.
+                errorCode: QUERY_PIPELINE_INTERRUPTED
+    TooManyRequests:
+      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 429
+            message: Too many requests.
+    ServiceUnavailable:
+      description: 'Service Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#5xx)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            ServiceUnavailable:
+              summary: 'Server Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-server_unavailable)'
+              value:
+                statusCode: 503
+                message: The server is currently unavailable due to overload or index unavailability.
+                errorCode: SERVER_UNAVAILABLE
+            OrganizationPaused:
+              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-organization_paused)'
+              value:
+                statusCode: 503
+                message: The organization is paused due to inactivity.
+                errorCode: ORGANIZATION_PAUSED
+    AuthenticationTimeout:
+      description: Authentication Timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 419
+            message: Authentication timeout.
+    Forbidden:
+      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 403
+            message: Access denied. API key does not have sufficient privileges.
+            errorCode: FORBIDDEN
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 422
+            message: Unprocessable entity.
+    Unauthorized:
+      description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 401
+            message: Invalid access token.
+            errorCode: UNAUTHORIZED
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,1409 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Mappings API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Mappings
+paths:
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings:
+    get:
+      tags:
+      - Mappings
+      summary: Show Mapping Configuration
+      description: 'Shows the [mapping](https://docs.coveo.com/en/217/) configuration of a [source](https://docs.coveo.com/en/246/).<br /> See [Managing the Mapping Configuration of a Source](https://docs.coveo.com/en/29/).</br>**Required privilege:** Sources - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMappingsConfiguration
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MappingsConfigurationModel'
+      x-pretty-name: getMappingsConfiguration
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings_get
+    put:
+      tags:
+      - Mappings
+      summary: Update Mapping Configuration
+      description: 'Updates the [mapping](https://docs.coveo.com/en/217/) configuration of a [source](https://docs.coveo.com/en/246/).<br /> See [Managing the Mapping Configuration of a  Source](https://docs.coveo.com/en/29/).</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: updateMappingsConfiguration
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MappingsConfigurationModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MappingsConfigurationModel'
+      x-pretty-name: updateMappingsConfiguration
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings_put
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings/types/{typeId}:
+    get:
+      tags:
+      - Mappings
+      summary: List Specific Mappings of Given Type
+      description: 'Lists the [mappings](https://docs.coveo.com/en/217/) of a specific [item](https://docs.coveo.com/en/210/) type.</br>**Required privilege:** Sources - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMappingTypeSettings
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: typeId
+        in: path
+        description: The specific [mapping](https://docs.coveo.com/en/217/) type to show.<br />**Example:** `Video`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TypedMappingSettingsModel'
+      x-pretty-name: getMappingTypeSettings
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/types/paramId_get
+    put:
+      tags:
+      - Mappings
+      summary: Update Specific Mappings of Given Type
+      description: 'Updates the [mappings](https://docs.coveo.com/en/217/) of a specific [item](https://docs.coveo.com/en/210/) type.</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: updateMappingTypeSettings
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: typeId
+        in: path
+        description: The specific [mapping](https://docs.coveo.com/en/217/) type to update.<br />**Example:** `Video`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseTypedMappingSettingsModelBaseRuleModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TypedMappingSettingsModel'
+      x-pretty-name: updateMappingTypeSettings
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/types/paramId_put
+    delete:
+      tags:
+      - Mappings
+      summary: Delete Specific Mappings of Given Type
+      description: 'Deletes the [mappings](https://docs.coveo.com/en/217/) of a specific [item](https://docs.coveo.com/en/210/) type.</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: deleteMappingType
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: typeId
+        in: path
+        description: The specific [mapping](https://docs.coveo.com/en/217/) item type to delete.<br />**Example:** `Video`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteMappingType
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/types/paramId_delete
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings/types/{typeId}/rules/{ruleId}:
+    get:
+      tags:
+      - Mappings
+      summary: Show Specific Mapping Rule
+      description: 'Shows the [mapping](https://docs.coveo.com/en/217/) rules of a specific [item](https://docs.coveo.com/en/210/) type.</br>**Required privilege:** Sources - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMappingTypeSettingsRule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: typeId
+        in: path
+        description: The target specific [mapping](https://docs.coveo.com/en/217/) type.<br />**Example:** `Video`
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        description: The unique identifier of the specific [mapping](https://docs.coveo.com/en/217/) rule to show.<br />**Example:** `wb74lavk6rmbjol3wqhamdspbi`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RuleModel'
+      x-pretty-name: getMappingTypeSettingsRule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/types/paramId/rules/paramId_get
+    put:
+      tags:
+      - Mappings
+      summary: Update Specific Mapping Rule
+      description: 'Updates a [mapping](https://docs.coveo.com/en/217/) rule of a specific [item](https://docs.coveo.com/en/210/) type.</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: updateMappingTypeSettingsRule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: typeId
+        in: path
+        description: The target specific [mapping](https://docs.coveo.com/en/217/) type.<br />**Example:** `Video`
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        description: The unique identifier of the specific [mapping](https://docs.coveo.com/en/217/) rule to update.<br />**Example:** `wb74lavk6rmbjol3wqhamdspbi`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseRuleModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RuleModel'
+      x-pretty-name: updateMappingTypeSettingsRule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/types/paramId/rules/paramId_put
+    delete:
+      tags:
+      - Mappings
+      summary: Delete Specific Mapping Rule
+      description: 'Deletes a [mapping](https://docs.coveo.com/en/217/) rule of a specific [item](https://docs.coveo.com/en/210/) type.</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: deleteMappingTypeSettingsRule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: typeId
+        in: path
+        description: The target specific [mapping](https://docs.coveo.com/en/217/) type.<br />**Example:** `Video`
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        description: The unique identifier of the specific [mapping](https://docs.coveo.com/en/217/) rule to delete.<br />**Example:** `wb74lavk6rmbjol3wqhamdspbi`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteMappingTypeSettingsRule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/types/paramId/rules/paramId_delete
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings/common:
+    get:
+      tags:
+      - Mappings
+      summary: List Common Mappings
+      description: 'Lists the common [mappings](https://docs.coveo.com/en/217/) of a [source](https://docs.coveo.com/en/246/) (i.e., the mappings that apply to all [item](https://docs.coveo.com/en/210/) types).</br>**Required privilege:** Sources - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCommonMappingSettings
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommonMappingSettingsModel'
+      x-pretty-name: getCommonMappingSettings
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/common_get
+    put:
+      tags:
+      - Mappings
+      summary: Update Common Mappings
+      description: 'Updates the common [mappings](https://docs.coveo.com/en/217/) of a [source](https://docs.coveo.com/en/246/), (i.e., the mappings that apply to all [item](https://docs.coveo.com/en/210/) types).</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: updateCommonMappingSettings
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommonMappingSettingsModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommonMappingSettingsModel'
+      x-pretty-name: updateCommonMappingSettings
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/common_put
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings/common/rules/{ruleId}:
+    get:
+      tags:
+      - Mappings
+      summary: Show Common Mapping Rule
+      description: 'Shows a common [mapping](https://docs.coveo.com/en/217/) rule (i.e., a mapping rule that applies to all [item](https://docs.coveo.com/en/210/) types).</br>**Required privilege:** Sources - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCommonMappingSettingsRule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        description: The unique identifier of the mapping rule to show.<br />**Example:** `teghteb76mvjttvufmxecasmzy`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RuleModel'
+      x-pretty-name: getCommonMappingSettingsRule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/common/rules/paramId_get
+    put:
+      tags:
+      - Mappings
+      summary: Update Common Mapping Rule
+      description: 'Updates a common [mapping](https://docs.coveo.com/en/217/) rule (i.e., a mapping rule that applies to all [item](https://docs.coveo.com/en/210/) types).</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: updateCommonMappingSettingsRule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        description: The unique identifier of the mapping rule to update.<br />**Example:** `teghteb76mvjttvufmxecasmzy`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseRuleModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RuleModel'
+      x-pretty-name: updateCommonMappingSettingsRule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/common/rules/paramId_put
+    delete:
+      tags:
+      - Mappings
+      summary: Delete Common Mapping Rule
+      description: 'Deletes a common [mapping](https://docs.coveo.com/en/217/) rule in a [source](https://docs.coveo.com/en/246/), (i.e., a mapping rule that applies to all [item](https://docs.coveo.com/en/210/) types.)</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: deleteCommonMappingSettingsRule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: ruleId
+        in: path
+        description: The unique identifier of the mapping rule to delete.<br />**Example:** `teghteb76mvjttvufmxecasmzy`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteCommonMappingSettingsRule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/common/rules/paramId_delete
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings/types:
+    get:
+      tags:
+      - Mappings
+      summary: List Specific Mappings
+      description: 'Lists the specific [mappings](https://docs.coveo.com/en/217/) of a [source](https://docs.coveo.com/en/246/) (i.e., the mappings that apply to specific [item](https://docs.coveo.com/en/210/) types).</br>**Required privilege:** Sources - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMappingTypes
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TypedMappingSettingsModel'
+      x-pretty-name: getMappingTypes
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/types_get
+    post:
+      tags:
+      - Mappings
+      summary: Create Specific Mapping
+      description: 'Creates a new specific [mapping](https://docs.coveo.com/en/217/) (i.e., a mapping that applies to a specific [item](https://docs.coveo.com/en/210/) type).</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: addMappingTypes
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseTypedMappingSettingsModelBaseRuleModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TypedMappingSettingsModel'
+      x-pretty-name: addMappingTypes
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/types_post
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings/types/{typeId}/rules:
+    get:
+      tags:
+      - Mappings
+      summary: List Specific Mapping Rules of Given Type
+      description: 'Lists the [mapping](https://docs.coveo.com/en/217/) rules of a specific [item](https://docs.coveo.com/en/210/) type.</br>**Required privilege:** Sources - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMappingTypeSettingRules
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: typeId
+        in: path
+        description: The unique identifier of the specific [mapping](https://docs.coveo.com/en/217/) [item](https://docs.coveo.com/en/210/) type to show.<br />**Example:** `Video`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RuleModel'
+      x-pretty-name: getMappingTypeSettingRules
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/types/paramId/rules_get
+    post:
+      tags:
+      - Mappings
+      summary: Create Specific Mapping Rule of Given Type
+      description: 'Creates a new [mapping](https://docs.coveo.com/en/217/) rule of a specific [item](https://docs.coveo.com/en/210/) type.</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: addMappingTypeSettingRule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: typeId
+        in: path
+        description: The type of specific [mapping](https://docs.coveo.com/en/217/) rule to create.<br />**Example:** `Video`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseRuleModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RuleModel'
+      x-pretty-name: addMappingTypeSettingRule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/types/paramId/rules_post
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings/common/rules:
+    get:
+      tags:
+      - Mappings
+      summary: List Common Mapping Rules
+      description: 'Lists the common [mapping](https://docs.coveo.com/en/217/) rules of a [source](https://docs.coveo.com/en/246/) (i.e., the mapping rules that apply to all [item](https://docs.coveo.com/en/210/) types).</br>**Required privilege:** Sources - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCommonMappingSettingsRules
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RuleModel'
+      x-pretty-name: getCommonMappingSettingsRules
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/common/rules_get
+    post:
+      tags:
+      - Mappings
+      summary: Create Common Mapping Rule
+      description: 'Creates a new [source](https://docs.coveo.com/en/246/) common [mapping](https://docs.coveo.com/en/217/) rule (i.e., a mapping rule that applies to all [item](https://docs.coveo.com/en/210/) types).</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: addCommonMappingSettingsRule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseRuleModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RuleModel'
+      x-pretty-name: addCommonMappingSettingsRule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/common/rules_post
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings/batch/update:
+    post:
+      tags:
+      - Mappings
+      summary: Update Mapping Rules in Batch
+      description: 'Updates [mappings](https://docs.coveo.com/en/217/) in batch for a specific [source](https://docs.coveo.com/en/246/).</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: updateMappingTypesBatch
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The [mappings](https://docs.coveo.com/en/217/) to update.
+              items:
+                $ref: '#/components/schemas/TypedMappingSettingsModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BatchOperationProgressModelTypedMappingSettingsModel'
+      x-pretty-name: updateMappingTypesBatch
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/batch/update_post
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings/batch/delete:
+    post:
+      tags:
+      - Mappings
+      summary: Delete Mapping Rules in Batch
+      description: 'Deletes [mappings](https://docs.coveo.com/en/217/) in batch for a specific [source](https://docs.coveo.com/en/246/).</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: deleteMappingTypesBatch
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The [mappings](https://docs.coveo.com/en/217/) to delete.
+              items:
+                $ref: '#/components/schemas/TypedMappingSettingsModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BatchOperationProgressModelTypedMappingSettingsModel'
+      x-pretty-name: deleteMappingTypesBatch
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/batch/delete_post
+  /rest/organizations/{organizationId}/sources/{sourceId}/mappings/batch/create:
+    post:
+      tags:
+      - Mappings
+      summary: Create Mapping Rules in Batch
+      description: 'Creates new [mappings](https://docs.coveo.com/en/217/) in batch for a specific [source](https://docs.coveo.com/en/246/).</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: addMappingTypesBatch
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The [mappings](https://docs.coveo.com/en/217/) to create.
+              items:
+                $ref: '#/components/schemas/TypedMappingSettingsModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BatchOperationProgressModelTypedMappingSettingsModel'
+      x-pretty-name: addMappingTypesBatch
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/batch/create_post
+components:
+  schemas:
+    BaseTypedMappingSettingsModelBaseRuleModel:
+      type: object
+      properties:
+        rules:
+          type: array
+          description: The [mapping](https://docs.coveo.com/en/217/) rules.<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+          items:
+            $ref: '#/components/schemas/BaseRuleModel'
+        type:
+          type: string
+          description: The type of [item](https://docs.coveo.com/en/210/) for which the mapping applies.<br />**Example:** `Video`
+      description: A JSON describing the specific [mapping](https://docs.coveo.com/en/217/) to create.
+    BaseRuleModel:
+      type: object
+      properties:
+        field:
+          type: string
+          description: The name of the target [field](https://docs.coveo.com/en/200/) to populate with the first non-null value yielded by a mapping rule statement from the `content` array.<br />**Example:** `rating`
+        content:
+          type: array
+          description: The mapping rule statements.<br />**Example:** `["%[internal_rating]"]`<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+          items:
+            type: string
+            description: The mapping rule statements.<br />**Example:** `["%[internal_rating]"]`<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+      description: The common [mapping](https://docs.coveo.com/en/217/) rule to create.
+    CommonMappingSettingsModel:
+      type: object
+      properties:
+        rules:
+          type: array
+          description: The [mapping](https://docs.coveo.com/en/217/) rules.<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+          items:
+            $ref: '#/components/schemas/RuleModel'
+      description: A JSON describing the common [mappings](https://docs.coveo.com/en/217/) to update.
+    BatchOperationProgressModelTypedMappingSettingsModel:
+      type: object
+      properties:
+        batchOperationId:
+          type: string
+        status:
+          type: string
+          enum:
+          - IN_PROGRESS
+          - COMPLETED
+        batchOperationResourcesStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/BatchOperationResourceStatusModelTypedMappingSettingsModel'
+    BatchOperationResourceStatusModelTypedMappingSettingsModel:
+      type: object
+      properties:
+        resourceModel:
+          $ref: '#/components/schemas/TypedMappingSettingsModel'
+        operationResult:
+          type: string
+          enum:
+          - SUCCESS
+          - ERROR
+        errorDetails:
+          type: string
+        successful:
+          type: boolean
+    MappingsConfigurationModel:
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/CommonMappingSettingsModel'
+        types:
+          type: array
+          description: The specific [mappings](https://docs.coveo.com/en/217/) (i.e., the mappings that apply only to specified [item](https://docs.coveo.com/en/210/) types).
+          items:
+            $ref: '#/components/schemas/TypedMappingSettingsModel'
+      description: A JSON describing the [mapping](https://docs.coveo.com/en/217/) configuration to add or update.
+    RuleModel:
+      type: object
+      properties:
+        field:
+          type: string
+          description: The name of the target [field](https://docs.coveo.com/en/200/) to populate with the first non-null value yielded by a mapping rule statement from the `content` array.<br />**Example:** `rating`
+        content:
+          type: array
+          description: The mapping rule statements.<br />**Example:** `["%[internal_rating]"]`<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+          items:
+            type: string
+            description: The mapping rule statements.<br />**Example:** `["%[internal_rating]"]`<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+        id:
+          type: string
+          description: The unique identifier of the mapping rule.<br />**Example:** `q5dpywnbpb3ul7xpyodh3e2j7i`
+      description: 'A [mapping](https://docs.coveo.com/en/217/) rule.
+
+        See [Mapping Definition Examples](https://docs.coveo.com/en/66/).'
+    TypedMappingSettingsModel:
+      type: object
+      properties:
+        rules:
+          type: array
+          description: The [mapping](https://docs.coveo.com/en/217/) rules.<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+          items:
+            $ref: '#/components/schemas/RuleModel'
+        type:
+          type: string
+          description: The type of [item](https://docs.coveo.com/en/210/) for which the mapping applies.<br />**Example:** `Video`
+        id:
+          type: string
+          description: The unique identifier of the mapping.<br />**Note:** Typically matches the `type` value.<br />**Example:** `Video`
+      description: A specific [mapping](https://docs.coveo.com/en/217/) (i.e., a mapping that applies only to a specified [item](https://docs.coveo.com/en/210/) type).
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

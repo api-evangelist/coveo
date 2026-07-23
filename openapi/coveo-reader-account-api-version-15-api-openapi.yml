@@ -1,0 +1,585 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Reader Account API - Version 15 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Reader Account API - Version 15
+paths:
+  /v15/admin/snowflake/readeraccounts:
+    post:
+      tags:
+      - Reader Account API - Version 15
+      summary: Create a Reader Account
+      operationId: post__v15_admin_snowflake_readeraccounts
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusInfo:
+                    type: object
+                    properties:
+                      reasonPhrase:
+                        type: string
+                      statusCode:
+                        type: integer
+                        format: int32
+                      family:
+                        type: string
+                        enum:
+                        - INFORMATIONAL
+                        - SUCCESSFUL
+                        - REDIRECTION
+                        - CLIENT_ERROR
+                        - SERVER_ERROR
+                        - OTHER
+                  mediaType:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      subtype:
+                        type: string
+                      parameters:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      wildcardType:
+                        type: boolean
+                      wildcardSubtype:
+                        type: boolean
+                  allowedMethods:
+                    uniqueItems: true
+                    type: array
+                    items:
+                      type: string
+                  cookies:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          type: string
+                        version:
+                          type: integer
+                          format: int32
+                        path:
+                          type: string
+                        domain:
+                          type: string
+                        comment:
+                          type: string
+                        maxAge:
+                          type: integer
+                          format: int32
+                        expiry:
+                          type: string
+                          format: date-time
+                        secure:
+                          type: boolean
+                        httpOnly:
+                          type: boolean
+                  entity:
+                    type: object
+                  links:
+                    uniqueItems: true
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rel:
+                          type: string
+                        rels:
+                          type: array
+                          items:
+                            type: string
+                        uriBuilder:
+                          type: object
+                        uri:
+                          type: string
+                          format: uri
+                        params:
+                          type: object
+                          additionalProperties:
+                            type: string
+                        title:
+                          type: string
+                        type:
+                          type: string
+                  status:
+                    type: integer
+                    format: int32
+                  metadata:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: object
+                  entityTag:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                      weak:
+                        type: boolean
+                  stringHeaders:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                  length:
+                    type: integer
+                    format: int32
+                  location:
+                    type: string
+                    format: uri
+                  language:
+                    type: object
+                    properties:
+                      language:
+                        type: string
+                      displayName:
+                        type: string
+                      country:
+                        type: string
+                      variant:
+                        type: string
+                      script:
+                        type: string
+                      unicodeLocaleAttributes:
+                        uniqueItems: true
+                        type: array
+                        items:
+                          type: string
+                      unicodeLocaleKeys:
+                        uniqueItems: true
+                        type: array
+                        items:
+                          type: string
+                      displayLanguage:
+                        type: string
+                      displayScript:
+                        type: string
+                      displayCountry:
+                        type: string
+                      displayVariant:
+                        type: string
+                      extensionKeys:
+                        uniqueItems: true
+                        type: array
+                        items:
+                          type: string
+                      iso3Language:
+                        type: string
+                      iso3Country:
+                        type: string
+                  date:
+                    type: string
+                    format: date-time
+                  lastModified:
+                    type: string
+                    format: date-time
+                  headers:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: object
+  /v15/admin/snowflake/users:
+    get:
+      tags:
+      - Reader Account API - Version 15
+      summary: Get the Details for All Users from a Snowflake Reader Account
+      operationId: get__v15_admin_snowflake_users
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnowflakeUserResponseV15'
+    post:
+      tags:
+      - Reader Account API - Version 15
+      summary: Create a New User Within a Snowflake Reader Account
+      operationId: post__v15_admin_snowflake_users
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      requestBody:
+        description: Snowflake user details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSnowflakeUserModelV15'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnowflakeUserResponseV15'
+  /v15/admin/snowflake/readeraccount:
+    get:
+      tags:
+      - Reader Account API - Version 15
+      summary: Retrieve Snowflake Reader Account State
+      operationId: get__v15_admin_snowflake_readeraccount
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnowflakeReaderAccountStateResponseV15'
+    delete:
+      tags:
+      - Reader Account API - Version 15
+      summary: Delete Snowflake Reader Account
+      operationId: delete__v15_admin_snowflake_readeraccount
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+  /v15/admin/snowflake/users/{snowflakeUser}:
+    get:
+      tags:
+      - Reader Account API - Version 15
+      summary: Get the Details for a Specific User from a Snowflake Reader Account
+      operationId: get__v15_admin_snowflake_users_{snowflakeUser}
+      parameters:
+      - name: snowflakeUser
+        in: path
+        description: The login name for the Snowflake user.
+        required: true
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnowflakeUserResponseV15'
+    delete:
+      tags:
+      - Reader Account API - Version 15
+      summary: Delete a User from a Snowflake Reader Account
+      operationId: delete__v15_admin_snowflake_users_{snowflakeUser}
+      parameters:
+      - name: snowflakeUser
+        in: path
+        description: The login name for the Snowflake user.
+        required: true
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+  /v15/admin/snowflake/creditusage:
+    get:
+      tags:
+      - Reader Account API - Version 15
+      summary: Get the Amount of Compute Credits Used by a Snowflake Reader Account Within a Date Range
+      operationId: get__v15_admin_snowflake_creditusage
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnowflakeCreditUsageResponseV15'
+  /v15/admin/snowflake/readeraccount/endpoint:
+    get:
+      tags:
+      - Reader Account API - Version 15
+      summary: Retrieve Snowflake Reader Account Endpoint
+      operationId: get__v15_admin_snowflake_readeraccount_endpoint
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnowflakeReaderAccountEndpointResponseV15'
+  /v15/admin/snowflake/networkpolicy:
+    get:
+      tags:
+      - Reader Account API - Version 15
+      summary: Get the Details of the Active Network Policy for a Snowflake Reader Account
+      operationId: get__v15_admin_snowflake_networkpolicy
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnowflakeNetworkPolicyResponseV15'
+    put:
+      tags:
+      - Reader Account API - Version 15
+      summary: Set the Details of the Active Network Policy for a Snowflake Reader Account
+      operationId: put__v15_admin_snowflake_networkpolicy
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      requestBody:
+        description: Snowflake user details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnowflakeNetworkPolicyModelV15'
+        required: true
+      responses:
+        '204':
+          description: No content
+  /v15/admin/snowflake/users/{snowflakeUser}/passwordreset:
+    post:
+      tags:
+      - Reader Account API - Version 15
+      summary: Reset a User's Password in a Snowflake Reader Account
+      operationId: post__v15_admin_snowflake_users_{snowflakeUser}_passwordreset
+      parameters:
+      - name: snowflakeUser
+        in: path
+        description: The login name for the Snowflake user.
+        required: true
+        schema:
+          type: string
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+  /v15/admin/snowflake/users/{snowflakeUser}/expiration:
+    put:
+      tags:
+      - Reader Account API - Version 15
+      summary: Change the Expiration Time of a Snowflake Reader Account User
+      operationId: put__v15_admin_snowflake_users_{snowflakeUser}_expiration
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: snowflakeUser
+        in: path
+        description: The login name for the Snowflake user.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Snowflake user details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSnowflakeUserExpirationRequestModelV15'
+        required: true
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    SnowflakeReaderAccountStateResponseV15:
+      type: object
+      properties:
+        snowflakeReaderAccountStatus:
+          type: string
+          description: The status of the account
+          enum:
+          - AVAILABLE
+      description: A snowflake reader account's state
+    SnowflakeNetworkPolicyModelV15:
+      required:
+      - allowedIpAddresses
+      type: object
+      properties:
+        allowedIpAddresses:
+          uniqueItems: true
+          type: array
+          description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
+          items:
+            type: string
+            description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
+        blockedIpAddresses:
+          uniqueItems: true
+          type: array
+          description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
+          items:
+            type: string
+            description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
+      description: Details required when creating a new Snowflake network policy
+    UpdateSnowflakeUserExpirationRequestModelV15:
+      type: object
+      properties:
+        daysToExpiry:
+          type: integer
+          description: The number of days before the user expiration.
+          format: int32
+      description: Details required when changing the expiration of a Snowflake user
+    SnowflakeCreditUsageResponseV15:
+      type: object
+      properties:
+        creditsUsed:
+          type: number
+          description: The total number of warehouse compute credits used.
+          format: double
+      description: The compute credit usage for a Snowflake account over a date range.
+    SnowflakeNetworkPolicyResponseV15:
+      type: object
+      properties:
+        allowedIpAddresses:
+          uniqueItems: true
+          type: array
+          description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
+          items:
+            type: string
+            description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
+        blockedIpAddresses:
+          uniqueItems: true
+          type: array
+          description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
+          items:
+            type: string
+            description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
+      description: The policy that specifies options for managing network configurations to the Snowflake service.
+    CreateSnowflakeUserModelV15:
+      required:
+      - email
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username, which will be used when logging into the Snowflake account
+        email:
+          type: string
+          description: The user's e-mail, where password setup and reset URLs will be sent
+        daysToExpiry:
+          type: integer
+          description: The number of days before the user expiration, if not defined, the user will never expire.
+          format: int32
+      description: Details required when creating a new Snowflake user
+    SnowflakeReaderAccountEndpointResponseV15:
+      type: object
+      properties:
+        endpoint:
+          type: string
+          description: The endpoint of the account
+      description: A snowflake reader account's endpoint
+    SnowflakeUserResponseV15:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The user login name.
+        email:
+          type: string
+          description: The e-mail address currently associated with the user.
+        daysToExpiry:
+          type: number
+          description: The number of days before the user expires.
+          format: double
+      description: A user from a Snowflake account
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

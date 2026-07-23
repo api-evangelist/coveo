@@ -1,0 +1,113 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Salesforce Trial API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Salesforce Trial
+paths:
+  /rest/organizations/{organizationId}/salesforce/trial/licenseStatus:
+    get:
+      operationId: getLicenseStatus
+      summary: Retrieves the License Status for an Organization
+      tags:
+      - Salesforce Trial
+      deprecated: true
+      parameters:
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/OutgoingLicenseStatus'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/salesforce/trial/provisioningStatus:
+    get:
+      operationId: getProvisioningStatus
+      summary: Retrieves the Provisioning Status for an Organization
+      tags:
+      - Salesforce Trial
+      deprecated: true
+      parameters:
+      - name: salesforceOrganizationId
+        description: The ID of the Salesforce organization.
+        required: true
+        in: query
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/OutgoingProvisioningStatus'
+      security:
+      - oauth2:
+        - full
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required
+definitions:
+  OutgoingLicenseStatus:
+    type: object
+    properties:
+      status:
+        description: The status code for the current license status
+        enum:
+        - CANNOT_START_TRIAL
+        type: string
+    required:
+    - status
+  OutgoingProvisioningStatus:
+    type: object
+    properties:
+      code:
+        description: The status code for the current provisioning status
+        enum:
+        - LEGACY
+        type: string
+      description:
+        description: Description of the current provisioning status
+        type: string
+      infos:
+        description: Optional information generated during the provisioning operation
+        type: string
+      warnings:
+        description: Optional warnings generated during the provisioning operation
+        type: string
+      error:
+        description: Optional error generated during the provisioning operation
+        type: string
+      done:
+        description: Whether the provisioning operation is done or not
+        type: boolean
+    required:
+    - code
+    - description
+    - done

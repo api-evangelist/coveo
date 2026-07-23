@@ -1,0 +1,487 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Agent Configuration API API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Agent Configuration API
+paths:
+  /api/preview/organizations/{organizationId}/agents:
+    get:
+      tags:
+      - Agent Configuration API
+      summary: List Agents
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getByPage
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: page
+        in: query
+        description: The zero-based index of the results page to retrieve
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The number of items to return per page
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PaginatedResponseAgent_Response'
+      x-pretty-name: getByPage
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/agents_get
+    post:
+      tags:
+      - Agent Configuration API
+      summary: Create an Agent
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: create
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: X-Skip-Provisioning
+        in: header
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Agent_Request'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Agent_Response'
+      x-pretty-name: create
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/agents_post
+  /api/preview/organizations/{organizationId}/agents/{agentId}:
+    get:
+      tags:
+      - Agent Configuration API
+      summary: Get an Agent by agentId
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: get
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: agentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Agent_Response'
+      x-pretty-name: get
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/agents/paramId_get
+    delete:
+      tags:
+      - Agent Configuration API
+      summary: Delete an Agent
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: delete
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: agentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: delete
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/agents/paramId_delete
+    patch:
+      tags:
+      - Agent Configuration API
+      summary: Update an Agent
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: update
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Organization identifier
+      - name: agentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Skip-Provisioning
+        in: header
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentUpdate_Response'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Agent_Response'
+      x-pretty-name: update
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: AGENT_CONFIGURATION
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/agents/paramId_patch
+components:
+  schemas:
+    Behavior_Request:
+      required:
+      - conditions
+      - obligation
+      type: object
+      properties:
+        obligation:
+          maxLength: 300
+          minLength: 0
+          type: string
+          description: The obligation/instruction that applies when conditions are met.
+        conditions:
+          maxItems: 15
+          minItems: 0
+          type: array
+          description: The list of conditions that must be met for this behavior to apply.
+          items:
+            maxLength: 300
+            minLength: 0
+            type: string
+            description: The list of conditions that must be met for this behavior to apply.
+      description: A behavior that the agent should follow.
+    Pagination_Response:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+        perPage:
+          type: integer
+          format: int32
+        totalItems:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+    Behavior_Response:
+      required:
+      - conditions
+      - obligation
+      type: object
+      properties:
+        obligation:
+          maxLength: 300
+          minLength: 0
+          type: string
+          description: The obligation/instruction that applies when conditions are met.
+        conditions:
+          maxItems: 15
+          minItems: 0
+          type: array
+          description: The list of conditions that must be met for this behavior to apply.
+          items:
+            maxLength: 300
+            minLength: 0
+            type: string
+            description: The list of conditions that must be met for this behavior to apply.
+      description: A behavior that the agent should follow.
+    AgentUpdate_Response:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the Agent
+        description:
+          type: string
+          description: The description of the Agent
+      description: A partial agent update containing only the mutable metadata fields
+    Agent_Response:
+      required:
+      - agentType
+      - followUpEnabled
+      - name
+      - passageRetrievalModelId
+      type: object
+      properties:
+        id:
+          type: string
+          description: The public UUID for this configuration
+          format: uuid
+        name:
+          minLength: 1
+          type: string
+          description: The name of the Agent
+        description:
+          type: string
+          description: The description of the Agent
+        agentType:
+          type: string
+          description: Agent type
+        passageRetrievalModelId:
+          type: string
+          description: Passage retrieval model identifier
+        answerModelId:
+          type: string
+          description: Answer model identifier
+          deprecated: true
+        followUpModelId:
+          type: string
+          description: Follow-up model identifier
+          deprecated: true
+        numberOfItemsToConsider:
+          maximum: 100
+          minimum: 1
+          type: integer
+          description: The maximum number of items/documents to consider for the Passage Retrieval model
+          format: int32
+        followUpEnabled:
+          type: boolean
+          description: Does the model support follow-up questions. When true, followUpModelId must be provided.
+        status:
+          type: string
+          description: 'Overall status of the Agent.
+
+
+            Possible values:
+
+            - ACTIVE: The agent is active and can be queried.
+
+            - SOON_TO_BE_ARCHIVED: The agent is still available, but will be archived soon if it is not queried.
+
+            - INACTIVE: The agent is not ready to be queried yet.
+
+            - LIMITED: The latest build completed with issues that may affect performance.
+
+            - ARCHIVED: The agent has been archived and is no longer active.
+
+            - BUILD_IN_PROGRESS: A build or rebuild is currently in progress.
+
+            - ERROR: The latest build failed and the issue is customer-visible.
+
+            - NO_MODELS_DEFINED: No underlying models are configured for this agent.
+
+            '
+        behaviors:
+          type: array
+          description: Optional behaviors to persist with the created agent.
+          items:
+            $ref: '#/components/schemas/Behavior_Response'
+        createdDate:
+          type: string
+          description: Creation timestamp in ISO-8601 format
+          format: date-time
+        modifiedDate:
+          type: string
+          description: Last modification timestamp in ISO-8601 format
+          format: date-time
+      description: An agent configuration
+    Agent_Request:
+      required:
+      - agentType
+      - followUpEnabled
+      - name
+      - passageRetrievalModelId
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+          description: The name of the Agent
+        description:
+          type: string
+          description: The description of the Agent
+        agentType:
+          type: string
+          description: Agent type
+        passageRetrievalModelId:
+          type: string
+          description: Passage retrieval model identifier
+        answerModelId:
+          type: string
+          description: Answer model identifier
+          deprecated: true
+        followUpModelId:
+          type: string
+          description: Follow-up model identifier
+          deprecated: true
+        numberOfItemsToConsider:
+          maximum: 100
+          minimum: 1
+          type: integer
+          description: The maximum number of items/documents to consider for the Passage Retrieval model
+          format: int32
+        followUpEnabled:
+          type: boolean
+          description: Does the model support follow-up questions. When true, followUpModelId must be provided.
+        behaviors:
+          type: array
+          description: Optional behaviors to persist with the created agent.
+          items:
+            $ref: '#/components/schemas/Behavior_Request'
+      description: An agent configuration
+    PaginatedResponseAgent_Response:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination_Response'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agent_Response'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

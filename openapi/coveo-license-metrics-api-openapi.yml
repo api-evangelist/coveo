@@ -1,0 +1,272 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities License Metrics API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: License Metrics
+paths:
+  /rest/organizations/{organizationId}/searchusagemetrics/license/all:
+    get:
+      operationId: listLicenseMetrics
+      summary: Lists the Available Metrics for Reporting
+      tags:
+      - License Metrics
+      deprecated: false
+      parameters:
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestListOfMetrics'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/searchusagemetrics/license/assignable:
+    get:
+      operationId: listAssignableLicenceMetrics
+      summary: Lists the Available Metrics for Assignment
+      tags:
+      - License Metrics
+      deprecated: false
+      parameters:
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestListOfMetrics'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/searchusagemetrics/license/daily/{metric}:
+    get:
+      operationId: getDailyLicenseMetrics
+      summary: Gets Per-Day Values for a Specific License Metric
+      tags:
+      - License Metrics
+      deprecated: false
+      parameters:
+      - name: to
+        description: The last day to report for
+        required: true
+        in: query
+        type: string
+      - name: from
+        description: The first day to report for
+        required: true
+        in: query
+        type: string
+      - name: metric
+        description: The license metric to report on
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestListOfMetricValues'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/searchusagemetrics/license/inUse:
+    get:
+      operationId: listInUseLicenceMetrics
+      summary: Lists the in-Use Metrics for an Organization
+      tags:
+      - License Metrics
+      deprecated: false
+      parameters:
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestListOfMetrics'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/searchusagemetrics/license/monthly/{metric}:
+    get:
+      operationId: getMonthlyLicenseMetrics
+      summary: Gets Per-Day Values for a Specific License Metric
+      tags:
+      - License Metrics
+      deprecated: false
+      parameters:
+      - name: slidingWindow
+        description: When appropriate, the size of the sliding window to use, in months. If this parameter is not specified the default sliding window for the metric will be used.
+        required: false
+        in: query
+        type: string
+      - name: to
+        description: The last month to report for
+        required: true
+        in: query
+        type: string
+      - name: from
+        description: The first month to report for
+        required: true
+        in: query
+        type: string
+      - name: metric
+        description: The license metric to report on
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestListOfMetricValues'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/searchusagemetrics/license/total/{metric}:
+    get:
+      operationId: getTotalLicenseMetrics
+      summary: Gets Total Values for a Specific License Metric Over a Specified Month Range
+      tags:
+      - License Metrics
+      deprecated: false
+      parameters:
+      - name: to
+        description: The last month to report for
+        required: true
+        in: query
+        type: string
+      - name: from
+        description: The first month to report for
+        required: true
+        in: query
+        type: string
+      - name: metric
+        description: The license metric to report on
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestMetricValue'
+      security:
+      - oauth2:
+        - full
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required
+definitions:
+  RestListOfMetricValues:
+    type: object
+    properties:
+      values:
+        description: The list of daily metric values
+        type: array
+        items:
+          $ref: '#/definitions/RestMetricValueforDate'
+    required:
+    - values
+  RestListOfMetrics:
+    type: object
+    properties:
+      metrics:
+        description: The list of metrics
+        type: array
+        items:
+          $ref: '#/definitions/RestMetric'
+    required:
+    - metrics
+  RestMetric:
+    type: object
+    properties:
+      id:
+        example: '"queries"'
+        description: The ID of the metric
+        type: string
+      label:
+        example: '"Normal Queries"'
+        description: The display name of the metric
+        type: string
+      productId:
+        example: '"01t0d000001abCdEFG"'
+        description: The productId associated to a metric
+        type: string
+      slidingWindowInMonths:
+        example: 3
+        description: The size of the sliding window to use, in months.
+        type: integer
+        format: int32
+    required:
+    - id
+  RestMetricValue:
+    type: object
+    properties:
+      value:
+        example: 123
+        description: The numeric metric value
+        type: integer
+        format: int64
+    required:
+    - value
+  RestMetricValueforDate:
+    type: object
+    properties:
+      date:
+        example: '"2019-01-01"'
+        description: The date for the usage metric value
+        type: string
+      value:
+        example: 123
+        description: The numeric metric value
+        type: integer
+        format: int64
+    required:
+    - date
+    - value

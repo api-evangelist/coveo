@@ -1,0 +1,1072 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Exports API - Version 15 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Exports API - Version 15
+paths:
+  /v15/exports/schedules:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Get All the Export Schedules
+      operationId: get__v15_exports_schedules
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExportScheduleResponseV15'
+    post:
+      tags:
+      - Exports API - Version 15
+      summary: Create an Export Schedule
+      operationId: post__v15_exports_schedules
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      requestBody:
+        description: Information about the requested export schedule.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportScheduleModelV15'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportScheduleResponseV15'
+  /v15/exports/{exportId}:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Get Information on an Export
+      operationId: get__v15_exports_{exportId}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: exportId
+        in: path
+        description: The export's unique identifier.
+        required: true
+        schema:
+          type: string
+      - name: redirect
+        in: query
+        description: "Whether to return a HTTP redirect to the actual file.\n\n Note: for technical reasons, setting this parameter to true will yield an error when calling the endpoint through Swagger user interface."
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponseV15'
+        '303':
+          description: Responds with See Other, if the redirect parameter is used
+    delete:
+      tags:
+      - Exports API - Version 15
+      summary: Delete an Export
+      operationId: delete__v15_exports_{exportId}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: exportId
+        in: path
+        description: The export's unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+  /v15/exports/schedules/{exportScheduleId}:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Get Information on an Export Schedule
+      operationId: get__v15_exports_schedules_{exportScheduleId}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: exportScheduleId
+        in: path
+        description: The export schedule's unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportScheduleResponseV15'
+    put:
+      tags:
+      - Exports API - Version 15
+      summary: Update an Existing Export Schedule
+      operationId: put__v15_exports_schedules_{exportScheduleId}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: exportScheduleId
+        in: path
+        description: The export schedule's unique identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Information about the requested export schedule.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportScheduleModelV15'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportScheduleResponseV15'
+    delete:
+      tags:
+      - Exports API - Version 15
+      summary: Delete an Export Schedule
+      operationId: delete__v15_exports_schedules_{exportScheduleId}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: exportScheduleId
+        in: path
+        description: The export schedule's unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+  /v15/exports/estimate:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Estimate the Number of Rows in an Export
+      operationId: get__v15_exports_estimate
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: tables
+        in: query
+        description: The tables that will be exported. If not provided, all tables will be exported.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - SEARCHES
+            - CLICKS
+            - CUSTOM_EVENTS
+            - KEYWORDS
+            - GROUPS
+            - ALL_EVENTS
+      - name: f
+        in: query
+        description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fs
+        in: query
+        description: The filter that will be applied to the click and search events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fc
+        in: query
+        description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportEstimateResponseV15'
+  /v15/exports/visits/estimate:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Estimate the Number of Rows in a Visit Export
+      operationId: get__v15_exports_visits_estimate
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: hideEventFilters
+        in: query
+        description: Each specified filter is inverted in order to hide events. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fn
+        in: query
+        description: The filter that will be applied to dimensions to exclude events from the results. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportEstimateResponseV15'
+  /v15/exports:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Lists All Exports
+      operationId: get__v15_exports
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExportResponseV15'
+    post:
+      tags:
+      - Exports API - Version 15
+      summary: Generate an Export
+      operationId: post__v15_exports
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fs
+        in: query
+        description: The filter that will be applied to the click and search events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fc
+        in: query
+        description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: filename
+        in: query
+        description: A file name for the export. Can only contain US-ASCII characters. If none is supplied it will be set to the export's id.
+        schema:
+          type: string
+      - name: d
+        in: query
+        description: Export's description.
+        schema:
+          type: string
+      - name: dimensions
+        in: query
+        description: The dimensions that will be exported. If not provided, all dimensions will be exported.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: tables
+        in: query
+        description: The tables that will be exported. If not provided, all tables will be exported.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - SEARCHES
+            - CLICKS
+            - CUSTOM_EVENTS
+            - KEYWORDS
+            - GROUPS
+            - ALL_EVENTS
+      - name: format
+        in: query
+        description: The format of the generated CSV files.
+        schema:
+          type: string
+          enum:
+          - EXCEL
+          - NO_NEWLINE
+          default: EXCEL
+      - name: useDisplayNames
+        in: query
+        description: Whether to use the display names in the export's header. If false, the api names will be used.
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponseV15'
+  /v15/exports/visits:
+    post:
+      tags:
+      - Exports API - Version 15
+      summary: Generate a Visit Export
+      operationId: post__v15_exports_visits
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: hideEventFilters
+        in: query
+        description: Each specified filter is inverted in order to hide events. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fn
+        in: query
+        description: The filter that will be applied to dimensions to exclude events from the results. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: filename
+        in: query
+        description: A file name for the export. Can only contain US-ASCII characters. If none is supplied it will be set to the export's id.
+        schema:
+          type: string
+      - name: d
+        in: query
+        description: Export's description.
+        schema:
+          type: string
+      - name: dimensions
+        in: query
+        description: The dimensions that will be exported. If not provided, all dimensions will be exported.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: format
+        in: query
+        description: The format of the generated CSV files.
+        schema:
+          type: string
+          enum:
+          - EXCEL
+          - NO_NEWLINE
+          - EXCEL,NO_NEWLINE
+          default: EXCEL
+      - name: ordered
+        in: query
+        description: Whether to order the rows by datetime in the export. If the number of rows exported is to great, this parameter will be ignored and data will be unsorted.
+        schema:
+          type: boolean
+          default: true
+      - name: useDisplayNames
+        in: query
+        description: Whether to use the display names in the export's header. If false, the api names will be used.
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponseV15'
+  /v15/exports/visits/create:
+    post:
+      tags:
+      - Exports API - Version 15
+      summary: Generate a Visit Export (with Parameters as Request Body)
+      operationId: post__v15_exports_visits_create
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportVisitsModelV15'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponseV15'
+  /v15/exports/create:
+    post:
+      tags:
+      - Exports API - Version 15
+      summary: Generate an Export (with Parameters as Request Body)
+      operationId: post__v15_exports_create
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportModelV15'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponseV15'
+  /v15/exports/{exportId}/downloadlink:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Get the Download Link of an Export
+      operationId: get__v15_exports_{exportId}_downloadlink
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: exportId
+        in: path
+        description: The export's unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportDownloadLinkResponseV15'
+  /v15/exports/rowLimit:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Get the Maximum Allowed Number of Rows an Export Can Have
+      operationId: get__v15_exports_rowLimit
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportRowCountLimitV15'
+  /v15/exports/schedules/{exportScheduleId}/exports:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Get Exports Generated by the Specified Schedule
+      operationId: get__v15_exports_schedules_{exportScheduleId}_exports
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: exportScheduleId
+        in: path
+        description: The export schedule's unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExportResponseV15'
+  /v15/exports/monitoring/health:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Health Check for the Exports Service
+      operationId: get__v15_exports_monitoring_health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+  /v15/exports/status:
+    get:
+      tags:
+      - Exports API - Version 15
+      summary: Get the Exports Service Status
+      operationId: get__v15_exports_status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+components:
+  schemas:
+    ExportVisitsModelV15:
+      type: object
+      properties:
+        from:
+          type: string
+          description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        to:
+          type: string
+          description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        inclusionFilters:
+          type: array
+          description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+        hideEventFilters:
+          type: array
+          description: Each specified filter is inverted in order to hide events. Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: Each specified filter is inverted in order to hide events. Multiple filter parameters are joined with the AND operator.
+        exclusionFilters:
+          type: array
+          description: The filter that will be applied to dimensions to exclude events from the results. Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to dimensions to exclude events from the results. Multiple filter parameters are joined with the AND operator.
+        filename:
+          type: string
+          description: A file name for the export. Can only contain US-ASCII characters. If none is supplied it will be set to the export's id.
+        description:
+          type: string
+          description: Export's description.
+        dimensions:
+          type: array
+          description: The dimensions that will be exported. If not provided, all dimensions will be exported.
+          items:
+            type: string
+            description: The dimensions that will be exported. If not provided, all dimensions will be exported.
+        exportFormat:
+          type: string
+          description: The format of the generated CSV files.
+          enum:
+          - EXCEL
+          - NO_NEWLINE
+          default: EXCEL
+        useDisplayNames:
+          type: boolean
+          description: Whether to use the display names in the export's header. If false, the api names will be used.
+          default: false
+        ordered:
+          type: boolean
+          description: Whether to order the rows by datetime in the export. If the number of rows exported is to great, this parameter will be ignored and data will be unsorted.
+          default: true
+      description: An export of visits.
+    ExportScheduleResponseV15:
+      required:
+      - author
+      - description
+      - filters
+      - frequency
+      - id
+      - timezone
+      type: object
+      properties:
+        id:
+          type: string
+          description: The export schedule's unique identifier
+        author:
+          type: string
+          description: The author of the export schedule
+        frequency:
+          type: string
+          description: The execution frequency of the export schedule
+          enum:
+          - DAILY
+          - MONTHLY
+          - WEEKLY
+        dayOfWeek:
+          type: string
+          description: The day of the week on which the export is executed (for weekly exports)
+          enum:
+          - MONDAY
+          - TUESDAY
+          - WEDNESDAY
+          - THURSDAY
+          - FRIDAY
+          - SATURDAY
+          - SUNDAY
+        timezone:
+          type: string
+          description: The timezone of the export schedule
+        filters:
+          type: object
+          additionalProperties:
+            type: string
+            description: The filters that will be applied to the exports created by the schedule
+          description: The filters that will be applied to the exports created by the schedule
+        dimensions:
+          type: array
+          description: The requested dimensions for the schedule's exports, if specified
+          items:
+            type: string
+            description: The requested dimensions for the schedule's exports, if specified
+        tables:
+          uniqueItems: true
+          type: array
+          description: The requested tables for the schedule's exports, if specified
+          items:
+            type: string
+            description: The requested tables for the schedule's exports, if specified
+        description:
+          type: string
+          description: A description of this export schedule
+        usingDisplayNames:
+          type: boolean
+          description: Whether the generated export headers will be using display names.
+        notificationsEmails:
+          uniqueItems: true
+          type: array
+          description: The email addresses of the users that will be notified when an export is ready.
+          items:
+            type: string
+            description: The email addresses of the users that will be notified when an export is ready.
+      description: Information about the export schedule
+    ExportEstimateResponseV15:
+      required:
+      - estimates
+      type: object
+      properties:
+        estimates:
+          type: object
+          additionalProperties:
+            type: integer
+            description: The estimated number of rows by event
+            format: int64
+          description: The estimated number of rows by event
+      description: Export's number of row estimate
+    ExportModelV15:
+      type: object
+      properties:
+        from:
+          type: string
+          description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        to:
+          type: string
+          description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        commonFilters:
+          type: array
+          description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+        searchesFilters:
+          type: array
+          description: The filter that will be applied to the click and search events dimensions. Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the click and search events dimensions. Multiple filter parameters are joined with the AND operator.
+        customEventsFilters:
+          type: array
+          description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+        filename:
+          type: string
+          description: A file name for the export. Can only contain US-ASCII characters. If none is supplied it will be set to the export's id.
+        description:
+          type: string
+          description: Export's description.
+        dimensions:
+          type: array
+          description: The dimensions that will be exported. If not provided, all dimensions will be exported.
+          items:
+            type: string
+            description: The dimensions that will be exported. If not provided, all dimensions will be exported.
+        tables:
+          type: array
+          description: The tables that will be exported. If not provided, all tables will be exported.
+          items:
+            type: string
+            description: The tables that will be exported. If not provided, all tables will be exported.
+            enum:
+            - SEARCHES
+            - CLICKS
+            - CUSTOM_EVENTS
+            - KEYWORDS
+            - GROUPS
+            - ALL_EVENTS
+        exportFormat:
+          type: string
+          description: The format of the generated CSV files.
+          enum:
+          - EXCEL
+          - NO_NEWLINE
+          default: EXCEL
+        useDisplayNames:
+          type: boolean
+          description: Whether to use the display names in the export's header. If false, the api names will be used.
+          default: false
+      description: An export.
+    ExportResponseV15:
+      required:
+      - author
+      - description
+      - downloadable
+      - filters
+      - from
+      - id
+      - size
+      - startDate
+      - status
+      - to
+      type: object
+      properties:
+        id:
+          type: string
+          description: The export's unique identifier
+        author:
+          type: string
+          description: The user who created this export
+        downloadLink:
+          type: string
+          description: The export download link. Only appears when export is ready
+          format: url
+        startDate:
+          type: integer
+          description: The date at which this export was started. Epoch time format in milliseconds (POSIX time or UNIX Epoch time)
+          format: int64
+        from:
+          type: integer
+          description: The beginning date of the date range. Epoch time format in milliseconds (POSIX time or UNIX Epoch time)
+          format: int64
+        to:
+          type: integer
+          description: The end date of the date range. Epoch time format in milliseconds (POSIX time or UNIX Epoch time)
+          format: int64
+        filters:
+          type: object
+          additionalProperties:
+            type: string
+            description: The filters that will be applied to the export
+          description: The filters that will be applied to the export
+        description:
+          type: string
+          description: A description of this export
+        size:
+          type: integer
+          description: In bytes
+          format: int64
+        status:
+          type: string
+          description: The status of this export
+          enum:
+          - AVAILABLE
+          - PENDING
+          - FAILED
+          - EXPIRED
+        tables:
+          uniqueItems: true
+          type: array
+          description: The requested tables for this export, if specified
+          items:
+            type: string
+            description: The requested tables for this export, if specified
+        downloadable:
+          type: boolean
+          description: Whether the export is downloadable when available
+        dimensions:
+          uniqueItems: true
+          type: array
+          description: The requested dimensions for this export, if specified
+          items:
+            type: string
+            description: The requested dimensions for this export, if specified
+        replayable:
+          type: boolean
+          description: Whether the export can be replayed.
+        usingDisplayNames:
+          type: boolean
+          description: Whether the export header is using the display names.
+        scheduleId:
+          type: string
+          description: The id of the schedule an export was generated by (if scheduled export)
+      description: Export's information
+    StatusResponse:
+      type: object
+      description: Service's status information
+    ExportDownloadLinkResponseV15:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: The export's unique identifier
+        downloadLink:
+          type: string
+          description: The export download link. Only appears when export is ready
+          format: url
+      description: Export's download link
+    ExportScheduleModelV15:
+      required:
+      - frequency
+      - timezone
+      type: object
+      properties:
+        frequency:
+          type: string
+          description: The execution frequency of the export schedule
+          enum:
+          - DAILY
+          - MONTHLY
+          - WEEKLY
+        dayOfWeek:
+          type: string
+          description: The day of the week on which the export is executed (for weekly exports)
+          enum:
+          - MONDAY
+          - TUESDAY
+          - WEDNESDAY
+          - THURSDAY
+          - FRIDAY
+          - SATURDAY
+          - SUNDAY
+        timezone:
+          type: string
+          description: The timezone of the export schedule
+        dimensions:
+          type: array
+          description: The requested dimensions for the schedule's exports, if specified
+          items:
+            type: string
+            description: The requested dimensions for the schedule's exports, if specified
+        commonFilters:
+          type: array
+          description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+        searchesFilters:
+          type: array
+          description: The filter that will be applied to the search and click events dimensions. Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the search and click events dimensions. Multiple filter parameters are joined with the AND operator.
+        customEventsFilters:
+          type: array
+          description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+        description:
+          type: string
+          description: A description of this export schedule
+        tables:
+          type: array
+          description: The requested tables for the schedule's exports, if specified
+          items:
+            type: string
+            description: The requested tables for the schedule's exports, if specified
+            enum:
+            - SEARCHES
+            - CLICKS
+            - CUSTOM_EVENTS
+            - KEYWORDS
+            - GROUPS
+            - ALL_EVENTS
+        exportFormat:
+          type: string
+          description: The format of the generated CSV files.
+          enum:
+          - EXCEL
+          - NO_NEWLINE
+        usingDisplayNames:
+          type: boolean
+          description: Whether the generated export headers will be using display names.
+        notificationsEmails:
+          uniqueItems: true
+          type: array
+          description: The email addresses of the users that will be notified when an export is ready.
+          items:
+            type: string
+            description: The email addresses of the users that will be notified when an export is ready.
+      description: An export schedule.
+    ExportRowCountLimitV15:
+      type: object
+      properties:
+        exportRowCountLimit:
+          type: integer
+          description: The maximum number of rows allowed in an export
+          format: int64
+      description: Export's row count limit
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

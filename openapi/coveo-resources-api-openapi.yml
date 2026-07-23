@@ -1,0 +1,165 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Resources API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Resources
+paths:
+  /rest/organizations/{organizationId}/resources/{resourceType}:
+    get:
+      tags:
+      - Resources
+      summary: Get Resources
+      description: 'Gets resources by resource type for a given organization.</br>**Required privilege:**` {resourceType} - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAllResourcesDetailsByResourceType
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [Coveo organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: resourceType
+        in: path
+        description: The type of the [resource](https://docs.coveo.com/2820).<br/>**Example:** `SOURCE`
+        required: true
+        schema:
+          type: string
+          enum:
+          - SOURCE
+          - CRAWLING_MODULE
+          - SECURITY_PROVIDER
+          - EXTENSION
+          - SEARCH_PAGE
+          - QUERY_PIPELINE
+          - UA_REPORT
+          - ML_MODEL
+          - CATALOG
+          - CASE_ASSIST
+          - IN_PRODUCT_EXPERIENCE
+          - INSIGHT_PANEL
+          - SEARCH_HUB
+          - STOREFRONT_ASSOCIATION
+          - TRACKING_ID
+          - FIELD
+          - DATA_COLLECTION
+      - name: filter
+        in: query
+        description: The text to filter resources by (applied to the resource id and name properties).<br/>**Example:** `My Web source`
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The 0-based number of the results page to fetch.<br/>**Default:** `0`
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The number of results to fetch per page.<br/>**Default:** `50`
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelProjectResourceModel'
+      x-pretty-name: getAllResourcesDetailsByResourceType
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/resources/paramId_get
+components:
+  schemas:
+    ProjectResourceModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of a [resource](https://docs.coveo.com/2820).
+          readOnly: true
+          example: 3987990e-0f0d-440f-bcf6-22279078a20f
+        name:
+          type: string
+          description: The name of the [resource](https://docs.coveo.com/2820).
+          readOnly: true
+          example: My Web source
+        type:
+          type: string
+          description: The resource type subset that the resource belongs to (often reflected in the related Coveo Administration Console resource list page).
+          readOnly: true
+          example: WEB2
+        version:
+          type: string
+          description: The resource version.
+          readOnly: true
+          example: 1.2.3
+        additionalInfo:
+          type: object
+          additionalProperties:
+            type: object
+            description: Additional information about the resource.
+            readOnly: true
+            example:
+              CatalogName: Test Catalog
+          description: Additional information about the resource.
+          readOnly: true
+          example:
+            CatalogName: Test Catalog
+      description: A resource.
+    PageModelProjectResourceModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectResourceModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

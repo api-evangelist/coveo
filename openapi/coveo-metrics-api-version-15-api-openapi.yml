@@ -1,0 +1,143 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Metrics API - Version 15 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Metrics API - Version 15
+paths:
+  /v15/metrics/{metricName}:
+    get:
+      tags:
+      - Metrics API - Version 15
+      summary: Get a Metric
+      operationId: get__v15_metrics_{metricName}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: metricName
+        in: path
+        description: metricName
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricResponseV15'
+  /v15/metrics:
+    get:
+      tags:
+      - Metrics API - Version 15
+      summary: Get All the Metrics
+      operationId: get__v15_metrics
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponseV15'
+  /v15/metrics/monitoring/health:
+    get:
+      tags:
+      - Metrics API - Version 15
+      summary: Health Check for the Metrics Service
+      operationId: get__v15_metrics_monitoring_health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+  /v15/metrics/status:
+    get:
+      tags:
+      - Metrics API - Version 15
+      summary: Get the Metrics Service Status
+      operationId: get__v15_metrics_status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+components:
+  schemas:
+    MetricsResponseV15:
+      type: object
+      properties:
+        metricResponses:
+          type: array
+          description: A collection of available metrics
+          items:
+            $ref: '#/components/schemas/MetricResponseV15'
+      description: A collection of available metrics
+    MetricResponseV15:
+      type: object
+      properties:
+        metricName:
+          type: string
+          description: The metric name. Also acts as a unique identifier.
+        displayName:
+          type: string
+          description: A name that can be used for displaying the metric in UI.
+        type:
+          type: string
+          description: The type of the metric value.
+        higherIsBetter:
+          type: boolean
+          description: Whether a higher value is better. For example, higher clicks is better, higher average click rank is bad. A null value indicates that it depends on the context.
+        percentage:
+          type: boolean
+          description: Whether the metric must be interpreted as a percentage.
+        summable:
+          type: boolean
+          description: Whether the metric value is summable.
+        eventTypes:
+          uniqueItems: true
+          type: array
+          description: The list of event types that might be used to calculate this metric.
+          items:
+            type: string
+            description: The list of event types that might be used to calculate this metric.
+        availableInVisit:
+          type: boolean
+          description: Whether the dimension is available in a visit's statistics.
+      description: The details of a metric.
+    StatusResponse:
+      type: object
+      description: Service's status information
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

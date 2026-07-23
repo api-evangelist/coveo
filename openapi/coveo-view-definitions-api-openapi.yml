@@ -1,0 +1,161 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities View Definitions API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: View Definitions
+paths:
+  /api/preview/organizations/{organizationId}/catalog-management/catalogs/{catalogId}/view-definitions:
+    get:
+      tags:
+      - View Definitions
+      summary: Get View Definitions for a Catalog
+      description: 'Retrieves the view definitions for a specific catalog. </br></br>**Required privilege:** Catalogs - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"CATALOG","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getViewDefinitions
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: catalogId
+        in: path
+        description: The unique identifier of the [catalog](https://docs.coveo.com/en/3143/).
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: View definitions retrieved successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ViewDefinitionsModel'
+        '404':
+          description: Organization or catalog not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ViewDefinitionsModel'
+      x-pretty-name: getViewDefinitions
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: CATALOG
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/catalog-management/catalogs/paramId/view-definitions_get
+    put:
+      tags:
+      - View Definitions
+      summary: Update View Definitions for a Catalog
+      description: 'Updates the view definitions for a specific catalog. This replaces all existing view definitions.</br></br>**Required privilege:** Catalogs - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"CATALOG","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: putViewDefinitions
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: catalogId
+        in: path
+        description: The unique identifier of the [catalog](https://docs.coveo.com/en/3143/).
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViewDefinitionsModel'
+        required: true
+      responses:
+        '200':
+          description: View definitions updated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ViewDefinitionsModel'
+        '404':
+          description: Organization or catalog not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ViewDefinitionsModel'
+      x-pretty-name: putViewDefinitions
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: CATALOG
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: CATALOG
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /api/preview/organizations/paramId/catalog-management/catalogs/paramId/view-definitions_put
+components:
+  schemas:
+    ViewDefinitionsModel:
+      required:
+      - viewDefinitions
+      type: object
+      properties:
+        viewDefinitions:
+          maxItems: 50
+          minItems: 0
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/ViewDefinitionEntry'
+    ViewDefinitionEntry:
+      type: object
+      properties:
+        field:
+          type: string
+        key:
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

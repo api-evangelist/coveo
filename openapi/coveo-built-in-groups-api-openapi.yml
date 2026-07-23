@@ -1,0 +1,129 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Built-in Groups API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Built-in Groups
+paths:
+  /rest/organizations/{organizationId}/defaultgroups:
+    get:
+      tags:
+      - Built-in Groups
+      summary: List Built-in Groups
+      description: 'Lists all the built-in [groups](https://docs.coveo.com/en/2867/) in an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: Built-in groups
+        url: https://docs.coveo.com/en/1980/manage-an-organization/manage-member-access#built-in-groups
+      operationId: getDefaultGroups
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DefaultGroupModel'
+      x-pretty-name: getDefaultGroups
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/defaultgroups_get
+components:
+  schemas:
+    PrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
+      readOnly: true
+      externalDocs:
+        description: Privilege reference
+        url: https://docs.coveo.com/en/1707/
+    DefaultGroupModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the built-in [group](https://docs.coveo.com/en/2867/).
+          example: myorg-administrators-feioshf3w3fi4535
+        displayName:
+          type: string
+          description: The display name of the built-in [group](https://docs.coveo.com/en/2867/).
+          example: Administrators
+        deletable:
+          type: boolean
+          description: Whether the built-in group can be deleted.
+          example: false
+        privileges:
+          uniqueItems: true
+          type: array
+          description: The [privileges](https://docs.coveo.com/en/228/) of the built-in [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        groupType:
+          type: string
+          description: The Group type for the given group.
+          example: CUSTOM
+          enum:
+          - CUSTOM
+          - ADMINISTRATOR
+          - MCP_SEARCH_USERS
+      description: A built-in [group](https://docs.coveo.com/en/2867/)
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

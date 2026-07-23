@@ -1,0 +1,192 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Administration API - Version 15 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Administration API - Version 15
+paths:
+  /v15/admin/account:
+    get:
+      tags:
+      - Administration API - Version 15
+      summary: Get an Account
+      operationId: get__v15_admin_account
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponseV15'
+    put:
+      tags:
+      - Administration API - Version 15
+      summary: Edit an Account
+      operationId: put__v15_admin_account
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      requestBody:
+        description: The account information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountInfoModelV15'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponseV15'
+  /v15/admin/account/strictValidationTest:
+    get:
+      tags:
+      - Administration API - Version 15
+      summary: Get Example Values That Would Be Rejected by Strict Validation for the Specified Dimension
+      description: This endpoint is deprecated and will be removed in April 2025.
+      operationId: get__v15_admin_account_strictValidationTest
+      parameters:
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: d
+        in: query
+        description: The dimension to fetch.
+        required: true
+        schema:
+          type: string
+      - name: p
+        in: query
+        description: The response's page to access, starting at 1.
+        schema:
+          type: integer
+          format: int32
+      - name: n
+        in: query
+        description: The number of results to include in a page.
+        schema:
+          type: integer
+          format: int32
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrictValidationTestResponseV15'
+      deprecated: true
+components:
+  schemas:
+    AccountResponseV15:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the account
+        enabled:
+          type: boolean
+          description: Whether the account is enabled in Usage Analytics
+        status:
+          type: string
+          description: The status of the account. Can be CREATING, AVAILABLE or DELETING
+          enum:
+          - AVAILABLE
+          - CREATING
+          - DELETING
+          - AVAILABLE
+          - CREATING
+          - DELETING
+        internalEventIps:
+          uniqueItems: true
+          type: array
+          description: A set of IP addresses or CIDR blocks identifying the origin of events qualified as 'internal'
+          items:
+            type: string
+            description: A set of IP addresses or CIDR blocks identifying the origin of events qualified as 'internal'
+        useStrictFieldValidation:
+          type: boolean
+          description: 'Deprecated. Will be removed in April 2025.
+
+
+            Whether to use the strict field validation on incoming events.'
+      description: The response to get and edit account operations
+    AccountInfoModelV15:
+      type: object
+      properties:
+        internalEventIps:
+          uniqueItems: true
+          type: array
+          description: A set of IP addresses or CIDR blocks from which events will be considered internal.
+          items:
+            type: string
+            description: A set of IP addresses or CIDR blocks from which events will be considered internal.
+        useStrictFieldValidation:
+          type: boolean
+          description: 'Deprecated. Will be removed in April 2025.
+
+
+            Whether to use the strict field validation on incoming events.'
+      description: Account informations
+    StrictValidationTestResponseV15:
+      required:
+      - dimensionName
+      - validationTestResults
+      type: object
+      properties:
+        dimensionName:
+          type: string
+          description: The name of the dimension
+        validationTestResults:
+          type: array
+          description: The rejected values
+          items:
+            type: object
+            additionalProperties:
+              type: object
+              description: The rejected values
+            description: The rejected values
+      description: Values that would be excluded by the strict validation for the specified dimension
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

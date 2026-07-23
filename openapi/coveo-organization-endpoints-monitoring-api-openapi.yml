@@ -1,0 +1,385 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Organization Endpoints Monitoring API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Organization Endpoints Monitoring
+paths:
+  /rest/monitoring/global/organizations/{organizationId}/usage/regions:
+    get:
+      tags:
+      - Organization Endpoints Monitoring
+      summary: Get Usage Per Region for an Organization.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getRegionUsage
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: numberOfDaysToInclude
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 7
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RegionUsageModel'
+      x-pretty-name: getRegionUsage
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/monitoring/global/organizations/paramId/usage/regions_get
+  /rest/monitoring/global/organizations/{organizationId}/search-hubs/usage:
+    get:
+      tags:
+      - Organization Endpoints Monitoring
+      summary: Get the Search Hubs Usage for an Organization.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSearchHubUsage
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: hostname
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: numberOfDaysToInclude
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 7
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 25
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelSearchHubUsageDetailsModel'
+      x-pretty-name: getSearchHubUsage
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/monitoring/global/organizations/paramId/search-hubs/usage_get
+  /rest/monitoring/global/organizations/{organizationId}/endpoints/usage:
+    get:
+      tags:
+      - Organization Endpoints Monitoring
+      summary: Get the Endpoints Usage for an Organization.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getEndpointUsage
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: numberOfDaysToInclude
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 7
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EndpointUsageModel'
+      x-pretty-name: getEndpointUsage
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/monitoring/global/organizations/paramId/endpoints/usage_get
+  /rest/monitoring/global/organizations/{organizationId}/endpoints/readiness:
+    get:
+      tags:
+      - Organization Endpoints Monitoring
+      summary: Get the Customer Endpoint Usage Status for an Organization.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCustomerEndpointUsageStatus
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: numberOfDaysToInclude
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 7
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CustomerEndpointUsageStatusModel'
+      x-pretty-name: getCustomerEndpointUsageStatus
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/monitoring/global/organizations/paramId/endpoints/readiness_get
+components:
+  schemas:
+    EndpointUsageRequestDetailsModel:
+      type: object
+      properties:
+        totalRequestPercentage:
+          type: number
+          format: double
+        blockedRequestPercentage:
+          type: number
+          format: double
+    EndpointUsageDetailsModel:
+      type: object
+      properties:
+        hostname:
+          type: string
+        requestDetails:
+          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
+    EndpointUsageDetailsPerServiceModel:
+      type: object
+      properties:
+        recommendedEndpointDetails:
+          $ref: '#/components/schemas/EndpointUsageDetailsModel'
+        wrongEndpointsDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/WrongEndpointUsageDetailsModel'
+        otherEndpointsDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/EndpointUsageDetailsModel'
+    PageModelSearchHubUsageDetailsModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchHubUsageDetailsModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    EndpointUsageModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        customerEndpointUsageStatus:
+          $ref: '#/components/schemas/CustomerEndpointUsageStatusModel'
+        searchDetails:
+          $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
+        analyticsDetails:
+          $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
+    SearchHubUsageDetailsModel:
+      type: object
+      properties:
+        searchHub:
+          type: string
+        lastUsageDate:
+          type: string
+          format: date
+    RegionUsageDetailsModel:
+      type: object
+      properties:
+        region:
+          type: string
+          enum:
+          - ca-central-1
+          - ca-west-1
+          - us-gov-west-1
+          - us-gov-east-1
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - sa-east-1
+          - eu-north-1
+          - eu-south-1
+          - eu-south-2
+          - eu-central-1
+          - eu-central-2
+          - eu-west-1
+          - eu-west-2
+          - eu-west-3
+          - me-south-1
+          - me-central-1
+          - ap-northeast-1
+          - ap-northeast-2
+          - ap-northeast-3
+          - ap-south-1
+          - ap-south-2
+          - ap-southeast-1
+          - ap-southeast-2
+          - ap-southeast-3
+          - ap-southeast-4
+          - ap-southeast-5
+          - ap-southeast-6
+          - ap-southeast-7
+          - ap-east-1
+          - ap-east-2
+          - cn-north-1
+          - cn-northwest-1
+          - af-south-1
+          - il-central-1
+          - mx-central-1
+          - unknown-region
+        organizationRegionType:
+          type: string
+          enum:
+          - MAIN
+          - SATELLITE
+        totalRequestPercentage:
+          type: number
+          format: double
+    WrongEndpointUsageDetailsModel:
+      type: object
+      properties:
+        hostname:
+          type: string
+        requestDetails:
+          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
+        reason:
+          type: string
+          enum:
+          - DEPRECATED_ENDPOINT
+          - USING_PLATFORM_ENDPOINT_FOR_ANALYTICS
+          - USING_SEARCH_ENDPOINT_FOR_ANALYTICS
+          - USING_ADMIN_CUSTOM_ENDPOINT_FOR_SEARCH
+          - WRONG_ORGANIZATION
+          - USING_SEARCH_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
+          - USING_ANALYTICS_ENDPOINT_FOR_SEARCH
+          - USING_ANALYTICS_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
+        blockedAfter:
+          type: string
+          format: date-time
+    RegionUsageModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        regionUsageDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegionUsageDetailsModel'
+    CustomerEndpointUsageStatusModel:
+      type: object
+      properties:
+        readyForSearch:
+          type: boolean
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,285 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Metadata API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Metadata
+paths:
+  /rest/organizations/{organizationId}/sources/{sourceId}/metadata:
+    get:
+      tags:
+      - Metadata
+      summary: Retrieve Metadata Report for a Source
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE_METADATA","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSourceMetadataReport
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: filter
+        in: query
+        description: Optional filter string. Must be at least 2 characters long to be applied.
+        required: false
+        schema:
+          type: string
+      - name: sortBy
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ASC
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MetadataReportPageModel'
+      x-pretty-name: getSourceMetadataReport
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      - owner: PLATFORM
+        targetDomain: SOURCE_METADATA
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/metadata_get
+    post:
+      tags:
+      - Metadata
+      summary: Create Metadata Report for a Source
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE_METADATA","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createMetadataReport
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: createMetadataReport
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      - owner: PLATFORM
+        targetDomain: SOURCE_METADATA
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/metadata_post
+  /rest/organizations/{organizationId}/sources/{sourceId}/metadata/status:
+    get:
+      tags:
+      - Metadata
+      summary: Get the Status of Metadata Reports for a Source
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE_METADATA","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSourceMetadataStatus
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SourceMetadataStatusModel'
+      x-pretty-name: getSourceMetadataStatus
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      - owner: PLATFORM
+        targetDomain: SOURCE_METADATA
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/metadata/status_get
+components:
+  schemas:
+    MetadataValueModel:
+      type: object
+      properties:
+        metadataValue:
+          type: object
+        count:
+          type: integer
+          format: int32
+    SourceMetadataStatusModel:
+      type: object
+      properties:
+        sampleAvailable:
+          type: boolean
+        reportGenerationInProgress:
+          type: boolean
+        reportAvailable:
+          type: boolean
+    SourceMetadataModel:
+      type: object
+      properties:
+        key:
+          type: string
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataValueModel'
+        count:
+          type: integer
+          format: int32
+        origin:
+          type: string
+        isMapped:
+          type: boolean
+          deprecated: true
+        indexedBy:
+          type: string
+          enum:
+          - NONE
+          - FIELD
+          - MAPPING
+    MetadataReportPageModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceMetadataModel'
+        creationDate:
+          type: string
+          format: date-time
+        expirationDate:
+          type: string
+          format: date-time
+        sampledDocumentCount:
+          type: integer
+          format: int32
+        documentErrorCount:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        totalEntries:
+          type: integer
+          format: int64
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

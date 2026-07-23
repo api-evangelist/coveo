@@ -1,0 +1,882 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Case Assist API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Case Assist
+  x-displayName: Case Assist
+paths:
+  /rest/organizations/{organizationId}/caseassists/{caseAssistId}:
+    get:
+      tags:
+      - Case Assist
+      summary: Show Case Assist Configuration
+      description: Shows a case assist configuration in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br /><b>Required privilege:</b> Customer Service - Case assist configuration - View
+      operationId: getCaseAssistConfiguration
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: caseAssistId
+        in: path
+        description: The unique identifier of the target case assist configuration.<br /><b>Example:</b> `812efd5e-a7e3-49d5-8f1d-81be8e739b70`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+    put:
+      tags:
+      - Case Assist
+      summary: Update Case Assist Configuration
+      description: Updates a case assist configuration in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br /><b>Required privilege:</b> Customer Service - Case assist configuration - Edit
+      operationId: updateCaseAssistConfiguration
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: caseAssistId
+        in: path
+        description: The unique identifier of the target case assist configuration.<br /><b>Example:</b> `812efd5e-a7e3-49d5-8f1d-81be8e739b70`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestCaseAssistConfigurationRequest'
+        required: true
+      responses:
+        '204':
+          description: No Content
+          content: {}
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - Case Assist
+      summary: Delete Case Assist Configuration
+      description: Deletes a case assist configuration in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br /><b>Required privilege:</b> Customer Service - Case assist configuration - Edit
+      operationId: deleteCaseAssistConfiguration
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: caseAssistId
+        in: path
+        description: The unique identifier of the target case assist configuration.<br /><b>Example:</b> `812efd5e-a7e3-49d5-8f1d-81be8e739b70`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+          content: {}
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/caseassists/{caseAssistId}/classify:
+    post:
+      tags:
+      - Case Assist
+      summary: Request Classifications
+      description: Requests field value suggestions for a case.<br /><br /><b>Required privilege:</b> Customer Service - Use case assist - Allowed<br/>
+      operationId: postClassify
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: caseAssistId
+        in: path
+        description: The unique identifier of the target case assist configuration.<br /><b>Example:</b> `812efd5e-a7e3-49d5-8f1d-81be8e739b70`
+        required: true
+        schema:
+          type: string
+      - name: debug
+        in: query
+        description: Whether to include an execution report for debugging purposes.
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestCaseAssistContext'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestClassification'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/caseassists/preview/classify:
+    post:
+      tags:
+      - Case Assist
+      summary: Request Classifications Preview
+      description: Requests field value suggestions preview for a case and configuration.<br /><br /><b>Required privilege:</b><ul><li>Customer Service - Use case assist - Allowed</li><li>Customer Service - Case assist configuration - Edit</li><li>Search - All Content - View</li></ul>
+      operationId: postClassifyPreview
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: debug
+        in: query
+        description: Whether to include an execution report for debugging purposes.
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/PreviewClassificationRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestClassification'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/caseassists/{caseAssistId}/documents/suggest:
+    post:
+      tags:
+      - Case Assist
+      summary: Request Document Suggestions
+      description: Requests document suggestions for a case.<br /><br /><b>Required privilege:</b> Customer Service - Use case assist - Allowed
+      operationId: getSuggestDocument
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: caseAssistId
+        in: path
+        description: The unique identifier of the target case assist configuration.<br /><b>Example:</b> `812efd5e-a7e3-49d5-8f1d-81be8e739b70`
+        required: true
+        schema:
+          type: string
+      - name: debug
+        in: query
+        description: Whether to include an execution report for debugging purposes.
+        schema:
+          type: boolean
+          default: false
+      - name: numberOfResults
+        in: query
+        description: The maximum number of results to return.<br />**Must be in range:** `[1, 100]`
+        schema:
+          type: integer
+          format: int32
+          default: 5
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestCaseAssistContext'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestDocumentSuggestions'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/caseassists/preview/documents/suggest:
+    post:
+      tags:
+      - Case Assist
+      summary: Request Document Suggestions Preview
+      description: Requests document suggestions preview for a case and configuration.<br /><br /><b>Required privilege:</b><ul><li>Customer Service - Use case assist - Allowed</li><li>Customer Service - Case assist configuration - Edit</li></ul>
+      operationId: getSuggestDocumentPreview
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: debug
+        in: query
+        description: Whether to include an execution report for debugging purposes.
+        schema:
+          type: boolean
+          default: false
+      - name: numberOfResults
+        in: query
+        description: The maximum number of results to return.<br />**Must be in range:** `[1, 100]`
+        schema:
+          type: integer
+          format: int32
+          default: 5
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/PreviewDocumentSuggestionRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestDocumentSuggestions'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/caseassists:
+    get:
+      tags:
+      - Case Assist
+      summary: List Case Assist Configurations
+      description: Lists all case assist configurations in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br /><b>Required privilege:</b> Customer Service - Case assist configuration - View
+      operationId: getAllCaseAssistConfigurations
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The 0-based number of the page of configurations to list.<br /><b>Default:</b> `0`
+        schema:
+          type: integer
+          format: int32
+      - name: perPage
+        in: query
+        description: The maximum number of configurations to include per page.<br /><b>Default:</b> `100`
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestListOfCaseAssistConfigurations'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+    post:
+      tags:
+      - Case Assist
+      summary: Create Case Assist Configuration
+      description: Creates a case assist configuration in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br/><br/><b>Required privilege:</b><ul><li>Customer Service - Case assist configuration - Edit</li><li>Search - All Content - View</li></ul>
+      operationId: createCaseAssistConfiguration
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RestCaseAssistConfigurationRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+      x-codegen-request-body-name: body
+  /rest/organizations/{organizationId}/caseassists/projects/get:
+    get:
+      tags:
+      - Case Assist
+      summary: Get Case Assist Configurations by Project
+      description: Retrieves case assist configurations associated with a specific project in a [Coveo Cloud organization](https://docs.coveo.com/en/185/).<br /><br /><b>Required privilege:</b> Customer Service - Case assist configuration - View
+      operationId: getCaseAssistConfigurationsByProject
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br /><b>Example:</b> `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: query
+        description: The unique identifier of the project for which to retrieve case assist configurations.
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The 0-based number of the page of configurations to list.<br /><b>Default:</b> `0`
+        schema:
+          type: integer
+          format: int32
+      - name: perPage
+        in: query
+        description: The maximum number of configurations to include per page.<br /><b>Default:</b> `100`
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestListOfCaseAssistConfigurationsWithProjects'
+      deprecated: false
+      security:
+      - oauth2:
+        - full
+components:
+  schemas:
+    RestClassificationConfiguration:
+      required:
+      - fieldsToPredict
+      - filter
+      - strategy
+      type: object
+      properties:
+        strategy:
+          type: string
+          description: 'The strategy with which to retrieve field value suggestions.<br /><b>Allowed value:</b><br /> - `Some`: Use the [`$some` query extension](https://docs.coveo.com/en/1462/#some).<br /> - `Axon`: Use a Case Classification Machine Learning Model.'
+          example: Some
+          enum:
+          - Some
+        filter:
+          type: string
+          description: A [filter query expression](https://docs.coveo.com/en/1552/) that restricts the items from which to base the field value suggestions.
+          example: '@objecttype==case'
+        fieldsToPredict:
+          type: array
+          description: The [fields](https://docs.coveo.com/en/200/) for which to retrieve suggestions.<br /><b>Example:</b> `[{"name":"opportunitytype"}]`
+          example:
+          - name: opportunitytype
+          - name: issuetype
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: A field name.
+      description: A document classification configuration.
+    PreviewDocumentSuggestionRequest:
+      required:
+      - configuration
+      - fields
+      type: object
+      properties:
+        allOf:
+        - $ref: '#/components/schemas/RestCaseAssistContext'
+        configuration:
+          $ref: '#/components/schemas/DocumentSuggestionConfiguration'
+    RestClassification:
+      type: object
+      properties:
+        fields:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              predictions:
+                type: array
+                description: The field value suggestions.
+                items:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                      description: The field value suggestion.
+                      example: Electrical
+                    confidence:
+                      type: number
+                      description: 'A floating-point number between `0` and `1` indicating the level of certainty that the suggested field value is actually relevant to the case.<br />Minimum: `0.0` Maximum: `1.0`'
+                      format: float
+                      example: 0.9
+                    id:
+                      type: string
+                      description: The unique identifier of the predicted value.
+                      example: 5ac61db7-49ab-50be-b9c5-d62dd6083fde
+          example:
+            opportunitytype:
+              predictions:
+              - value: Propane
+                confidence: 0.9178082346916199
+                id: c38dec1f-349e-5dc1-bc24-4de96dc53bbd
+            issuetype:
+              predictions:
+              - value: Ignition
+                confidence: 0.8325673948382833
+                id: 7ac53b91-afd2-5472-8f6d-e829a0a8232f
+              - value: Controller
+                confidence: 0.5364940382730438
+                id: 7cf52516-3dc6-5a1a-ba2e-d05b0c255c1c
+        responseId:
+          type: string
+          description: The unique identifier of the response.
+          example: 123e4567-e89b-12d3-a456-426614174000
+    DocumentSuggestionConfiguration:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the case assist configuration.<br />
+          example: myCaseAssistConfiguration
+        documentSuggestionConfiguration:
+          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
+      description: A mock case assist configuration to test a document suggestions configuration.
+    RestCaseAssistConfigurationWithProject:
+      allOf:
+      - $ref: '#/components/schemas/RestClassificationConfiguration'
+      - type: object
+        properties:
+          projectIds:
+            type: array
+            description: Each item is the unique identifier of a project associated with the case assist configuration.
+            items:
+              type: string
+        required:
+        - projectIds
+    CaseClassificationConfiguration:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the case assist configuration.<br />
+          example: myCaseAssistConfiguration
+        classificationConfigurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestClassificationConfiguration'
+      description: A mock case assist configuration to test a case classification configuration.
+    RestDocumentSuggestionConfiguration:
+      required:
+      - filter
+      - pipeline
+      - strategy
+      type: object
+      properties:
+        strategy:
+          type: string
+          description: 'The strategy with which to retrieve document suggestions.<br /><b>Allowed value:</b><br /> - `ITD`: Use [Intelligent Term Detection](https://docs.coveo.com/en/207/).'
+          example: ITD
+          enum:
+          - ITD
+        filter:
+          type: string
+          description: A [filter query expression](https://docs.coveo.com/en/1552/) to restrict returned items.
+          example: '@objecttype==case'
+        pipeline:
+          type: string
+          description: The name of a [query pipeline](https://docs.coveo.com/en/180/) to use to retrieve document suggestions. The query pipeline must support the strategy defined in the `strategy` parameter.<br />For example, if you have selected `ITD` as `strategy` value, you must provide the name of a pipeline that has an [ITD](https://docs.coveo.com/en/207/)-enabled [Coveo ML](https://docs.coveo.com/en/188/) [ART](https://docs.coveo.com/en/1013/) model association.
+          example: myPipelineName
+      description: A document suggestions configuration.
+    Analytics:
+      type: object
+      nullable: true
+      properties:
+        capture:
+          type: boolean
+          description: 'Whether the search api call should be tracked for analytics and machine learning purposes.
+
+            When set to `true`, be sure to set the `actionCause` parameter.
+
+            See [Standard actions and Usage Analytics reference](docs.coveo.com/en/1389)).'
+        trackingId:
+          type: string
+          description: A value to identify which web property an event is related to.
+        userId:
+          type: string
+          description: The ID of the user who is currently logged in. If not present, this ID is obtained from the authentication token.
+        clientId:
+          type: string
+          description: 'A GUID which represents the current client.
+
+
+            If your implementation uses the Atomic or Headless libraries, or newer versions of the JavaScript Search Framework, then the [client ID](https://docs.coveo.com/en/masb0234/) is generated automatically in client-side code. This GUID is held in a browser''s local storage as well as a top level domain first-party cookie (`coveo_visitorId`) that expires after 1 year. **Note:** The cookie takes precedence over the value in the browser''s local storage.
+
+
+            If you have a custom Coveo implementation, you will have to generate a [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)>)-formatted GUID. You will need to send this ID as `analytics.clientId` in every event that is sent to Coveo UA and the Search API.
+
+
+            Coveo Machine Learning models may use this information to provide contextually relevant output.
+
+
+            **Note** The `clientId` replaces the deprecated `visitorId`. For compatibility, the cookie and local storage values are still named `coveo_visitorId`.'
+        documentLocation:
+          type: string
+          description: 'The URL of the current page or component.
+
+
+            If not present, the referrer is obtained from the [Referer](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer) header.
+
+
+            **Note**: This information can be obtained from `coveo.analytics.js`.'
+        documentReferrer:
+          type: string
+          description: 'Typically the URL of the page that linked to the search interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).
+
+
+            Coveo Machine Learning models may use this information to provide contextually relevant output.
+
+
+            **Note**: This information can be obtained from `coveo.analytics.js`.'
+        pageId:
+          description: 'A GUID representing the page ID.
+
+
+            **Note**: This information can be obtained from `coveo.analytics.js`.'
+          anyOf:
+          - type: string
+            nullable: true
+          - type: integer
+        userIp:
+          type: string
+          description: 'The user IP. If not present, the IP is obtained from the [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For) and [Forwarded](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded) headers.
+
+
+            **Note**: This information is required when endpoints are behind a proxy.
+
+
+            **Example**: `127.0. 0.1`'
+        clientRequestId:
+          type: string
+          description: 'A GUID generated by the client representing the current request.
+
+
+            This information is used to identify operations across different apis related to the same request.'
+        clientTimestamp:
+          type: string
+          description: Client ISO 8601 timestamp with milliseconds.
+        userAgent:
+          type: string
+          description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.
+
+
+            **Note**: This information is required when endpoints are behind a proxy.'
+        actionCause:
+          type: string
+          description: 'The type of operation that triggered this event.
+
+            See [Standard actions and Usage Analytics reference](docs.coveo.com/en/1389)).'
+          example: facetSelect
+        originContext:
+          type: string
+          example: CommunitySearch
+          description: The origin of the event. Used to specify the deployment from which the user performs the action. Suggested values are Search, InternalSearch, CommunitySearch, or the originLevel1 value
+        customData:
+          type: object
+          description: 'The user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters.
+
+            Whitespaces in keys are converted to underscores. Uppercase characters in keys are converted to lowercase characters.
+
+            The value could be any valid JSON, but it is handled as string over Coveo usage analytics. It is highly recommended that you
+
+            create your custom dimension before adding customData'
+        configId:
+          type: string
+          description: 'An optional external reference to a use-case specific search configuration.
+
+            These configurations are maintained by LOBs and the search api has no knowledge of them.
+
+            This field can be used by LOBs to break down search statistics in LOB specific reporting.
+
+            This field is not present on non-captured search calls.'
+        source:
+          description: Defines one or more client side libraries that generated the analytics event. The format should be the library's name followed by '@', and then the version. For example, '[custom.library.js@2.0.0]'.
+          type: array
+          items:
+            type: string
+          x-coveo-internal: true
+    RestCaseAssistContext:
+      type: object
+      properties:
+        analytics:
+          $ref: '#/components/schemas/Analytics'
+        visitorId:
+          $ref: '#/components/schemas/visitorId'
+        clientId:
+          $ref: '#/components/schemas/clientId'
+        locale:
+          $ref: '#/components/schemas/locale'
+        fields:
+          $ref: '#/components/schemas/Fields'
+        context:
+          $ref: '#/components/schemas/ContextAttributes'
+    RestDocumentSuggestions:
+      required:
+      - documents
+      - responseId
+      - totalCount
+      type: object
+      properties:
+        documents:
+          type: array
+          description: The document suggestions.
+          items:
+            required:
+            - clickUri
+            - excerpt
+            - fields
+            - hasHtmlVersion
+            - title
+            - uniqueId
+            type: object
+            properties:
+              title:
+                type: string
+                description: The document title.
+                example: GC3000 Series Propane Generator Ignition
+              clickUri:
+                type: string
+                description: The document clickable URI.
+                example: http://www.salesforce.com/org:organization/object:Solution/record:5013h000000tPmnAAE
+              excerpt:
+                type: string
+                description: An excerpt from the document.
+                example: The GC3000 series propane generators need to be started up using the following process if the ignition fails at the first try
+              uniqueId:
+                type: string
+                description: The unique ID of the document.
+                example: 84.72597$http://www.salesforce.com/org:organization/object:Solution/record:5013h000000tPmnAAE:2
+              hasHtmlVersion:
+                type: boolean
+                description: Whether the index contains an HTML version of this item.
+                example: true
+              fields:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: GC3000 Series Propane Generator Ignition
+                  urihash:
+                    type: string
+                    example: EFQOedWwU1M5af37
+                  '...':
+                    type: object
+                    example: '...'
+                description: The `raw` fields of the item.
+        totalCount:
+          type: integer
+          description: The total number of suggestions.
+          format: int32
+          example: 1
+        responseId:
+          type: string
+          description: The unique identifier of the response.
+          example: 123e4567-e89b-12d3-a456-426614174000
+    RestCaseAssistConfigurationRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the case assist configuration.<br />
+          example: myCaseAssistConfiguration
+        documentSuggestionConfiguration:
+          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
+        classificationConfigurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestClassificationConfiguration'
+      description: A case assist configuration.
+    ContextAttributes:
+      type: object
+      additionalProperties:
+        type: string
+        description: The value of the attribute.
+        example: GC3000 Series
+      description: A dictionary where each key is the name of a context attribute that pertains to the target case, and each value is a string that describes the content of that context attribute.
+      example:
+        product: Propane Generator
+        subproduct: GC3000 Series
+    RestCaseAssistConfigurationResponse:
+      required:
+      - classificationConfigurations
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the case assist configuration.
+          example: d9ff783c-574f-4d22-838c-df2c18a0c2b3
+        name:
+          type: string
+          description: The name of the case assist configuration.
+          example: myCaseAssistConfiguration
+        documentSuggestionConfiguration:
+          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
+        classificationConfigurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestClassificationConfiguration'
+      description: A case assist configuration.
+    RestListOfCaseAssistConfigurations:
+      required:
+      - configurations
+      type: object
+      properties:
+        configurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
+        totalEntries:
+          type: integer
+          description: The total number of configurations.
+          format: int32
+          example: 1
+        totalPages:
+          type: integer
+          description: The total number of pages.
+          format: int32
+          example: 1
+    Fields:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          value:
+            type: string
+            description: The value of the field.
+            example: My GC3000 series propane generator won't start
+      description: 'A dictionary where each key is the name of a field that pertains to the target case, and each value is an object that describes the content of that field.<br /><b>Example:</b> `{"subject": {"value": "GC3000 won''t start"}, "description": {"value": "My GC3000 series propane generator won''t start"}`}'
+      example:
+        subject:
+          value: GC3000 won't start
+        description:
+          value: My GC3000 series propane generator won't start
+    visitorId:
+      type: string
+      description: <p>A GUID which represents the current user, who can either be authenticated or anonymous.</p> <p><code>visitorId</code> is deprecated and has been replaced by <a href="https://docs.coveo.com/en/masb0234/"><code>clientId</code><a> in newer versions of the Coveo UI libraries. For compatibility, the new first-party cookie and local storage values are still named <code>coveo_visitorId</code>.</p> <p>For older versions of the JavaScript Search Framework, the visitor ID is generated by the Coveo Usage Analytics service and stored in a non-expiring third-party cookie. <strong>Note:</strong> Third-party cookies <a href="https://docs.coveo.com/en/m54b9238/">have also been deprecated</a>. This is unrelated to the deprecation of <code>visitorId</code>.</p>
+      example: 5cb98953-9c13-42ff-8176-e6fcba6a50bf
+    PreviewClassificationRequest:
+      required:
+      - configuration
+      - fields
+      type: object
+      properties:
+        allOf:
+        - $ref: '#/components/schemas/RestCaseAssistContext'
+        configuration:
+          $ref: '#/components/schemas/CaseClassificationConfiguration'
+    clientId:
+      type: string
+      description: The <a href="https://docs.coveo.com/en/masb0234/"><code>clientId</code><a> identifies a user on a browser of a Coveo-powered search page and provides insight into the events they performed
+      example: 5cb98953-9c13-42ff-8176-e6fcba6a50bf
+    locale:
+      type: string
+      description: <p>The locale of the current user. Must comply with IETF's <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">BCP 47</a> definition.</p> <p>Coveo Machine Learning models use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the <code>$locale</code> object.</p> <p><strong>Note:</strong> When logging a Search Usage Analytics event, the <code>language</code> field of that event should match the language part of the <code>locale</code> value of the query (e.g., <code>en-US</code> in <code>locale</code> becomes <code>en</code> in <code>language</code>).</p>
+      example: en-US
+    RestCaseAssistConfigurationWithProjectResponse:
+      allOf:
+      - $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
+      - type: object
+        properties:
+          classificationConfigurations:
+            type: array
+            items:
+              $ref: '#/components/schemas/RestCaseAssistConfigurationWithProject'
+    RestListOfCaseAssistConfigurationsWithProjects:
+      required:
+      - configurations
+      type: object
+      properties:
+        configurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestCaseAssistConfigurationWithProjectResponse'
+        totalEntries:
+          type: integer
+          format: int32
+          description: The total number of configurations
+          example: 1
+        totalPages:
+          type: integer
+          format: int32
+          description: The total number of pages
+          example: 1
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,651 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Dimensions API - Version 14 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Dimensions API - Version 14
+paths:
+  /v14/dimensions/custom:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Get All the Custom Dimensions
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions_custom
+      parameters:
+      - name: includeOnlyParents
+        in: query
+        description: This will filter out dimensions which are covered by others. Only parent/master dimensions will be output
+        schema:
+          type: boolean
+          default: false
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DimensionResponseV14'
+      deprecated: true
+    post:
+      tags:
+      - Dimensions API - Version 14
+      summary: Create a Custom Dimension
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_dimensions_custom
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: The name of the custom dimension. It should start with the 'c_' prefix. If not present, the prefix will be added automatically.
+        schema:
+          type: string
+      - name: event
+        in: query
+        description: The types of event where this dimension will be added.
+        required: true
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+            - searches
+            - clicks
+            - custom_events
+      - name: updatePastEvents
+        in: query
+        description: Whether to update the custom dimension in past events.
+        deprecated: true
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        description: The custom dimension information.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomDimensionModelV15'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionResponseV14'
+      deprecated: true
+  /v14/dimensions/custom/{apiName}:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Get a Custom Dimension
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions_custom_{apiName}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: apiName
+        in: path
+        description: Format must be `EVENT.DIMENSION` where EVENT is the event type and DIMENSION is the name of the dimension.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionResponseV14'
+      deprecated: true
+    put:
+      tags:
+      - Dimensions API - Version 14
+      summary: Create or Edit a Custom Dimension
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: put__v14_dimensions_custom_{apiName}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: apiName
+        in: path
+        description: Format must be `EVENT.DIMENSION` where EVENT is the event type and DIMENSION is the name of the dimension.
+        required: true
+        schema:
+          type: string
+      - name: updatePastEvents
+        in: query
+        description: Whether to update the custom dimension in past events.
+        deprecated: true
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        description: The custom dimension information.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomDimensionModelV14'
+        required: true
+      responses:
+        '200':
+          description: The custom dimension has been edited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionResponseV14'
+        '201':
+          description: The custom dimension has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionResponseV14'
+      deprecated: true
+    delete:
+      tags:
+      - Dimensions API - Version 14
+      summary: Get a Custom Dimension
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: delete__v14_dimensions_custom_{apiName}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: apiName
+        in: path
+        description: Format must be `EVENT.DIMENSION` where EVENT is the event type and DIMENSION is the name of the dimension.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+      deprecated: true
+  /v14/dimensions/custom/{event}/suggestions:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Get a List of Dimensions That Have Data but Are Not Created Yet
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions_custom_{event}_suggestions
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        schema:
+          type: string
+      - name: event
+        in: path
+        description: The type of event for which to look for suggestions.
+        required: true
+        schema:
+          type: string
+          enum:
+          - searches
+          - clicks
+          - custom_events
+      - name: includeValueSamples
+        in: query
+        description: Whether value samples should be included in the response.
+        schema:
+          type: boolean
+          default: true
+      - name: depth
+        in: query
+        description: The number of events to look at when getting suggestions. A larger depth means more suggestions but also slower performance.
+        schema:
+          type: integer
+          format: int32
+          default: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomDimensionSuggestionsResponseV14'
+      deprecated: true
+  /v14/dimensions/custom/monitoring/health:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Health Check for the Custom Dimensions Service
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions_custom_monitoring_health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/dimensions/custom/status:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Get the Custom Dimensions Service Status
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions_custom_status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/dimensions/custom/{dimension}/values:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Get the Values for a Custom Dimension
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions_custom_{dimension}_values
+      parameters:
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: tz
+        in: query
+        description: Timezone used for calculations.
+        schema:
+          type: string
+          default: Z
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: dimension
+        in: path
+        description: The dimensions to fetch.
+        required: true
+        schema:
+          type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: p
+        in: query
+        description: The response's page to access, starting at 1.
+        schema:
+          type: integer
+          format: int32
+      - name: n
+        in: query
+        description: The number of result to include in a page.
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionValuesResponseV14'
+      deprecated: true
+  /v14/dimensions/{apiName}:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Get a Dimension
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions_{apiName}
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionResponseV14'
+      deprecated: true
+  /v14/dimensions:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Get All the Dimensions
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: includeOnlyParents
+        in: query
+        description: This will filter out dimensions which are covered by others. Only parent/master dimensions will be output
+        schema:
+          type: boolean
+          default: false
+      - name: includeCustom
+        in: query
+        description: Whether to include custom dimensions within the results.
+        schema:
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DimensionResponseV14'
+      deprecated: true
+  /v14/dimensions/monitoring/health:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Health Check for the Dimensions Service
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions_monitoring_health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/dimensions/status:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Get the Dimensions Service Status
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions_status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/dimensions/{dimension}/values:
+    get:
+      tags:
+      - Dimensions API - Version 14
+      summary: Get the Values for a Dimension
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_dimensions_{dimension}_values
+      parameters:
+      - name: from
+        in: query
+        description: from
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        schema:
+          type: string
+      - name: tz
+        in: query
+        description: Timezone used for calculations.
+        schema:
+          type: string
+          default: Z
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: dimension
+        in: path
+        description: The dimensions to fetch.
+        required: true
+        schema:
+          type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: p
+        in: query
+        description: The response's page to access, starting at 1.
+        schema:
+          type: integer
+          format: int32
+      - name: n
+        in: query
+        description: The number of result to include in a page.
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionValuesResponseV14'
+      deprecated: true
+components:
+  schemas:
+    CustomDimensionSuggestionResponseV14:
+      type: object
+      properties:
+        eventName:
+          type: string
+          description: The event type of the custom dimension
+        apiName:
+          type: string
+          description: The api name of the custom dimension
+        values:
+          uniqueItems: true
+          type: array
+          description: The existing values for the custom dimension
+          items:
+            type: string
+            description: The existing values for the custom dimension
+      description: Information regarding the custom dimension
+    CustomDimensionModelV14:
+      required:
+      - displayName
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the dimension
+          enum:
+          - TEXT
+          - NUMBER
+          - SHORT
+          - BOOLEAN
+          - DATE
+          - DATETIME
+          - TEXT
+          - NUMBER
+          - SHORT
+          - BOOLEAN
+          - DATE
+          - DATETIME
+        displayName:
+          type: string
+          description: The display name of the dimension Should be human readable
+      description: Additional required information to create a custom dimension
+    DimensionValuesResponseV14:
+      type: object
+      properties:
+        values:
+          type: array
+          description: The values for this dimension
+          items:
+            type: object
+            additionalProperties:
+              type: object
+              description: The values for this dimension
+            description: The values for this dimension
+      description: The values for this dimension
+    CustomDimensionModelV15:
+      required:
+      - displayName
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the dimension
+          enum:
+          - TEXT
+          - NUMBER
+          - SHORT
+          - BOOLEAN
+          - DATE
+          - DATETIME
+          - TEXT
+          - NUMBER
+          - SHORT
+          - BOOLEAN
+          - DATE
+          - DATETIME
+        displayName:
+          type: string
+          description: The display name of the dimension. Should be human readable
+        path:
+          type: array
+          description: 'Strings that correspond to the path that must be followed to fetch the desired value of the dimension in the custom_datas map. For example, let''s consider the following custom_datas map: ''{"a":{"b":"c"}}''. To select the value "c", the path would need to contain the elements "a" and "b".'
+          items:
+            type: string
+      description: Additional required information to create a custom dimension
+    StatusResponse:
+      type: object
+      description: Service's status information
+    CustomDimensionSuggestionsResponseV14:
+      required:
+      - suggestions
+      type: object
+      properties:
+        suggestions:
+          type: array
+          description: Information regarding the custom dimension
+          items:
+            $ref: '#/components/schemas/CustomDimensionSuggestionResponseV14'
+      description: Suggestions of custom dimensions that could be created
+    DimensionResponseV14:
+      required:
+      - apiNames
+      - custom
+      - displayName
+      - eventTypes
+      - returnName
+      - status
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the dimension
+          enum:
+          - TEXT
+          - NUMBER
+          - SHORT
+          - BOOLEAN
+          - DATE
+          - DATETIME
+        displayName:
+          type: string
+          description: The display name of the dimension
+        apiNames:
+          uniqueItems: true
+          type: array
+          description: A collection of possible names to use when querying the statistics service with this dimension
+          items:
+            type: string
+            description: A collection of possible names to use when querying the statistics service with this dimension
+        returnName:
+          type: string
+          description: The name of the dimension when returned by the statistics service
+        custom:
+          type: boolean
+          description: A flag indicating if the dimension is a custom dimension
+        availableInVisit:
+          type: boolean
+          description: Whether the dimension is available in a visit's statistics.
+        eventTypes:
+          uniqueItems: true
+          type: array
+          description: Indicates the type of events that this dimension can be attached to.
+          items:
+            type: string
+            description: Indicates the type of events that this dimension can be attached to.
+        status:
+          type: string
+          description: The status of the dimension
+          enum:
+          - AVAILABLE
+          - UPDATING
+      description: The details of a dimension
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

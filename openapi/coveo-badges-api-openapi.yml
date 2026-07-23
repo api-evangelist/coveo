@@ -1,0 +1,277 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Badges API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Badges
+paths:
+  /rest/organizations/{organizationId}/commerce/v2/tracking-ids/{trackingId}/badges:
+    post:
+      tags:
+      - Badges
+      summary: Get Badges for a Set of Placement IDs
+      description: 'Retrieve badges on products for a set of placements </br></br>**Required privilege:** Execute Query<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"SEARCH_API","targetDomain":"EXECUTE_QUERY","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: badges
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: trackingId
+        in: path
+        description: The unique identifier of the tracking target.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BadgeRequestModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/NonPaginatedProductResponseProductBadgeViewModel'
+      x-pretty-name: badges
+      x-required-privilege:
+        owner: SEARCH_API
+        targetDomain: EXECUTE_QUERY
+        targetId: '*'
+      x-required-privileges:
+      - owner: SEARCH_API
+        targetDomain: EXECUTE_QUERY
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/commerce/v2/tracking-ids/paramId/badges_post
+components:
+  schemas:
+    BadgeRequestModel:
+      required:
+      - context
+      - country
+      - currency
+      - language
+      - placementIds
+      type: object
+      properties:
+        language:
+          minLength: 1
+          type: string
+          description: An ISO 639-1 language code.
+          example: en
+        country:
+          minLength: 1
+          type: string
+          description: An ISO 3166-1 alpha-2 country code.
+          example: US
+        currency:
+          minLength: 1
+          type: string
+          description: An ISO 4217 currency code.
+          example: USD
+        placementIds:
+          maxItems: 5
+          minItems: 1
+          uniqueItems: true
+          type: array
+          description: The list of placement unique identifiers for which to retrieve badges. Maximum of 5 placement IDs allowed per request.
+          example:
+          - 36164bca-b489-4c42-8574-e1325d56d0be
+          - 47275dcb-c590-5d53-9685-f2436e67e1cf
+          items:
+            type: string
+            description: The list of placement unique identifiers for which to retrieve badges. Maximum of 5 placement IDs allowed per request.
+            format: uuid
+        context:
+          $ref: '#/components/schemas/BadgingContextModel'
+      description: The badge request containing placement identifiers and context information to retrieve badges for products.
+    BadgeViewModel:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The localized text displayed on the badge.
+          example: Bestseller!
+        backgroundColor:
+          type: string
+          description: The badge background color in the format `#RRGGBB`.
+          example: '#FFFFFF'
+        textColor:
+          type: string
+          description: The badge text color in the format `#RRGGBB`.
+          example: '#000000'
+        iconUrl:
+          type: string
+          description: The url of an icon to render with the badge text.
+          example: https://example.com/icon.png
+      description: The list of badges associated with this placement
+    NonPaginatedProductResponseProductBadgeViewModel:
+      type: object
+      properties:
+        products:
+          type: array
+          description: The list of products
+          items:
+            $ref: '#/components/schemas/ProductBadgeViewModel'
+    BadgingContextModel:
+      required:
+      - view
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserModel'
+        view:
+          $ref: '#/components/schemas/ViewModel'
+        cart:
+          type: array
+          description: The cart information.
+          items:
+            $ref: '#/components/schemas/CartItemModel'
+        source:
+          type: array
+          description: Defines one or more client side libraries that generated the analytics event. The format should be the library's name followed by '@', and then the version. For example, '[custom.library.js@2.0.0]'.
+          example:
+          - '@coveo/headless@2.61.0'
+          - custom.library.js@2.0.0
+          items:
+            minLength: 1
+            pattern: ^[^@]*@.*$
+            type: string
+            description: A context source
+            example: '@coveo/headless@2.61.0'
+        capture:
+          type: boolean
+          description: Whether the request should be tracked for analytics and machine learning purposes. When set to `true`, this will trigger a server-side event to be logged. When set to `false`, the server-side event will not be logged.
+          example: true
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+            description: Deprecated - The context labels.
+            example: '{"category":"garden > garden-tools > chainsaws","brand":"ACME"}'
+          description: Deprecated - The context labels.
+          example:
+            category: garden > garden-tools > chainsaws
+            brand: ACME
+        custom:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom context values under context.custom. Use this for context mapping.
+            example:
+              fitmentProducts:
+              - sku_123
+              - sku_456
+          description: Custom context values under context.custom. Use this for context mapping.
+          example:
+            fitmentProducts:
+            - sku_123
+            - sku_456
+        product:
+          $ref: '#/components/schemas/ProductItemModel'
+      description: Contextual information about the query.
+    UserModel:
+      type: object
+      properties:
+        userAgent:
+          type: string
+          description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.\n\n**Note**: This information is required when endpoints are behind a proxy.'
+          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
+      description: The user information.
+    CartItemModel:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The id of the product.
+          example: shoe-a1-red
+        quantity:
+          type: integer
+          description: The product quantity.
+          format: int32
+          example: 2
+      description: A cart item.
+    BadgePlacementViewModel:
+      type: object
+      properties:
+        placementId:
+          type: string
+          description: The placement unique identifier.
+          format: uuid
+          example: 36164bca-b489-4c42-8574-e1325d56d0be
+        badges:
+          type: array
+          description: The list of badges associated with this placement
+          items:
+            $ref: '#/components/schemas/BadgeViewModel'
+      description: The list of badge placements associated with this product.
+    ProductBadgeViewModel:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The product identifier.
+          example: 0000003035-45
+        badgePlacements:
+          type: array
+          description: The list of badge placements associated with this product.
+          items:
+            $ref: '#/components/schemas/BadgePlacementViewModel'
+      description: The list of products
+    ViewModel:
+      required:
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: The URL used to retrieve the products. Used as `documentLocation` for analytics purposes, which indicates the URL of the resource where the request originated.
+          example: https://acme.com/summersale
+        referrer:
+          type: string
+          description: Typically the URL of the page that linked to the interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Used as `documentReferrer` for analytics purposes.
+          nullable: true
+          example: https://example.com/
+      description: 'A collection of data points describing the view. Note: The term ''view'' is used instead of ''page'' to accommodate usage in contexts such as mobile apps.'
+    ProductItemModel:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The id of the product.
+          example: shoe-a1-red
+      description: The product ID used to generate the recommendations.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

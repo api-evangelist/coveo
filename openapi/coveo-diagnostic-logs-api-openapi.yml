@@ -1,0 +1,149 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Diagnostic Logs API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Diagnostic Logs
+paths:
+  /rest/organizations/{organizationId}/logrequests:
+    post:
+      tags:
+      - Diagnostic Logs
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CONNECTIVITY_DIAGNOSTIC_LOGS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createLogRequestForActivity
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resourceType
+        in: query
+        description: The type of the resource referenced in the request model. Possible values are SOURCE and SECURITY_PROVIDER.
+        required: false
+        schema:
+          type: string
+          default: SOURCE
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLogRequestModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ValueModelString'
+      x-pretty-name: createLogRequestForActivity
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CONNECTIVITY_DIAGNOSTIC_LOGS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CONNECTIVITY_DIAGNOSTIC_LOGS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/logrequests_post
+  /rest/organizations/{organizationId}/logrequests/{logRequestId}:
+    get:
+      tags:
+      - Diagnostic Logs
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CONNECTIVITY_DIAGNOSTIC_LOGS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getLogRequest
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: logRequestId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LogRequestModel'
+      x-pretty-name: getLogRequest
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CONNECTIVITY_DIAGNOSTIC_LOGS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CONNECTIVITY_DIAGNOSTIC_LOGS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/logrequests/paramId_get
+components:
+  schemas:
+    ValueModelString:
+      type: object
+      properties:
+        value:
+          type: string
+    CreateLogRequestModel:
+      type: object
+      properties:
+        resourceId:
+          type: string
+          description: Identifies the resource for which logs will be requested.
+        activityId:
+          type: string
+          description: Identifies the activity for which logs will be requested.
+      description: Specifies the resource and activity for a log request.
+    LogRequestModel:
+      type: object
+      properties:
+        url:
+          type: string
+        error:
+          type: string
+        state:
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

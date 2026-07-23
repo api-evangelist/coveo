@@ -1,0 +1,159 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Relevance Generative Answering Configuration API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Relevance Generative Answering Configuration
+paths:
+  /rest/organizations/{organizationId}/machinelearning/configuration/rga/preview:
+    post:
+      tags:
+      - Relevance Generative Answering Configuration
+      summary: Get Preview for Building an RGA Model
+      description: 'Show how many documents matching various RGA requirements are in the selection.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"ALLOW_CONTENT_PREVIEW","type":"ENABLE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getRelevanceGenerativeAnsweringPreview
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+        example: mycoveocloudv2organizationg8tp8wu3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelevanceGenerativeAnsweringPreviewRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RelevanceGenerativeAnsweringPreviewResponse'
+      x-pretty-name: getRelevanceGenerativeAnsweringPreview
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: ALLOW_CONTENT_PREVIEW
+        type: ENABLE
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: ALLOW_CONTENT_PREVIEW
+        type: ENABLE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/rga/preview_post
+components:
+  schemas:
+    RelevanceGenerativeAnsweringPreviewRequest:
+      type: object
+      properties:
+        advancedQuery:
+          type: string
+          description: The query that determines the documents to extract. Cannot be used with other document extraction parameters, e.g. sources, filter conditions, etc.<br />**Example:** `@source==("My source") AND @permanentid AND @language="English"`
+          example: '@source==("My source") AND @permanentid AND @language="English"'
+        sources:
+          type: array
+          description: The names of the sources containing the items that the model should use to extract chunks.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+          example:
+          - CommunityArticles
+          - SalesforceCatalog
+          items:
+            type: string
+            description: The names of the sources containing the items that the model should use to extract chunks.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+            example: '["CommunityArticles","SalesforceCatalog"]'
+        filterConditions:
+          type: array
+          description: The custom filter conditions to target specific documents.
+          items:
+            $ref: '#/components/schemas/FilterConditionModel'
+      description: The configuration for the Relevance Generative Answering preview.
+    FilterConditionModel:
+      required:
+      - field
+      - operator
+      - value
+      type: object
+      properties:
+        field:
+          type: string
+          description: The field to use for the filter.<br />**Example:** `author`
+          example: author
+        operator:
+          type: string
+          description: The operator to use for the condition.<br />**Example:** `EQUALS`
+          example: EQUALS
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - EQUALS, NOT_EQUALS
+        value:
+          type: string
+          description: The value to use for the filter.<br />**Example:** `John Smith`
+          example: John Smith
+      description: A custom filter condition.
+    RelevanceGenerativeAnsweringPreviewResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The query that was used to fetch document information.<br />**Example:** `@source==("Salesforce Notifier")`
+          example: '@source==("Salesforce Notifier")'
+        numberOfDocumentsInSources:
+          type: integer
+          description: The total number of documents in the selected sources.
+          format: int64
+        numberOfValidDocuments:
+          type: integer
+          description: The number of documents that are candidates for learning.
+          format: int64
+        numberOfDocumentsInSourcesMatchingFilters:
+          type: integer
+          description: The number of documents in the selected sources that match the conditions.
+          format: int64
+        numberOfDocumentsInSourcesMatchingFiltersWithPermanentId:
+          type: integer
+          description: The number of documents in the selected sources that match the conditions and have a `permanentid`.
+          format: int64
+        documentLimit:
+          type: integer
+          description: The maximum number of documents allowed to learn from.
+          format: int64
+        documentRequirementStatus:
+          type: string
+          description: Status for the number of required documents to build the model.
+          enum:
+          - OK
+          - INSUFFICIENT_DOCUMENTS
+          - NB_OF_DOCUMENTS_OVER_LIMIT
+      description: The Relevance Generative Answering preview response.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,208 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Security Providers Schedules API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Security Providers Schedules
+paths:
+  /rest/organizations/{organizationId}/securityproviders/{securityProviderId}/schedules/{scheduleId}:
+    put:
+      tags:
+      - Security Providers Schedules
+      summary: Update a Security Provider Schedule
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"EDIT","targetId":"{securityProviderId}"}
+
+        ```
+
+        </details>'
+      operationId: updateSchedule
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: securityProviderId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: scheduleId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ScheduleModel'
+      x-pretty-name: updateSchedule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: EDIT
+        targetId: '{securityProviderId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: EDIT
+        targetId: '{securityProviderId}'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders/paramId/schedules/paramId_put
+  /rest/organizations/{organizationId}/securityproviders/{securityProviderId}/schedules:
+    get:
+      tags:
+      - Security Providers Schedules
+      summary: Get Security Provider Schedules
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSchedules
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: securityProviderId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScheduleModel'
+      x-pretty-name: getSchedules
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders/paramId/schedules_get
+components:
+  schemas:
+    HourMinutePair:
+      type: object
+      properties:
+        hour:
+          type: integer
+          format: int32
+        minute:
+          type: integer
+          format: int32
+    ScheduleModel:
+      type: object
+      properties:
+        id:
+          type: string
+        refreshType:
+          type: string
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        scheduleType:
+          type: string
+          enum:
+          - SECURITY_CACHE
+          - SECURITY_PROVIDER
+          - SOURCE
+        enabled:
+          type: boolean
+        frequency:
+          $ref: '#/components/schemas/ScheduleFrequency'
+        organizationId:
+          type: string
+        resourceId:
+          type: string
+        lastExecution:
+          type: string
+          format: date-time
+    ScheduleFrequency:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - MINUTELY
+          - HOURLY
+          - DAILY
+          - WEEKLY
+          - MONTHLY
+        value:
+          type: integer
+          format: int32
+        hourMinute:
+          $ref: '#/components/schemas/HourMinutePair'
+        monthDay:
+          type: integer
+          format: int32
+        weekDays:
+          type: array
+          items:
+            type: string
+            enum:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+            - SATURDAY
+            - SUNDAY
+        seed:
+          type: integer
+          format: int32
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

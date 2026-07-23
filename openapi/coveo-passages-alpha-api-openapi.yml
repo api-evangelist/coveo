@@ -1,0 +1,500 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Passages Alpha API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Passages Alpha
+  x-displayName: Passages Alpha
+paths:
+  /rest/search/alpha/passages/retrieve/debug:
+    post:
+      tags:
+      - Passages Alpha
+      summary: Allow to Debug Passage(s) Retrieval.
+      description: 'API that allows to debug how the passage(s) retrieval was performed for a particular query.
+
+
+        **Note**: The debug endpoint of the Passage Retrieval API is currently in alpha.
+
+
+        <details>
+
+        <summary>Privilege(s) required</summary>
+
+
+        ```json
+
+        {"level":"NORMAL","owner":"SEARCH_API","targetDomain":"EXECUTE_QUERY","type":"ENABLE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: debugRetrievePassageAlpha
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdQueryRequired'
+      - $ref: '#/components/parameters/ViewAllContentQuery'
+      security:
+      - oauth2:
+        - full
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrievePassagesRequestV3'
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Request-Id:
+              description: A unique identifier for the request.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebugRetrievePassagesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/PassageRetrievalUnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/PassageRetrievalServerUnavailable'
+components:
+  schemas:
+    PassageV3:
+      type: object
+      required:
+      - text
+      - relevanceScore
+      - document
+      properties:
+        text:
+          type: string
+          description: The text associated to this passage.
+          minLength: 0
+          maxLength: 6000
+          example: Solar energy has several benefits including reducing electricity bills, providing a renewable energy source, and lowering carbon footprint."
+        relevanceScore:
+          type: number
+          format: float
+          example: 0.85
+          description: 'A score that indicates the relevance of a passage.
+
+
+            The score computation is based on cosine similarity between the passage and the query.
+
+            The computation logic and value range may change in the future.
+
+
+            Example values:
+
+            - A value of -1 (minimum) indicates that the passage is the semantic opposite of the query.
+
+            - A value of 0 indicates that the passage is not semantically similar to the query.
+
+            - A value of 1 (maximum) indicates that the passage is semantically similar to the query.
+
+            '
+        document:
+          $ref: '#/components/schemas/PassageDocumentV3'
+    RetrievePassageRequestContextValue:
+      oneOf:
+      - type: string
+      - type: array
+        items:
+          type: string
+    RetrievePassagesRequestV3:
+      type: object
+      required:
+      - query
+      - localization
+      properties:
+        query:
+          type: string
+          description: 'The query for which to retrieve the passage(s).
+
+            '
+          example: What are the benefits of using solar energy?
+          maxLength: 1000
+        filter:
+          type: string
+          description: 'A filter expression that will be applied during the first stage retrieval.
+
+
+            The expression must comply with the Coveo Query Language (CQL) syntax.
+
+            '
+          example: '@source=="acme"
+
+            '
+        additionalFields:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+            pattern: ^([a-z][a-z0-9_]{0,254})$
+          example:
+          - clickableuri
+          description: 'The fields to include in the response.
+
+
+            When omitted, only the identifier of the document will be returned.
+
+            '
+        maxPassages:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 5
+          description: The maximum number of passage(s) to retrieve.
+          example: 5
+        pipeline:
+          $ref: '#/components/schemas/Pipeline'
+        searchHub:
+          type: string
+          description: 'The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates.
+
+
+            Coveo Machine Learning models use this information to provide contextually relevant output.
+
+
+            **Notes:**
+
+
+            - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
+
+            - When logging a **Search** usage analytics event for a query, the `originLevel1` field of that event should be set to the value of the `searchHub` search request parameter.
+
+            '
+          example: Main
+        localization:
+          type: object
+          required:
+          - locale
+          description: Localization parameter.
+          properties:
+            locale:
+              type: string
+              description: 'The locale of the current user. Must comply with IETF''s BCP 47 definition.
+
+
+                Coveo Machine Learning models use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the $locale object.
+
+
+                Note: When logging a Search usage analytics event, the language field of that event should match the language part of the locale value of the query (e.g., en-US in locale becomes en in language).
+
+                '
+              example: en-CA
+            timezone:
+              type: string
+              description: The [tz database identifier](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) of the user's time zone. Used for interpreting dates in query expressions and retrieving passages.
+              example: America/Montreal
+        context:
+          type: object
+          nullable: true
+          additionalProperties:
+            $ref: '#/components/schemas/RetrievePassageRequestContextValue'
+          description: 'The custom context information to send along with the request. Must be a dictionary of key-value pairs (JSON) where each key is a string, and each value is either a string or an array of strings.
+
+
+            Coveo Machine Learning models may use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the `$context` object.'
+          example:
+            userAgeRange: 25-35
+            userRoles:
+            - PremiumCustomer
+            - ProductReviewer
+        analytics:
+          type: object
+          nullable: false
+          additionalProperties: false
+          properties:
+            capture:
+              type: boolean
+              description: 'Whether the API call should be tracked for analytics. When not provided, it defaults to `false`.
+
+                '
+            clientId:
+              type: string
+              pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+              description: A UUID identifying the client or agent that generated the event.
+            userAgent:
+              type: string
+              description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.
+
+
+                **Note**: This information is required when endpoints are behind a proxy.
+
+                '
+    PassageDocumentV3:
+      type: object
+      required:
+      - title
+      - primaryid
+      properties:
+        title:
+          type: string
+          example: The Benefits of Solar Energy
+        primaryid:
+          type: string
+          description: 'The primary identifier of the document.
+
+            '
+          example: bDMzdA
+      additionalProperties: true
+    RankedResult:
+      type: object
+      required:
+      - score
+      - primaryid
+      properties:
+        score:
+          type: number
+          format: float
+          description: The Coveo index's ranking score computed for the item.
+          example: 250
+        primaryid:
+          type: string
+          description: 'The primaryid of the document.
+
+            '
+          example: KVUVKMCSIZLEYVLVMNLGQ4JQK4XDMNBQGY4C4ZDFMZQXK3DU
+    ErrorMessage:
+      type: object
+      additionalProperties: true
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        errorCode:
+          type: string
+          example: ORGANIZATION_DOES_NOT_EXIST
+        message:
+          type: string
+          example: The organization does not exist in the search api.
+    DebugRetrievePassagesResponse:
+      type: object
+      required:
+      - firstStageRetrievalResults
+      - passages
+      - responseId
+      description: A response with the passage(s) retrieved from the user query.
+      properties:
+        firstStageRetrievalResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/RankedResult'
+          description: 'The list of results retrieved during the first stage of retrieval.
+
+            '
+          example:
+          - score: 460
+            primaryid: '#AVUVKMCSIZLEYVLVMNLGQ4JQK4XDMNBQGY4C4ZDFMZQXK3DU'
+          - score: 120
+            primaryid: BVUVKMCSIZLEYVLVMNLGQ4JQK4XDMNBQGY4C4ZDFMZQXK3DU
+          - score: 60
+            primaryid: CVUVKMCSIZLEYVLVMNLGQ4JQK4XDMNBQGY4C4ZDFMZQXK3DU
+        passages:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassageV3'
+          description: 'The list of passages retrieved during the second stage of retrieval based on the results and the semantic query.
+
+            '
+        responseId:
+          type: string
+          description: 'A unique identifier for the retrieval request. This identifier can be used to track the request.
+
+            '
+          example: c0857557-5579-4f5e-8958-9befd7d1d4a8
+        warnings:
+          type: array
+          description: A list of warnings that occurred during the retrieval. They can provide insights on why the retrieval wasn't successful or was less relevant than expected.
+          items:
+            type: string
+          example:
+          - No index items matched your query, therefore no passages could be retrieved. Try rephrasing your query or checking whether the query pipeline filters are too restrictive.
+          - No passages were retrieved for the query. Review whether your passage retrieval model is up-to-date and is trained on the documents relevant to your query.
+    Pipeline:
+      type: string
+      nullable: true
+      description: 'The name of the query pipeline to use for this request (bypassing its conditions, if it has any).
+
+
+        You can pass an empty `pipeline` value to use an empty query pipeline (i.e., `?pipeline=` or `"pipeline": ""`).
+
+
+        If a query does not contain the `pipeline` parameter, the first query pipeline whose conditions are met by the request is used (query pipelines without conditions are not evaluated). Should the request fail to meet the conditions of each evaluated query pipeline, the default query pipeline of the target Coveo Cloud organization is used (bypassing its conditions, if it has any).
+
+
+        **Notes:**
+
+
+        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
+
+        - For reporting purposes, when logging a **Search** usage analytics event for a query, the `queryPipeline` field of that event should be set to the final `pipeline` value used in the query execution. This value is determined from the query response. If no pipeline was specified, it uses the `"default"` value.
+
+
+        See also [Managing Query Pipelines](https://docs.coveo.com/en/1450/).
+
+        '
+      example: CustomerQueryPipeline
+  responses:
+    PassageRetrievalServerUnavailable:
+      description: Server unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            ModelTemporaryUnavailable:
+              summary: Error returned when the model is temporarily unavailable.
+              value:
+                errorCode: SERVER_UNAVAILABLE
+                message: The Passage Retrieval model is temporarily unavailable. Please retry the request. If the problem persists, reach out to Coveo Support.
+            IndexUnavailable:
+              summary: Error returned when the index is not available.
+              value:
+                errorCode: SERVER_UNAVAILABLE
+                message: Due to a temporary issue with Coveo indexes, no available index could process the request.
+            InternalLimitExceeded:
+              summary: Error returned when the size of passages was larger than expected.
+              value:
+                errorCode: INTERNAL_ERROR
+                message: An internal limit on the size of passages was exceeded.
+    Forbidden:
+      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 403
+            message: Access denied. API key does not have sufficient privileges.
+            errorCode: FORBIDDEN
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            InternalError:
+              summary: Internal Server Error
+              value:
+                statusCode: 500
+                message: Internal error.
+            OrganizationPaused:
+              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#500-organization_paused)'
+              value:
+                statusCode: 500
+                message: The organization is paused due to inactivity.
+                errorCode: ORGANIZATION_PAUSED
+            FacetSearchFailure:
+              summary: 'Facet Search Failure (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#500-facet_search_failure)'
+              value:
+                statusCode: 500
+                message: Facet search failed due to internal index issues.
+                errorCode: FACET_SEARCH_FAILURE
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            BadRequest:
+              summary: 'Bad Request (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-bad_request)'
+              value:
+                statusCode: 400
+                message: Invalid JSON format in request body.
+            NoRegisteredEndpoint:
+              summary: 'No Registered Endpoint (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-no_registered_endpoint)'
+              value:
+                statusCode: 400
+                message: No registered endpoint found for this organization.
+                errorCode: NO_REGISTERED_ENDPOINT
+            QueryPipelineInterrupted:
+              summary: 'Query Pipeline Interrupted (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-query_pipeline_interrupted)'
+              value:
+                statusCode: 400
+                message: Failed to evaluate your query as some conditions in your pipeline took too much time.
+                errorCode: QUERY_PIPELINE_INTERRUPTED
+    Unauthorized:
+      description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 401
+            message: Invalid access token.
+            errorCode: UNAUTHORIZED
+    PassageRetrievalUnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            MissingModel:
+              summary: Error returned when the model is missing.
+              value:
+                errorCode: UNPROCESSABLE_ENTITY
+                message: This API requires an ML Passage Retrieval model associated to the pipeline.
+            ModelUnavailable:
+              summary: Error returned when the model is unavailable.
+              value:
+                errorCode: UNPROCESSABLE_ENTITY
+                message: The Passage Retrieval model is not available. Please review whether the model exists and is ready to be used. If the model was just created, it may take a few minutes before it's available. If the problem persists, reach out to Coveo Support.
+    TooManyRequests:
+      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 429
+            message: Too many requests.
+  parameters:
+    ViewAllContentQuery:
+      name: viewAllContent
+      in: query
+      description: Whether to bypass document permissions. Only effective if the access token grants the **Search - View all content** privilege.
+      schema:
+        type: boolean
+    OrganizationIdQueryRequired:
+      name: organizationId
+      in: query
+      description: The unique identifier of the target Coveo Cloud organization.
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

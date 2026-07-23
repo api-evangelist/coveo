@@ -1,0 +1,495 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Vault API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Vault
+paths:
+  /rest/organizations/{organizationId}/vaultentries/{key}:
+    get:
+      tags:
+      - Vault
+      summary: Get a Single Vault Entry
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getVaultEntry
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/VaultEntryModel'
+      x-pretty-name: getVaultEntry
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries/paramId_get
+    put:
+      tags:
+      - Vault
+      summary: Update a Vault Entry
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateVaultEntry
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VaultEntryModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/VaultEntryModel'
+      x-pretty-name: updateVaultEntry
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries/paramId_put
+    delete:
+      tags:
+      - Vault
+      summary: Delete a Vault Entry
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: deleteVaultEntry
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteVaultEntry
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries/paramId_delete
+  /rest/organizations/{organizationId}/vaultentries/fetch:
+    put:
+      tags:
+      - Vault
+      summary: Fetches Vault Entries Referenced in a Specific Snapshot from a Given Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: fetchVaultEntries
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: referenceSnapshotId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: sourceOrganizationId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: fetchStrategy
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - ALL_OR_NOTHING
+          - OVERWRITE
+          - ONLY_MISSING
+          default: ALL_OR_NOTHING
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: fetchVaultEntries
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries/fetch_put
+  /rest/organizations/{organizationId}/vaultentries:
+    get:
+      tags:
+      - Vault
+      summary: Get All Vault Entries for an Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAllVaultEntries
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelVaultEntryModel'
+      x-pretty-name: getAllVaultEntries
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries_get
+    post:
+      tags:
+      - Vault
+      summary: Create a Vault Entry
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createVaultEntry
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VaultEntryModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/VaultEntryModel'
+      x-pretty-name: createVaultEntry
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries_post
+  /rest/organizations/{organizationId}/vaultentries/missing:
+    get:
+      tags:
+      - Vault
+      summary: Retrieve State of Vault Entries for Specified Snapshot
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"VAULT_ENTRY","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSnapshotVaultEntryState
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SnapshotVaultEntryState'
+      x-pretty-name: getSnapshotVaultEntryState
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: VAULT_ENTRY
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/vaultentries/missing_get
+components:
+  schemas:
+    ScopeModel:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - CATALOG_CONFIG
+          - CATALOG
+          - EXTENSION
+          - FIELD
+          - FILTER
+          - INSIGHT_PANEL_INTERFACE
+          - INSIGHT_PANEL_CONFIGURATION
+          - MAPPING
+          - ML_MODEL
+          - ML_MODEL_ASSOCIATION
+          - QUERY_PARAMETER
+          - QUERY_PIPELINE
+          - QUERY_PIPELINE_CONDITION
+          - RANKING_EXPRESSION
+          - RANKING_WEIGHT
+          - RESULT_RANKING
+          - FEATURED_RESULT
+          - SEARCH_PAGE
+          - SECURITY_PROVIDER
+          - SOURCE
+          - STATEMENT_GROUP
+          - SETTING
+          - STOP_WORD
+          - STOREFRONT_ASSOCIATION
+          - SUBSCRIPTION
+          - THESAURUS
+          - TRACKING_ID
+          - TRIGGER
+          - UNKNOWN
+        id:
+          type: string
+    PageModelVaultEntryModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VaultEntryModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    VaultEntryModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        key:
+          type: string
+        value:
+          type: string
+        valueType:
+          type: string
+          enum:
+          - BOOLEAN
+          - FLOAT
+          - INTEGER
+          - STRING
+        vaultVisibilityType:
+          type: string
+          enum:
+          - PUBLIC
+          - OBFUSCATED
+          - STRICT
+        attributeReferences:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeReferenceModel'
+        scopes:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeModel'
+        public:
+          type: boolean
+    SnapshotVaultEntryState:
+      type: object
+      properties:
+        missingVaultEntries:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    AttributeReferenceModel:
+      type: object
+      properties:
+        jsonPath:
+          type: string
+        resourceName:
+          type: string
+        resourceType:
+          type: string
+          enum:
+          - CATALOG_CONFIG
+          - CATALOG
+          - EXTENSION
+          - FIELD
+          - FILTER
+          - INSIGHT_PANEL_INTERFACE
+          - INSIGHT_PANEL_CONFIGURATION
+          - MAPPING
+          - ML_MODEL
+          - ML_MODEL_ASSOCIATION
+          - QUERY_PARAMETER
+          - QUERY_PIPELINE
+          - QUERY_PIPELINE_CONDITION
+          - RANKING_EXPRESSION
+          - RANKING_WEIGHT
+          - RESULT_RANKING
+          - FEATURED_RESULT
+          - SEARCH_PAGE
+          - SECURITY_PROVIDER
+          - SOURCE
+          - STATEMENT_GROUP
+          - SETTING
+          - STOP_WORD
+          - STOREFRONT_ASSOCIATION
+          - SUBSCRIPTION
+          - THESAURUS
+          - TRACKING_ID
+          - TRIGGER
+          - UNKNOWN
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

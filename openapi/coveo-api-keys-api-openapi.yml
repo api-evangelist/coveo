@@ -1,0 +1,1686 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Api Keys API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Api Keys
+paths:
+  /rest/organizations/{organizationId}/apikeys/{sourceApiKeyId}/duplicate:
+    put:
+      tags:
+      - Api Keys
+      summary: Duplicate API Key
+      description: 'Duplicates and existing API key of an API key in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: duplicateApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceApiKeyId
+        in: path
+        description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting the apiKeyId](https://docs.coveo.com/en/38/).
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The JSON configuration of the API key to be duplicated.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DuplicatedApiKeyRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiKeyWithValueResponse'
+      x-pretty-name: duplicateApiKey
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/paramId/duplicate_put
+  /rest/organizations/{organizationId}/apikeys/{apiKeyId}:
+    get:
+      tags:
+      - Api Keys
+      summary: Show API Key
+      description: 'Shows an API key in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: Getting the API Key ID
+        url: https://docs.coveo.com/en/38/
+      operationId: getApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: apiKeyId
+        in: path
+        description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiKeyResponse'
+      x-pretty-name: getApiKey
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/paramId_get
+    put:
+      tags:
+      - Api Keys
+      summary: Update API Key
+      description: 'Updates an existing API key in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"EDIT","targetId":"{apiKeyId}"}
+
+        ```
+
+        </details>'
+      operationId: updateApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: apiKeyId
+        in: path
+        description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting the apiKeyId](https://docs.coveo.com/en/38/).
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The JSON configuration to update the target API key to.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyUpdateRequest'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: updateApiKey
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/paramId_put
+    delete:
+      tags:
+      - Api Keys
+      summary: Delete API Key
+      description: 'Deletes an API key from an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"EDIT","targetId":"{apiKeyId}"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: Deleting an API Key
+        url: https://docs.coveo.com/en/82/#delete-an-api-key-programmatically
+      operationId: deleteApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: apiKeyId
+        in: path
+        description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting the apiKeyId](https://docs.coveo.com/en/38/).
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteApiKey
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/paramId_delete
+  /rest/organizations/{organizationId}/apikeys/{apiKeyId}/disable:
+    put:
+      tags:
+      - Api Keys
+      summary: Disable API Key
+      description: 'Disables an API key in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"EDIT","targetId":"{apiKeyId}"}
+
+        ```
+
+        </details>'
+      operationId: disableApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: apiKeyId
+        in: path
+        description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting the apiKeyId](https://docs.coveo.com/en/38/).
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: disableApiKey
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/paramId/disable_put
+  /rest/organizations/{organizationId}/apikeys/{apiKeyId}/activation/extend:
+    put:
+      tags:
+      - Api Keys
+      summary: Extend API Key Activation
+      description: 'Extend the activation of an API key in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"EDIT","targetId":"{apiKeyId}"}
+
+        ```
+
+        </details>'
+      operationId: extendActivation
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: apiKeyId
+        in: path
+        description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting the apiKeyId](https://docs.coveo.com/en/38/).
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: extendActivation
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/paramId/activation/extend_put
+  /rest/organizations/{organizationId}/apikeys/{apiKeyId}/activate:
+    put:
+      tags:
+      - Api Keys
+      summary: Activate API Key
+      description: 'Activates an API key in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"EDIT","targetId":"{apiKeyId}"}
+
+        ```
+
+        </details>'
+      operationId: activateApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: apiKeyId
+        in: path
+        description: The unique identifier of the API key. </br>**Example:** `t4hk287bfj5sg6wskg64ckk5a`</br>See [Getting the apiKeyId](https://docs.coveo.com/en/38/).
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: activateApiKey
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/paramId/activate_put
+  /rest/organizations/{organizationId}/apikeys/disable/bulk:
+    put:
+      tags:
+      - Api Keys
+      summary: Disable Multiple API Keys
+      description: 'Disables multiple API keys in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"EDIT","targetId":"{apiKeyId}"}
+
+        ```
+
+        </details>'
+      operationId: bulkDisableApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: A list of unique identifiers of API keys. </br>**Example:** `["t4hk287bfj5sg6wskg64ckk5a"]`</br>See [Getting the apiKeyId](https://docs.coveo.com/en/38/).
+        content:
+          application/json:
+            schema:
+              uniqueItems: true
+              type: array
+              items:
+                type: string
+            example:
+            - loggerId1
+            - loggerId2
+            - loggerId3
+        required: true
+      responses:
+        '412':
+          description: Precondition Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestException'
+        '204':
+          description: No Content
+      x-pretty-name: bulkDisableApiKey
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/disable/bulk_put
+  /rest/organizations/{organizationId}/apikeys/activate/bulk:
+    put:
+      tags:
+      - Api Keys
+      summary: Activate API Keys
+      description: 'Activates multiple API keys in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"EDIT","targetId":"{apiKeyId}"}
+
+        ```
+
+        </details>'
+      operationId: bulkActivateApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: A list of unique identifiers of API keys. </br>**Example:** `["t4hk287bfj5sg6wskg64ckk5a"]`</br>See [Getting the apiKeyId](https://docs.coveo.com/en/38/).
+        content:
+          application/json:
+            schema:
+              uniqueItems: true
+              type: array
+              items:
+                type: string
+            example:
+            - loggerId1
+            - loggerId2
+            - loggerId3
+        required: true
+      responses:
+        '412':
+          description: Precondition Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestException'
+        '204':
+          description: No Content
+      x-pretty-name: bulkActivateApiKey
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/activate/bulk_put
+  /rest/organizations/{organizationId}/apikeys:
+    get:
+      tags:
+      - Api Keys
+      summary: List API Keys
+      description: 'Lists all API keys in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getApiKeys
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the organization
+        required: true
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Optional filter for API key status
+        required: false
+        schema:
+          type: string
+          description: API Key Status Filter
+          enum:
+          - ACTIVE
+          - SOON_TO_BE_DISABLED
+          - SOON_TO_BE_EXPIRED
+          - ACTIVE_AND_EXPOSED
+          - WITH_WARNING
+          - ALL_EXPOSED
+          - DEACTIVATED
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKeyResponse'
+      x-pretty-name: getApiKeys
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys_get
+    post:
+      tags:
+      - Api Keys
+      summary: Create API Key
+      description: 'Creates an API key in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: Creating an API Key
+        url: https://docs.coveo.com/en/82/
+      operationId: createApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: apiKeyTemplateId
+        in: query
+        description: The unique identifier of the template on which to base the API key.
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: The JSON configuration of the API key to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyCreationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiKeyWithValueResponse'
+      x-pretty-name: createApiKey
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys_post
+  /rest/organizations/{organizationId}/apikeys/rotate:
+    post:
+      tags:
+      - Api Keys
+      summary: Rotate API Key
+      description: Rotates an API key in an [organization](https://docs.coveo.com/en/185/).
+      operationId: rotateApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyRotationRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiKeyWithValueResponse'
+      x-pretty-name: rotateApiKey
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/rotate_post
+  /rest/organizations/{organizationId}/apikeys/delete/bulk:
+    post:
+      tags:
+      - Api Keys
+      summary: Delete API Keys
+      description: 'Deletes multiple API keys from an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"EDIT","targetId":"{apiKeyId}"}
+
+        ```
+
+        </details>'
+      externalDocs:
+        description: Deleting an API Key
+        url: https://docs.coveo.com/en/82/#delete-an-api-key-programmatically
+      operationId: bulkDeleteApiKey
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: A list of unique identifiers of API keys. </br>**Example:** `["t4hk287bfj5sg6wskg64ckk5a"]`</br>See [Getting the apiKeyId](https://docs.coveo.com/en/38/).
+        content:
+          application/json:
+            schema:
+              uniqueItems: true
+              type: array
+              items:
+                type: string
+            example:
+            - loggerId1
+            - loggerId2
+            - loggerId3
+        required: true
+      responses:
+        '412':
+          description: Precondition Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestException'
+        '204':
+          description: No Content
+      x-pretty-name: bulkDeleteApiKey
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: EDIT
+        targetId: '{apiKeyId}'
+      x-ui-operation-id: /rest/organizations/paramId/apikeys/delete/bulk_post
+components:
+  schemas:
+    RestException:
+      type: object
+      properties:
+        message:
+          type: string
+        errorCode:
+          type: string
+        requestID:
+          type: string
+    IdAndDisplayNameModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+      description: The unique identifiers of the organizations by which the SAML identity provider is used.
+    EnforcedQueryPipelineConfigurationModel:
+      type: object
+      properties:
+        searchHub:
+          type: string
+          description: The search hub to enforce on the queries using the API key. </br>**Example:** `SupportHub`
+      description: The query pipeline configuration to enforce on the API key.
+    ApiKeyExposureReportResponse:
+      type: object
+      properties:
+        apiKeyLoggerId:
+          type: string
+          description: The unique identifier of the API key.
+          readOnly: true
+          example: t4hk287bfj5sg6wskg64ckk5a
+        severity:
+          type: string
+          description: The severity of the exposure report.
+          readOnly: true
+          example: CRITICAL
+          enum:
+          - CRITICAL
+          - HIGH
+          - MEDIUM
+          - LOW
+          - WARN
+        deactivationDate:
+          type: string
+          description: The expected deactivation date of the API key according to the severity.
+          format: date-time
+          readOnly: true
+        creationType:
+          type: string
+          description: The creation type of the exposure report
+          readOnly: true
+          example: MANUAL
+          enum:
+          - MANUAL
+          - AUTOMATED
+        createdBy:
+          $ref: '#/components/schemas/UserModel'
+        reasons:
+          type: array
+          description: The reasons for the API key exposure.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ApiKeyExposureReportReasonResponse'
+        createdDate:
+          type: string
+          description: The date when the exposure report was created.
+          format: date-time
+          readOnly: true
+      description: An API key Exposure Report
+      readOnly: true
+    ApiKeyResponse:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        value:
+          type: string
+          description: The value of the API key (Masked).
+          readOnly: true
+          example: xx*****1343
+        id:
+          type: string
+          description: The unique identifier of the API key.
+          readOnly: true
+          example: t4hk287bfj5sg6wskg64ckk5a
+        tokenId:
+          type: string
+          description: The universal token ID of this API key. It is currently mapped directly to the token `id`.
+          readOnly: true
+          example: t4hk287bfj5sg6wskg64ckk5a
+        organizationId:
+          type: string
+          description: The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id) the API key was created for.
+          readOnly: true
+          example: mycoveocloudorganizationg8tp8wu3
+        displayName:
+          type: string
+          description: The display name for the API key.
+          readOnly: true
+          example: PushAPIKey
+        description:
+          type: string
+          description: A brief description of the API key.
+          readOnly: true
+          example: API key used for managing sources.
+        privileges:
+          uniqueItems: true
+          type: array
+          description: A set of privileges.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        enabled:
+          type: boolean
+          description: Whether the API key is enabled.
+          readOnly: true
+        createdDate:
+          type: string
+          description: The API key creation date in Unix timestamp in milliseconds.
+          format: date-time
+          readOnly: true
+        createdBy:
+          $ref: '#/components/schemas/UserModel'
+        allowedIps:
+          type: array
+          description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+          items:
+            type: string
+            description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+        deniedIps:
+          type: array
+          description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+          items:
+            type: string
+            description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+        apiKeyTemplateId:
+          type: string
+          description: API key template id
+          readOnly: true
+        additionalConfiguration:
+          $ref: '#/components/schemas/ApiKeyAdditionalConfigurationModel'
+        lastUsedDate:
+          type: string
+          description: The date and time the API key was last used.
+          format: date-time
+          readOnly: true
+        privacyLevel:
+          type: string
+          description: The privacy level of the API key.
+          readOnly: true
+          enum:
+          - PUBLIC
+          - PRIVATE
+        status:
+          type: string
+          description: The status of the ApiKey.
+          readOnly: true
+          enum:
+          - ENABLED
+          - SOON_TO_BE_EXPIRED
+          - SOON_TO_BE_DISABLED
+          - DISABLED
+          - DISABLED_FOR_INACTIVITY
+          - DISABLED_EXPOSED
+          - EXPIRED
+        expirationDate:
+          type: string
+          description: The expiration date of the ApiKey.
+          format: date-time
+          readOnly: true
+        disabledDate:
+          type: string
+          description: The disabled date of the ApiKey.
+          format: date-time
+          readOnly: true
+        activationDate:
+          type: string
+          description: The activation date of the ApiKey.
+          format: date-time
+          readOnly: true
+        exposureReport:
+          $ref: '#/components/schemas/ApiKeyExposureReportResponse'
+        resourceId:
+          type: string
+      description: An API key with masked value
+      externalDocs:
+        description: Use API key authentication with the Search API
+        url: https://docs.coveo.com/en/105/
+    ApiKeyAdditionalConfigurationModel:
+      type: object
+      properties:
+        commerce:
+          $ref: '#/components/schemas/CommerceApiKeyConfigurationModel'
+        search:
+          $ref: '#/components/schemas/SearchApiKeyConfigurationModel'
+        analytics:
+          $ref: '#/components/schemas/AnalyticsConfigurationModel'
+      description: The additional configuration to attach to the API key.
+    ApiKeyExposureReportReasonResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the exposure reason
+          example: 123e4567-e89b-12d3-a456-426614174000
+        reason:
+          type: string
+          description: Reason for the API key exposure
+          nullable: true
+          example: The API key was found on a public repository
+        source:
+          type: string
+          description: Source of the API key exposure reason
+          example: MANUAL
+          enum:
+          - GITHUB
+          - MANUAL
+        url:
+          type: string
+          description: URL where the API key was found
+          nullable: true
+          example: https://example.com
+        createdDate:
+          type: string
+          description: Date when the exposure reason was created
+          format: date-time
+          example: '2023-10-01T12:00:00Z'
+      description: Response containing the reason for API key exposure, it contain at least one of the reason or url
+      readOnly: true
+    AnalyticsConfigurationModel:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/EventModel'
+      description: The user information to send to Coveo Usage Analytics
+    DuplicatedApiKeyRequest:
+      type: object
+      properties:
+        displayName:
+          maxLength: 1000
+          type: string
+          description: The display name for the API key.
+          writeOnly: true
+          example: PushAPIKey
+        description:
+          maxLength: 1000
+          type: string
+          description: A brief description of the API key.
+          writeOnly: true
+          example: API key used for managing sources.
+        lifetimeDuration:
+          type: string
+          description: The lifetime duration until the api key expiration. Represented in ISO 8601 format.
+          writeOnly: true
+          example: P1M
+      description: Request model for the duplication of an API key
+      externalDocs:
+        description: Use API key authentication with the Search API
+        url: https://docs.coveo.com/en/105/
+    UserModel:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the user.</br>**Example:** `jsmith@email.com-google`
+        name:
+          type: string
+          description: The full name of the user.</br>**Example:** `John Smith`
+          nullable: true
+        firstName:
+          type: string
+          description: The first name of the user.</br>**Example:** `John`
+          nullable: true
+        lastName:
+          type: string
+          description: The last name of the user.</br>**Example:** `Smith`
+          nullable: true
+        email:
+          type: string
+          description: The email address of the user.</br>**Example:**`jsmith@email.com`
+        emailConfirmed:
+          type: boolean
+          description: Whether the user has confirmed their email.
+        displayName:
+          type: string
+          description: The display name of the user.</br>**Example:** `John Smith`
+        country:
+          type: string
+          enum:
+          - UNDEFINED
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AQ
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AX
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BL
+          - BM
+          - BN
+          - BO
+          - BQ
+          - BR
+          - BS
+          - BT
+          - BU
+          - BV
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CC
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CP
+          - CR
+          - CS
+          - CU
+          - CV
+          - CW
+          - CX
+          - CY
+          - CZ
+          - DE
+          - DG
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EA
+          - EC
+          - EE
+          - EG
+          - EH
+          - ER
+          - ES
+          - ET
+          - EU
+          - EZ
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - FX
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GS
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HM
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IM
+          - IN
+          - IO
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MF
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NF
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NT
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PM
+          - PN
+          - PR
+          - PS
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SF
+          - SG
+          - SH
+          - SI
+          - SJ
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SU
+          - SV
+          - SX
+          - SY
+          - SZ
+          - TA
+          - TC
+          - TD
+          - TF
+          - TG
+          - TH
+          - TJ
+          - TK
+          - TL
+          - TM
+          - TN
+          - TO
+          - TP
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - UK
+          - UM
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WF
+          - WS
+          - XI
+          - XU
+          - XK
+          - YE
+          - YT
+          - YU
+          - ZA
+          - ZM
+          - ZR
+          - ZW
+        providerUsername:
+          type: string
+          description: The username of the user for the corresponding provider.</br>**Example:** `jsmith@email.com`
+          nullable: true
+        providerUserId:
+          type: string
+          description: The unique identifier of the user for the provider.</br>**Example:** `office365`
+        provider:
+          type: string
+          description: The provider of the user.
+          nullable: true
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the SAML identity provider the user is a part of.</br>**Example:** `myprovider`
+          nullable: true
+        realms:
+          type: array
+          description: The realms the user is a part of.
+          items:
+            $ref: '#/components/schemas/UserRealmModel'
+        socialUser:
+          type: boolean
+        expired:
+          type: boolean
+          description: Whether the user is expired.
+        locked:
+          type: boolean
+          description: Whether the user is locked.
+        credentialsExpired:
+          type: boolean
+          description: Whether the user's credentials have expired.
+        enabled:
+          type: boolean
+          description: Whether the user is enabled.
+        emailAliases:
+          uniqueItems: true
+          type: array
+          description: The email aliases of the user.
+          items:
+            type: string
+            description: The email aliases of the user.
+        additionalInformation:
+          type: object
+          additionalProperties:
+            type: string
+            description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen": "v2.5652.11"}`</br>*Default:* `{}`'
+          description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen": "v2.5652.11"}`</br>*Default:* `{}`'
+        lastUsedDate:
+          type: string
+          description: The last day the user has logged in into the platform
+          format: date-time
+          nullable: true
+      description: A user.
+    ApiKeyWithValueResponse:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        value:
+          type: string
+          description: The value of the API key.
+          readOnly: true
+        id:
+          type: string
+          description: The unique identifier of the API key.
+          readOnly: true
+          example: t4hk287bfj5sg6wskg64ckk5a
+        tokenId:
+          type: string
+          description: The universal token ID of this API key. It is currently mapped directly to the token `id`.
+          readOnly: true
+          example: t4hk287bfj5sg6wskg64ckk5a
+        organizationId:
+          type: string
+          description: The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id) the API key was created for.
+          readOnly: true
+          example: mycoveocloudorganizationg8tp8wu3
+        displayName:
+          type: string
+          description: The display name for the API key.
+          readOnly: true
+          example: PushAPIKey
+        description:
+          type: string
+          description: A brief description of the API key.
+          readOnly: true
+          example: API key used for managing sources.
+        privileges:
+          uniqueItems: true
+          type: array
+          description: A set of privileges.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        enabled:
+          type: boolean
+          description: Whether the API key is enabled.
+          readOnly: true
+        createdDate:
+          type: string
+          description: The API key creation date in Unix timestamp in milliseconds.
+          format: date-time
+          readOnly: true
+        createdBy:
+          $ref: '#/components/schemas/UserModel'
+        allowedIps:
+          type: array
+          description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+          items:
+            type: string
+            description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+        deniedIps:
+          type: array
+          description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+          items:
+            type: string
+            description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+        apiKeyTemplateId:
+          type: string
+          description: API key template id
+          readOnly: true
+        additionalConfiguration:
+          $ref: '#/components/schemas/ApiKeyAdditionalConfigurationModel'
+        lastUsedDate:
+          type: string
+          description: The date and time the API key was last used.
+          format: date-time
+          readOnly: true
+        privacyLevel:
+          type: string
+          description: The privacy level of the API key.
+          readOnly: true
+          enum:
+          - PUBLIC
+          - PRIVATE
+        status:
+          type: string
+          description: The status of the ApiKey.
+          readOnly: true
+          enum:
+          - ENABLED
+          - SOON_TO_BE_EXPIRED
+          - SOON_TO_BE_DISABLED
+          - DISABLED
+          - DISABLED_FOR_INACTIVITY
+          - DISABLED_EXPOSED
+          - EXPIRED
+        expirationDate:
+          type: string
+          description: The expiration date of the ApiKey.
+          format: date-time
+          readOnly: true
+        disabledDate:
+          type: string
+          description: The disabled date of the ApiKey.
+          format: date-time
+          readOnly: true
+        activationDate:
+          type: string
+          description: The activation date of the ApiKey.
+          format: date-time
+          readOnly: true
+        exposureReport:
+          $ref: '#/components/schemas/ApiKeyExposureReportResponse'
+        rotationSecret:
+          type: string
+          description: The secret used to rotate the API key.
+          readOnly: true
+        resourceId:
+          type: string
+      description: An API key with a non-masked value
+      externalDocs:
+        description: Use API key authentication with the Search API
+        url: https://docs.coveo.com/en/105/
+    PrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
+      readOnly: true
+      externalDocs:
+        description: Privilege reference
+        url: https://docs.coveo.com/en/1707/
+    SearchApiKeyConfigurationModel:
+      type: object
+      properties:
+        enforcedQueryPipelineConfiguration:
+          $ref: '#/components/schemas/EnforcedQueryPipelineConfigurationModel'
+        impersonationRestrictions:
+          $ref: '#/components/schemas/ImpersonationRestrictionsModel'
+        apiKeyQueryAuthentication:
+          uniqueItems: true
+          type: array
+          description: The security identity used to authenticate queries with the API key.
+          items:
+            $ref: '#/components/schemas/ImpersonatedUserModel'
+      description: The Search API configuration to enforce in the API key.
+    EventModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the user.
+        userDisplayName:
+          type: string
+          description: The display name of the user. **Example:** `Alice`
+      description: The user information to send along with usage analytics events.
+    RealmModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: The realm to add.
+    ImpersonationRestrictionsModel:
+      type: object
+      properties:
+        allowedUserIds:
+          uniqueItems: true
+          type: array
+          description: The security identities to impersonate.
+          items:
+            $ref: '#/components/schemas/ImpersonatedUserModel'
+      description: The security identities to impersonate when authenticating queries with the API key.
+    UserRealmModel:
+      type: object
+      properties:
+        member:
+          type: boolean
+        realm:
+          $ref: '#/components/schemas/RealmModel'
+        realmModel:
+          $ref: '#/components/schemas/RealmModel'
+      description: The realms the user is a part of.
+    CommerceApiKeyConfigurationModel:
+      type: object
+      properties:
+        catalogId:
+          type: string
+          description: The catalogId to enforce on the queries using the API key. </br>**Example:** `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
+      description: The commerce configuration to enforce on the queries using the API key.
+    ImpersonatedUserModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the security identity to impersonate.</br>**Example:** `asmith@example.com`
+        provider:
+          type: string
+          description: The security identity provider containing the security identity to impersonate.</br>**Example:** `Email Security Provider`
+        type:
+          type: string
+          description: The type of the security identity to impersonate.</br>**Default:** `User`</br> **Allowed values:** </br>- `User` </br>- `Group` </br>- `VirtualGroup` </br>- `Unknown`
+      description: The security identities to impersonate when authenticating queries with the API key. </br>**Note:** If specified, the API key must have the `IMPERSONATE` privilege.
+    ApiKeyRotationRequest:
+      required:
+      - rotationSecret
+      type: object
+      properties:
+        previousKeyExpirationPeriod:
+          type: string
+          description: Specifies the expiration period for the previous API key after rotation. If the previous key already has an expiration date, you may only reduce (not extend) its remaining validity. If the previous key has an expiration date longer than the maximum allowed duration of 30 days, it will be reduced to 30 days. If the previous key does not have an expiration, you can set a duration up to a maximum of 30 days. Providing a duration longer than 30 days will result in an exception. The value must be in ISO 8601 duration format (e.g., 'P14D' for 14 days).
+          writeOnly: true
+          example: P14D
+        newKeyExpirationPeriod:
+          type: string
+          description: Optional new API key expiration period. If set, this defines after how long the new key will expire (ISO 8601 format). If not set, the API key won't expire.
+          writeOnly: true
+          example: P30D
+        rotationSecret:
+          minLength: 1
+          type: string
+          description: The rotation secret for the API key being rotated.
+          writeOnly: true
+      description: Request Model to rotate an API key
+    ApiKeyCreationRequest:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        displayName:
+          maxLength: 125
+          type: string
+          description: The display name for the API key.
+          example: PushAPIKey
+        description:
+          maxLength: 1000
+          type: string
+          description: A brief description of the API key.
+          example: API key used for managing sources.
+        privileges:
+          uniqueItems: true
+          type: array
+          description: A set of privileges.
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        enabled:
+          type: boolean
+          description: Whether the API key is enabled.
+        allowedIps:
+          type: array
+          description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+          items:
+            type: string
+            description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+        deniedIps:
+          type: array
+          description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+          items:
+            type: string
+            description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+        additionalConfiguration:
+          $ref: '#/components/schemas/ApiKeyAdditionalConfigurationModel'
+        lifetimeDuration:
+          type: string
+          description: The lifetime duration until the api key expiration. Represented in ISO 8601 format.
+          writeOnly: true
+          example: P1M
+        overrideTemplatePrivileges:
+          uniqueItems: true
+          type: array
+          description: The privileges that will be used to override the privileges of the template - Specifically to add target ids
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        rotationEnabled:
+          type: boolean
+          description: If true, the API key can be rotated programmatically.
+          writeOnly: true
+          default: false
+      description: Model for the creation of an API key.
+      externalDocs:
+        description: Use API key authentication with the Search API
+        url: https://docs.coveo.com/en/105/
+    ApiKeyUpdateRequest:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        displayName:
+          maxLength: 125
+          type: string
+          description: The display name for the API key.
+          example: PushAPIKey
+        description:
+          maxLength: 1000
+          type: string
+          description: A brief description of the API key.
+          example: API key used for managing sources.
+        allowedIps:
+          type: array
+          description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+          items:
+            type: string
+            description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+        deniedIps:
+          type: array
+          description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+          items:
+            type: string
+            description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+        additionalConfiguration:
+          $ref: '#/components/schemas/ApiKeyAdditionalConfigurationModel'
+      description: Model for the creation of an API key.
+      externalDocs:
+        description: Use API key authentication with the Search API
+        url: https://docs.coveo.com/en/105/
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

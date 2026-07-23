@@ -1,0 +1,963 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Search Page Configuration API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Search Page Configuration
+paths:
+  /rest/organizations/{organizationId}/searchpage/v1/interfaces:
+    get:
+      operationId: get-all-search-page-interfaces
+      summary: Get All Search Page Interfaces
+      description: Get all search page interfaces in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/search-page-interface-config-id'
+    post:
+      operationId: create-search-page-interface
+      summary: Create a Search Page Interface
+      description: Create a search page interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/search-page-interface-config'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search-page-interface-config-id'
+  /organizations/{organizationId}/searchpage/v1/projects/interfaces:
+    get:
+      operationId: get-project-search-page-interfaces
+      summary: Get Project Search Page Interfaces
+      description: Get all search page interfaces in a [Coveo organization](https://docs.coveo.com/en/185/) and a [project](https://docs.coveo.com/en/n7ef0517/manage-an-organization/manage-projects).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/projectId'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/search-page-interface-config-project'
+  /rest/organizations/{organizationId}/searchpage/v1/interfaces/{interfaceId}:
+    get:
+      operationId: get-search-page-interface
+      summary: Get a Search Page Interface
+      description: Get a search page interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search-page-interface-config-id'
+        '404':
+          description: Not Found
+    put:
+      operationId: update-search-page-interface
+      summary: Update a Search Page Interface
+      description: Update a search page interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/search-page-interface-config'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search-page-interface-config-id'
+        '404':
+          description: Not Found
+    delete:
+      operationId: delete-search-page-interface
+      summary: Delete a Search Page Interface
+      description: Delete a search page interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /rest/organizations/{organizationId}/searchpage/v1/interfaces/{interfaceId}/accesses:
+    get:
+      operationId: get-search-page-interface-access
+      summary: Get a Search Page Interface's Access Configuration
+      description: Get a search page interface access in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/interface-access'
+        '404':
+          description: Not Found
+    put:
+      operationId: update-search-page-interface-access
+      summary: Update a Search Page Interface's Access Configuration
+      description: Update a search page interface access in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/search-page-interface-access'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search-page-interface-access'
+        '404':
+          description: Not Found
+  /rest/organizations/{organizationId}/searchpage/v1/interfaces/{interfaceId}/accesses/users:
+    get:
+      operationId: get-search-page-interface-user-access
+      summary: Get the List of Users with Access to the Search Page.
+      description: Get a user with access to a given search page interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          description: Not Found
+    put:
+      operationId: update-search-page-interface-user-access
+      summary: Update the List of Users with Access to a Search Page.
+      description: Set list of users with access to a given search page interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search-page-interface-config-id'
+        '404':
+          description: Not Found
+    post:
+      operationId: add-search-page-interface-user-access
+      summary: Add a Search Page Interface User Access
+      description: Add users to list of users with access to given search page in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      - $ref: '#/components/parameters/notify'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/interface-add-user'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search-page-interface-config-id'
+  /rest/organizations/{organizationId}/searchpage/v1/interfaces/{interfaceId}/access/request:
+    post:
+      operationId: request-search-page-interface-access
+      summary: Request Search Page Interface Access
+      description: Request access to a search page interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+  /rest/organizations/{organizationId}/searchpage/v1/interfaces/{interfaceId}/preview:
+    post:
+      operationId: preview-search-page-interface
+      summary: Preview Search Page Interface
+      description: Generate the markup of a search page interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/search-page-interface-config-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            text/html:
+              schema:
+                type: string
+                example: <atomic-search-interface></atomic-search-interface>
+        '404':
+          description: Not Found
+        '401':
+          description: Unauthorized
+  /rest/organizations/{organizationId}/searchpage/v1/interfaces/{interfaceId}/pipelines:
+    get:
+      operationId: get-search-page-interface-pipelines
+      summary: Get Search Page Interface Pipelines
+      description: Get the pipelines used by a search page in a [Coveo organization](https://docs.coveo.com/en/185/) in the builder context.
+      tags:
+      - Search Page Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pipelines-status'
+        '404':
+          description: Not Found
+components:
+  schemas:
+    interface-add-user:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/interface-user-list'
+        message:
+          type: string
+          description: Message to send as part of email notifications, when `notify` is set to `true`.
+          example: Hey, check out this new search page
+          required: false
+    pipeline-status:
+      type: object
+      description: The status of a pipeline.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the pipeline.
+          example: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+        name:
+          type: string
+          description: The name of the pipeline.
+          example: My pipeline
+        pipelineType:
+          type: string
+          description: The type of the pipeline.
+          example: search
+        conditionId:
+          type: string
+          description: The unique identifier of the associated condition.
+          example: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
+        models:
+          type: array
+          items:
+            description: The list of models used by the pipeline.
+            properties:
+              id:
+                type: string
+                description: The unique identifier of the model.
+                example: cccccccc-cccc-cccc-cccc-cccccccccccc
+              modelStatus:
+                type: string
+                description: The status of the model.
+                example: ACTIVE
+              modelEngine:
+                type: string
+                description: The type of the model.
+                example: genqa
+    interface-user-list:
+      type: array
+      description: The list of users that are allowed to access the search interface.
+      example:
+      - alice@example.com
+      - bob@example.com
+      items:
+        type: string
+    search-page-interface-config-id:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the search interface configuration.
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          description: A short descriptive name to help manage search pages.
+          example: ExStore
+        facets:
+          type: array
+          description: The list of facets to display in the search page.
+          items:
+            properties:
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the facet is based.
+              label:
+                type: string
+                description: The label of the facet.
+          example:
+          - field: source
+            label: Source
+          - field: objecttype
+            label: Object Type
+        sortCriteria:
+          type: array
+          description: The array of sort criteria the end user can select when interacting with the search interface.
+          items:
+            properties:
+              by:
+                type: string
+                description: 'The kind of sort criterion. Required. <br />**Allowed values:**<br />- `relevancy`<br />- `date`<br />- `field`: sort based on the values of a target field, which you need to specify in the `field` parameter.'
+                enum:
+                - relevancy
+                - date
+                - field
+              label:
+                type: string
+                description: The label of the sort criterion. Required.
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the sort is based. Required when `by` value is `field`, and ignored otherwise.<br />Must be [sortable in the index](https://docs.coveo.com/en/1833/index-content/add-or-edit-a-field#sortable).
+              order:
+                type: string
+                enum:
+                - ASC
+                - DESC
+                description: 'The sort direction, if applicable.<br />Default behaviour is a follows:<br />- If the `by` value is `relevancy`, this parameter does not apply.<br />- If the `by` value is `date`, the default value is `DESC`.<br />- If the `by` value is anything else, the default value is `ASC`.<br />**Allowed values:** <br />- `ASC`: ascending <br>- `DESC`: descending'
+            required:
+            - by
+            - label
+        accesses:
+          $ref: '#/components/schemas/interface-access'
+        layout:
+          type: string
+          description: The search page layout.
+          enum:
+          - list
+          - grid
+        resultTemplates:
+          type: array
+          description: The list of search page result templates.
+          items:
+            properties:
+              name:
+                type: string
+                description: The result template name.
+              badges:
+                type: array
+                description: The result template badges.
+                items:
+                  properties:
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the badge is based.
+                    color:
+                      type: string
+                      description: The color of the result template badge.
+              details:
+                type: array
+                description: The result template details.
+                items:
+                  properties:
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                    label:
+                      type: string
+                      description: The label of the result template detail.
+              conditions:
+                type: array
+                description: The conditions of the tab to use on fields.
+                items:
+                  properties:
+                    conditionType:
+                      type: string
+                      description: The type of condition to apply on a field.
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                    values:
+                      type: array
+                      description: The value to use for the tab condition.
+              imageSize:
+                type: string
+                description: The size of the result template image.
+                enum:
+                - NONE
+                - SMALL
+                - MEDIUM
+                - LARGE
+              descriptionEnabled:
+                type: boolean
+                description: Whether to display the result template description.
+              resultActions:
+                type: object
+                description: The result template actions.
+                properties:
+                  copyToClipboard:
+                    type: object
+                    properties:
+                      enabled:
+                        type: boolean
+                  quickView:
+                    type: object
+                    properties:
+                      enabled:
+                        type: boolean
+          example:
+          - name: Default
+            layout: default
+            badges:
+            - field: documenttype
+              color: '#d057bf'
+            details:
+            - field: source
+              label: source
+            conditions: []
+          - name: My Custom Template
+            layout: default
+            badges:
+            - field: documenttype
+              color: '#e4e3e3'
+            details:
+            - field: source
+              label: source
+            conditions:
+            - conditionType: isDefined
+              field: filetype
+            - conditionType: mustMatch
+              field: sourcetype
+              values:
+              - youtube
+        style:
+          type: object
+          description: The search page styling.
+          properties:
+            fontFamily:
+              type: string
+              description: The font-family
+              example: Comic Sans MS
+            colors:
+              type: object
+              description: All changeable HEX colors of the search page.
+              properties:
+                accent1:
+                  type: string
+                  description: The primary color.
+                  example: '#1372ec'
+                accent2:
+                  type: string
+                  description: The secondary color.
+                background:
+                  type: string
+                  description: The background color.
+                titles:
+                  type: string
+                  description: The color of the titles.
+                normalText:
+                  type: string
+                  description: The color of other text.
+                navigationBackground:
+                  type: string
+                  description: The color of the navigation background.
+        settings:
+          type: object
+          description: The search page settings.
+          properties:
+            targetSelector:
+              type: string
+              description: CSS selector to target the HTML element in which the search page will render.
+              example: '#sidepanel'
+            querySuggestions:
+              type: object
+              description: Whether to enable query suggestions.
+              properties:
+                enabled:
+                  type: boolean
+            queryHistory:
+              type: object
+              description: Whether to enable query history.
+              properties:
+                enabled:
+                  type: boolean
+            smartSnippets:
+              type: object
+              description: Whether to enable smart snippets.
+              properties:
+                enabled:
+                  type: boolean
+            peopleAlsoAsk:
+              type: object
+              description: Whether to enable people also ask.
+              properties:
+                enabled:
+                  type: boolean
+            genQA:
+              type: object
+              description: Whether to enable GenQA.
+              properties:
+                enabled:
+                  type: boolean
+            agent:
+              type: object
+              description: Whether to enable the agent-based generated answer. Mutually exclusive with genQA.
+              properties:
+                enabled:
+                  type: boolean
+                  default: false
+        created:
+          type: string
+          format: date-time
+          description: The creation timestamp. (ISO 8601)
+          example: '2021-12-31T12:46:00.000Z'
+        createdBy:
+          type: string
+          description: The creator principal.
+          example: jdoe@gmail.com-google
+        updated:
+          type: string
+          format: date-time
+          description: The last update timestamp. (ISO 8601)
+          example: '2001-12-31T13:03:00.000Z'
+        updatedBy:
+          type: string
+          description: The last updater principal.
+          example: jdoe@gmail.com-google
+      required:
+      - id
+      - name
+    search-page-interface-config:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A short descriptive name to help manage search pages.
+          example: ExStore
+        facets:
+          type: array
+          description: The list of facets to display in the search page.
+          items:
+            properties:
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the facet is based.
+              label:
+                type: string
+                description: The label of the facet.
+          example:
+          - field: source
+            label: Source
+          - field: objecttype
+            label: Object Type
+        sortCriteria:
+          type: array
+          description: The array of sort criteria the end user can select when interacting with the search interface.
+          items:
+            properties:
+              by:
+                type: string
+                description: 'The kind of sort criterion. Required. <br />**Allowed values:**<br />- `relevancy`<br />- `date`<br />- `field`: sort based on the values of a target field, which you need to specify in the `field` parameter.'
+                enum:
+                - relevancy
+                - date
+                - field
+              label:
+                type: string
+                description: The label of the sort criterion. Required.
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the sort is based. Required when `by` value is `field`, and ignored otherwise.<br />Must be [sortable in the index](https://docs.coveo.com/en/1833/index-content/add-or-edit-a-field#sortable).
+              order:
+                type: string
+                enum:
+                - ASC
+                - DESC
+                description: 'The sort direction, if applicable.<br />Default behaviour is a follows:<br />- If the `by` value is `relevancy`, this parameter does not apply.<br />- If the `by` value is `date`, the default value is `DESC`.<br />- If the `by` value is anything else, the default value is `ASC`.<br />**Allowed values:** <br />- `ASC`: ascending <br>- `DESC`: descending'
+            required:
+            - by
+            - label
+        accesses:
+          $ref: '#/components/schemas/interface-access'
+        layout:
+          type: string
+          description: The search page layout.
+          enum:
+          - list
+          - grid
+        resultTemplates:
+          type: array
+          description: The list of search page result templates.
+          items:
+            properties:
+              name:
+                type: string
+                description: The result template name.
+              badges:
+                type: array
+                description: The result template badges.
+                items:
+                  properties:
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the badge is based.
+                    color:
+                      type: string
+                      description: The color of the result template badge.
+              details:
+                type: array
+                description: The result template details.
+                items:
+                  properties:
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                    label:
+                      type: string
+                      description: The label of the result template detail.
+              conditions:
+                type: array
+                description: The conditions of the tab to use on fields.
+                items:
+                  properties:
+                    conditionType:
+                      type: string
+                      description: The type of condition to apply on a field.
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                    values:
+                      type: array
+                      description: The value to use for the tab condition.
+              imageSize:
+                type: string
+                description: The size of the result template image.
+                enum:
+                - NONE
+                - SMALL
+                - MEDIUM
+                - LARGE
+              descriptionEnabled:
+                type: boolean
+                description: Whether to display the result template description.
+              resultActions:
+                type: object
+                description: The result template actions.
+                properties:
+                  copyToClipboard:
+                    type: object
+                    properties:
+                      enabled:
+                        type: boolean
+                  quickView:
+                    type: object
+                    properties:
+                      enabled:
+                        type: boolean
+          example:
+          - name: Default
+            layout: default
+            badges:
+            - field: documenttype
+              color: '#d057bf'
+            details:
+            - field: source
+              label: source
+            conditions: []
+          - name: My Custom Template
+            layout: default
+            badges:
+            - field: documenttype
+              color: '#e4e3e3'
+            details:
+            - field: source
+              label: source
+            conditions:
+            - conditionType: isDefined
+              field: filetype
+            - conditionType: mustMatch
+              field: sourcetype
+              values:
+              - youtube
+        style:
+          type: object
+          description: The search page styling.
+          properties:
+            fontFamily:
+              type: string
+              description: The font-family
+              example: Comic Sans MS
+            colors:
+              type: object
+              description: All changeable HEX colors of the search page.
+              properties:
+                accent1:
+                  type: string
+                  description: The primary color.
+                  example: '#1372ec'
+                accent2:
+                  type: string
+                  description: The secondary color.
+                background:
+                  type: string
+                  description: The background color.
+                titles:
+                  type: string
+                  description: The color of the titles.
+                normalText:
+                  type: string
+                  description: The color of other text.
+                navigationBackground:
+                  type: string
+                  description: The color of the navigation background.
+        settings:
+          type: object
+          description: The search page settings.
+          properties:
+            targetSelector:
+              type: string
+              description: CSS selector to target the HTML element in which the search page will render.
+              example: '#sidepanel'
+            querySuggestions:
+              type: object
+              description: Whether to enable query suggestions.
+              properties:
+                enabled:
+                  type: boolean
+            queryHistory:
+              type: object
+              description: Whether to enable query history.
+              properties:
+                enabled:
+                  type: boolean
+            smartSnippets:
+              type: object
+              description: Whether to enable smart snippets.
+              properties:
+                enabled:
+                  type: boolean
+            peopleAlsoAsk:
+              type: object
+              description: Whether to enable people also ask.
+              properties:
+                enabled:
+                  type: boolean
+            genQA:
+              type: object
+              description: Whether to enable GenQA.
+              properties:
+                enabled:
+                  type: boolean
+            agent:
+              type: object
+              description: Whether to enable the agent-based generated answer. Mutually exclusive with genQA.
+              properties:
+                enabled:
+                  type: boolean
+                  default: false
+      required:
+      - name
+    pipelines-status:
+      type: array
+      description: A list containing the pipeline(s) used by the interface.
+      items:
+        $ref: '#/components/schemas/pipeline-status'
+    search-page-interface-config-project:
+      allOf:
+      - $ref: '#/components/schemas/search-page-interface-config'
+      - type: object
+        properties:
+          projectIds:
+            type: array
+            description: The list of project IDs associated with the search page interface.
+            items:
+              type: string
+    interface-access:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/interface-user-list'
+        domains:
+          type: array
+          description: The list of domains that are allowed to access the search interface.
+          example:
+          - example.com
+          - sample.com
+          items:
+            type: string
+        sharingLinkEnabled:
+          type: boolean
+          example: true
+        sharingDomainEnabled:
+          type: boolean
+          example: true
+  parameters:
+    notify:
+      name: notify
+      description: Whether to send an email notification to new search page users.
+      example: false
+      in: query
+      schema:
+        type: boolean
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
+      schema:
+        type: string
+    page:
+      name: page
+      description: The 0-based number of the page of configurations to list.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+    filter:
+      name: filter
+      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
+      example: Store
+      in: query
+      schema:
+        type: string
+    interface-id:
+      name: interfaceId
+      description: The unique identifier of the target search interface.
+      example: 123e4567-e89b-12d3-a456-426614174000
+      in: path
+      required: true
+      schema:
+        type: string
+    perPage:
+      name: perPage
+      description: The maximum number of configurations to include per page.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 20
+    projectId:
+      name: projectId
+      description: The id of the project to which the resource belongs.
+      in: query
+      schema:
+        type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

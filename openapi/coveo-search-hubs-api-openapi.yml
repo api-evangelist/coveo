@@ -1,0 +1,225 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Search Hubs API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Search Hubs
+paths:
+  /rest/organizations/{organizationId}/searchusagemetrics/hubs/:
+    post:
+      operationId: createSearchHub
+      summary: Creates a Search Hub in the Organization
+      tags:
+      - Search Hubs
+      deprecated: false
+      parameters:
+      - name: hub
+        description: The search hub data
+        required: true
+        in: body
+        schema:
+          $ref: '#/definitions/RestSearchHub'
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: No response
+      security:
+      - oauth2:
+        - full
+    get:
+      operationId: listSearchHubs
+      summary: Lists the Search Hubs for an Organization
+      tags:
+      - Search Hubs
+      deprecated: false
+      parameters:
+      - name: minimumQueries
+        description: The minimum number of queries required for a search hub to be listed
+        default: '1'
+        required: false
+        in: query
+        type: string
+      - name: filter
+        description: The free-form string to filter the returned list based on the values of the search hub attributes.
+        required: false
+        in: query
+        type: string
+      - name: pageSize
+        description: The maximum number of organizations to list per page.
+        default: '100'
+        required: false
+        in: query
+        type: integer
+        format: int32
+      - name: page
+        description: The 0-based index number of the page to list.
+        default: '0'
+        required: false
+        in: query
+        type: integer
+        format: int32
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RestSearchHub'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/searchusagemetrics/hubs/{hubName}:
+    delete:
+      operationId: deleteSearchHub
+      summary: Deletes a Search Hub for an Organization
+      tags:
+      - Search Hubs
+      deprecated: false
+      parameters:
+      - name: hubName
+        description: The search hub name
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: No response
+      security:
+      - oauth2:
+        - full
+    get:
+      operationId: getSearchHub
+      summary: Gets a Specific Search Hub for an Organization
+      tags:
+      - Search Hubs
+      deprecated: false
+      parameters:
+      - name: hubName
+        description: The search hub name
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestSearchHub'
+      security:
+      - oauth2:
+        - full
+    put:
+      operationId: updateSearchHub
+      summary: Updates a Search Hub in an Organization
+      tags:
+      - Search Hubs
+      deprecated: false
+      parameters:
+      - name: hub
+        description: The search hub data
+        required: true
+        in: body
+        schema:
+          $ref: '#/definitions/RestSearchHub'
+      - name: hubName
+        description: The search hub name
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: No response
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/searchusagemetrics/hubs/{hubName}/bucket:
+    put:
+      operationId: updateSearchHubBucket
+      summary: Updates a Search Hub Bucket in an Organization, Creating the Hub If Required
+      tags:
+      - Search Hubs
+      deprecated: false
+      parameters:
+      - name: bucket
+        description: The search hub bucket
+        required: true
+        in: query
+        type: string
+      - name: hubName
+        description: The search hub name
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: No response
+      security:
+      - oauth2:
+        - full
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required
+definitions:
+  RestSearchHub:
+    type: object
+    properties:
+      name:
+        example: '"myhub"'
+        description: The name of the search hub
+        type: string
+      bucket:
+        example: '"qpm"'
+        description: The usage bucket to count queries from this hub into
+        type: string
+      description:
+        example: '"Public search page"'
+        description: A description for the search hub
+        type: string
+    required:
+    - name

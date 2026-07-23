@@ -1,0 +1,78 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Source Item Types API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Source Item Types
+paths:
+  /rest/organizations/{organizationId}/sources/{sourceId}/itemTypes:
+    get:
+      tags:
+      - Source Item Types
+      summary: List Item Types
+      description: 'Lists all available [item](https://docs.coveo.com/en/210/) types in a [source](https://docs.coveo.com/en/246/).</br>**Required privilege:** Sources - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSourceItemTypes
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+      x-pretty-name: getSourceItemTypes
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/itemTypes_get
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

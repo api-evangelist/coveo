@@ -1,0 +1,899 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Security Providers API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Security Providers
+paths:
+  /rest/organizations/{organizationId}/securityproviders/{securityProviderId}:
+    get:
+      tags:
+      - Security Providers
+      summary: Get a Single Security Provider for an Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSecurityProvider
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: securityProviderId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SecurityProviderModelWithStatus'
+      x-pretty-name: getSecurityProvider
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders/paramId_get
+    put:
+      tags:
+      - Security Providers
+      summary: Update a Security Provider for an Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createOrUpdateSecurityProvider
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: securityProviderId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecurityProviderModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SecurityProviderModelWithStatus'
+      x-pretty-name: createOrUpdateSecurityProvider
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders/paramId_put
+    delete:
+      tags:
+      - Security Providers
+      summary: Remove a Security Provider from an Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"EDIT","targetId":"{securityProviderId}"}
+
+        ```
+
+        </details>'
+      operationId: removeSecurityProvider
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: securityProviderId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: removeSecurityProvider
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: EDIT
+        targetId: '{securityProviderId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: EDIT
+        targetId: '{securityProviderId}'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders/paramId_delete
+  /rest/organizations/{organizationId}/securityproviders/{securityProviderId}/raw:
+    get:
+      tags:
+      - Security Providers
+      summary: Get the Raw Configuration of a Security Provider for an Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSecurityProviderRaw
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: securityProviderId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RawSecurityProviderConfig'
+      x-pretty-name: getSecurityProviderRaw
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders/paramId/raw_get
+    put:
+      tags:
+      - Security Providers
+      summary: Update the Raw Configuration of a Security Provider for an Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createOrUpdateSecurityProviderRaw
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: securityProviderId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: forceUpdate
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RawSecurityProviderConfig'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: createOrUpdateSecurityProviderRaw
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders/paramId/raw_put
+  /rest/organizations/{organizationId}/securityproviders:
+    get:
+      tags:
+      - Security Providers
+      summary: Get All Security Providers for an Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSecurityProviders
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SecurityProviderModelWithStatus'
+      x-pretty-name: getSecurityProviders
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders_get
+    post:
+      tags:
+      - Security Providers
+      summary: Create a Security Provider for an Organization
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createSecurityProvider
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecurityProviderModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SecurityProviderModel'
+      x-pretty-name: createSecurityProvider
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders_post
+  /rest/organizations/{organizationId}/securityproviders/batch/filter:
+    post:
+      tags:
+      - Security Providers
+      summary: Get and Filter Security Providers by Ids for an Organization.
+      description: 'Lists the requested [security providers](https://docs.coveo.com/en/242/) by their respective ids. The unknown ids are ignored.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSecurityProvidersByIdsWithFilter
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: The text to filter security providers by (applied to the id, and displayName properties).<br/>**Example:** `Email Security Provider`
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelSecurityProviderModelWithStatus'
+      x-pretty-name: getSecurityProvidersByIdsWithFilter
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders/batch/filter_post
+  /rest/organizations/{organizationId}/securityproviders/page:
+    get:
+      tags:
+      - Security Providers
+      summary: Get and Filter Security Providers by Page for an Organization.
+      description: 'Lists the filtered [security providers](https://docs.coveo.com/en/242/) by page.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SECURITY_PROVIDER","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSecurityProvidersByPage
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: The text to filter security providers by (applied to the id, and displayName properties).<br/>**Example:** `Email Security Provider`
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelSecurityProviderModelWithStatus'
+      x-pretty-name: getSecurityProvidersByPage
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SECURITY_PROVIDER
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/securityproviders/page_get
+components:
+  schemas:
+    SecurityProviderModelWithStatus:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          deprecated: true
+        displayName:
+          type: string
+        organizationId:
+          type: string
+        type:
+          type: string
+          enum:
+          - ACTIVE_DIRECTORY2
+          - BOX
+          - CLAIMS
+          - CLAIMS_TO_EMAIL
+          - CONFLUENCE
+          - CONFLUENCE2
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - EMAIL
+          - EXPANDED
+          - FILE
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GENERIC_REST
+          - GRAPHQL
+          - JIRA2
+          - JIVE
+          - KHOROS_COMMUNITY
+          - MICROSOFT_DYNAMICS
+          - OFFICE365
+          - SALESFORCE
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE
+          - SITECORE
+          - SLACK
+          - ZENDESK
+        nodeTypeName:
+          type: string
+        sourceTypeName:
+          type: string
+        nodeRequired:
+          type: boolean
+        onPremisesEnabled:
+          type: boolean
+        projectIds:
+          type: array
+          items:
+            type: string
+        crawlingModuleId:
+          type: string
+        caseSensitive:
+          type: boolean
+        userIdentities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UserIdentityModel'
+        parameters:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ParameterModel'
+        cascadingSecurityProviders:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CascadingSecurityProvider'
+        referencedBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityProviderReferenceModel'
+        instanceId:
+          type: string
+        statistics:
+          $ref: '#/components/schemas/SecurityProviderStatisticsModel'
+        lastRefreshOperation:
+          $ref: '#/components/schemas/LastRefreshOperationModel'
+        currentStatus:
+          $ref: '#/components/schemas/CurrentStatusModel'
+    SecurityProviderModel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          deprecated: true
+        displayName:
+          type: string
+        organizationId:
+          type: string
+        type:
+          type: string
+          enum:
+          - ACTIVE_DIRECTORY2
+          - BOX
+          - CLAIMS
+          - CLAIMS_TO_EMAIL
+          - CONFLUENCE
+          - CONFLUENCE2
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - EMAIL
+          - EXPANDED
+          - FILE
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GENERIC_REST
+          - GRAPHQL
+          - JIRA2
+          - JIVE
+          - KHOROS_COMMUNITY
+          - MICROSOFT_DYNAMICS
+          - OFFICE365
+          - SALESFORCE
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE
+          - SITECORE
+          - SLACK
+          - ZENDESK
+        nodeTypeName:
+          type: string
+        sourceTypeName:
+          type: string
+        nodeRequired:
+          type: boolean
+        onPremisesEnabled:
+          type: boolean
+        projectIds:
+          type: array
+          items:
+            type: string
+        crawlingModuleId:
+          type: string
+        caseSensitive:
+          type: boolean
+        userIdentities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UserIdentityModel'
+        parameters:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ParameterModel'
+        cascadingSecurityProviders:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CascadingSecurityProvider'
+        referencedBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityProviderReferenceModel'
+        instanceId:
+          type: string
+    SecurityProviderReferenceModel:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - SOURCE
+          - SECURITY_PROVIDER
+        id:
+          type: string
+        attributes:
+          type: object
+    UserIdentityModel:
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+    DataFile:
+      type: object
+      properties:
+        sensitive:
+          type: boolean
+        data:
+          type: string
+    Parameter:
+      type: object
+      properties:
+        sensitive:
+          type: boolean
+        value:
+          type: string
+    RawSecurityProviderConfig:
+      type: object
+      properties:
+        name:
+          type: string
+        userIdentities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UserIdentity'
+        parameters:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Parameter'
+        dataFiles:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DataFile'
+        securityProviders:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SecurityProvider'
+        indexIdentifier:
+          type: string
+        dbConnectionString:
+          type: string
+        organizationId:
+          type: string
+        operationId:
+          type: string
+        expansionScope:
+          type: string
+          enum:
+          - Single
+          - All
+          - InError
+          - NotUpdated
+        type:
+          type: string
+          enum:
+          - ACTIVE_DIRECTORY2
+          - BOX
+          - CLAIMS
+          - CLAIMS_TO_EMAIL
+          - CONFLUENCE
+          - CONFLUENCE2
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - EMAIL
+          - EXPANDED
+          - FILE
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GENERIC_REST
+          - GRAPHQL
+          - JIRA2
+          - JIVE
+          - KHOROS_COMMUNITY
+          - MICROSOFT_DYNAMICS
+          - OFFICE365
+          - SALESFORCE
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE
+          - SITECORE
+          - SLACK
+          - ZENDESK
+        nodeTypeName:
+          type: string
+        sourceTypeName:
+          type: string
+        displayName:
+          type: string
+        nodeRequired:
+          type: boolean
+        onPremisesEnabled:
+          type: boolean
+        crawlingModuleId:
+          type: string
+        caseSensitive:
+          type: boolean
+    LastRefreshOperationModel:
+      type: object
+      properties:
+        id:
+          type: string
+        operationType:
+          type: string
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        timestamp:
+          type: string
+          format: date-time
+        result:
+          type: string
+        errorCode:
+          type: string
+        numberOfEntitiesProcessed:
+          type: integer
+          format: int32
+    CurrentStatusModel:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - CREATING
+          - DISABLED
+          - REFRESHING
+          - PAUSED
+          - PAUSED_ON_ERROR
+          - IDLE
+          - ERROR
+          - PUSH_READY
+        refreshType:
+          type: string
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        numberOfEntitiesInError:
+          type: integer
+          format: int32
+        numberOfEntitiesProcessed:
+          type: integer
+          format: int32
+        totalNumberOfEntities:
+          type: integer
+          format: int32
+    SecurityProviderStatisticsModel:
+      type: object
+      properties:
+        numberOfEntitiesByState:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        totalNumberOfEntities:
+          type: integer
+          format: int32
+        numberOfEntitiesInError:
+          type: integer
+          format: int32
+    PageModelSecurityProviderModelWithStatus:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityProviderModelWithStatus'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    SecurityProvider:
+      type: object
+      properties:
+        name:
+          type: string
+        typeName:
+          type: string
+    UserIdentity:
+      type: object
+      properties:
+        name:
+          type: string
+        userName:
+          type: string
+        password:
+          type: string
+    ParameterModel:
+      type: object
+      properties:
+        value:
+          type: string
+        sensitive:
+          type: boolean
+    CascadingSecurityProvider:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+          deprecated: true
+          enum:
+          - ACTIVE_DIRECTORY2
+          - BOX
+          - CLAIMS
+          - CLAIMS_TO_EMAIL
+          - CONFLUENCE
+          - CONFLUENCE2
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - EMAIL
+          - EXPANDED
+          - FILE
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GENERIC_REST
+          - GRAPHQL
+          - JIRA2
+          - JIVE
+          - KHOROS_COMMUNITY
+          - MICROSOFT_DYNAMICS
+          - OFFICE365
+          - SALESFORCE
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE
+          - SITECORE
+          - SLACK
+          - ZENDESK
+        typeName:
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,446 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Exports API - Version 14 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Exports API - Version 14
+paths:
+  /v14/exports/{exportId}:
+    get:
+      tags:
+      - Exports API - Version 14
+      summary: Get Information on an Export
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_exports_{exportId}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: exportId
+        in: path
+        description: The export's unique identifier.
+        required: true
+        schema:
+          type: string
+      - name: redirect
+        in: query
+        description: "Whether to return a HTTP redirect to the actual file.\n\n Note: for technical reasons, setting this parameter to true will yield an error when calling the endpoint through Swagger user interface."
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponseV14'
+      deprecated: true
+    delete:
+      tags:
+      - Exports API - Version 14
+      summary: Delete an Export
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: delete__v14_exports_{exportId}
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: exportId
+        in: path
+        description: The export's unique identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+      deprecated: true
+  /v14/exports/estimate:
+    get:
+      tags:
+      - Exports API - Version 14
+      summary: Estimate the Number of Rows in an Export
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_exports_estimate
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fs
+        in: query
+        description: The filter that will be applied to the click and search events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fc
+        in: query
+        description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportEstimateResponseV14'
+      deprecated: true
+  /v14/exports/visits/estimate:
+    get:
+      tags:
+      - Exports API - Version 14
+      summary: Estimate the Number of Rows in a Visit Export
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_exports_visits_estimate
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fn
+        in: query
+        description: The filter that will be applied to dimensions to exclude events from the results. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportEstimateResponseV14'
+      deprecated: true
+  /v14/exports:
+    get:
+      tags:
+      - Exports API - Version 14
+      summary: Lists All Exports
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_exports
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExportResponseV14'
+      deprecated: true
+    post:
+      tags:
+      - Exports API - Version 14
+      summary: Generate an Export
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_exports
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fs
+        in: query
+        description: The filter that will be applied to the click and search events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fc
+        in: query
+        description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: filename
+        in: query
+        description: Can only contain US-ASCII characters. If none is supplied it will be set to the export's id.
+        schema:
+          type: string
+      - name: format
+        in: query
+        description: The format of the generated CSV files.
+        schema:
+          type: string
+          enum:
+          - EXCEL
+          - NO_NEWLINE
+          - EXCEL,NO_NEWLINE
+          default: EXCEL
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponseV14'
+      deprecated: true
+  /v14/exports/visits:
+    post:
+      tags:
+      - Exports API - Version 14
+      summary: Generate a Visit Export
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_exports_visits
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fn
+        in: query
+        description: The filter that will be applied to dimensions to exclude events from the results. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: filename
+        in: query
+        description: Can only contain US-ASCII characters. If none is supplied it will be set to the export's id.
+        schema:
+          type: string
+      - name: d
+        in: query
+        description: Export's description.
+        schema:
+          type: string
+      - name: format
+        in: query
+        description: The format of the generated CSV files.
+        schema:
+          type: string
+          enum:
+          - EXCEL
+          - NO_NEWLINE
+          - EXCEL,NO_NEWLINE
+          default: EXCEL
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponseV14'
+      deprecated: true
+  /v14/exports/monitoring/health:
+    get:
+      tags:
+      - Exports API - Version 14
+      summary: Health Check for the Exports Service
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_exports_monitoring_health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/exports/status:
+    get:
+      tags:
+      - Exports API - Version 14
+      summary: Get the Exports Service Status
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_exports_status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+components:
+  schemas:
+    ExportResponseV14:
+      required:
+      - author
+      - description
+      - filters
+      - from
+      - id
+      - size
+      - startDate
+      - status
+      - to
+      type: object
+      properties:
+        id:
+          type: string
+          description: The export's unique identifier
+        author:
+          type: string
+          description: The user who created this export
+        downloadLink:
+          type: string
+          description: The export download link. Only appears when export is ready
+          format: url
+        startDate:
+          type: integer
+          description: The date at which this export was started. Epoch time format in milliseconds (POSIX time or UNIX Epoch time)
+          format: int64
+        from:
+          type: integer
+          description: The beginning date of the date range. Epoch time format in milliseconds (POSIX time or UNIX Epoch time)
+          format: int64
+        to:
+          type: integer
+          description: The end date of the date range. Epoch time format in milliseconds (POSIX time or UNIX Epoch time)
+          format: int64
+        filters:
+          type: object
+          additionalProperties:
+            type: string
+            description: The filters that will be applied to the export
+          description: The filters that will be applied to the export
+        description:
+          type: string
+          description: A description of this export
+        size:
+          type: integer
+          description: In bytes
+          format: int64
+        status:
+          type: string
+          description: The status of this export
+          enum:
+          - AVAILABLE
+          - PENDING
+          - FAILED
+          - EXPIRED
+      description: Export's information
+    StatusResponse:
+      type: object
+      description: Service's status information
+    ExportEstimateResponseV14:
+      required:
+      - estimates
+      type: object
+      properties:
+        estimates:
+          type: object
+          additionalProperties:
+            type: integer
+            description: The estimated number of rows by event
+            format: int64
+          description: The estimated number of rows by event
+      description: Export's number of row estimate
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

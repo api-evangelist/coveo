@@ -1,0 +1,184 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Source Extension Configurations API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Source Extension Configurations
+paths:
+  /rest/organizations/{organizationId}/sources/{sourceId}/extensions:
+    get:
+      tags:
+      - Source Extension Configurations
+      summary: List Extension Configurations
+      description: 'Lists the [extension](https://docs.coveo.com/en/206/) configurations of a [source](https://docs.coveo.com/en/246/).</br>**Required privilege:** Sources - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSourceExtensions
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SourceExtensionsMap'
+      x-pretty-name: getSourceExtensions
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/extensions_get
+    put:
+      tags:
+      - Source Extension Configurations
+      summary: Update Extension Configurations
+      description: 'Updates the [extension](https://docs.coveo.com/en/206/) configurations of a [source](https://docs.coveo.com/en/246/).</br>**Required privilege:** Sources - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SOURCE","type":"EDIT","targetId":"{sourceId}"}
+
+        ```
+
+        </details>'
+      operationId: setSourceExtensions
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sourceId
+        in: path
+        description: The unique identifier of the target [source](https://docs.coveo.com/en/246/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-gravodalyysjsu34camnvxm2d2y`
+        required: true
+        schema:
+          type: string
+      - name: rebuild
+        in: query
+        description: Whether to rebuild the [source](https://docs.coveo.com/en/246/) after the operation.<br />**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceExtensionsMap'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: setSourceExtensions
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SOURCE
+        type: EDIT
+        targetId: '{sourceId}'
+      x-ui-operation-id: /rest/organizations/paramId/sources/paramId/extensions_put
+components:
+  schemas:
+    SourceExtensionModel:
+      type: object
+      properties:
+        actionOnError:
+          type: string
+          description: 'The action to carry out when the [extension](https://docs.coveo.com/en/206/) returns an error.<br />See [Action on error](https://docs.coveo.com/en/1943/#actionOnError).<br />**Allowed values:** <br /> - `REJECT_DOCUMENT`: The item is rejected (i.e., it is not indexed).<br /> - `SKIP_EXTENSION`: The item continues to be processed in the indexing pipeline, as if the extension had never been applied.<br /><br /> **Default:** `SKIP_EXTENSION`<br />'
+          enum:
+          - REJECT_DOCUMENT
+          - SKIP_EXTENSION
+        condition:
+          type: string
+          description: The condition the [item](https://docs.coveo.com/en/210/) must meet for the [extension](https://docs.coveo.com/en/206/) to apply to it.<br />See [Indexing Pipeline Extension Condition Syntax Reference](https://docs.coveo.com/en/64/).<br />**Example:** `%[ytlikecount] OR %[ytdislikecount]`<br />**Default:** `""`
+        extensionId:
+          type: string
+          description: The unique identifier of the [extension](https://docs.coveo.com/en/206/) to apply.<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        itemType:
+          type: string
+          description: The type of item to apply the [extension](https://docs.coveo.com/en/206/) to, in the case of an extension only applying to a specific item type.<br />**Note:** Typically matches the key of the extension configuration.<br />**Example:** `Video`
+        parameters:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional parameters to pass to the [extension](https://docs.coveo.com/en/206/).<br />See [Pass parameters](https://docs.coveo.com/en/1943/#Parameters).<br />**Example:** `{"myparam":38}`<br />**Default:** `{}`
+          description: Additional parameters to pass to the [extension](https://docs.coveo.com/en/206/).<br />See [Pass parameters](https://docs.coveo.com/en/1943/#Parameters).<br />**Example:** `{"myparam":38}`<br />**Default:** `{}`
+        versionId:
+          type: string
+          description: The unique identifier of the [extension](https://docs.coveo.com/en/206/) version to execute.<br />See [Execute a specific extension version](https://docs.coveo.com/en/1943/#Version).<br />**Example**:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`<br />By default, the latest extension version is used.
+      description: An [extension](https://docs.coveo.com/en/206/) configuration.
+    SourceExtensionsModel:
+      type: object
+      properties:
+        preConversionExtensions:
+          type: array
+          description: The postconversion [extension](https://docs.coveo.com/en/206/) configurations.<br />See [Preconversion Versus Postconversion](https://docs.coveo.com/en/1556/#PreVsPost).
+          items:
+            $ref: '#/components/schemas/SourceExtensionModel'
+        postConversionExtensions:
+          type: array
+          description: The preconversion [extension](https://docs.coveo.com/en/206/) configurations.<br />See [Preconversion Versus Postconversion](https://docs.coveo.com/en/1556/#PreVsPost).
+          items:
+            $ref: '#/components/schemas/SourceExtensionModel'
+      description: A set of [extension](https://docs.coveo.com/en/206/) configurations.
+    SourceExtensionsMap:
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/SourceExtensionsModel'
+        items:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SourceExtensionsModel'
+          description: 'The [extension](https://docs.coveo.com/en/206/) configurations that apply to specific [item](https://docs.coveo.com/en/210/) types. The key is the item type, and the value object describes the extension configurations.<br />**Example:** `{"Video":{"postConversionExtensions":[{"extensionId": "mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy"}]}}`'
+      description: The [extension](https://docs.coveo.com/en/206/) configurations to set on the target [source](https://docs.coveo.com/en/246/).
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

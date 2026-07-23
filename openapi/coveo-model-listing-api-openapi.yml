@@ -1,0 +1,259 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Model Listing API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Model Listing
+paths:
+  /rest/organizations/{organizationId}/machinelearning/configuration/modellisting:
+    get:
+      tags:
+      - Model Listing
+      summary: List Models
+      description: 'Lists the organization models corresponding to the specified engine IDs.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getModels
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+        example: mycoveocloudv2organizationg8tp8wu3
+      - name: engineIds
+        in: query
+        description: The engine identifiers of the machine learning models to request.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        example: topclicks, querysuggest
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModelListingModel'
+      x-pretty-name: getModels
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/modellisting_get
+    post:
+      tags:
+      - Model Listing
+      summary: List Models
+      description: 'Lists the organization models corresponding to the specified IDs.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getModels_1
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+        example: mycoveocloudv2organizationg8tp8wu3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelListingModelsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModelListingModel'
+      x-pretty-name: getModels
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/modellisting_post
+components:
+  schemas:
+    ModelListingModel:
+      type: object
+      properties:
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Administration console.<br />**Example:** `MyModelDisplayName`
+          example: MyModelDisplayName
+        modelId:
+          type: string
+          description: The unique identifier of the target machine learning model.<br />**Example:** `My_Model_ID`
+          example: My_Model_ID
+        engineId:
+          type: string
+          description: The id of the engine.<br />**Example:** `topclicks`
+          example: topclicks
+        estimatedPreviousModelUpdateTime:
+          type: integer
+          description: The date and time the model was last updated.
+          format: int64
+          example: 1691762520000
+        nextModelUpdateTime:
+          type: integer
+          description: The date and time the model is scheduled to start its next update.
+          format: int64
+          example: 1691762520000
+        platformVersion:
+          type: integer
+          description: Version of the platform.
+          format: int32
+          example: 2
+        modelSizeStatistic:
+          type: integer
+          description: The model size statistic. Depending on the model type, this value represents the number of items or queries on which the model was built.
+          format: int32
+          example: 5
+        modelStatusInfo:
+          $ref: '#/components/schemas/ModelStatusInfoModel'
+        requiresAssociation:
+          type: boolean
+          description: Indicates if the model requires association.
+        modelAssociations:
+          type: array
+          description: The associations related to this model
+          example: "[\n  {\n      \"parentId\": \"38b08160-d7d4-4626-8e03-53587c23415d\",\n      \"id\": \"917af358-13fd-4c8e-94af-7cf649bddc48,\n      \"name\": \"test pipeline\",\n      \"associationType\": \"QUERY_PIPELINE\"\n  }\n]"
+          items:
+            $ref: '#/components/schemas/ModelAssociationModel'
+        readyForAssociation:
+          type: boolean
+    ModelAssociationModel:
+      type: object
+      properties:
+        parentId:
+          type: string
+          description: The unique identifier of the query pipeline to which the model is associated.
+          example: 38b08160-d7d4-4626-8e03-53587c23415d
+        id:
+          type: string
+          description: The unique identifier of the model association.
+          example: 917af358-13fd-4c8e-94af-7cf649bddc48
+        name:
+          type: string
+          description: The name of the query pipeline or case assist configuration the model is associated with.
+          example: association name
+        associationType:
+          type: string
+          description: The type of the association.
+          example: QUERY_PIPELINE
+          enum:
+          - QUERY_PIPELINE
+          - CASE_ASSIST
+      description: The associations related to this model
+      example: "[\n  {\n      \"parentId\": \"38b08160-d7d4-4626-8e03-53587c23415d\",\n      \"id\": \"917af358-13fd-4c8e-94af-7cf649bddc48,\n      \"name\": \"test pipeline\",\n      \"associationType\": \"QUERY_PIPELINE\"\n  }\n]"
+    ModelStatusInfoModel:
+      type: object
+      properties:
+        modelStatus:
+          type: string
+          description: The status of the model.
+          example: ACTIVE
+          enum:
+          - ARCHIVED
+          - SOON_TO_BE_ARCHIVED
+          - BUILD_IN_PROGRESS
+          - ERROR
+          - ERROR_INTERNAL
+          - LIMITED
+          - ACTIVE
+          - INACTIVE
+        daysUntilArchival:
+          type: integer
+          description: The remaining days until the model is archived.
+          format: int64
+          example: 2
+        activeModelBuildDate:
+          type: string
+          description: The epoch timestamp, in milliseconds, of when the active model was built. This field is empty if there are no active models.
+          format: date-time
+        lastBuildStatus:
+          type: string
+          description: The status of the model.
+          example: ACTIVE
+          enum:
+          - ARCHIVED
+          - SOON_TO_BE_ARCHIVED
+          - BUILD_IN_PROGRESS
+          - ERROR
+          - ERROR_INTERNAL
+          - LIMITED
+          - ACTIVE
+          - INACTIVE
+      description: The current status of the model..
+      example: "{\n \"modelStatus\": \"BUILDING\",\n \"daysUntilArchival\" : 3\n }"
+    ModelListingModelsRequest:
+      type: object
+      properties:
+        engineIds:
+          type: array
+          items:
+            type: string
+        registrationIds:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        displayNameAndRegistrationIdFilter:
+          type: string
+        projectId:
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,139 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Privilege Evaluator API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Privilege Evaluator
+paths:
+  /rest/privilege/evaluate:
+    post:
+      tags:
+      - Privilege Evaluator
+      summary: Evaluate a Privilege Request
+      operationId: evaluate
+      requestBody:
+        description: The request to evaluate.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrivilegeRequestModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PrivilegeRequestModel'
+      x-pretty-name: evaluate
+      x-ui-operation-id: /rest/privilege/evaluate_post
+  /rest/privilege/evaluate/general-access:
+    post:
+      tags:
+      - Privilege Evaluator
+      summary: Evaluate a Privilege Request
+      operationId: evaluateGeneralAccess
+      requestBody:
+        description: The request to evaluate.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeneralAccessPrivilegeRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PrivilegeRequestModel'
+      x-pretty-name: evaluateGeneralAccess
+      x-ui-operation-id: /rest/privilege/evaluate/general-access_post
+components:
+  schemas:
+    PrivilegeRequestEvaluationReportModel:
+      type: object
+      properties:
+        privilegeEvaluationResultCodes:
+          type: array
+          items:
+            type: string
+            enum:
+            - OPERATION_FORBIDDEN_FOR_ANONYMOUS_AUTHENTICATION
+            - OPERATION_FORBIDDEN_FOR_AUTHENTICATION_BOUND_TO_DIFFERENT_ORGANIZATION
+            - OPERATION_FORBIDDEN_FOR_ORGANIZATION
+            - OPERATION_FORBIDDEN_FOR_ORGANIZATION_IN_READ_ONLY
+            - OPERATION_FORBIDDEN_FROM_REQUEST_LOCATION
+            - OPERATION_FORBIDDEN_INVALID_PRIVILEGE_REQUEST
+            - OPERATION_GRANTED
+            - OPERATION_NOT_ALLOWED
+      description: A privilege request evaluation report.
+      readOnly: true
+    GeneralAccessPrivilegeRequest:
+      type: object
+      properties:
+        organizationId:
+          type: string
+          description: The unique identifier of the organization in which the target privilege applies.
+          example: mycoveocloudv2organizationg8tp8wu3
+      description: A general access privilege evaluation request.
+    PrivilegeRequestModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+          description: The unique identifier of the organization in which the target privilege applies.
+          example: mycoveocloudv2organizationg8tp8wu3
+        approved:
+          type: boolean
+          description: Whether the request has been approved.
+          readOnly: true
+        evaluationReport:
+          $ref: '#/components/schemas/PrivilegeRequestEvaluationReportModel'
+        requestedPrivilege:
+          $ref: '#/components/schemas/GlobalPrivilegeModel'
+      description: A privilege evaluation request.
+    GlobalPrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+        level:
+          type: string
+          description: The access level of the global privileges.`
+          example: GLOBAL
+      description: A global privilege.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

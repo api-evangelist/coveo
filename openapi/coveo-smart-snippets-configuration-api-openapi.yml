@@ -1,0 +1,322 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Smart Snippets Configuration API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Smart Snippets Configuration
+paths:
+  /rest/organizations/{organizationId}/machinelearning/configuration/smartsnippets/preview:
+    post:
+      tags:
+      - Smart Snippets Configuration
+      summary: Get Preview for Building an SS Model.
+      description: 'Show how many documents matching SS requirements are in the sources.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"ALLOW_CONTENT_PREVIEW","type":"ENABLE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getDocumentsCountPreview
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+        example: mycoveocloudv2organizationg8tp8wu3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmartSnippetsPreviewRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SmartSnippetsPreviewResponse'
+      x-pretty-name: getDocumentsCountPreview
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: ALLOW_CONTENT_PREVIEW
+        type: ENABLE
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: ALLOW_CONTENT_PREVIEW
+        type: ENABLE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/smartsnippets/preview_post
+  /rest/organizations/{organizationId}/machinelearning/configuration/smartsnippets/documenttypes:
+    post:
+      tags:
+      - Smart Snippets Configuration
+      summary: Get SS Document Types
+      description: 'Get the document types available for a Smart Snippets (SS) model to use.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"ALLOW_CONTENT_PREVIEW","type":"ENABLE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getDocumentTypes
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+        example: mycoveocloudv2organizationg8tp8wu3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmartSnippetsPreviewRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SmartSnippetsDocumentTypesResponse'
+      x-pretty-name: getDocumentTypes
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: ALLOW_CONTENT_PREVIEW
+        type: ENABLE
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: ALLOW_CONTENT_PREVIEW
+        type: ENABLE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/smartsnippets/documenttypes_post
+  /rest/organizations/{organizationId}/machinelearning/configuration/smartsnippets/contentfields:
+    post:
+      tags:
+      - Smart Snippets Configuration
+      summary: Get SS Content Fields
+      description: 'Get the content fields that a model can use for a given document type.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"ALLOW_CONTENT_PREVIEW","type":"ENABLE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getContentFields
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+        example: mycoveocloudv2organizationg8tp8wu3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmartSnippetsContentFieldsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ContentFieldsResponse'
+      x-pretty-name: getContentFields
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: ALLOW_CONTENT_PREVIEW
+        type: ENABLE
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: ALLOW_CONTENT_PREVIEW
+        type: ENABLE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/smartsnippets/contentfields_post
+components:
+  schemas:
+    DocumentTypeResponse:
+      required:
+      - documentType
+      type: object
+      properties:
+        documentType:
+          type: string
+          description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
+          example: SupportArticle
+      description: List of available document types
+    FieldCandidateModel:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the field, also referred to as the field identifier.<br />**Example:** `article_description`
+          example: article_description
+      description: The list of non-empty fields for at least one item.
+    SmartSnippetsDocumentTypesResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The query that was used to fetch document information.<br />**Example:** `@source==("Salesforce Notifier")`
+          example: '@source==("Salesforce Notifier")'
+        documentTypes:
+          type: array
+          description: List of available document types
+          items:
+            $ref: '#/components/schemas/DocumentTypeResponse'
+    SmartSnippetsContentFieldsRequest:
+      type: object
+      properties:
+        sources:
+          type: array
+          description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+          example:
+          - CommunityArticles
+          - SalesforceCatalog
+          items:
+            type: string
+            description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+            example: '["CommunityArticles","SalesforceCatalog"]'
+        filterConditions:
+          type: array
+          description: The custom filter conditions to target specific documents.
+          items:
+            $ref: '#/components/schemas/FilterConditionModel'
+        advancedQuery:
+          type: string
+          description: The query that determines the documents to extract. Cannot be used with other document extraction parameters, e.g. sources, filter conditions, etc.<br />**Example:** `@source==("My source") AND @permanentid AND @language="English"`
+          example: '@source==("My source") AND @permanentid AND @language="English"'
+        documentType:
+          type: string
+          description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
+          example: SupportArticle
+      description: The configuration for the Smart Snippets content fields request.
+    SmartSnippetsPreviewResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The query that was used to fetch document information.<br />**Example:** `@source==("Salesforce Notifier")`
+          example: '@source==("Salesforce Notifier")'
+        numberOfDocumentsInSources:
+          type: integer
+          description: The total number of documents in the selected sources.
+          format: int64
+        numberOfValidDocuments:
+          type: integer
+          description: The number of documents that are candidates for learning.
+          format: int64
+        numberOfDocumentsInSourcesMatchingFilters:
+          type: integer
+          description: The number of documents in the selected sources that match the conditions.
+          format: int64
+        numberOfDocumentsInSourcesMatchingFiltersWithPermanentId:
+          type: integer
+          description: The number of documents in the selected sources that match the conditions and have a `permanentid`.
+          format: int64
+        documentRequirementStatus:
+          type: string
+          description: Status for the number of required documents to build the model.
+          enum:
+          - OK
+          - INSUFFICIENT_DOCUMENTS
+          - NB_OF_DOCUMENTS_OVER_LIMIT
+      description: The Smart Snippets preview response.
+    ContentFieldsResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The query used to retrieve item information.
+          example: '@language="English" AND @documenttype=="SupportArticle"'
+        fields:
+          type: array
+          description: The list of non-empty fields for at least one item.
+          items:
+            $ref: '#/components/schemas/FieldCandidateModel'
+    SmartSnippetsPreviewRequest:
+      type: object
+      properties:
+        sources:
+          type: array
+          description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+          example:
+          - CommunityArticles
+          - SalesforceCatalog
+          items:
+            type: string
+            description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+            example: '["CommunityArticles","SalesforceCatalog"]'
+        filterConditions:
+          type: array
+          description: The custom filter conditions to target specific documents.
+          items:
+            $ref: '#/components/schemas/FilterConditionModel'
+        advancedQuery:
+          type: string
+          description: The query that determines the documents to extract. Cannot be used with other document extraction parameters, e.g. sources, filter conditions, etc.<br />**Example:** `@source==("My source") AND @permanentid AND @language="English"`
+          example: '@source==("My source") AND @permanentid AND @language="English"'
+      description: The configuration for the Smart Snippets preview.
+    FilterConditionModel:
+      required:
+      - field
+      - operator
+      - value
+      type: object
+      properties:
+        field:
+          type: string
+          description: The field to use for the filter.<br />**Example:** `author`
+          example: author
+        operator:
+          type: string
+          description: The operator to use for the condition.<br />**Example:** `EQUALS`
+          example: EQUALS
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - EQUALS, NOT_EQUALS
+        value:
+          type: string
+          description: The value to use for the filter.<br />**Example:** `John Smith`
+          example: John Smith
+      description: A custom filter condition.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

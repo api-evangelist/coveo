@@ -1,0 +1,282 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Group Invites API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Group Invites
+paths:
+  /rest/organizations/{organizationId}/groups/{groupId}/invites:
+    get:
+      tags:
+      - Group Invites
+      summary: List Invites
+      description: 'Lists all invites of a [group](https://docs.coveo.com/en/2867/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getInvites
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: path
+        description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InviteModel'
+      x-pretty-name: getInvites
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/groups/paramId/invites_get
+    post:
+      tags:
+      - Group Invites
+      summary: Invite User to Group
+      description: 'Invites a user to a [group](https://docs.coveo.com/en/2867/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"EDIT","targetId":"{groupId}"}
+
+        ```
+
+        </details>'
+      operationId: inviteMember
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: path
+        description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+        required: true
+        schema:
+          type: string
+      - name: sendEmail
+        in: query
+        description: Whether to send an invitation email alongside the invite.
+        required: false
+        schema:
+          type: boolean
+          default: true
+      requestBody:
+        description: The configuration of the invite to send.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InviteModel'
+      x-pretty-name: inviteMember
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '{groupId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '{groupId}'
+      x-ui-operation-id: /rest/organizations/paramId/groups/paramId/invites_post
+  /rest/organizations/{organizationId}/groups/{groupId}/invites/decline:
+    post:
+      tags:
+      - Group Invites
+      summary: Decline Invite to Group
+      description: Declines an invite to a [group](https://docs.coveo.com/en/2867/).
+      operationId: declineInvite
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: path
+        description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+        required: true
+        schema:
+          type: string
+      - name: invite_code
+        in: cookie
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: declineInvite
+      x-ui-operation-id: /rest/organizations/paramId/groups/paramId/invites/decline_post
+  /rest/organizations/{organizationId}/groups/{groupId}/invites/accept:
+    post:
+      tags:
+      - Group Invites
+      summary: Accept Invite to Group
+      description: Accepts an invite to a [group](https://docs.coveo.com/en/2867/).
+      operationId: acceptInvite
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: path
+        description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+        required: true
+        schema:
+          type: string
+      - name: invite_code
+        in: cookie
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: acceptInvite
+      x-ui-operation-id: /rest/organizations/paramId/groups/paramId/invites/accept_post
+  /rest/organizations/{organizationId}/groups/{groupId}/invites/{usernameOrEmail}:
+    delete:
+      tags:
+      - Group Invites
+      summary: Delete Invite to Group
+      description: 'Deletes an invite to a [group](https://docs.coveo.com/en/2867/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"EDIT","targetId":"{groupId}"}
+
+        ```
+
+        </details>'
+      operationId: deleteInvite
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: path
+        description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+        required: true
+        schema:
+          type: string
+      - name: usernameOrEmail
+        in: path
+        description: The username or email of the invited user.</br>**Example:** `jsmith@email.com-google`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteInvite
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '{groupId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '{groupId}'
+      x-ui-operation-id: /rest/organizations/paramId/groups/paramId/invites/paramId_delete
+components:
+  schemas:
+    InviteModel:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the invited member</br>**Example:**`jsmith`
+        providerUsername:
+          type: string
+          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
+        email:
+          type: string
+          description: The email address to send the invite to, if applicable.</br>**Example:**`jsmith@email.com`
+        provider:
+          type: string
+          description: The provider that the user who sent the invite is assigned to.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        invitedDate:
+          type: string
+          description: The date at which the invite was sent in milliseconds since UNIX epoch.</br>**Example:**`1556722921779`
+          format: date-time
+        expirationDate:
+          type: string
+          description: The expiration date of the invite in number of milliseconds since UNIX epoch.</br>**Example:**`1556722981779`
+          format: date-time
+        id:
+          type: string
+        displayName:
+          type: string
+      description: An invite.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

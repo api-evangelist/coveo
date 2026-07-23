@@ -1,0 +1,230 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Snapshot Access API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Snapshot Access
+paths:
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/access:
+    get:
+      tags:
+      - Snapshot Access
+      summary: Show Access
+      description: 'Shows whether the authenticated user has the specified access level (i.e., read or write) to the content of the target snapshot.<br/>**Required privilege:** `Snapshot - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getHasResourcesAccess
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: snapshotAccessType
+        in: query
+        description: The resource access level to verify.<br/>**Allowed values:**<br/> - `READ`<br/> - `WRITE`
+        required: true
+        schema:
+          type: string
+          enum:
+          - READ
+          - WRITE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SnapshotAccessModel'
+      x-pretty-name: getHasResourcesAccess
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/access_get
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/access/resources:
+    get:
+      tags:
+      - Snapshot Access
+      summary: Show Resources Access
+      description: 'Shows whether the authenticated user has the specified access level (i.e., read or write) to the content of the snapshot and returns a list of missing privileges.<br/>**Required privilege:** `Snapshot - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getMissingPrivilegeAccess
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: snapshotAccessType
+        in: query
+        description: The resource access level to verify.<br/>**Allowed values:**<br/> - `READ`<br/> - `WRITE`
+        required: true
+        schema:
+          type: string
+          enum:
+          - READ
+          - WRITE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ResourceAccessValidationResult'
+      x-pretty-name: getMissingPrivilegeAccess
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/access/resources_get
+  /rest/organizations/{organizationId}/snapshots/access/resource:
+    get:
+      tags:
+      - Snapshot Access
+      summary: Show Resource Access
+      description: 'Lists the resources that the authenticated user can leverage in snapshots in the target [organization](https://docs.coveo.com/en/185/).</br>**Required privilege:** `Snapshot - Edit`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAccessibleResourceTypes
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: string
+      x-pretty-name: getAccessibleResourceTypes
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/access/resource_get
+components:
+  schemas:
+    ResourceAccessValidationResult:
+      type: object
+      properties:
+        accessGranted:
+          type: boolean
+        resourceNames:
+          type: array
+          items:
+            type: string
+        requiredPrivileges:
+          type: array
+          items:
+            $ref: '#/components/schemas/GlobalPrivilegeModel'
+    SnapshotAccessModel:
+      type: object
+      properties:
+        allowed:
+          type: boolean
+    GlobalPrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+        level:
+          type: string
+          description: The access level of the global privileges.`
+          example: GLOBAL
+      description: A global privilege.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

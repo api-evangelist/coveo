@@ -1,0 +1,55 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Search Hub Entitlement Sync API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Search Hub Entitlement Sync
+paths:
+  /internal/jobs/trigger-searchhubs-entitlement-sync:
+    post:
+      operationId: triggerSearchHubEntitlementSyncJob
+      summary: Trigger the AutoSearchHubEntitlementSyncJob to Run Asynchronously
+      tags:
+      - Search Hub Entitlement Sync
+      deprecated: false
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SearchHubEntitlementSyncTriggerJobResponse'
+      security:
+      - oauth2:
+        - full
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required
+definitions:
+  SearchHubEntitlementSyncTriggerJobResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      jobKey:
+        type: string
+    required:
+    - message
+    - jobKey

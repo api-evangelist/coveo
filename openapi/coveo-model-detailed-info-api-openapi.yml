@@ -1,0 +1,511 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Model Detailed Info API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Model Detailed Info
+paths:
+  /rest/organizations/{organizationId}/machinelearning/configuration/modeldetailedinfo/{modelId}:
+    get:
+      tags:
+      - Model Detailed Info
+      summary: Fetch Model
+      description: 'Fetch the model corresponding to the specified model ID.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getModelDetailedInfo
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+        example: mycoveocloudv2organizationg8tp8wu3
+      - name: modelId
+        in: path
+        description: The unique identifier of the target machine learning model.<br />**Example:** `My_Model_ID`
+        required: true
+        schema:
+          type: string
+        example: My_Model_ID
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ModelDetailedInfoModel'
+      x-pretty-name: getModelDetailedInfo
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/modeldetailedinfo/paramId_get
+components:
+  schemas:
+    ModelStatusInfoModel:
+      type: object
+      properties:
+        modelStatus:
+          type: string
+          description: The status of the model.
+          example: ACTIVE
+          enum:
+          - ARCHIVED
+          - SOON_TO_BE_ARCHIVED
+          - BUILD_IN_PROGRESS
+          - ERROR
+          - ERROR_INTERNAL
+          - LIMITED
+          - ACTIVE
+          - INACTIVE
+        daysUntilArchival:
+          type: integer
+          description: The remaining days until the model is archived.
+          format: int64
+          example: 2
+        activeModelBuildDate:
+          type: string
+          description: The epoch timestamp, in milliseconds, of when the active model was built. This field is empty if there are no active models.
+          format: date-time
+        lastBuildStatus:
+          type: string
+          description: The status of the model.
+          example: ACTIVE
+          enum:
+          - ARCHIVED
+          - SOON_TO_BE_ARCHIVED
+          - BUILD_IN_PROGRESS
+          - ERROR
+          - ERROR_INTERNAL
+          - LIMITED
+          - ACTIVE
+          - INACTIVE
+      description: The current status of the model..
+      example: "{\n \"modelStatus\": \"BUILDING\",\n \"daysUntilArchival\" : 3\n }"
+    ModelDetailedInfoModel:
+      type: object
+      properties:
+        modelDisplayName:
+          type: string
+          description: The name of the model configuration.
+          example: My model
+        modelAssociations:
+          type: array
+          description: The associations related to this model
+          example: "[\n  {\n      \"parentId\": \"38b08160-d7d4-4626-8e03-53587c23415d\",\n      \"id\": \"917af358-13fd-4c8e-94af-7cf649bddc48,\n      \"name\": \"test pipeline\",\n      \"associationType\": \"QUERY_PIPELINE\"\n  }\n]"
+          items:
+            $ref: '#/components/schemas/ModelAssociationModel'
+        modelStatusInfo:
+          $ref: '#/components/schemas/ModelStatusInfoModel'
+        modelId:
+          type: string
+          description: The unique identifier of the target machine learning model.<br />**Example:** `My_Model_ID`
+          example: My_Model_ID
+        engineId:
+          type: string
+          description: The id of the engine.<br />**Example:** `topclicks`
+          example: topclicks
+        estimatedPreviousModelUpdateTime:
+          type: integer
+          description: The date and time the model was last updated.
+          format: int64
+          example: 1691762520000
+        nextModelUpdateTime:
+          type: integer
+          description: The date and time the model is scheduled to start its next update.
+          format: int64
+          example: 1691762520000
+        modelIssues:
+          type: array
+          description: The description and troubleshooting messages for a model error or limitation.
+          items:
+            $ref: '#/components/schemas/ModelErrorDescriptionModel'
+        modelDetails:
+          $ref: '#/components/schemas/ModelDetailedServingInfoModel'
+        requiresAssociation:
+          type: boolean
+          description: Indicates if the model requires association.
+        isLicensed:
+          type: boolean
+          description: Indicates if a license is required to create the model.
+    ChunksPerDocumentModel:
+      type: object
+      properties:
+        min:
+          type: number
+          format: float
+        max:
+          type: number
+          format: float
+        mean:
+          type: number
+          format: float
+    ModelDetailedSubModelsModel:
+      type: object
+      properties:
+        numOfItems:
+          type: integer
+          format: int64
+        candidates:
+          type: array
+          items:
+            type: object
+        numOfUsers:
+          type: integer
+          format: int64
+    ModelDetailedLanguagesModel:
+      type: object
+      properties:
+        queries:
+          type: integer
+          format: int32
+        words:
+          type: integer
+          format: int32
+        stopwords:
+          type: integer
+          format: int32
+        topfacets:
+          type: array
+          items:
+            type: string
+        contextKeysToDocuments:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        docPerFilters:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+    ModelDetailedPreparationDetailsModel:
+      type: object
+      properties:
+        trainDatasetsDetails:
+          $ref: '#/components/schemas/DatasetDetails'
+        testDatasetsDetails:
+          $ref: '#/components/schemas/DatasetDetails'
+        facetsDetails:
+          $ref: '#/components/schemas/FacetsDetails'
+    FacetsDetails:
+      type: object
+      properties:
+        facetLabels:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    ModelErrorDescriptionModel:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A description of an error or limitation present in the model.
+        troubleshoot:
+          type: string
+          description: The recommended action to perform to resolve the error or limitation.
+      description: The description and troubleshooting messages for a model error or limitation.
+    FacetPerformanceDetails:
+      type: object
+      properties:
+        hit1:
+          type: number
+          format: float
+        hit3:
+          type: number
+          format: float
+    ModelAssociationModel:
+      type: object
+      properties:
+        parentId:
+          type: string
+          description: The unique identifier of the query pipeline to which the model is associated.
+          example: 38b08160-d7d4-4626-8e03-53587c23415d
+        id:
+          type: string
+          description: The unique identifier of the model association.
+          example: 917af358-13fd-4c8e-94af-7cf649bddc48
+        name:
+          type: string
+          description: The name of the query pipeline or case assist configuration the model is associated with.
+          example: association name
+        associationType:
+          type: string
+          description: The type of the association.
+          example: QUERY_PIPELINE
+          enum:
+          - QUERY_PIPELINE
+          - CASE_ASSIST
+      description: The associations related to this model
+      example: "[\n  {\n      \"parentId\": \"38b08160-d7d4-4626-8e03-53587c23415d\",\n      \"id\": \"917af358-13fd-4c8e-94af-7cf649bddc48,\n      \"name\": \"test pipeline\",\n      \"associationType\": \"QUERY_PIPELINE\"\n  }\n]"
+    DatasetFieldDetails:
+      type: object
+      properties:
+        numSamples:
+          type: integer
+          format: int32
+        labelsDistribution:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+    ModelDetailedServingInfoModel:
+      type: object
+      properties:
+        possibleRecommendations:
+          type: integer
+          format: int32
+        candidates:
+          type: integer
+          format: int32
+        totalQueries:
+          type: integer
+          format: int32
+        userContextFields:
+          type: array
+          items:
+            type: string
+        contentIDKeys:
+          type: array
+          items:
+            type: string
+        candidatesPerFilters:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        contextCandidateExamples:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        languages:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ModelDetailedLanguagesModel'
+        candidateExamples:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        candidatesPerLanguages:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        minClickCountByLang:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        subModels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ModelDetailedSubModelsModel'
+        modelDetailedBuildingStats:
+          $ref: '#/components/schemas/ModelDetailedBuildingStatsModel'
+        modelDetailedTrainingDetails:
+          $ref: '#/components/schemas/ModelDetailedTrainingDetailsModel'
+        modelDetailedPreparationDetails:
+          $ref: '#/components/schemas/ModelDetailedPreparationDetailsModel'
+      description: The detailed information about the model.
+    ModelDetailedTrainingDetailsModel:
+      type: object
+      properties:
+        performanceDetails:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FacetPerformanceDetails'
+    SnippetsPerDocumentModel:
+      type: object
+      properties:
+        min:
+          type: number
+          format: float
+        max:
+          type: number
+          format: float
+        mean:
+          type: number
+          format: float
+    ModelDetailedCommerceEventsModel:
+      type: object
+      properties:
+        removeFromCart:
+          type: integer
+          format: int32
+        addToCart:
+          type: integer
+          format: int32
+        addPurchase:
+          type: integer
+          format: int32
+        detailView:
+          type: integer
+          format: int32
+    ModelDetailedStatsPerSourceModel:
+      type: object
+      properties:
+        sourceName:
+          type: string
+        documentCount:
+          type: integer
+          format: int32
+        invalidHtmlDocumentCount:
+          type: integer
+          format: int32
+        documentWithoutIdCount:
+          type: integer
+          format: int32
+        documentWithDuplicatedIdCount:
+          type: integer
+          format: int32
+        documentsWithChunksCount:
+          type: integer
+          format: int32
+        documentsWithChunksRatio:
+          type: integer
+          format: int32
+        chunkCount:
+          type: integer
+          format: int32
+        snippetsPerDocument:
+          $ref: '#/components/schemas/SnippetsPerDocumentModel'
+        chunksPerDocument:
+          $ref: '#/components/schemas/ChunksPerDocumentModel'
+    ModelDetailedBuildingStatsModel:
+      type: object
+      properties:
+        documentWithSnippetRatio:
+          type: number
+          format: float
+        snippetCount:
+          type: integer
+          format: int32
+        meanSnippetLength:
+          type: number
+          format: float
+        headerCount:
+          type: integer
+          format: int32
+        documentCount:
+          type: integer
+          format: int32
+        documentWithSnippetCount:
+          type: integer
+          format: int32
+        searchEventCount:
+          type: integer
+          format: int32
+        clickEventCount:
+          type: integer
+          format: int32
+        viewEventCount:
+          type: integer
+          format: int32
+        customEventCount:
+          type: integer
+          format: int32
+        segmentedVisitsCount:
+          type: integer
+          format: int32
+        searchCount:
+          type: integer
+          format: int32
+        clickCount:
+          type: integer
+          format: int32
+        viewCount:
+          type: integer
+          format: int32
+        visitsCount:
+          type: integer
+          format: int32
+        facetSelectEventCount:
+          type: integer
+          format: int32
+        invalidHtmlDocumentCount:
+          type: integer
+          format: int32
+        documentWithoutIdCount:
+          type: integer
+          format: int32
+        documentWithDuplicatedIdCount:
+          type: integer
+          format: int32
+        documentsWithChunksCount:
+          type: integer
+          format: int32
+        documentsWithChunksRatio:
+          type: number
+          format: float
+        chunkCount:
+          type: integer
+          format: int32
+        meanChunkLength:
+          type: number
+          format: float
+        chunksPerDocument:
+          $ref: '#/components/schemas/ChunksPerDocumentModel'
+        snippetsPerDocument:
+          $ref: '#/components/schemas/SnippetsPerDocumentModel'
+        addToCart:
+          type: integer
+          format: int32
+        addPurchase:
+          type: integer
+          format: int32
+        modelDetailedStatsPerSource:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModelDetailedStatsPerSourceModel'
+        commerceEventCounts:
+          $ref: '#/components/schemas/ModelDetailedCommerceEventsModel'
+    DatasetDetails:
+      type: object
+      properties:
+        numRows:
+          type: integer
+          format: int32
+        dataDetails:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DatasetFieldDetails'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

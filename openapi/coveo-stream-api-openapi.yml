@@ -1,0 +1,2983 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Stream API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- description: Manage streams
+  name: Stream
+paths:
+  /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/deleteolderthan/{epochMilliseconds}:
+    post:
+      consumes:
+      - application/json
+      description: Delete documents indexed before specified epoch milliseconds.
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the data collection.  \n**Example:** `myorganization-rp5rxzbdz753uhndklv2ztkfgy`"
+        in: path
+        name: dataCollectionId
+        required: true
+        type: string
+      - description: "The epoch milliseconds timestamp limit used to delete documents indexed before it.  \n**Example:** `1699456507127 for nov 8th 2023 15:15 UTC time`"
+        in: path
+        name: epochMilliseconds
+        required: true
+        type: string
+      - description: "A grace period (in minutes) whose purpose is to give the Coveo Cloud V2 indexing pipeline enough time to finish processing any previously enqueued operation that would affect the target stream enabled source. Default value is 15 minutes.  \n**Example:** `5`"
+        format: int32
+        in: query
+        minimum: 0
+        name: queueDelay
+        required: false
+        type: integer
+      produces:
+      - application/json
+      responses:
+        '201':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/CatalogStreamOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Delete Old Documents
+      tags:
+      - Stream
+      x-pretty-name: deleteOlderThanStream
+  /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/merge:
+    put:
+      consumes:
+      - application/json
+      description: Perform a shallow merge with a batch of items in a Data Collection.
+      externalDocs:
+        description: Merge a batch of items in a Data Collection.
+        url: https://docs.coveo.com/en/p4eb0515/coveo-for-commerce/partial-catalog-data-updates#shallow-merge-operations
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the data collection.  \n**Example:** `myorganization-rp5rxzbdz753uhndklv2ztkfgy`"
+        in: path
+        name: dataCollectionId
+        required: true
+        type: string
+      - description: "The unique identifier of the Amazon S3 file container into which the JSON definition of the content update was previously uploaded (see [Create a file container](https://docs.coveo.com/en/43/)).  \n**Example:** d22778ca-7f42-4e13-9d9a-47d01bce866c"
+        in: query
+        name: fileId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '202':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/CatalogStreamOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Merge Entities of a Data Collection
+      tags:
+      - Stream
+      x-pretty-name: mergeStream
+  /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/open:
+    post:
+      consumes:
+      - application/json
+      description: Opens a stream for upload.
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the data collection.  \n**Example:** `myorganization-rp5rxzbdz753uhndklv2ztkfgy`"
+        in: path
+        name: dataCollectionId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '201':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/OpenStreamOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Open a Stream
+      tags:
+      - Stream
+      x-pretty-name: openStream
+  /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/update:
+    put:
+      consumes:
+      - application/json
+      description: Manages a batch of items in a Data Collection.
+      externalDocs:
+        description: Upload a batch of items to a Data Collection
+        url: https://docs.coveo.com/en/p4eb0129/coveo-for-commerce/full-catalog-data-updates#step-3-send-the-file-container-to-update-your-source-update-operation
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the data collection.  \n**Example:** `myorganization-rp5rxzbdz753uhndklv2ztkfgy`"
+        in: path
+        name: dataCollectionId
+        required: true
+        type: string
+      - description: "The unique identifier of the Amazon S3 file container into which the JSON definition of the content update was previously uploaded (see [Create a file container](https://docs.coveo.com/en/43/)).  \n**Example:** d22778ca-7f42-4e13-9d9a-47d01bce866c"
+        in: query
+        name: fileId
+        required: true
+        type: string
+      - description: '**Experimental** An identifier to process the JSON payload by groups. The shard must be a string from 1 to 10 alphanumeric characters.'
+        in: path
+        name: shard
+        required: false
+        type: string
+      produces:
+      - application/json
+      responses:
+        '202':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/CatalogStreamOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Update Entities of a Data Collection
+      tags:
+      - Stream
+      x-pretty-name: updateStream
+  /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/{streamId}/chunk:
+    post:
+      consumes:
+      - application/json
+      description: Requests another chunk of a stream for upload.
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the data collection.  \n**Example:** `myorganization-rp5rxzbdz753uhndklv2ztkfgy`"
+        in: path
+        name: dataCollectionId
+        required: true
+        type: string
+      - description: "The unique identifier of the stream.  \n**Example:** `18320d0e-c2e8-4a56-acfc-4eae55f92380`"
+        in: path
+        name: streamId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/ChunkOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Get a New Chunk for a Stream
+      tags:
+      - Stream
+      x-pretty-name: getStreamChunk
+  /organizations/{organizationId}/data-collections/{dataCollectionId}/stream/{streamId}/close:
+    post:
+      consumes:
+      - application/json
+      description: Closes a stream.
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the data collection.  \n**Example:** `myorganization-rp5rxzbdz753uhndklv2ztkfgy`"
+        in: path
+        name: dataCollectionId
+        required: true
+        type: string
+      - description: "The unique identifier of the stream.  \n**Example:** `18320d0e-c2e8-4a56-acfc-4eae55f92380`"
+        in: path
+        name: streamId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/CatalogStreamOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Close a Stream
+      tags:
+      - Stream
+      x-pretty-name: closeStream
+  /organizations/{organizationId}/sources/{sourceId}/stream/deleteolderthan/{epochMilliseconds}:
+    post:
+      consumes:
+      - application/json
+      description: Delete documents indexed before specified epoch milliseconds.
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the target source.  \n**Example:** `rp5rxzbdz753uhndklv2ztkfgy-mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: sourceId
+        required: true
+        type: string
+      - description: "The epoch milliseconds timestamp limit used to delete documents indexed before it.  \n**Example:** `1699456507127 for nov 8th 2023 15:15 UTC time`"
+        in: path
+        name: epochMilliseconds
+        required: true
+        type: string
+      - description: "A grace period (in minutes) whose purpose is to give the Coveo Cloud V2 indexing pipeline enough time to finish processing any previously enqueued operation that would affect the target stream enabled source. Default value is 15 minutes.  \n**Example:** `5`"
+        format: int32
+        in: query
+        minimum: 0
+        name: queueDelay
+        required: false
+        type: integer
+      produces:
+      - application/json
+      responses:
+        '201':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/CatalogStreamOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Delete Old Documents
+      tags:
+      - Stream
+      x-pretty-name: deleteOlderThanStream
+  /organizations/{organizationId}/sources/{sourceId}/stream/merge:
+    put:
+      consumes:
+      - application/json
+      description: Perform a shallow merge with a batch of items in a Catalog source.
+      externalDocs:
+        description: Merge a batch of items in a Catalog source
+        url: https://docs.coveo.com/en/p4eb0515/coveo-for-commerce/partial-catalog-data-updates#shallow-merge-operations
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the target Push source (see [Creating a Push Source](https://developers.coveo.com/x/34s9Ag)).  \n**Example:** `rp5rxzbdz753uhndklv2ztkfgy-mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: sourceId
+        required: true
+        type: string
+      - description: "The unique identifier of the Amazon S3 file container into which the JSON definition of the content update was previously uploaded (see [Create a file container](https://docs.coveo.com/en/43/)).  \n**Example:** d22778ca-7f42-4e13-9d9a-47d01bce866c"
+        in: query
+        name: fileId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '202':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/CatalogStreamOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Merge Documents of a Catalog Stream Source
+      tags:
+      - Stream
+      x-pretty-name: mergeStream
+  /organizations/{organizationId}/sources/{sourceId}/stream/open:
+    post:
+      consumes:
+      - application/json
+      description: Opens a stream for upload.
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the target source.  \n**Example:** `rp5rxzbdz753uhndklv2ztkfgy-mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: sourceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '201':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/OpenStreamOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Open a Stream
+      tags:
+      - Stream
+      x-pretty-name: openStream
+  /organizations/{organizationId}/sources/{sourceId}/stream/update:
+    put:
+      consumes:
+      - application/json
+      description: Manages a batch of items in a Catalog source.
+      externalDocs:
+        description: Upload a batch of items to a Catalog source
+        url: https://docs.coveo.com/en/p4eb0129/coveo-for-commerce/full-catalog-data-updates#step-3-send-the-file-container-to-update-your-source-update-operation
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the target Push source (see [Creating a Push Source](https://developers.coveo.com/x/34s9Ag)).  \n**Example:** `rp5rxzbdz753uhndklv2ztkfgy-mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: sourceId
+        required: true
+        type: string
+      - description: "The unique identifier of the Amazon S3 file container into which the JSON definition of the content update was previously uploaded (see [Create a file container](https://docs.coveo.com/en/43/)).  \n**Example:** d22778ca-7f42-4e13-9d9a-47d01bce866c"
+        in: query
+        name: fileId
+        required: true
+        type: string
+      - description: '**Experimental** An identifier to process the JSON payload by groups. The shard must be a string from 1 to 10 alphanumeric characters.'
+        in: path
+        name: shard
+        required: false
+        type: string
+      produces:
+      - application/json
+      responses:
+        '202':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/CatalogStreamOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Update a Catalog Stream Source
+      tags:
+      - Stream
+      x-pretty-name: updateStream
+  /organizations/{organizationId}/sources/{sourceId}/stream/{streamId}/chunk:
+    post:
+      consumes:
+      - application/json
+      description: Requests another chunk of a stream for upload.
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the target source.  \n**Example:** `rp5rxzbdz753uhndklv2ztkfgy-mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: sourceId
+        required: true
+        type: string
+      - description: "The unique identifier of the stream.  \n**Example:** `18320d0e-c2e8-4a56-acfc-4eae55f92380`"
+        in: path
+        name: streamId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/ChunkOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Get a New Chunk for a Stream
+      tags:
+      - Stream
+      x-pretty-name: getStreamChunk
+  /organizations/{organizationId}/sources/{sourceId}/stream/{streamId}/close:
+    post:
+      consumes:
+      - application/json
+      description: Closes a stream.
+      parameters:
+      - description: "The unique identifier of the target Coveo Cloud V2 organization.  \n**Example:** `mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: organizationId
+        required: true
+        type: string
+      - description: "The unique identifier of the target source.  \n**Example:** `rp5rxzbdz753uhndklv2ztkfgy-mycoveocloudv2organizationg8tp8wu3`"
+        in: path
+        name: sourceId
+        required: true
+        type: string
+      - description: "The unique identifier of the stream.  \n**Example:** `18320d0e-c2e8-4a56-acfc-4eae55f92380`"
+        in: path
+        name: streamId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Created
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/CatalogStreamOutArgs'
+        '400':
+          description: Bad request
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not found
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '412':
+          description: Precondition Failed
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '415':
+          description: Unsupported Media Type
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '429':
+          description: Too many Requests
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Retry-After:
+              type: number
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          headers:
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Content-Security-Policy:
+              type: string
+            Referrer-Policy:
+              type: string
+            Strict-Transport-Security:
+              type: string
+            X-Content-Type-Options:
+              type: string
+            X-Frame-Options:
+              type: string
+            X-XSS-Protection:
+              type: string
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - oauth2:
+        - full
+      summary: Close a Stream
+      tags:
+      - Stream
+      x-pretty-name: closeStream
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required
+definitions:
+  ChunkOutArgs:
+    properties:
+      fileId:
+        description: "The unique identifier of the file container.  \nYou can use this identifier as the `fileId` query parameter value when pushing a batch of items or security identities, or as the `compressedBinaryDataFileId` property value when pushing item data.  \n**Example:** `\"b5e8767e-8f0d-4a89-9095-1127915c89c7\"`"
+        type: string
+      requiredHeaders:
+        additionalProperties:
+          description: The HTTP headers to include when sending a `POST` request to the `uploadUri`.
+          type: string
+        type: object
+      uploadUri:
+        description: "The presigned URI of the file container.  \nYou can upload data into the file container by sending a `PUT` request whose body is your raw textual data to this URI.  \n**Example:** `\"https://s3.amazonaws.com/coveo-nprod-customerdata/proda/blobstore/[...]\"`"
+        type: string
+    type: object
+  CatalogStreamOutArgs:
+    properties:
+      orderingId:
+        description: A unique identifier that represents the order of the request. By default, the Stream API automatically sets this parameter to the current number of milliseconds since the Unix epoch, providing a timestamp that can also serve as a unique order ID.
+        type: string
+      requestId:
+        requestId: A unique identifier for the request. This ID helps in tracking and identifying individual requests, ensuring that each request can be distinctly recognized.
+        type: string
+    type: object
+  Error:
+    properties:
+      errorCode:
+        type: string
+      message:
+        type: string
+    type: object
+  OpenStreamOutArgs:
+    properties:
+      fileId:
+        description: "The unique identifier of the file container. \n**Example:** `\"b5e8767e-8f0d-4a89-9095-1127915c89c7\"`"
+        type: string
+      requiredHeaders:
+        additionalProperties:
+          description: The HTTP headers to include when sending a `POST` request to the `uploadUri`.
+          type: string
+        type: object
+      streamId:
+        description: "Unique identifier for the stream. \nThis identifier is required to request additional chunks in the stream, or to close the stream."
+        type: string
+      uploadUri:
+        description: "The presigned URI of the file container.  \nYou can upload data into the file container by sending a `PUT` request whose body is your raw textual data to this URI.  \n**Example:** `\"https://s3.amazonaws.com/coveo-nprod-customerdata/proda/blobstore/[...]\"`"
+        type: string
+    type: object

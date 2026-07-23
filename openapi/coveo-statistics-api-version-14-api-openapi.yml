@@ -1,0 +1,705 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Statistics API - Version 14 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Statistics API - Version 14
+paths:
+  /v14/stats/combinedData:
+    get:
+      tags:
+      - Statistics API - Version 14
+      summary: Get Metrics Combined with Dimensions for a Date Range
+      description: 'This endpoint is deprecated and will be removed on October 1st, 2024.
+
+        There is one value of each metric for every possible dimension combination.'
+      operationId: get__v14_stats_combinedData
+      parameters:
+      - name: m
+        in: query
+        description: The metrics to fetch.
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: tz
+        in: query
+        description: Timezone used for calculations.
+        schema:
+          type: string
+          default: Z
+      - name: d
+        in: query
+        description: Timezone used for calculations.
+        schema:
+          type: array
+          items:
+            type: string
+            default: Z
+          default: Z
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fm
+        in: query
+        description: The filter that will be applied to the metrics. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: s
+        in: query
+        description: The field to order the results by. It must be a dimension, metric or custom dimension that was specified in the 'm' or the 'd' parameter.
+        schema:
+          type: string
+      - name: p
+        in: query
+        description: The response's page to access, starting at 1.
+        schema:
+          type: integer
+          format: int32
+      - name: n
+        in: query
+        description: The number of result to include in a page.
+        schema:
+          type: integer
+          format: int32
+      - name: asc
+        in: query
+        description: Whether to sort by ascending order.
+        schema:
+          type: boolean
+          default: true
+      - name: includeMetadata
+        in: query
+        description: Whether to include metadata regarding the results (total count and unique counts, if applicable).
+        schema:
+          type: boolean
+          default: true
+      - name: format
+        in: query
+        description: The format of the response. Default is JSON.
+        schema:
+          type: string
+          enum:
+          - JSON
+          - CSV
+          - JSON,CSV
+          default: JSON
+      - name: bindOnLastSearch
+        in: query
+        description: bindOnLastSearch
+        schema:
+          type: boolean
+          default: true
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CombinedDataResponseV14'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/CombinedDataResponseV14'
+      deprecated: true
+  /v14/stats/trends:
+    get:
+      tags:
+      - Statistics API - Version 14
+      summary: Get Trends of a Metric Combined with Dimensions for a Date Range
+      description: 'This endpoint is deprecated and will be removed on October 1st, 2024.
+
+        There is one value of each metric for every possible dimension combination.'
+      operationId: get__v14_stats_trends
+      parameters:
+      - name: m
+        in: query
+        description: The metrics to fetch.
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: previousFrom
+        in: query
+        description: The beginning date of the previous date range, when reporting trends. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'. If not specified, it will be the 'from' date minus the duration of the 'from'-'to' date range.
+        schema:
+          type: string
+      - name: previousTo
+        in: query
+        description: The end date of the previous date range, when reporting trends. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'. If not specified, it will be the 'to' date minus the duration of the 'from'-'to' date range.
+        schema:
+          type: string
+      - name: tz
+        in: query
+        description: Timezone used for calculations.
+        schema:
+          type: string
+          default: Z
+      - name: d
+        in: query
+        description: Timezone used for calculations.
+        schema:
+          type: array
+          items:
+            type: string
+            default: Z
+          default: Z
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fm
+        in: query
+        description: The filter that will be applied to the metrics. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: s
+        in: query
+        description: The field to order the results by. It must be a dimension, metric or custom dimension that was specified in the 'm' or the 'd' parameter.
+        schema:
+          type: string
+      - name: p
+        in: query
+        description: The response's page to access, starting at 1.
+        schema:
+          type: integer
+          format: int32
+      - name: n
+        in: query
+        description: The number of result to include in a page.
+        schema:
+          type: integer
+          format: int32
+      - name: asc
+        in: query
+        description: Whether to sort by ascending order.
+        schema:
+          type: boolean
+          default: true
+      - name: includeMetadata
+        in: query
+        description: Whether to include metadata regarding the results (total count and unique counts, if applicable).
+        schema:
+          type: boolean
+          default: true
+      - name: format
+        in: query
+        description: The format of the response. Default is JSON.
+        schema:
+          type: string
+          enum:
+          - JSON
+          - CSV
+          default: JSON
+      - name: bindOnLastSearch
+        in: query
+        description: bindOnLastSearch
+        schema:
+          type: boolean
+          default: true
+      - name: t
+        in: query
+        description: The trends to caculate.
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CombinedDataResponseV14'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/CombinedDataResponseV14'
+      deprecated: true
+  /v14/stats/globalData:
+    get:
+      tags:
+      - Statistics API - Version 14
+      summary: Get Global Data for Each Metric for a Date Range
+      description: 'This endpoint is deprecated and will be removed on October 1st, 2024.
+
+        Global data contain the total, the daily peak and the daily average.'
+      operationId: get__v14_stats_globalData
+      parameters:
+      - name: m
+        in: query
+        description: The metrics to fetch.
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: tz
+        in: query
+        description: Timezone used for calculations.
+        schema:
+          type: string
+          default: Z
+      - name: d
+        in: query
+        description: The dimensions to fetch. Required when the Activity metric is requested as it has to be based on a dimension.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: i
+        in: query
+        description: The interval on which data will be grouped. Default value is DAY.
+        schema:
+          type: string
+          enum:
+          - MINUTE
+          - HOUR
+          - DAY
+          - WEEK
+          - MONTH
+          - MINUTE,HOUR,DAY,WEEK,MONTH
+          default: DAY
+      - name: bindOnLastSearch
+        in: query
+        description: bindOnLastSearch
+        schema:
+          type: boolean
+          default: true
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalAggregatedDataResponseV14'
+      deprecated: true
+  /v14/stats/graphDataPoints:
+    get:
+      tags:
+      - Statistics API - Version 14
+      summary: Get Graph Data Points for the Metrics for a Date Range
+      description: 'This endpoint is deprecated and will be removed on October 1st, 2024.
+
+        There is one data point per interval per metric. The interval can be specified with the ''i'' query parameter.'
+      operationId: get__v14_stats_graphDataPoints
+      parameters:
+      - name: m
+        in: query
+        description: The metrics to fetch.
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: tz
+        in: query
+        description: Timezone used for calculations.
+        schema:
+          type: string
+          default: Z
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: i
+        in: query
+        description: The interval on which data will be grouped. Default value is DAY.
+        schema:
+          type: string
+          enum:
+          - MINUTE
+          - HOUR
+          - DAY
+          - WEEK
+          - MONTH
+          - MINUTE,HOUR,DAY,WEEK,MONTH
+          default: DAY
+      - name: bindOnLastSearch
+        in: query
+        description: bindOnLastSearch
+        schema:
+          type: boolean
+          default: true
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAggregatedDataResponseV14'
+      deprecated: true
+  /v14/stats/monitoring/health:
+    get:
+      tags:
+      - Statistics API - Version 14
+      summary: Health Check for the Statistics Service
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_stats_monitoring_health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/stats/status:
+    get:
+      tags:
+      - Statistics API - Version 14
+      summary: Get the Statistics Service Status
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_stats_status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/stats/visits:
+    get:
+      tags:
+      - Statistics API - Version 14
+      summary: Get the Details of the Visits Matching the Specified Criteria
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_stats_visits
+      parameters:
+      - name: from
+        in: query
+        description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        required: true
+        schema:
+          type: string
+      - name: tz
+        in: query
+        description: Timezone used for calculations.
+        schema:
+          type: string
+          default: Z
+      - name: d
+        in: query
+        description: The dimensions to fetch.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: f
+        in: query
+        description: The filter that will be applied to the events dimensions. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: fn
+        in: query
+        description: The filter that will be applied to dimensions to exclude events from the results. Multiple filter parameters are joined with the AND operator.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: s
+        in: query
+        description: The field to order the results by. It must be a dimension, metric or custom dimension that was specified in the 'm' or the 'd' parameter.
+        schema:
+          type: string
+          default: eventDatetime
+      - name: p
+        in: query
+        description: The response's page to access, starting at 1.
+        schema:
+          type: integer
+          format: int32
+      - name: n
+        in: query
+        description: The number of result to include in a page.
+        schema:
+          type: integer
+          format: int32
+      - name: asc
+        in: query
+        description: Whether to sort by ascending order.
+        schema:
+          type: boolean
+          default: false
+      - name: includeMetadata
+        in: query
+        description: Whether to include metadata regarding the results (total count and unique counts, if applicable).
+        schema:
+          type: boolean
+          default: true
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitsStatisticsResponseV14'
+      deprecated: true
+    post:
+      tags:
+      - Statistics API - Version 14
+      summary: Force a Visit View Update
+      description: 'This endpoint is deprecated and will be removed on October 1st, 2024.
+
+        Global data contain the total, the daily peak and the daily average.'
+      operationId: post__v14_stats_visits
+      parameters:
+      - name: org
+        in: query
+        description: The name of the organization (Coveo Cloud V2 only)
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content
+      deprecated: true
+components:
+  schemas:
+    SummaryStatisticsPojo:
+      type: object
+      properties: {}
+      description: The sum, average, max and min for the requested metrics.
+    EventPojo:
+      type: object
+      properties: {}
+      description: The visit's events
+    GraphAggregatedDataResponseV14:
+      required:
+      - dataPoints
+      - totals
+      type: object
+      properties:
+        dataPoints:
+          type: array
+          description: A collection of data points
+          items:
+            $ref: '#/components/schemas/DataPoint'
+        totals:
+          type: object
+          additionalProperties:
+            type: number
+            description: The totals for the requested metrics.
+          description: The totals for the requested metrics.
+        stats:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SummaryStatisticsPojo'
+          description: The sum, average, max and min for the requested metrics.
+      description: The data points to be used in a graph, aggregated by the specified time interval.
+    VisitsStatisticsResponseV14:
+      required:
+      - visits
+      type: object
+      properties:
+        visits:
+          type: array
+          description: The visits matching the specified criteria
+          items:
+            $ref: '#/components/schemas/VisitStatisticsResponseV15'
+        totalNumberOfVisits:
+          type: integer
+          description: The total number of visits matching
+          format: int32
+      description: The visits matching the specified criteria
+    VisitStatisticsResponseV15:
+      required:
+      - visitId
+      type: object
+      properties:
+        visitId:
+          type: string
+          description: The visit id
+        events:
+          type: array
+          description: The visit's events
+          items:
+            $ref: '#/components/schemas/EventPojo'
+        numberOfEvents:
+          type: integer
+          description: The number of events
+          format: int32
+      description: The visit matching the specified criteria
+    GlobalAggregatedDataResponseV14:
+      required:
+      - globalDatas
+      type: object
+      properties:
+        globalDatas:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: number
+              description: The global values by metrics. Usually a unique count, a daily count or daily average
+            description: The global values by metrics. Usually a unique count, a daily count or daily average
+          description: The global values by metrics. Usually a unique count, a daily count or daily average
+      description: The global aggregated values by metrics
+    StatusResponse:
+      type: object
+      description: Service's status information
+    CombinedDataResponseV14:
+      required:
+      - combinations
+      type: object
+      properties:
+        combinations:
+          type: array
+          description: The metrics/dimensions combinations
+          items:
+            type: object
+            additionalProperties:
+              type: object
+              description: The metrics/dimensions combinations
+            description: The metrics/dimensions combinations
+        uniqueCounts:
+          type: object
+          additionalProperties:
+            type: object
+            description: The unique counts for the different values of all specified dimensions
+          description: The unique counts for the different values of all specified dimensions
+        totalNumberOfResults:
+          type: integer
+          description: The total number of combinations available
+          format: int32
+      description: The values of the metrics combined by dimensions
+    DataPoint:
+      required:
+      - datas
+      - dateTime
+      type: object
+      properties:
+        dateTime:
+          type: string
+          description: The moment in time that this point represents
+          format: date-time
+        datas:
+          type: object
+          additionalProperties:
+            type: number
+            description: The metric values
+          description: The metric values
+      description: A collection of data points
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

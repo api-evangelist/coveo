@@ -1,0 +1,1032 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Crawling Module API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Crawling Module
+paths:
+  /rest/organizations/{organizationId}/crawlingmodules/{crawlingModuleId}/logrequests/{crawlingModuleLogRequestId}/state:
+    put:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE_LOG_REQUEST","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateCrawlingModuleLogRequestState
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleLogRequestId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrawlingModuleLogRequestStateModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+      x-pretty-name: updateCrawlingModuleLogRequestState
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/logrequests/paramId/state_put
+  /rest/organizations/{organizationId}/crawlingmodules/{crawlingModuleId}/reporting:
+    post:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"EDIT","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createCrawlingModuleReport
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: destination
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - CORE
+          - SERVICE
+          - WEBSITE
+          - WORKPLACE
+          - INFRA
+          - GENERIC
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrawlingModuleReportModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+      x-pretty-name: createCrawlingModuleReport
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/reporting_post
+  /rest/organizations/{organizationId}/crawlingmodules/{crawlingModuleId}/logrequests:
+    get:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE_LOG_REQUEST","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModuleLogRequests
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - SUCCESSFUL
+          - EMPTY
+          - ERROR
+          - TIMEOUT
+          - RUNNING
+          - CREATED
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageModelCrawlingModuleLogRequestModel'
+      x-pretty-name: getCrawlingModuleLogRequests
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/logrequests_get
+    post:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE_LOG_REQUEST","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createCrawlingModuleLogRequest
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCrawlingModuleLogRequestModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CrawlingModuleLogRequestModel'
+      x-pretty-name: createCrawlingModuleLogRequest
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/logrequests_post
+  /rest/organizations/{organizationId}/crawlingmodules/{crawlingModuleId}/logrequests/{crawlingModuleLogRequestId}/uploadurl:
+    get:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE_LOG_REQUEST","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModuleLogRequestUploadUrl
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleLogRequestId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ValueModelString'
+      x-pretty-name: getCrawlingModuleLogRequestUploadUrl
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/logrequests/paramId/uploadurl_get
+  /rest/organizations/{organizationId}/crawlingmodules/{crawlingModuleId}/logrequests/{crawlingModuleLogRequestId}/download:
+    get:
+      tags:
+      - Crawling Module
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE_LOG_REQUEST","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModuleLogRequestDownload
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleLogRequestId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CrawlingModuleLogRequestDownloadModel'
+      x-pretty-name: getCrawlingModuleLogRequestDownload
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE_LOG_REQUEST
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodules/paramId/logrequests/paramId/download_get
+  /rest/organizations/{organizationId}/crawlingmodule/{crawlingModuleId}:
+    put:
+      tags:
+      - Crawling Module
+      summary: Report Crawling Module Deployment
+      description: 'Reports a crawling module deployment in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).</br>**Required privilege:** On-Premise Administration - Edit or Crawling Module - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"EDIT","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: reportCrawlingModule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        description: 'The unique identifier of the target crawling module.</br>**Example:** mycoveocloudv2organization76kcam-1e7c13e2-afe7-4510-bd00-cd5fd8ba9b0d
+
+          '
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The JSON configuration of the crawling module.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportCrawlingModuleModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CrawlingModuleModel'
+      x-pretty-name: reportCrawlingModule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/paramId_put
+    delete:
+      tags:
+      - Crawling Module
+      summary: Remove a Crawling Module Deployment
+      description: 'Remove an inactive Crawling Module Deployment</br>**Required privilege:** On-Premise Administration - Edit or Crawling Module - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"EDIT","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: removeCrawlingModule
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        description: 'The unique identifier of the target crawling module.</br>**Example:** mycoveocloudv2organization76kcam-1e7c13e2-afe7-4510-bd00-cd5fd8ba9b0d
+
+          '
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: removeCrawlingModule
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: EDIT
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/paramId_delete
+  /rest/crawlingmodule/upgradechannels/{upgradeChannel}/version/{version}:
+    put:
+      tags:
+      - Crawling Module
+      summary: Sets the Crawling Module Version for an Upgrade Channel
+      operationId: setCrawlingModuleUpgradeChannelVersion
+      parameters:
+      - name: upgradeChannel
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - INTERNAL
+          - LATEST
+          - STABLE
+      - name: version
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+      x-pretty-name: setCrawlingModuleUpgradeChannelVersion
+      x-ui-operation-id: /rest/crawlingmodule/upgradechannels/paramId/version/paramId_put
+  /rest/organizations/{organizationId}/crawlingmodule:
+    get:
+      tags:
+      - Crawling Module
+      summary: List Crawling Modules
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"VIEW","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModulesForOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrawlingModuleModel'
+      x-pretty-name: getCrawlingModulesForOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule_get
+    post:
+      tags:
+      - Crawling Module
+      summary: List Crawling Modules by Ids
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"VIEW","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModulesByIdsForOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrawlingModuleModel'
+      x-pretty-name: getCrawlingModulesByIdsForOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule_post
+  /rest/organizations/{organizationId}/crawlingmodule/{crawlingModuleId}/update:
+    get:
+      tags:
+      - Crawling Module
+      summary: Get the Update Status
+      description: 'Get the update status of a crawling module for an organization.</br>**Required privilege:** Crawling Module - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getUpdateStatus
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: crawlingModuleId
+        in: path
+        description: 'The unique identifier of the target crawling module.</br>**Example:** mycoveocloudv2organization76kcam-1e7c13e2-afe7-4510-bd00-cd5fd8ba9b0d
+
+          '
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CrawlingModuleUpdateStatusModel'
+      x-pretty-name: getUpdateStatus
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/paramId/update_get
+  /rest/organizations/{organizationId}/crawlingmodule/versions/latest:
+    get:
+      tags:
+      - Crawling Module
+      summary: Gets the Latest Maestro Version
+      description: 'Gets the latest version of Maestro of an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).</br>**Required privilege:** On-Premise Administration - View or Crawling Module - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"VIEW","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getLatestMaestroVersion
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CrawlingModuleVersionsModel'
+      x-pretty-name: getLatestMaestroVersion
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/versions/latest_get
+  /rest/organizations/{organizationId}/crawlingmodule/projectid:
+    get:
+      tags:
+      - Crawling Module
+      summary: List Crawling Modules by Project ID
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ON_PREMISE_ADMINISTRATION","type":"VIEW","targetId":"*"}
+
+        OR
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModulesByProjectIdForOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: projectId
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrawlingModuleModel'
+      x-pretty-name: getCrawlingModulesByProjectIdForOrganization
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ON_PREMISE_ADMINISTRATION
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/projectid_get
+  /rest/organizations/{organizationId}/crawlingmodule/download:
+    get:
+      tags:
+      - Crawling Module
+      summary: Get the Download URL Prefix for Crawling Module Binaries.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"CRAWLING_MODULE","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getCrawlingModuleDownloadUrl
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+      x-pretty-name: getCrawlingModuleDownloadUrl
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: CRAWLING_MODULE
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/crawlingmodule/download_get
+  /rest/crawlingmodule/upgradechannels/{upgradeChannel}/version:
+    get:
+      tags:
+      - Crawling Module
+      summary: Gets the Crawling Module Version for an Upgrade Channel
+      operationId: getCrawlingModuleUpgradeChannelVersion
+      parameters:
+      - name: upgradeChannel
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - INTERNAL
+          - LATEST
+          - STABLE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ValueModelString'
+      x-pretty-name: getCrawlingModuleUpgradeChannelVersion
+      x-ui-operation-id: /rest/crawlingmodule/upgradechannels/paramId/version_get
+components:
+  schemas:
+    JsonNode:
+      type: object
+    PageModelCrawlingModuleLogRequestModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrawlingModuleLogRequestModel'
+        totalPages:
+          type: integer
+          format: int32
+        totalEntries:
+          type: integer
+          format: int64
+    CrawlingModuleReportModel:
+      type: object
+      properties:
+        message:
+          type: string
+        type:
+          type: string
+        source:
+          type: string
+        stackTrace:
+          type: string
+        user:
+          type: string
+        tags:
+          type: object
+          additionalProperties:
+            type: string
+        fingerprints:
+          type: array
+          items:
+            type: string
+        innerExceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrawlingModuleExceptionModel'
+    CrawlingModuleVersionsModel:
+      type: object
+      properties:
+        maestroVersion:
+          type: string
+          description: The version of Maestro that is being used for the crawling module.</br>See [Updating Maestro](https://docs.coveo.com/en/3266/index-content/crawling-module-rest-api-reference#updating-maestro).</br>**Example:** `0.9.33`
+      description: Various versions of a crawling module.
+    ReportCrawlingModuleModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the crawling module.</br>**Example:** `Prod Crawling Module`
+        versions:
+          $ref: '#/components/schemas/CrawlingModuleVersionsModel'
+        status:
+          $ref: '#/components/schemas/JsonNode'
+      description: A crawling module report.
+    CrawlingModuleLogRequestModel:
+      type: object
+      properties:
+        id:
+          type: string
+        logType:
+          type: string
+          enum:
+          - MAESTRO
+          - WORKER
+        operationId:
+          type: string
+        instanceId:
+          type: string
+        state:
+          type: string
+          enum:
+          - SUCCESSFUL
+          - EMPTY
+          - ERROR
+          - TIMEOUT
+          - RUNNING
+          - CREATED
+        createdDate:
+          type: string
+          format: date-time
+    CreateCrawlingModuleLogRequestModel:
+      type: object
+      properties:
+        logType:
+          type: string
+          enum:
+          - MAESTRO
+          - WORKER
+        operationId:
+          type: string
+        instanceId:
+          type: string
+    CrawlingModuleLogRequestDownloadModel:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+          - SUCCESSFUL
+          - EMPTY
+          - ERROR
+          - TIMEOUT
+          - RUNNING
+          - CREATED
+        info:
+          type: string
+        url:
+          type: string
+    ValueModelString:
+      type: object
+      properties:
+        value:
+          type: string
+    CrawlingModuleLogRequestStateModel:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+          - SUCCESSFUL
+          - EMPTY
+          - ERROR
+          - TIMEOUT
+          - RUNNING
+          - CREATED
+        info:
+          type: string
+    CrawlingModuleUpdateStatusModel:
+      type: object
+      properties:
+        updateAvailable:
+          type: boolean
+          description: If a specified crawling module has an update available.
+        updateCategory:
+          type: string
+          description: The update category for a specified crawling module.
+          enum:
+          - MINOR
+          - CRITICAL
+          - BREAKING
+          - ROLLBACK
+      description: A crawling module update status.
+    CrawlingModuleExceptionModel:
+      type: object
+      properties:
+        message:
+          type: string
+        type:
+          type: string
+        source:
+          type: string
+        stackTrace:
+          type: string
+    CrawlingModuleModel:
+      type: object
+      properties:
+        maestroVersion:
+          type: string
+          description: The version of Maestro that is being used for the crawling module.</br>See [Updating Maestro](https://docs.coveo.com/en/3266/index-content/crawling-module-rest-api-reference#updating-maestro).</br>**Example:** `0.9.33`
+        createdDate:
+          type: string
+          description: The crawling module creation date in W3C format (see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime)).</br>**Example:** `2018-05-22T23:36:30.589Z`
+          format: date-time
+        id:
+          type: string
+          description: The unique identifier of the crawling module.</br>**Example:** `crawlingmodulejvas70dt-d9c69mla-8912-6653-a90g-4ach953fd96b`
+        organizationId:
+          type: string
+          description: The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id) the crawling module was created for.</br>**Example:** `mycoveocloudorganizationg8tp8wu3`
+        name:
+          type: string
+          description: The name of the crawling module.</br>**Example:** `Prod Crawling Module`
+        updatedDate:
+          type: string
+          description: The last update date of the crawling module in number of milliseconds since UNIX epoch.</br>**Example:** `1556722921779`
+          format: date-time
+        lastHeartbeat:
+          type: string
+          description: The last heartbeat date of the crawling module in number of milliseconds since UNIX epoch.</br>**Example:** `1556722921779`
+          format: date-time
+        lastVersionUpgrade:
+          type: string
+          description: The last version upgrade date of the crawling module in number of milliseconds since UNIX epoch.</br>**Example:** `1556722921779`
+          format: date-time
+        disabled:
+          type: boolean
+          description: Whether the crawling module is disabled.
+        status:
+          $ref: '#/components/schemas/JsonNode'
+        projectIds:
+          type: array
+          items:
+            type: string
+      description: A crawling module.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

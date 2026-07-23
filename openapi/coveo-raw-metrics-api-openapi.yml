@@ -1,0 +1,276 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Raw Metrics API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Raw Metrics
+paths:
+  /rest/organizations/{organizationId}/searchusagemetrics/raw/all:
+    get:
+      operationId: listRawMetrics
+      summary: Lists the Available Metrics for Assignment
+      tags:
+      - Raw Metrics
+      deprecated: false
+      parameters:
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestListOfMetrics'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/searchusagemetrics/raw/monthly:
+    get:
+      operationId: getRawMetricsForMonth
+      summary: Gets Raw Metric Values for a Specific Month
+      tags:
+      - Raw Metrics
+      deprecated: false
+      parameters:
+      - name: minimumQueries
+        description: The minimum number of queries required for a search hub to be listed
+        default: '1'
+        required: false
+        in: query
+        type: string
+      - name: month
+        description: The month to report for
+        example: Specify '2024-02' for February 2024.
+        required: true
+        in: query
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestListOfSearchHubMetrics'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/searchusagemetrics/raw/searchhubs/{searchHub}/daily/{metric}:
+    get:
+      operationId: getDailyRawMetrics
+      summary: Gets Daily Raw Values for a Specific Search Hub and Metric
+      tags:
+      - Raw Metrics
+      deprecated: false
+      parameters:
+      - name: to
+        description: The last day to report for
+        required: true
+        in: query
+        type: string
+      - name: from
+        description: The first day to report for
+        required: true
+        in: query
+        type: string
+      - name: metric
+        description: The raw metric to report on
+        required: true
+        in: path
+        type: string
+      - name: searchHub
+        description: The name of the search hub to report on
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestListOfMetricValues'
+      security:
+      - oauth2:
+        - full
+  /rest/organizations/{organizationId}/searchusagemetrics/raw/searchhubs/{searchHub}/monthly/{metric}:
+    get:
+      operationId: getMonthlyRawMetrics
+      summary: Gets Monthly Raw Values for a Specific Search Hub and Metric
+      tags:
+      - Raw Metrics
+      deprecated: false
+      parameters:
+      - name: to
+        description: The last month to report for
+        required: true
+        in: query
+        type: string
+      - name: from
+        description: The first month to report for
+        required: true
+        in: query
+        type: string
+      - name: metric
+        description: The raw metric to report on
+        required: true
+        in: path
+        type: string
+      - name: searchHub
+        description: The name of the search hub to report on
+        required: true
+        in: path
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RestListOfMetricValues'
+      security:
+      - oauth2:
+        - full
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required
+definitions:
+  RestListOfMetricValues:
+    type: object
+    properties:
+      values:
+        description: The list of daily metric values
+        type: array
+        items:
+          $ref: '#/definitions/RestMetricValueforDate'
+    required:
+    - values
+  RestListOfMetrics:
+    type: object
+    properties:
+      metrics:
+        description: The list of metrics
+        type: array
+        items:
+          $ref: '#/definitions/RestMetric'
+    required:
+    - metrics
+  RestMetric:
+    type: object
+    properties:
+      id:
+        example: '"queries"'
+        description: The ID of the metric
+        type: string
+      label:
+        example: '"Normal Queries"'
+        description: The display name of the metric
+        type: string
+      productId:
+        example: '"01t0d000001abCdEFG"'
+        description: The productId associated to a metric
+        type: string
+      slidingWindowInMonths:
+        example: 3
+        description: The size of the sliding window to use, in months.
+        type: integer
+        format: int32
+    required:
+    - id
+  RestListOfSearchHubMetrics:
+    type: object
+    properties:
+      searchHubs:
+        description: The list of search hubs
+        type: array
+        items:
+          $ref: '#/definitions/RestSearchHubMetrics'
+    required:
+    - searchHubs
+  RestSearchHubMetrics:
+    type: object
+    properties:
+      searchHub:
+        example: '"myhub"'
+        description: The name of the search hub
+        type: string
+      assignment:
+        example: '"qpm"'
+        description: The usage buckets to which the search hub is assigned
+        type: string
+      normalQueries:
+        example: 123
+        description: The number of normal queries
+        type: integer
+        format: int64
+      recommendationQueries:
+        example: 123
+        description: The number of recommendation queries
+        type: integer
+        format: int64
+      users:
+        example: 123
+        description: The number of distinct users
+        type: integer
+        format: int64
+      staticQueries:
+        example: 123
+        description: The number of distinct persistent queries
+        type: integer
+        format: int64
+      productListingQueries:
+        example: 123
+        description: '**Deprecated** The number of product listing queries'
+        type: integer
+        format: int64
+    required:
+    - searchHub
+    - assignment
+    - normalQueries
+    - recommendationQueries
+    - users
+    - staticQueries
+    - productListingQueries
+  RestMetricValueforDate:
+    type: object
+    properties:
+      date:
+        example: '"2019-01-01"'
+        description: The date for the usage metric value
+        type: string
+      value:
+        example: 123
+        description: The numeric metric value
+        type: integer
+        format: int64
+    required:
+    - date
+    - value

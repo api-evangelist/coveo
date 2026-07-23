@@ -1,0 +1,213 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Organization Access API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Organization Access
+paths:
+  /rest/organizations/{organizationId}/access/groups:
+    get:
+      tags:
+      - Organization Access
+      summary: List Groups with Privilege Access Level
+      description: 'Lists groups with a specific privilege [access level](https://docs.coveo.com/en/2818/) in an [organization](https://docs.coveo.com/en/185/).</br>See [Privilege reference](https://docs.coveo.com/en/1707/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"VIEW","targetId":"*"}
+
+        OR
+
+        {"owner":"{privilegeOwner}","targetDomain":"{privilegeTargetDomain}","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getGroupsWithSpecificPrivilegeAccessLevels
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: privilegeOwner
+        in: query
+        description: The `owner` value the groups privileges must match to be included in the response.
+        required: true
+        schema:
+          type: string
+      - name: privilegeTargetDomain
+        in: query
+        description: The `targetDomain` value the groups privileges must match to be included in the response.
+        required: true
+        schema:
+          type: string
+      - name: accessLevel
+        in: query
+        description: 'The [access level](https://docs.coveo.com/en/2818/) the groups privileges must match to be included in the response.</br>**Allowed values:**</br>- `EDIT_ALL`: Groups can edit the organization.</br>- `CUSTOM`: Groups have custom access to the organization.</br>- `VIEW_ALL`: Groups can view the organization.</br>- `NONE`: Groups have no access to the organization.'
+        required: true
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+            - EDIT_ALL
+            - CUSTOM
+            - VIEW_ALL
+            - NONE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PrivilegeHolderAccessModel'
+      x-pretty-name: getGroupsWithSpecificPrivilegeAccessLevels
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      - owner: '{privilegeOwner}'
+        targetDomain: '{privilegeTargetDomain}'
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/access/groups_get
+  /rest/organizations/{organizationId}/access/apikeys:
+    get:
+      tags:
+      - Organization Access
+      summary: List API Keys with Privilege Access Level
+      description: 'Lists the API keys with a specific privilege [access level](https://docs.coveo.com/en/2818/) in an [organization](https://docs.coveo.com/en/185/).</br></br>See [Privilege reference](https://docs.coveo.com/en/1707/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getApiKeysWithSpecificPrivilegeAccessLevels
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: privilegeOwner
+        in: query
+        description: The `owner` value an API key must have to be included in the response.
+        required: true
+        schema:
+          type: string
+      - name: privilegeTargetDomain
+        in: query
+        description: The `targetDomain` value an API key must have to be included in response.
+        required: true
+        schema:
+          type: string
+      - name: accessLevel
+        in: query
+        description: 'The [access level](https://docs.coveo.com/en/2818/) an API key must have to be included in the response.</br>**Allowed values:**</br>- `EDIT_ALL`: API key can edit the organization.</br>- `CUSTOM`: API key has custom access to the organization.</br>- `VIEW_ALL`: API key can view the organization.</br>- `NONE`: API key has no access to the organization.'
+        required: true
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+            - EDIT_ALL
+            - CUSTOM
+            - VIEW_ALL
+            - NONE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PrivilegeHolderAccessModel'
+      x-pretty-name: getApiKeysWithSpecificPrivilegeAccessLevels
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/access/apikeys_get
+components:
+  schemas:
+    PrivilegeHolderAccessModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the privilege holder.</br>**Example:** `smbeesnfetddtifii5hf8jgb`
+        displayName:
+          type: string
+          description: The display name of the privilege holder.</br>**Example:** `Push Source Key`
+        callerPartOf:
+          type: boolean
+          description: Whether the user who initiated the privilege request is a part of the members targeted by the privilege.
+        createdDate:
+          type: string
+          description: The privilege holder creation date in W3C format (see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime)).</br><b>Example:</b> `2018-05-22T23:36:30.589Z`
+          format: date-time
+        privilegeHolderType:
+          type: string
+          description: The type of the privilege holder.</br>**Example:** `API_KEY`
+          enum:
+          - API_KEY
+          - GROUP
+        accessLevel:
+          type: string
+          description: The access level of the privilege.
+          enum:
+          - EDIT_ALL
+          - CUSTOM
+          - VIEW_ALL
+          - NONE
+        resourceIdsWithEditLevel:
+          uniqueItems: true
+          type: array
+          description: A set of unique identifiers of privilege holders that can edit the privilege.
+          items:
+            type: string
+            description: A set of unique identifiers of privilege holders that can edit the privilege.
+      description: A privilege holder with a specified access level.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

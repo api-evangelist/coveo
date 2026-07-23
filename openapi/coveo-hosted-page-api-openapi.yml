@@ -1,0 +1,302 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Hosted Page API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Hosted Page
+paths:
+  /rest/organizations/{organizationId}/hostedpages:
+    get:
+      operationId: get-all-hostedpages
+      summary: List Hosted Pages
+      description: Lists the hosted pages in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Hosted Page
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      responses:
+        '200':
+          description: Ok
+    post:
+      operationId: create-hostedpage
+      summary: Create Hosted Page
+      description: Creates a hosted page in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Hosted Page
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hostedpage'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hostedpage-id'
+  /rest/organizations/{organizationId}/hostedpages/projects/pages:
+    get:
+      operationId: get-project-hostedpages
+      summary: List Hosted Pages in a Project
+      description: Lists the hosted pages in a [Coveo organization](https://docs.coveo.com/en/185/) and a [project](https://docs.coveo.com/en/n7ef0517/manage-an-organization/manage-projects).
+      tags:
+      - Hosted Page
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/projectId'
+      responses:
+        '200':
+          description: Ok
+  /rest/organizations/{organizationId}/hostedpages/{pageId}:
+    get:
+      operationId: get-hostedpage
+      summary: Retrieve Hosted Page Configuration
+      description: Retrieves a hosted page configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Hosted Page
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/page-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hostedpage-id'
+        '404':
+          description: Not Found
+    put:
+      operationId: update-hostedpage
+      summary: Update Hosted Page
+      description: Updates an hosted page in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Hosted Page
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/page-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hostedpage'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hostedpage-id'
+        '404':
+          description: Not Found
+    delete:
+      operationId: delete-hostedpage
+      summary: Delete Hosted Page
+      description: Deletes an hosted page in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Hosted Page
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/page-id'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /rest/organizations/{organizationId}/hostedpages/{pageId}/html/v1:
+    get:
+      operationId: get-hostedpage-html
+      summary: Show Hosted Page
+      description: Shows a hosted page in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Hosted Page
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/page-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            text/html:
+              encoding:
+                text/html:
+                  contentType: text/html
+components:
+  parameters:
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
+      schema:
+        type: string
+    filter:
+      name: filter
+      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
+      example: Store
+      in: query
+      schema:
+        type: string
+    page:
+      name: page
+      description: The 0-based number of the page of configurations to list.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+    perPage:
+      name: perPage
+      description: The maximum number of configurations to include per page.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 20
+    projectId:
+      name: projectId
+      description: The id of the project to which the resource belongs.
+      in: query
+      schema:
+        type: string
+  schemas:
+    hostedpage-file-css:
+      type: object
+      description: CSS resource appended in the header, pertaining to a specific hosted page in the target Coveo organization.
+      properties:
+        inlineContent:
+          type: string
+          description: The content of the header `style` tag. If this property is defined, the `url` property should not be specified.
+          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
+        url:
+          type: string
+          description: The URL of CSS stylesheet. If this property is defined, the `inlineContent` property should not be specified.
+          example: https://static.cloud.coveo.com/atomic/v2/themes/coveo.css
+    hostedpage-id:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the hosted page.
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          description: A short descriptive name to help manage hosted pages.
+          example: ExStore
+        html:
+          type: string
+          description: The HTML markup of the hosted page.
+          example: <atomic-search-interface> ... </atomic-search-interface>
+        javascript:
+          type: array
+          description: List of JavaScript resources appended to the header of a specific hosted page in the target Coveo organization. There is a limit of 20 JavaScript resources per hosted page.
+          items:
+            $ref: '#/components/schemas/hostedpage-file-javascript'
+        css:
+          type: array
+          description: List of CSS resources appended to the header of a specific hosted page in the target Coveo organization. There is a limit of 20 CSS resources per hosted page.
+          items:
+            $ref: '#/components/schemas/hostedpage-file-css'
+        created:
+          type: string
+          format: date-time
+          description: The creation timestamp. (ISO 8601)
+          example: '2021-12-31T12:46:00.000Z'
+        createdBy:
+          type: string
+          description: The creator principal.
+          example: jdoe@gmail.com-google
+        updated:
+          type: string
+          format: date-time
+          description: The last update timestamp. (ISO 8601)
+          example: '2001-12-31T13:03:00.000Z'
+        updatedBy:
+          type: string
+          description: The last updater principal.
+          example: jdoe@gmail.com-google
+      required:
+      - id
+      - name
+      - html
+    hostedpage:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A short descriptive name to help manage hosted pages.
+          example: ExStore
+        html:
+          type: string
+          description: The HTML markup of the hosted page.
+          example: <atomic-search-interface> ... </atomic-search-interface>
+        javascript:
+          type: array
+          items:
+            $ref: '#/components/schemas/hostedpage-file-javascript'
+        css:
+          type: array
+          items:
+            $ref: '#/components/schemas/hostedpage-file-css'
+      required:
+      - name
+      - html
+    hostedpage-file-javascript:
+      type: object
+      description: JavaScript resource appended to the header of a specific hosted page in the target Coveo organization.
+      properties:
+        isModule:
+          type: boolean
+          description: Whether the inline code should be treated as a JavaScript module. If this property is `true`, the `type` property will be set to `module` on the `script` tag.
+          required: true
+        inlineContent:
+          type: string
+          description: The content of the header `script` tag. If this property is defined, the `url` property should not be specified.
+          example: window.location = 'about:blank';
+        url:
+          type: string
+          description: The URL of the JavaScript source file. If this property is defined, the `inlineContent` property should not be specified.
+          example: https://static.cloud.coveo.com/atomic/v2/index.esm.js
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

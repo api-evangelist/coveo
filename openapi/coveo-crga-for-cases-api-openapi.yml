@@ -1,0 +1,180 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities CRGA For Cases API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: CRGA For Cases
+  x-displayName: CRGA For Cases
+paths:
+  /rest/organizations/{organizationId}/answer/cases/v1/configs/{configId}:
+    post:
+      tags:
+      - CRGA For Cases
+      summary: Create CRGA for Cases Configuration
+      description: Add a CRGA For Cases configuration to the answer configuration
+      operationId: createLfcaConfiguration
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+      - $ref: '#/components/parameters/ConfigIdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LfcaConfiguration'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LfcaConfiguration'
+      security:
+      - oauth2:
+        - full
+    get:
+      tags:
+      - CRGA For Cases
+      summary: Get CRGA for Cases Configuration
+      description: Get the CRGA For Cases configuration associated to the answer configuration.
+      operationId: getLfcaConfiguration
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+      - $ref: '#/components/parameters/ConfigIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LfcaConfiguration'
+      security:
+      - oauth2:
+        - full
+    patch:
+      tags:
+      - CRGA For Cases
+      summary: Update CRGA for Cases Configuration Attributes
+      description: Update attributes of the CRGA For Cases configuration.
+      operationId: patchLfcaConfiguration
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+      - $ref: '#/components/parameters/ConfigIdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LfcaConfigurationPatchRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LfcaConfiguration'
+      security:
+      - oauth2:
+        - full
+    delete:
+      tags:
+      - CRGA For Cases
+      summary: Delete CRGA for Cases Configuration
+      description: Delete the CRGA For Cases configuration associated to the answer configuration.
+      operationId: deleteLfcaConfiguration
+      parameters:
+      - $ref: '#/components/parameters/OrganizationIdPath'
+      - $ref: '#/components/parameters/ConfigIdPath'
+      responses:
+        '204':
+          description: No content
+      security:
+      - oauth2:
+        - full
+components:
+  schemas:
+    caseDescriptionKey:
+      type: string
+      description: The case context key used to store the case description. It is used by the case answering model.
+      example: case-description
+    prapiModelId:
+      type: string
+      description: The unique identifier of the passage retrieval machine-learning model.
+      example: myorganization1234_chunksretrieval_00000000_0000_0000_0000_000000000000
+    LfcaConfigurationPatchRequest:
+      type: object
+      properties:
+        gencasereformulationModelId:
+          $ref: '#/components/schemas/gencasereformulationModelId'
+        gencaseansweringModelId:
+          $ref: '#/components/schemas/gencaseansweringModelId'
+        prapiModelId:
+          $ref: '#/components/schemas/prapiModelId'
+        caseTitleKey:
+          $ref: '#/components/schemas/caseTitleKey'
+        caseDescriptionKey:
+          $ref: '#/components/schemas/caseDescriptionKey'
+    LfcaConfiguration:
+      type: object
+      required:
+      - gencasereformulationModelId
+      - gencaseansweringModelId
+      - prapiModelId
+      - caseTitleKey
+      - caseDescriptionKey
+      properties:
+        gencasereformulationModelId:
+          $ref: '#/components/schemas/gencasereformulationModelId'
+        gencaseansweringModelId:
+          $ref: '#/components/schemas/gencaseansweringModelId'
+        prapiModelId:
+          $ref: '#/components/schemas/prapiModelId'
+        caseTitleKey:
+          $ref: '#/components/schemas/caseTitleKey'
+        caseDescriptionKey:
+          $ref: '#/components/schemas/caseDescriptionKey'
+    gencaseansweringModelId:
+      type: string
+      description: The unique identifier of the case answering machine-learning model.
+      example: myorganization1234_gencaseanswering_00000000_0000_0000_0000_000000000000
+    gencasereformulationModelId:
+      type: string
+      description: The unique identifier of the case reformulation machine-learning model.
+      example: myorganization1234_gencasereformulation_00000000_0000_0000_0000_000000000000
+    caseTitleKey:
+      type: string
+      description: The case context key used to store the case title. It is used by the case answering model.
+      example: case-title
+  parameters:
+    OrganizationIdPath:
+      name: organizationId
+      in: path
+      description: The unique identifier of the target Coveo Cloud organization.
+      required: true
+      schema:
+        type: string
+    ConfigIdPath:
+      name: configId
+      in: path
+      description: The unique identifier of the answer configuration.
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

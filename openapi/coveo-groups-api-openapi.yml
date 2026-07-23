@@ -1,0 +1,693 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Groups API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Groups
+paths:
+  /rest/organizations/{organizationId}/groups/{groupId}:
+    get:
+      tags:
+      - Groups
+      summary: Show Group Details
+      description: 'Show the details of a [group](https://docs.coveo.com/en/2867/) in an organization.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getGroup
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: path
+        description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GroupModel_Response'
+      x-pretty-name: getGroup
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/groups/paramId_get
+    put:
+      tags:
+      - Groups
+      summary: Update Group
+      description: 'Updates a [group](https://docs.coveo.com/en/2867/) in an organization.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"EDIT","targetId":"{groupId}"}
+
+        ```
+
+        </details>'
+      operationId: updateGroup
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: path
+        description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+        required: true
+        schema:
+          type: string
+      - name: sendEmailToInvitedUsers
+        in: query
+        description: Whether to send an email to the users that are invited to the [group](https://docs.coveo.com/en/2867/).
+        required: false
+        schema:
+          type: boolean
+          default: true
+      requestBody:
+        description: The JSON configuration to update the target [group](https://docs.coveo.com/en/2867/) to.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupModel_Request'
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: updateGroup
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '{groupId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '{groupId}'
+      x-ui-operation-id: /rest/organizations/paramId/groups/paramId_put
+    delete:
+      tags:
+      - Groups
+      summary: Delete Group
+      description: 'Deletes a [group](https://docs.coveo.com/en/2867/) in an organization.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"EDIT","targetId":"{groupId}"}
+
+        ```
+
+        </details>'
+      operationId: deleteGroup
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: path
+        description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteGroup
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '{groupId}'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: EDIT
+        targetId: '{groupId}'
+      x-ui-operation-id: /rest/organizations/paramId/groups/paramId_delete
+  /rest/organizations/{organizationId}/groups:
+    get:
+      tags:
+      - Groups
+      summary: List Groups
+      description: 'Lists the [groups](https://docs.coveo.com/en/2867/) of an organization.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getGroups
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupModel_Response'
+      x-pretty-name: getGroups
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/groups_get
+    post:
+      tags:
+      - Groups
+      summary: Create Group
+      description: 'Creates a [group](https://docs.coveo.com/en/2867/) in an organization.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createGroup
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: sendEmailToInvitedUsers
+        in: query
+        description: Whether to send an invitation email alongside the invite.
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: canEditItself
+        in: query
+        description: Whether the new [group](https://docs.coveo.com/en/2867/) can edit itself.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        description: The [group](https://docs.coveo.com/en/2867/) to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupModel_Request'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JsonStringIdWrapper'
+      x-pretty-name: createGroup
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/groups_post
+  /rest/organizations/{organizationId}/groups/{groupId}/privileges/exclusive/me:
+    get:
+      tags:
+      - Groups
+      summary: List Privileges Granted by Group to Current User
+      description: 'Lists the [privileges](https://docs.coveo.com/en/228/) that are granted exclusively by the [group](https://docs.coveo.com/en/2867/) to the current user.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"GROUP","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getGroupExclusivePrivileges
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: groupId
+        in: path
+        description: The unique identifier of the target [group](https://docs.coveo.com/en/2867/).</br>**Example:**`myorganization-bfghkjfjb674jh5egjk`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PrivilegeModel'
+      x-pretty-name: getGroupExclusivePrivileges
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: GROUP
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/groups/paramId/privileges/exclusive/me_get
+components:
+  schemas:
+    InviteModel_Response:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the invited member</br>**Example:**`jsmith`
+        providerUsername:
+          type: string
+          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
+        email:
+          type: string
+          description: The email address to send the invite to, if applicable.</br>**Example:**`jsmith@email.com`
+        provider:
+          type: string
+          description: The provider that the user who sent the invite is assigned to.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        invitedDate:
+          type: string
+          description: The date at which the invite was sent in milliseconds since UNIX epoch.</br>**Example:**`1556722921779`
+          format: date-time
+        expirationDate:
+          type: string
+          description: The expiration date of the invite in number of milliseconds since UNIX epoch.</br>**Example:**`1556722981779`
+          format: date-time
+        id:
+          type: string
+        displayName:
+          type: string
+      description: An invite.
+    IdAndDisplayNameModel_Request:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+    PrivilegeModel_Request:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
+      externalDocs:
+        description: Privilege reference
+        url: https://docs.coveo.com/en/1707/
+    GroupModel_Response:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel_Response'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel_Response'
+        id:
+          type: string
+          description: The unique identifier of the [group](https://docs.coveo.com/en/2867/).</br>**Example:** `myorg-administrators-feioshf3w3fi4535`
+        displayName:
+          type: string
+          description: The display name of the [group](https://docs.coveo.com/en/2867/).</br>**Example:** `Administrators`
+        deletable:
+          type: boolean
+          description: Whether the group can be deleted.
+        groupType:
+          type: string
+          description: The Group type for the given group. This field is read-only and set by the system.
+          readOnly: true
+          example: CUSTOM
+          enum:
+          - CUSTOM
+          - ADMINISTRATOR
+          - MCP_SEARCH_USERS
+        realms:
+          uniqueItems: true
+          type: array
+          description: The realms of the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/RealmModel_Response'
+        members:
+          uniqueItems: true
+          type: array
+          description: The set of [members](https://docs.coveo.com/en/2873/) of the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/MemberModel_Response'
+        invites:
+          type: array
+          description: The invites to the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/InviteModel_Response'
+        privileges:
+          uniqueItems: true
+          type: array
+          description: The [privileges](https://docs.coveo.com/en/228/) of the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/PrivilegeModel_Response'
+        resourceId:
+          type: string
+      description: A [group](https://docs.coveo.com/en/2867/).
+    MemberModel_Response:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the member.
+        email:
+          type: string
+          description: The email address of the member.
+        displayName:
+          type: string
+          description: The display name of the member.
+        providerUsername:
+          type: string
+          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
+        provider:
+          type: string
+          description: The provider of the member.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        id:
+          type: string
+      description: A [member](https://docs.coveo.com/en/2873/).
+    GroupModel_Request:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel_Request'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel_Request'
+        id:
+          type: string
+          description: The unique identifier of the [group](https://docs.coveo.com/en/2867/).</br>**Example:** `myorg-administrators-feioshf3w3fi4535`
+        displayName:
+          type: string
+          description: The display name of the [group](https://docs.coveo.com/en/2867/).</br>**Example:** `Administrators`
+        deletable:
+          type: boolean
+          description: Whether the group can be deleted.
+        realms:
+          uniqueItems: true
+          type: array
+          description: The realms of the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/RealmModel_Request'
+        members:
+          uniqueItems: true
+          type: array
+          description: The set of [members](https://docs.coveo.com/en/2873/) of the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/MemberModel_Request'
+        invites:
+          type: array
+          description: The invites to the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/InviteModel_Request'
+        privileges:
+          uniqueItems: true
+          type: array
+          description: The [privileges](https://docs.coveo.com/en/228/) of the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/PrivilegeModel_Request'
+        resourceId:
+          type: string
+      description: A [group](https://docs.coveo.com/en/2867/).
+    RealmModel_Response:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: A realm.
+    IdAndDisplayNameModel_Response:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+    MemberModel_Request:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the member.
+        email:
+          type: string
+          description: The email address of the member.
+        displayName:
+          type: string
+          description: The display name of the member.
+        providerUsername:
+          type: string
+          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
+        provider:
+          type: string
+          description: The provider of the member.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        id:
+          type: string
+      description: A [member](https://docs.coveo.com/en/2873/).
+    PrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
+      readOnly: true
+      externalDocs:
+        description: Privilege reference
+        url: https://docs.coveo.com/en/1707/
+    InviteModel_Request:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the invited member</br>**Example:**`jsmith`
+        providerUsername:
+          type: string
+          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
+        email:
+          type: string
+          description: The email address to send the invite to, if applicable.</br>**Example:**`jsmith@email.com`
+        provider:
+          type: string
+          description: The provider that the user who sent the invite is assigned to.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        invitedDate:
+          type: string
+          description: The date at which the invite was sent in milliseconds since UNIX epoch.</br>**Example:**`1556722921779`
+          format: date-time
+        expirationDate:
+          type: string
+          description: The expiration date of the invite in number of milliseconds since UNIX epoch.</br>**Example:**`1556722981779`
+          format: date-time
+        id:
+          type: string
+        displayName:
+          type: string
+      description: An invite.
+    PrivilegeModel_Response:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
+      externalDocs:
+        description: Privilege reference
+        url: https://docs.coveo.com/en/1707/
+    RealmModel_Request:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: A realm.
+    JsonStringIdWrapper:
+      type: object
+      properties:
+        id:
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

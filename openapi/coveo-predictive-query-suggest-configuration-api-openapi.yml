@@ -1,0 +1,140 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Predictive Query Suggest Configuration API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Predictive Query Suggest Configuration
+paths:
+  /rest/organizations/{organizationId}/machinelearning/configuration/pqs/model:
+    post:
+      tags:
+      - Predictive Query Suggest Configuration
+      summary: Create PQS Model Resources
+      description: 'Creates resources for a Predictive Query Suggest (PQS) model.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createModel
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+        example: mycoveocloudv2organizationg8tp8wu3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PqsConfigurationModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PqsConfigurationModel'
+      x-pretty-name: createModel
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/pqs/model_post
+components:
+  schemas:
+    PqsConfigurationModel:
+      required:
+      - catalogId
+      - modelDisplayName
+      - trackingIds
+      type: object
+      properties:
+        catalogId:
+          type: string
+          description: The unique identifier of the catalog to be used by the model to infer personalized suggestions based on product vectors.<br />**Example:** `catalogId`
+          example: catalogId
+        trackingIds:
+          type: array
+          description: The trackingIds that usage analytics events must contain for the model to use those events in its learning process. The model will use an event if it contains at least one of the specified IDs
+          example:
+          - sport
+          items:
+            type: string
+            description: The trackingIds that usage analytics events must contain for the model to use those events in its learning process. The model will use an event if it contains at least one of the specified IDs
+            example: '["sport"]'
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Administration console.<br />**Example:** `MyModelDisplayName`
+          example: MyModelDisplayName
+        exportPeriod:
+          type: string
+          description: The period of UA data to learn from when rebuilding the model. The `exportPeriod` uses the moment when the model was last generated as a base. Must be in the ISO8601 period format (i.e., PyYmMwWdDThHmMsS).<br />**Example:** `P1M`
+          example: P1M
+        intervalTime:
+          type: integer
+          description: 'The number of `intervalUnit` to wait between each rebuild of the model.
+
+
+            Must be greater than or equal to `1`.<br />**Example:** `1`'
+          format: int32
+          example: 1
+          enum:
+          - null
+        intervalUnit:
+          type: string
+          description: The duration unit to use when interpreting the rebuild `intervalTime` for the model.<br />**Example:** `WEEK`
+          example: WEEK
+          enum:
+          - DAY,WEEK,MONTH
+        commonFilter:
+          type: string
+          description: 'The filter to apply to the ’Common’ event dimensions (shared by all event types) of the UA data to learn from when rebuilding the model.
+
+
+            See [Usge Analytics Read Filter Syntax](https://docs.coveo.com/en/2727/).<br />**Example:** `(originlevel1 == "My Hub")`'
+          example: (originlevel1 == "My Hub")
+        searchEventFilter:
+          type: string
+          description: 'The filter to apply to the ‘Click’ and ‘Search’ event dimensions of the UA data to learn from when rebuilding the model.
+
+
+            See [Usge Analytics Read Filter Syntax](https://docs.coveo.com/en/2727/).<br />**Example:** `(originlevel1 == "My Hub")`'
+          example: (originlevel1 == "My Hub")
+        modelId:
+          type: string
+          description: The unique identifier of the target machine learning model.<br />**Example:** `My_Model_ID`
+          example: My_Model_ID
+      description: The configuration for the creation of a PQS model.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

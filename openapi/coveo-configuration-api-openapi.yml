@@ -1,0 +1,536 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Configuration API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Configuration
+paths:
+  /rest/organizations/{organizationId}/searchinterfaces:
+    get:
+      operationId: get-all-interface-config
+      summary: List Search Interface Configurations
+      description: Lists the search interface configurations in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      responses:
+        '200':
+          description: Ok
+    post:
+      operationId: create-interface-config
+      summary: Create Search Interface Configuration
+      description: Creates a search interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/interface-config'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/interface-config-id'
+  /rest/organizations/{organizationId}/searchinterfaces/projects/interfaces:
+    get:
+      operationId: get-project-interface-config
+      summary: List Search Interface Configurations in a Project
+      description: Lists the search interface configurations in a [Coveo organization](https://docs.coveo.com/en/185/) and a [project](https://docs.coveo.com/en/n7ef0517/manage-an-organization/manage-projects).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/projectId'
+      responses:
+        '200':
+          description: Ok
+  /rest/organizations/{organizationId}/searchinterfaces/{interfaceId}:
+    get:
+      operationId: get-interface-config
+      summary: Show Search Interface Configuration
+      description: Shows a search interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/interface-config-id'
+        '404':
+          description: Not Found
+    put:
+      operationId: update-interface-config
+      summary: Update Search Interface Configuration
+      description: Updates a search interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/interface-config'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/interface-config-id'
+        '404':
+          description: Not Found
+    delete:
+      operationId: delete-interface-config
+      summary: Delete Search Interface Configuration
+      description: Deletes a search interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /rest/organizations/{organizationId}/searchinterfaces/{interfaceId}/accesses:
+    get:
+      operationId: get-interface-access
+      summary: List Search Interface Accesses
+      description: Lists the accesses to a target search interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/interface-access'
+        '404':
+          description: Not Found
+    put:
+      operationId: update-interface-access
+      summary: Update Search Interface Accesses
+      description: Updates the accesses to a target search interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/interface-access'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/interface-access'
+        '404':
+          description: Not Found
+  /rest/organizations/{organizationId}/searchinterfaces/{interfaceId}/accesses/users:
+    get:
+      operationId: get-interface-user-access
+      summary: List Search Interface User Accesses
+      description: Lists the accesses to a target search interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/interface-user-list'
+        '404':
+          description: Not Found
+    put:
+      operationId: update-interface-user-access
+      summary: Update Search Interface User Accesses
+      description: Updates the accesses to a target search interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/interface-user-list'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/interface-user-list'
+        '404':
+          description: Not Found
+    post:
+      operationId: add-interface-user-access
+      summary: Add Search Interface User Accesses
+      description: Adds user accesses to a target search interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      - $ref: '#/components/parameters/notify'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/interface-add-user'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/interface-user-list'
+        '404':
+          description: Not Found
+components:
+  schemas:
+    interface-config:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A short descriptive name to help manage search pages.
+          example: ExStore
+        title:
+          type: string
+          description: The title of the search interface configuration. Will be displayed as the HTML page title.
+          example: My example store search page
+        facets:
+          type: array
+          description: The list of facets to display in the search interface.
+          items:
+            properties:
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the facet is based.
+              label:
+                type: string
+                description: The label of the facet.
+          example:
+          - field: source
+            label: Source
+          - field: objecttype
+            label: Object Type
+        sortCriteria:
+          type: array
+          description: The array of sort criteria the end user can select when interacting with the search interface.
+          items:
+            properties:
+              by:
+                type: string
+                description: 'The kind of sort criterion. Required. <br />**Allowed values:**<br />- `relevancy`<br />- `date`<br />- `field`: sort based on the values of a target field, which you need to specify in the `field` parameter.'
+                enum:
+                - relevancy
+                - date
+                - field
+              label:
+                type: string
+                description: The label of the sort criterion. Required.
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the sort is based. Required when `by` value is `field`, and ignored otherwise.<br />Must be [sortable in the index](https://docs.coveo.com/en/1833/index-content/add-or-edit-a-field#sortable).
+              order:
+                type: string
+                enum:
+                - ASC
+                - DESC
+                description: 'The sort direction, if applicable.<br />Default behaviour is a follows:<br />- If the `by` value is `relevancy`, this parameter does not apply.<br />- If the `by` value is `date`, the default value is `DESC`.<br />- If the `by` value is anything else, the default value is `ASC`.<br />**Allowed values:** <br />- `ASC`: ascending <br>- `DESC`: descending'
+            required:
+            - by
+            - label
+          example:
+          - by: relevancy
+            label: Relevance
+          - by: date
+            label: Date
+            order: DESC
+          - by: field
+            label: Price
+            field: price
+            order: ASC
+        accesses:
+          $ref: '#/components/schemas/interface-access'
+        content:
+          $ref: '#/components/schemas/interface-content'
+        layout:
+          type: string
+          enum:
+          - LIST
+          - GRID
+      required:
+      - name
+    interface-config-id:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the search interface configuration.
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          description: A short descriptive name to help manage search pages.
+          example: ExStore
+        facets:
+          type: array
+          description: The list of facets to display in the search interface.
+          items:
+            properties:
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the facet is based.
+              label:
+                type: string
+                description: The label of the facet.
+          example:
+          - field: source
+            label: Source
+          - field: objecttype
+            label: Object Type
+        sortCriteria:
+          type: array
+          description: The array of sort criteria the end user can select when interacting with the search interface.
+          items:
+            properties:
+              by:
+                type: string
+                description: 'The kind of sort criterion. Required. <br />**Allowed values:**<br />- `relevancy`<br />- `date`<br />- `field`: sort based on the values of a target field, which you need to specify in the `field` parameter.'
+                enum:
+                - relevancy
+                - date
+                - field
+              label:
+                type: string
+                description: The label of the sort criterion. Required.
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the sort is based. Required when `by` value is `field`, and ignored otherwise.<br />Must be [sortable in the index](https://docs.coveo.com/en/1833/index-content/add-or-edit-a-field#sortable).
+              order:
+                type: string
+                enum:
+                - ASC
+                - DESC
+                description: 'The sort direction, if applicable.<br />Default behaviour is a follows:<br />- If the `by` value is `relevancy`, this parameter does not apply.<br />- If the `by` value is `date`, the default value is `DESC`.<br />- If the `by` value is anything else, the default value is `ASC`.<br />**Allowed values:** <br />- `ASC`: ascending <br>- `DESC`: descending'
+            required:
+            - by
+            - label
+          example:
+          - by: relevancy
+            label: Relevance
+          - by: date
+            label: Date
+            order: DESC
+          - by: field
+            label: Price
+            field: price
+            order: ASC
+        accesses:
+          $ref: '#/components/schemas/interface-access'
+        content:
+          $ref: '#/components/schemas/interface-pipeline-content'
+        created:
+          type: string
+          format: date-time
+          description: The creation timestamp. (ISO 8601)
+          example: '2021-12-31T12:46:00.000Z'
+        createdBy:
+          type: string
+          description: The creator principal.
+          example: jdoe@gmail.com-google
+        updated:
+          type: string
+          format: date-time
+          description: The last update timestamp. (ISO 8601)
+          example: '2001-12-31T13:03:00.000Z'
+        updatedBy:
+          type: string
+          description: The last updater principal.
+          example: jdoe@gmail.com-google
+      required:
+      - id
+      - name
+    interface-content:
+      type: object
+      properties:
+        pipeline:
+          type: string
+          description: The unique identifier of the query pipeline enforced in search requests.
+          example: 8652e601-fdc3-4ec9-90f8-510763ec0956
+        sources:
+          type: array
+          description: The list of sources with which to filter items in search requests. Only items from target sources may be returned.
+          example:
+          - sourceNameA
+          - sourceNameB
+          items:
+            type: string
+    interface-add-user:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/interface-user-list'
+        message:
+          type: string
+          description: Message to send as part of email notifications, when `notify` is set to `true`.
+          example: Hey, check out this new search page
+          required: false
+    interface-user-list:
+      type: array
+      description: The list of users that are allowed to access the search interface.
+      example:
+      - alice@example.com
+      - bob@example.com
+      items:
+        type: string
+    interface-pipeline-content:
+      type: object
+      properties:
+        pipeline:
+          type: string
+          description: The unique identifier of the query pipeline enforced in search requests.
+          example: 8652e601-fdc3-4ec9-90f8-510763ec0956
+    interface-access:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/interface-user-list'
+        domains:
+          type: array
+          description: The list of domains that are allowed to access the search interface.
+          example:
+          - example.com
+          - sample.com
+          items:
+            type: string
+        sharingLinkEnabled:
+          type: boolean
+          example: true
+        sharingDomainEnabled:
+          type: boolean
+          example: true
+  parameters:
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    notify:
+      name: notify
+      description: Whether to send an email notification to new search page users.
+      example: false
+      in: query
+      schema:
+        type: boolean
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
+      schema:
+        type: string
+    filter:
+      name: filter
+      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
+      example: Store
+      in: query
+      schema:
+        type: string
+    page:
+      name: page
+      description: The 0-based number of the page of configurations to list.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+    interface-id:
+      name: interfaceId
+      description: The unique identifier of the target search interface.
+      example: 123e4567-e89b-12d3-a456-426614174000
+      in: path
+      required: true
+      schema:
+        type: string
+    perPage:
+      name: perPage
+      description: The maximum number of configurations to include per page.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 20
+    projectId:
+      name: projectId
+      description: The id of the project to which the resource belongs.
+      in: query
+      schema:
+        type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

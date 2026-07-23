@@ -1,0 +1,256 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Organization Api Keys Templates API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Organization Api Keys Templates
+paths:
+  /rest/organizations/{organizationId}/templates/apikeys:
+    get:
+      tags:
+      - Organization Api Keys Templates
+      summary: List API Key Templates
+      description: 'Lists all the API keys templates in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getOrganizationApiKeyTemplates
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKeyTemplateModel'
+      x-pretty-name: getOrganizationApiKeyTemplates
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/templates/apikeys_get
+  /rest/organizations/{organizationId}/templates/apikeys/{organizationApiKeyTemplateId}:
+    get:
+      tags:
+      - Organization Api Keys Templates
+      summary: Show API Key Template
+      description: 'Shows an API key template in an [organization](https://docs.coveo.com/en/185/glossary/coveo-organization).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getOrganizationApiKeyTemplate
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: organizationApiKeyTemplateId
+        in: path
+        description: The unique identifier of the API key template.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiKeyTemplateModel'
+      x-pretty-name: getOrganizationApiKeyTemplate
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/templates/apikeys/paramId_get
+  /rest/organizations/{organizationId}/templates/apikeys/privileges/eligibility:
+    get:
+      tags:
+      - Organization Api Keys Templates
+      summary: Get All API Key Templates' Eligibility for the Current User
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"API_KEY","type":"CREATE","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getApiKeyTemplatesEligibility
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKeyTemplateEligibilityResponse'
+      x-pretty-name: getApiKeyTemplatesEligibility
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: API_KEY
+        type: CREATE
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: API_KEY
+        type: CREATE
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/templates/apikeys/privileges/eligibility_get
+components:
+  schemas:
+    ApiKeyTemplateEligibilityResponse:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: The id of the template
+          readOnly: true
+        missingPrivileges:
+          uniqueItems: true
+          type: array
+          description: The privileges needed to access the template
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        canGenerate:
+          type: boolean
+          description: If the user can generate an API key from this template
+          readOnly: true
+      description: An API key template
+    ApiKeyTemplateModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        description:
+          type: string
+        enabled:
+          type: boolean
+        allowedIps:
+          type: array
+          items:
+            type: string
+        deniedIps:
+          type: array
+          items:
+            type: string
+        privileges:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        creationType:
+          type: string
+          description: Type of the creation source of the ApiKey
+          enum:
+          - INTEGRATION
+          - MANUAL
+        privacyLevel:
+          type: string
+          description: The privacy level of the API key.
+          readOnly: true
+          enum:
+          - PUBLIC
+          - PRIVATE
+        creationSource:
+          type: string
+          description: The creation source of the ApiKeyTemplate.
+          readOnly: true
+          enum:
+          - DATABASE_REVISE
+          - API
+          - INFRASTRUCTURE_AS_CODE
+        enforcedLifetimePeriod:
+          type: string
+          description: When set, this period defines the **maximum allowed lifetime** for API keys generated from this template. Keys can be created with an equal or shorter lifetime. If not set, a system-defined default lifetime will be applied.
+      description: An API key template
+    PrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
+      readOnly: true
+      externalDocs:
+        description: Privilege reference
+        url: https://docs.coveo.com/en/1707/
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

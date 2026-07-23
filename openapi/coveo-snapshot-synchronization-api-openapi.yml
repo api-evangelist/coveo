@@ -1,0 +1,599 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Snapshot Synchronization API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Snapshot Synchronization
+paths:
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/synchronization/{synchronizationPlanId}:
+    get:
+      tags:
+      - Snapshot Synchronization
+      summary: Show Synchronization Plan
+      description: 'Shows a snapshot synchronization plan.</br>**Required privileges:**<br/> - `Snapshot - View`<br/> - `Link - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getSynchronizationPlan
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `destinationorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: synchronizationPlanId
+        in: path
+        description: The unique identifier of the target synchronization plan.<br/>**Example:** `destinationorganizationg7dg3gd-spnyvuywz6nbnqgujuwtlq2d7e`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SynchronizationPlanModel'
+      x-pretty-name: getSynchronizationPlan
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization/paramId_get
+    put:
+      tags:
+      - Snapshot Synchronization
+      summary: Update Synchronization Plan
+      description: 'Updates a snapshot synchronization plan.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> - `Link - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: updateSynchronizationPlan
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `destinationorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: synchronizationPlanId
+        in: path
+        description: The unique identifier of the target synchronization plan.<br/>**Example:** `destinationorganizationg7dg3gd-spnyvuywz6nbnqgujuwtlq2d7e`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SynchronizationPlanModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SynchronizationPlanModel'
+      x-pretty-name: updateSynchronizationPlan
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization/paramId_put
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/synchronization/{synchronizationPlanId}/children:
+    put:
+      tags:
+      - Snapshot Synchronization
+      summary: Update Synchronization Plan Children
+      description: 'Updates child resource associations in a synchronization plan given a target parent association.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> - `Link - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"VIEW","targetId":"*"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: computeChildrenOperations
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `destinationorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: synchronizationPlanId
+        in: path
+        description: The unique identifier of the target synchronization plan.<br/>**Example:** `destinationorganizationg7dg3gd-spnyvuywz6nbnqgujuwtlq2d7e`
+        required: true
+        schema:
+          type: string
+      - name: parentResourceType
+        in: query
+        description: The `resourceType` of the parent resource.<br/>**Example:** `QUERY_PIPELINE`
+        required: true
+        schema:
+          type: string
+          enum:
+          - CATALOG_CONFIG
+          - CATALOG
+          - EXTENSION
+          - FIELD
+          - FILTER
+          - INSIGHT_PANEL_INTERFACE
+          - INSIGHT_PANEL_CONFIGURATION
+          - MAPPING
+          - ML_MODEL
+          - ML_MODEL_ASSOCIATION
+          - QUERY_PARAMETER
+          - QUERY_PIPELINE
+          - QUERY_PIPELINE_CONDITION
+          - RANKING_EXPRESSION
+          - RANKING_WEIGHT
+          - RESULT_RANKING
+          - FEATURED_RESULT
+          - SEARCH_PAGE
+          - SECURITY_PROVIDER
+          - SOURCE
+          - STATEMENT_GROUP
+          - SETTING
+          - STOP_WORD
+          - STOREFRONT_ASSOCIATION
+          - SUBSCRIPTION
+          - THESAURUS
+          - TRACKING_ID
+          - TRIGGER
+          - UNKNOWN
+      - name: snapshotParentResourceName
+        in: query
+        description: The `resourceName` of the parent resource.<br/>**Example:** `my_pipeline_aAePCD`
+        required: true
+        schema:
+          type: string
+      - name: targetParentId
+        in: query
+        description: The unique identifier of the parent resource in the target organization.<br/>**Example:** `destinationorganizationg7dg3gd-qvml6dkyvouchhehsjhxxbkgqq`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SynchronizationPlanModel'
+      x-pretty-name: computeChildrenOperations
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: VIEW
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization/paramId/children_put
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/synchronization/{synchronizationPlanId}/apply:
+    put:
+      tags:
+      - Snapshot Synchronization
+      summary: Apply Synchronization Plan
+      description: 'Applies a snapshot synchronization plan.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> - `Link - Edit`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: applySynchronizationPlan
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `destinationorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      - name: synchronizationPlanId
+        in: path
+        description: The unique identifier of the target synchronization plan.<br/>**Example:** `destinationorganizationg7dg3gd-spnyvuywz6nbnqgujuwtlq2d7e`
+        required: true
+        schema:
+          type: string
+      - name: overrideExistingLinks
+        in: query
+        description: Whether to use the links in the target synchronization plan to override the ones already existing in the organization if conflicts arise, rather than throwing an error.<br/>**Default:** `false`
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SynchronizationReportModel'
+      x-pretty-name: applySynchronizationPlan
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization/paramId/apply_put
+  /rest/organizations/{organizationId}/snapshots/{snapshotId}/synchronization:
+    post:
+      tags:
+      - Snapshot Synchronization
+      summary: Create Synchronization Plan
+      description: 'Creates a snapshot synchronization plan.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> - `Link - View`<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"SNAPSHOTS","type":"EDIT","targetId":"*"}
+
+        AND
+
+        {"owner":"PLATFORM","targetDomain":"LINK","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: createSynchronizationPlan
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `destinationorganizationg7dg3gd`
+        required: true
+        schema:
+          type: string
+      - name: snapshotId
+        in: path
+        description: The unique identifier of the target snapshot.<br/>**Example:** `destinationorganization-xzgbf5rdaiqtaznvh74zdwcedi`
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SynchronizationPlanModel'
+      x-pretty-name: createSynchronizationPlan
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: SNAPSHOTS
+        type: EDIT
+        targetId: '*'
+      - owner: PLATFORM
+        targetDomain: LINK
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization_post
+components:
+  schemas:
+    LinkModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the link, if it already exists.
+          example: tngt45tayqj6op3zt22rf22ek
+        organizationId:
+          type: string
+          description: The unique identifier of the destination organization.
+          example: '`destinationorganizationg7dg3gd`'
+        resourceName:
+          type: string
+          description: The unique identifier of the resource in the snapshot that allows tracking across organizations.
+          example: myextension_aAePCD
+        resourceType:
+          type: string
+          description: The type of the resource.
+          enum:
+          - CATALOG_CONFIG
+          - CATALOG
+          - EXTENSION
+          - FIELD
+          - FILTER
+          - INSIGHT_PANEL_INTERFACE
+          - INSIGHT_PANEL_CONFIGURATION
+          - MAPPING
+          - ML_MODEL
+          - ML_MODEL_ASSOCIATION
+          - QUERY_PARAMETER
+          - QUERY_PIPELINE
+          - QUERY_PIPELINE_CONDITION
+          - RANKING_EXPRESSION
+          - RANKING_WEIGHT
+          - RESULT_RANKING
+          - FEATURED_RESULT
+          - SEARCH_PAGE
+          - SECURITY_PROVIDER
+          - SOURCE
+          - STATEMENT_GROUP
+          - SETTING
+          - STOP_WORD
+          - STOREFRONT_ASSOCIATION
+          - SUBSCRIPTION
+          - THESAURUS
+          - TRACKING_ID
+          - TRIGGER
+          - UNKNOWN
+        resourceId:
+          type: string
+          description: The unique identifier of the resource in the destination organization.
+          example: destinationorganizationg7dg3gd-qvml6dkyvouchhehsjhxxbkgqq
+      description: The link definition.
+    ReportResourceSynchronizationOperationsModel:
+      type: object
+      properties:
+        resourceName:
+          type: string
+          description: The unique identifier of the resource in the snapshot that allows tracking across organizations.
+          example: '`myrankingexpression_aAePCD`'
+        displayName:
+          type: string
+          description: The name of the resource in your organization.
+          example: '`myrankingexpression`'
+        parentResourceId:
+          type: string
+          description: The resourceId of the parent resource, if applicable.
+          example: mypipeline_f8dh8sh4
+        matches:
+          type: array
+          description: The matches of the resource.
+          items:
+            $ref: '#/components/schemas/MatchModel'
+      description: The links of the resource.
+    SynchronizationReportModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the synchronization operation.
+          example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
+        updatedDate:
+          type: string
+          description: The date at which the report was created in number of milliseconds since UNIX epoch.
+          format: date-time
+        synchronizationPlanId:
+          type: string
+          description: The unique identifier of the synchronization plan.
+          example: '`startingorganizationg8tp8wu3-xqtzk7c2lnskasagcxy75xkgp`'
+        type:
+          type: string
+          description: The synchronization operation type.
+          enum:
+          - CREATE_SNAPSHOT
+          - DRY_RUN
+          - APPLY
+          - CREATE_SYNCHRONIZATION_PLAN
+          - APPLY_SYNCHRONIZATION_PLAN
+          - GENERATE_DIFF
+        status:
+          type: string
+          description: The synchronization operation status.
+          enum:
+          - PENDING
+          - IN_PROGRESS
+          - COMPLETED
+          - ABORTED
+        resultCode:
+          type: string
+          description: The synchronization operation result code at the end of the operation, if applicable.
+          enum:
+          - AUTO_SYNCHRONIZATION_FAILURE
+          - EXTERNAL_SERVICE_COMMUNICATION_ERROR
+          - RESOURCE_DEPENDENCY_CYCLE
+          - RESOURCES_IN_ERROR
+          - SUCCESS
+          - UNABLE_TO_PUSH_TO_ORGANIZATION
+          - UNABLE_TO_RETRIEVE_RESOURCES
+          - UNEXPECTED_ERROR
+          - UNSUPPORTED_RESOURCE
+        resourcesProcessed:
+          type: integer
+          description: The number of resources processed by the synchronization.
+          format: int32
+        linkOperations:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SynchronizationReportLinkOperationsModel'
+          description: The summaries of the outcome of the link operations for the different resource types.
+        linkOperationDetails:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+              description: An object containing details about link operation failures, if applicable.
+            description: An object containing details about link operation failures, if applicable.
+          description: An object containing details about link operation failures, if applicable.
+      description: A snapshot synchronization report.
+    SynchronizationReportLinkOperationsModel:
+      type: object
+      properties:
+        linksCreated:
+          type: integer
+          description: The number of synchronization links created.
+          format: int32
+        linksOverridden:
+          type: integer
+          description: The number of synchronization links overridden.
+          format: int32
+        linksInError:
+          type: integer
+          description: The number of synchronization links in error.
+          format: int32
+      description: A summary of the outcome of the link operations.
+    ReportResourceAlreadyLinkedModel:
+      type: object
+      properties:
+        resourceName:
+          type: string
+          description: The unique identifier of the resource in the snapshot that allows tracking across organizations.
+          example: '`myrankingexpression_aAePCD`'
+        displayName:
+          type: string
+          description: The name of the resource in your organization.
+          example: '`myrankingexpression`'
+        linkModel:
+          $ref: '#/components/schemas/LinkModel'
+      description: A preexisting link.
+    SynchronizationPlanModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the snapshot synchronization plan.
+          example: destinationorganizationg7dg3gd-vfjwjnn6shwxjjd5vujhu22k5u
+        snapshotId:
+          type: string
+          description: The unique identifier of the target snapshot.
+          example: destinationorganizationg7dg3gd-wbbkq2fg6zprmdsegcqfbocdwq
+        status:
+          type: string
+          description: The status of the snapshot synchronization plan.
+          enum:
+          - CREATING
+          - CREATED
+          - IN_ERROR
+        alreadyLinkedResources:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            description: For each resource type, the pre-existing links, if applicable.
+            items:
+              $ref: '#/components/schemas/ReportResourceAlreadyLinkedModel'
+          description: For each resource type, the pre-existing links, if applicable.
+        resourceSynchronizationOperations:
+          type: object
+          additionalProperties:
+            type: array
+            description: The link operations performed when applying the synchronization plan.
+            items:
+              $ref: '#/components/schemas/ReportResourceSynchronizationOperationsModel'
+          description: The link operations performed when applying the synchronization plan.
+      description: The updated synchronization plan.
+    MatchModel:
+      type: object
+      properties:
+        linkModel:
+          $ref: '#/components/schemas/LinkModel'
+        associationScore:
+          type: number
+          description: A number between `0` and `1` denoting the degree of confidence in the match, where`1` is the highest and `0` is the lowest.
+          format: float
+        displayName:
+          type: string
+          description: The human-readable name of the resource in the target organization.
+          example: myextension
+      description: The matches of the resource.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

@@ -1,0 +1,610 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Synonym Preview API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Synonym Preview
+paths:
+  /rest/organizations/{organizationId}/commerce/v2/search/preview/synonyms/new:
+    post:
+      tags:
+      - Synonym Preview
+      summary: Preview the Impact of a Synonym Rule
+      description: 'Previews the impact of a synonym rule.</br></br>**Required privilege:** Execute Query<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"SEARCH_API","targetDomain":"EXECUTE_QUERY","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: previewSynonym
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: trackingId
+        in: query
+        description: The unique identifier of the tracking target.
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+        example: acmecorporation_ca
+      - name: id
+        in: query
+        description: A UUID identifying the synonym rule.
+        required: false
+        schema:
+          type: string
+          format: uuid
+        example: 58bb4b98-1daa-4767-8c15-90a0ea67645c
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SynonymPreviewRequestModel_V2ProductView'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PreviewResponseModel_V2ProductView'
+      x-pretty-name: previewSynonym
+      x-required-privilege:
+        owner: SEARCH_API
+        targetDomain: EXECUTE_QUERY
+        targetId: '*'
+      x-required-privileges:
+      - owner: SEARCH_API
+        targetDomain: EXECUTE_QUERY
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/commerce/v2/search/preview/synonyms/new_post
+components:
+  schemas:
+    RuleLocaleModel_V2ProductView:
+      type: object
+      properties:
+        language:
+          type: string
+          description: An ISO 639-1 language code.
+          example: en
+        country:
+          type: string
+          description: An ISO 3166-1 alpha-2 country code.
+          example: US
+        currency:
+          type: string
+          description: An ISO 4217 currency code.
+          example: USD
+      description: The list of locales the rule applies to. When empty, the rule applies to all locales.
+      example:
+      - language: en
+        country: US
+        currency: USD
+    QueryCorrectionResponse_V2ProductView:
+      type: object
+      properties:
+        originalQuery:
+          type: string
+          description: If the query was automatically corrected, this property indicates the original basic query expression (q) that triggered the automatic query correction.
+        correctedQuery:
+          type: string
+          description: If the query was automatically corrected, this property indicates the corrected basic query expression (q) that was executed instead of the original one.
+        corrections:
+          type: array
+          description: If the query wasn't automatically corrected, this property contains the basic query expression (q) keyword corrections provided by the Did You Mean index feature.
+          example:
+          - correctedQuery: Coveo Cloud V2 platform
+            wordCorrections:
+            - correctedWord: platform
+              length: 8
+              offset: 15
+              originalWord: plattfomr
+          items:
+            $ref: '#/components/schemas/QueryCorrection_V2ProductView'
+      description: The query correction response, if the query was corrected.
+    Product_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Result_V2ProductView'
+      - type: object
+        properties:
+          additionalFields:
+            type: object
+            additionalProperties:
+              type: object
+              description: The product additional fields.
+              example:
+                size: M
+                material: cotton
+            description: The product additional fields.
+            example:
+              size: M
+              material: cotton
+          queryPinned:
+            type: boolean
+            description: Indicates whether the product was pinned by a reserved position rule.
+            example: true
+          badgePlacements:
+            type: array
+            description: The list of badge placements associated with this product.
+            items:
+              $ref: '#/components/schemas/BadgePlacementViewModel_V2ProductView'
+          ec_name:
+            type: string
+            description: The product name.
+            example: ACME T-Shirt.
+          ec_description:
+            type: string
+            description: The product description.
+            example: A very nice T-Shirt. Comes in blue and green colors.
+          ec_shortdesc:
+            type: string
+            description: The product short description.
+            example: A very nice T-Shirt.
+          ec_brand:
+            type: string
+            description: The product brand.
+            example: ACME
+          ec_category:
+            type: array
+            description: The product category.
+            example:
+            - T-Shirts
+            items:
+              type: string
+              description: The product category.
+              example: '["T-Shirts"]'
+          ec_thumbnails:
+            type: array
+            description: The product thumbnails.
+            example:
+            - https://example.com/thumbnail1.jpg
+            - https://example.com/thumbnail2.jpg
+            items:
+              type: string
+              description: The product thumbnails.
+              example: '["https://example.com/thumbnail1.jpg","https://example.com/thumbnail2.jpg"]'
+          ec_images:
+            type: array
+            description: The product images.
+            example:
+            - https://example.com/image1.jpg
+            - https://example.com/image2.jpg
+            items:
+              type: string
+              description: The product images.
+              example: '["https://example.com/image1.jpg","https://example.com/image2.jpg"]'
+          ec_price:
+            type: number
+            description: The product price.
+            format: double
+            example: 19.99
+          ec_promo_price:
+            type: number
+            description: The product promotional price.
+            format: double
+            example: 14.99
+          ec_in_stock:
+            type: boolean
+            description: The product availability.
+            example: true
+          ec_item_group_id:
+            type: string
+            description: The product item group identifier.
+            example: '0000003035'
+          ec_rating:
+            type: number
+            description: The product rating.
+            format: double
+            example: 4.5
+          ec_product_id:
+            type: string
+            description: The product identifier.
+            example: 0000003035-45
+          ec_gender:
+            type: string
+            description: The intended gender of the product user.
+            example: M
+          ec_color:
+            type: string
+            description: The product color.
+            example: Blue
+          ec_listing:
+            type: string
+            description: The product listing.
+            example: T-Shirt
+          clickUri:
+            type: string
+            description: The product click URI.
+            example: https://example.com/product/0000003035-45
+          permanentid:
+            type: string
+            description: The product permanent identifier.
+            example: 0000003035-45
+          children:
+            type: array
+            description: The product child results.
+            items:
+              $ref: '#/components/schemas/ChildProduct_V2ProductView'
+          totalNumberOfChildren:
+            type: integer
+            description: The total number of child results.
+            format: int32
+            example: 2
+    PreviewResponseExecutionReportsModel_V2ProductView:
+      type: object
+      description: The execution reports for a preview query.
+      example:
+        current:
+          children:
+          - name: RequestId
+            description: The id correlating logs for this request
+            duration: 0
+            result: null
+            X-Request-ID: 948cf669-43ae-4d8d-b285-9b66350c5433
+          - name: Organization ID
+            description: Organization ID
+            duration: 0
+            result: null
+            coveo_organization: barcasportsmcy01fvu
+          duration: 88
+        modified:
+          children:
+          - name: RequestId
+            description: The id correlating logs for this request
+            duration: 0
+            result: null
+            X-Request-ID: 148cf689-63ae-4d8d-b285-9b63350c5433
+          - name: Organization ID
+            description: Organization ID
+            duration: 0
+            result: null
+            coveo_organization: barcasportsmcy01fvu
+          duration: 86
+    BadgePlacementViewModel_V2ProductView:
+      type: object
+      properties:
+        placementId:
+          type: string
+          description: The placement unique identifier.
+          format: uuid
+          example: 36164bca-b489-4c42-8574-e1325d56d0be
+        badges:
+          type: array
+          description: The list of badges associated with this placement
+          items:
+            $ref: '#/components/schemas/BadgeViewModel_V2ProductView'
+      description: The list of badge placements associated with this product.
+    PaginationResponseModel_V2ProductView:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: The page of products to request.
+          format: int32
+          example: 7
+        perPage:
+          type: integer
+          description: The number of products per page. Note that a value greater than 100 may be rejected in the future.
+          format: int32
+          example: 30
+        totalEntries:
+          type: integer
+          description: The total number of results that match the query.
+          format: int32
+          example: 100
+        totalPages:
+          type: integer
+          description: The total number of pages of items available.
+          format: int32
+          example: 10
+        totalProducts:
+          type: integer
+          description: The total number of products that match the query.
+          format: int32
+          example: 90
+        totalSpotlightContent:
+          type: integer
+          description: The total number of spotlight content that match the query.
+          format: int32
+          example: 10
+      description: Contextual pagination information about the query.
+      example:
+        page: 1
+        perPage: 10
+        totalPages: 10
+        totalEntries: 100
+    SynonymModel_V2ProductView:
+      required:
+      - action
+      - from
+      type: object
+      properties:
+        id:
+          type: string
+          description: A UUID identifying the synonym rule.
+          format: uuid
+          readOnly: true
+          example: 58bb4b98-1daa-4767-8c15-90a0ea67645c
+        action:
+          type: string
+          description: 'The synonym rule type. Possible values are: one-way, two-way, and one-way-reverse.'
+          example: one-way
+          enum:
+          - one-way
+          - two-way
+          - replace
+          - exact-match
+        from:
+          minItems: 1
+          type: array
+          description: The search terms contained in the output query if matched against a synonym rule.
+          example:
+          - sandals
+          - sneakers
+          items:
+            type: string
+            description: The search terms contained in the output query if matched against a synonym rule.
+            example: '["sandals","sneakers"]'
+        to:
+          type: array
+          description: The search terms contained in the input query.
+          example:
+          - shoes
+          - heels
+          items:
+            type: string
+            description: The search terms contained in the input query.
+            example: '["shoes","heels"]'
+        locales:
+          type: array
+          description: The list of locales the synonym applies to. When empty, the synonym applies to all locales.
+          example:
+          - language: en
+            country: US
+            currency: USD
+          items:
+            $ref: '#/components/schemas/RuleLocaleModel_V2ProductView'
+        updatedAt:
+          type: string
+          description: The date and time at which the synonym was last updated.
+      description: The synonym rule to preview.
+    QueryCorrection_V2ProductView:
+      type: object
+      properties:
+        correctedQuery:
+          type: string
+          description: The resulting query expression correction suggestion.
+        wordCorrections:
+          type: array
+          description: The word correction suggestions.
+          items:
+            $ref: '#/components/schemas/WordCorrection_V2ProductView'
+      description: If the query wasn't automatically corrected, this property contains the basic query expression (q) keyword corrections provided by the Did You Mean index feature.
+      example:
+      - correctedQuery: Coveo Cloud V2 platform
+        wordCorrections:
+        - correctedWord: platform
+          length: 8
+          offset: 15
+          originalWord: plattfomr
+    PreviewResponseModel_V2ProductView:
+      type: object
+      properties:
+        products:
+          type: array
+          description: The subset of products returned by the query.
+          items:
+            $ref: '#/components/schemas/ProductForPreview_V2ProductView'
+        results:
+          type: array
+          description: List of results including products and spotlight content
+          items:
+            $ref: '#/components/schemas/PreviewResult_V2ProductView'
+        pagination:
+          $ref: '#/components/schemas/PaginationResponseModel_V2ProductView'
+        responseIds:
+          $ref: '#/components/schemas/PreviewResponseIdsModel_V2ProductView'
+        executionReports:
+          $ref: '#/components/schemas/PreviewResponseExecutionReportsModel_V2ProductView'
+        queryCorrection:
+          $ref: '#/components/schemas/QueryCorrectionResponse_V2ProductView'
+    PreviewResult_V2ProductView:
+      required:
+      - resultType
+      type: object
+      properties:
+        resultType:
+          type: string
+      description: Preview result item that can be a product or spotlight content (including placeholders)
+      discriminator:
+        propertyName: resultType
+    SynonymPreviewRequestModel_V2ProductView:
+      required:
+      - country
+      - currency
+      - language
+      - query
+      type: object
+      properties:
+        language:
+          minLength: 1
+          type: string
+          description: An ISO 639-1 language code.
+          example: en
+        country:
+          minLength: 1
+          type: string
+          description: An ISO 3166-1 alpha-2 country code.
+          example: US
+        currency:
+          minLength: 1
+          type: string
+          description: An ISO 4217 currency code.
+          example: USD
+        page:
+          maximum: 4
+          minimum: 0
+          type: integer
+          description: The page of products to request.
+          format: int32
+          example: 7
+        perPage:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          description: The number of products per page. Note that a value greater than 100 may be rejected in the future.
+          format: int32
+          example: 30
+          default: 30
+        query:
+          type: string
+          description: The query expression, typically the keywords entered by the end user in a search box.
+          example: blue shoes
+        synonym:
+          $ref: '#/components/schemas/SynonymModel_V2ProductView'
+        debug:
+          type: boolean
+          description: Whether to include the execution report on a successful response.
+          example: true
+        additionalFields:
+          uniqueItems: true
+          type: array
+          description: Some additional fields to include in the preview results.
+          example:
+          - cat_color
+          - cat_gender
+          items:
+            type: string
+            description: Some additional fields to include in the preview results.
+            example: '["cat_color","cat_gender"]'
+    WordCorrection_V2ProductView:
+      type: object
+      properties:
+        correctedWord:
+          type: string
+          description: The suggested word correction.
+        length:
+          type: integer
+          description: The length (in number of characters) of the corrected word.
+          format: int32
+        offset:
+          type: integer
+          description: The offset (in number of characters) of the corrected word, from the beginning of the resulting query expression correction suggestion.
+          format: int32
+        originalWord:
+          type: string
+          description: The original, un-corrected word.
+      description: The word correction suggestions.
+    Result_V2ProductView:
+      required:
+      - resultType
+      type: object
+      properties:
+        resultType:
+          type: string
+      description: List of results including products and spotlight content
+      discriminator:
+        propertyName: resultType
+    BadgeViewModel_V2ProductView:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The localized text displayed on the badge.
+          example: Bestseller!
+        backgroundColor:
+          type: string
+          description: The badge background color in the format `#RRGGBB`.
+          example: '#FFFFFF'
+        textColor:
+          type: string
+          description: The badge text color in the format `#RRGGBB`.
+          example: '#000000'
+        iconUrl:
+          type: string
+          description: The url of an icon to render with the badge text.
+          example: https://example.com/icon.png
+      description: The list of badges associated with this placement
+    ChildProduct_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Product_V2ProductView'
+      - $ref: '#/components/schemas/Result_V2ProductView'
+    ProductForPreview_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Product_V2ProductView'
+      - type: object
+        properties:
+          score:
+            type: integer
+            description: The total ranking score computed for the product.
+            format: int32
+            example: 1292
+          scoreDifference:
+            type: integer
+            description: Score difference between the cached and previewed rules for a product.
+            format: int32
+            example: 1292
+          positionDifference:
+            type: integer
+            description: Position difference between the cached and previewed rules for a product.
+            format: int32
+            example: 9
+          included:
+            type: boolean
+            description: Whether the product has been included or not after applying a rule.
+          pinned:
+            type: boolean
+            description: Whether the product has been pinned or not after applying a rule.
+          reservedPosition:
+            type: boolean
+            description: Whether the product is in a position that is reserved for a query-time pin.
+      - $ref: '#/components/schemas/Result_V2ProductView'
+    PreviewResponseIdsModel_V2ProductView:
+      type: object
+      properties:
+        current:
+          type: string
+          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        modified:
+          type: string
+          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+      description: The unique identifiers of the API responses for a preview request.
+      example:
+        current: 123e4567-e89b-12d3-a456-426614174000
+        modified: 94c3779c-0e42-40b5-95b8-93a6ed3ea162
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

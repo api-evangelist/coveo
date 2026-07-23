@@ -1,0 +1,911 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Temporary Access API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Temporary Access
+paths:
+  /rest/users/{username}/access/temporary:
+    get:
+      tags:
+      - Temporary Access
+      summary: List Temporary Accesses for Current User
+      description: Lists the temporary accesses for the current user.
+      operationId: getUserTemporaryAccess
+      parameters:
+      - name: username
+        in: path
+        description: The username of the user for which to list temporary access.</br>**Example:** `jsmith@email.com-google`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: getUserTemporaryAccess
+      x-ui-operation-id: /rest/users/paramId/access/temporary_get
+  /rest/users/{username}/access/temporary/{temporaryAccessId}:
+    get:
+      tags:
+      - Temporary Access
+      summary: Show Temporary Access for Current User
+      description: Shows a temporary access for the current user.
+      operationId: getTemporaryAccess
+      parameters:
+      - name: username
+        in: path
+        description: The username of the user for which to show a temporary access.</br>**Example:** `jsmith@email.com-google`
+        required: true
+        schema:
+          type: string
+      - name: temporaryAccessId
+        in: path
+        description: The unique identifier of the temporary access to show.</br>**Example:** `wrm4yyygma4dga6zouiqcaknv4`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: getTemporaryAccess
+      x-ui-operation-id: /rest/users/paramId/access/temporary/paramId_get
+    delete:
+      tags:
+      - Temporary Access
+      summary: Revoke Temporary Access for Current User
+      description: Revokes temporary access for a user to an organization.
+      operationId: revokeTemporaryAccess
+      parameters:
+      - name: username
+        in: path
+        description: The username of the user for which to revoke a temporary access.</br>**Example:** `jsmith@email.com-google`
+        required: true
+        schema:
+          type: string
+      - name: temporaryAccessId
+        in: path
+        description: The unique identifier of the temporary access to revoke.</br>**Example:** `0378a782-ca90-11e9-a32f-2a2ae2dbcce4`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: revokeTemporaryAccess
+      x-ui-operation-id: /rest/users/paramId/access/temporary/paramId_delete
+  /rest/users/{username}/access/temporary/inactive:
+    get:
+      tags:
+      - Temporary Access
+      summary: List Expired and Revoked Temporary Accesses for Current User
+      description: Lists the expired and revoked temporary accesses for the current user.
+      operationId: getUserExpiredOrRevokedTemporaryAccess
+      parameters:
+      - name: username
+        in: path
+        description: The username of the user for which to list expired and revoked temporary accesses.</br>**Example:** `jsmith@email.com-google`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: getUserExpiredOrRevokedTemporaryAccess
+      x-ui-operation-id: /rest/users/paramId/access/temporary/inactive_get
+  /rest/users/{username}/access/temporary/expired:
+    get:
+      tags:
+      - Temporary Access
+      summary: List Expired Temporary Accesses for Current User
+      description: List the expired temporary accesses for the current user.
+      operationId: getUserExpiredTemporaryAccess
+      parameters:
+      - name: username
+        in: path
+        description: The username of the user for which to list expired temporary accesses.</br>**Example:** `jsmith@email.com-google`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: getUserExpiredTemporaryAccess
+      x-ui-operation-id: /rest/users/paramId/access/temporary/expired_get
+  /rest/users/{username}/access/temporary/active:
+    get:
+      tags:
+      - Temporary Access
+      summary: List Active Temporary Accesses for Current User
+      description: Lists the active temporary accesses for the current user.
+      operationId: getUserActiveTemporaryAccess
+      parameters:
+      - name: username
+        in: path
+        description: The username of the user for which to list active temporary accesses.</br>**Example:** `jsmith@email.com-google`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: getUserActiveTemporaryAccess
+      x-ui-operation-id: /rest/users/paramId/access/temporary/active_get
+  /rest/organizations/{organizationId}/access/temporary:
+    get:
+      tags:
+      - Temporary Access
+      summary: List Temporary Accesses
+      description: 'Lists the temporary accesses in an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"TEMPORARY_ACCESS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getOrganizationTemporaryAccess
+      parameters:
+      - name: organizationId
+        in: path
+        description: The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id) for which to list temporary accesses.</br>**Example:** `mycoveocloudorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: getOrganizationTemporaryAccess
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/access/temporary_get
+  /rest/organizations/{organizationId}/access/temporary/{temporaryAccessId}:
+    get:
+      tags:
+      - Temporary Access
+      summary: Show Temporary Access
+      description: 'Shows a temporary access in an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"TEMPORARY_ACCESS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getOrganizationTemporaryAccess_1
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: temporaryAccessId
+        in: path
+        description: The unique identifier of the temporary access to show.</br>**Example:** `wrm4yyygma4dga6zouiqcaknv4`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: getOrganizationTemporaryAccess
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/access/temporary/paramId_get
+    delete:
+      tags:
+      - Temporary Access
+      summary: Revoke Temporary Access
+      description: 'Revokes a temporary access in an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"TEMPORARY_ACCESS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: revokeTemporaryAccess_1
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: temporaryAccessId
+        in: path
+        description: The unique identifier of the temporary access to revoke.</br>**Example:** `0378a782-ca90-11e9-a32f-2a2ae2dbcce4`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: revokeTemporaryAccess
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/access/temporary/paramId_delete
+  /rest/organizations/{organizationId}/access/temporary/users/{username}:
+    get:
+      tags:
+      - Temporary Access
+      summary: List User Temporary Accesses
+      description: 'Lists user temporary accesses in an [organization](https://docs.coveo.com/en/185/).</br>**Required privilege:** Temporary access - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"TEMPORARY_ACCESS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getOrganizationTemporaryAccessForUser
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: username
+        in: path
+        description: The username of the user for which to list temporary access.</br>**Example:** `jsmith@email.com-google`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: getOrganizationTemporaryAccessForUser
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/access/temporary/users/paramId_get
+  /rest/organizations/{organizationId}/access/temporary/expired:
+    get:
+      tags:
+      - Temporary Access
+      summary: List Expired Temporary Accesses
+      description: 'List expired temporary accesses in an [organization](https://docs.coveo.com/en/185/).</br>**Required privilege:** Temporary access - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"TEMPORARY_ACCESS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getOrganizationExpiredTemporaryAccess
+      parameters:
+      - name: organizationId
+        in: path
+        description: The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id) for which to list expired temporary accesses.</br>**Example:** `mycoveocloudorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: getOrganizationExpiredTemporaryAccess
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/access/temporary/expired_get
+  /rest/organizations/{organizationId}/access/temporary/active:
+    get:
+      tags:
+      - Temporary Access
+      summary: List Active Temporary Accesses
+      description: 'List active temporary accesses in an organization.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"TEMPORARY_ACCESS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getOrganizationActiveTemporaryAccess
+      parameters:
+      - name: organizationId
+        in: path
+        description: The [unique identifier of the organization](https://docs.coveo.com/en/n1ce5273/manage-an-organization/find-your-organization-id) for which to list active temporary accesses.</br>**Example:** `mycoveocloudorganizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemporaryAccessModel'
+      x-pretty-name: getOrganizationActiveTemporaryAccess
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: TEMPORARY_ACCESS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/access/temporary/active_get
+components:
+  schemas:
+    TemporaryAccessModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the temporary access.</br>**Example:** `wrm4yyygma4dga6zouiqcaknv4`
+        description:
+          type: string
+          description: A brief description of the temporary access.</br>**Example:** `Temporary access for source demo.`
+        justificationNotes:
+          type: string
+        organizationId:
+          type: string
+          description: The unique identifier of the organization for which the temporary access was created.</br>**Example:** `mycoveocloudorganizationg8tp8wu3`
+        user:
+          $ref: '#/components/schemas/UserModel'
+        privileges:
+          uniqueItems: true
+          type: array
+          description: The set of privileges granted to the temporary access.
+          items:
+            $ref: '#/components/schemas/GlobalPrivilegeModel'
+        expirationDate:
+          type: string
+          description: The expiration date of the temporary access in number of milliseconds since UNIX epoch.</br>**Example:**`1556722981779`
+          format: date-time
+        dateGranted:
+          type: string
+          description: The date at which the temporary access was granted in number of milliseconds since UNIX epoch.</br>**Example:**`1556722981779`
+          format: date-time
+        revocationDate:
+          type: string
+          description: The date at which the temporary access was revoked in number of milliseconds since UNIX epoch.</br>**Example:**`1556722981779`
+          format: date-time
+      description: Information pertaining to a temporary access in an organization.
+    UserModel:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the user.</br>**Example:** `jsmith@email.com-google`
+        name:
+          type: string
+          description: The full name of the user.</br>**Example:** `John Smith`
+          nullable: true
+        firstName:
+          type: string
+          description: The first name of the user.</br>**Example:** `John`
+          nullable: true
+        lastName:
+          type: string
+          description: The last name of the user.</br>**Example:** `Smith`
+          nullable: true
+        email:
+          type: string
+          description: The email address of the user.</br>**Example:**`jsmith@email.com`
+        emailConfirmed:
+          type: boolean
+          description: Whether the user has confirmed their email.
+        displayName:
+          type: string
+          description: The display name of the user.</br>**Example:** `John Smith`
+        country:
+          type: string
+          enum:
+          - UNDEFINED
+          - AC
+          - AD
+          - AE
+          - AF
+          - AG
+          - AI
+          - AL
+          - AM
+          - AN
+          - AO
+          - AQ
+          - AR
+          - AS
+          - AT
+          - AU
+          - AW
+          - AX
+          - AZ
+          - BA
+          - BB
+          - BD
+          - BE
+          - BF
+          - BG
+          - BH
+          - BI
+          - BJ
+          - BL
+          - BM
+          - BN
+          - BO
+          - BQ
+          - BR
+          - BS
+          - BT
+          - BU
+          - BV
+          - BW
+          - BY
+          - BZ
+          - CA
+          - CC
+          - CD
+          - CF
+          - CG
+          - CH
+          - CI
+          - CK
+          - CL
+          - CM
+          - CN
+          - CO
+          - CP
+          - CR
+          - CS
+          - CU
+          - CV
+          - CW
+          - CX
+          - CY
+          - CZ
+          - DE
+          - DG
+          - DJ
+          - DK
+          - DM
+          - DO
+          - DZ
+          - EA
+          - EC
+          - EE
+          - EG
+          - EH
+          - ER
+          - ES
+          - ET
+          - EU
+          - EZ
+          - FI
+          - FJ
+          - FK
+          - FM
+          - FO
+          - FR
+          - FX
+          - GA
+          - GB
+          - GD
+          - GE
+          - GF
+          - GG
+          - GH
+          - GI
+          - GL
+          - GM
+          - GN
+          - GP
+          - GQ
+          - GR
+          - GS
+          - GT
+          - GU
+          - GW
+          - GY
+          - HK
+          - HM
+          - HN
+          - HR
+          - HT
+          - HU
+          - IC
+          - ID
+          - IE
+          - IL
+          - IM
+          - IN
+          - IO
+          - IQ
+          - IR
+          - IS
+          - IT
+          - JE
+          - JM
+          - JO
+          - JP
+          - KE
+          - KG
+          - KH
+          - KI
+          - KM
+          - KN
+          - KP
+          - KR
+          - KW
+          - KY
+          - KZ
+          - LA
+          - LB
+          - LC
+          - LI
+          - LK
+          - LR
+          - LS
+          - LT
+          - LU
+          - LV
+          - LY
+          - MA
+          - MC
+          - MD
+          - ME
+          - MF
+          - MG
+          - MH
+          - MK
+          - ML
+          - MM
+          - MN
+          - MO
+          - MP
+          - MQ
+          - MR
+          - MS
+          - MT
+          - MU
+          - MV
+          - MW
+          - MX
+          - MY
+          - MZ
+          - NA
+          - NC
+          - NE
+          - NF
+          - NG
+          - NI
+          - NL
+          - 'NO'
+          - NP
+          - NR
+          - NT
+          - NU
+          - NZ
+          - OM
+          - PA
+          - PE
+          - PF
+          - PG
+          - PH
+          - PK
+          - PL
+          - PM
+          - PN
+          - PR
+          - PS
+          - PT
+          - PW
+          - PY
+          - QA
+          - RE
+          - RO
+          - RS
+          - RU
+          - RW
+          - SA
+          - SB
+          - SC
+          - SD
+          - SE
+          - SF
+          - SG
+          - SH
+          - SI
+          - SJ
+          - SK
+          - SL
+          - SM
+          - SN
+          - SO
+          - SR
+          - SS
+          - ST
+          - SU
+          - SV
+          - SX
+          - SY
+          - SZ
+          - TA
+          - TC
+          - TD
+          - TF
+          - TG
+          - TH
+          - TJ
+          - TK
+          - TL
+          - TM
+          - TN
+          - TO
+          - TP
+          - TR
+          - TT
+          - TV
+          - TW
+          - TZ
+          - UA
+          - UG
+          - UK
+          - UM
+          - US
+          - UY
+          - UZ
+          - VA
+          - VC
+          - VE
+          - VG
+          - VI
+          - VN
+          - VU
+          - WF
+          - WS
+          - XI
+          - XU
+          - XK
+          - YE
+          - YT
+          - YU
+          - ZA
+          - ZM
+          - ZR
+          - ZW
+        providerUsername:
+          type: string
+          description: The username of the user for the corresponding provider.</br>**Example:** `jsmith@email.com`
+          nullable: true
+        providerUserId:
+          type: string
+          description: The unique identifier of the user for the provider.</br>**Example:** `office365`
+        provider:
+          type: string
+          description: The provider of the user.
+          nullable: true
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the SAML identity provider the user is a part of.</br>**Example:** `myprovider`
+          nullable: true
+        realms:
+          type: array
+          description: The realms the user is a part of.
+          items:
+            $ref: '#/components/schemas/UserRealmModel'
+        socialUser:
+          type: boolean
+        expired:
+          type: boolean
+          description: Whether the user is expired.
+        locked:
+          type: boolean
+          description: Whether the user is locked.
+        credentialsExpired:
+          type: boolean
+          description: Whether the user's credentials have expired.
+        enabled:
+          type: boolean
+          description: Whether the user is enabled.
+        emailAliases:
+          uniqueItems: true
+          type: array
+          description: The email aliases of the user.
+          items:
+            type: string
+            description: The email aliases of the user.
+        additionalInformation:
+          type: object
+          additionalProperties:
+            type: string
+            description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen": "v2.5652.11"}`</br>*Default:* `{}`'
+          description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen": "v2.5652.11"}`</br>*Default:* `{}`'
+        lastUsedDate:
+          type: string
+          description: The last day the user has logged in into the platform
+          format: date-time
+          nullable: true
+      description: A user.
+    RealmModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: The realm to add.
+    UserRealmModel:
+      type: object
+      properties:
+        member:
+          type: boolean
+        realm:
+          $ref: '#/components/schemas/RealmModel'
+        realmModel:
+          $ref: '#/components/schemas/RealmModel'
+      description: The realms the user is a part of.
+    GlobalPrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+        level:
+          type: string
+          description: The access level of the global privileges.`
+          example: GLOBAL
+      description: A global privilege.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

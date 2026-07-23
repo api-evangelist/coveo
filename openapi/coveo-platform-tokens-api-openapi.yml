@@ -1,0 +1,180 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Platform Tokens API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Platform Tokens
+paths:
+  /rest/organizations/{organizationId}/tokens:
+    post:
+      tags:
+      - Platform Tokens
+      operationId: generatePlatformToken
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: validityPeriod
+        in: query
+        required: false
+        schema:
+          type: string
+          default: PT24H
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlatformTokenPayloadModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PlatformTokenResponseModel'
+      x-pretty-name: generatePlatformToken
+      x-ui-operation-id: /rest/organizations/paramId/tokens_post
+components:
+  schemas:
+    PlatformTokenResponseModel:
+      type: object
+      properties:
+        token:
+          type: string
+    PlatformTokenPayloadBodyModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        privileges:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/GlobalPrivilegeModel'
+        additionalConfiguration:
+          $ref: '#/components/schemas/PlatformTokenAdditionalConfigurationModel'
+        creatorAuthentication:
+          type: string
+          readOnly: true
+        creatorEmail:
+          type: string
+          readOnly: true
+    AnalyticsConfigurationModel:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/EventModel'
+      description: The user information to send to Coveo Usage Analytics
+    PlatformTokenAdditionalConfigurationModel:
+      type: object
+      properties:
+        search:
+          $ref: '#/components/schemas/PlatformTokenSearchConfigurationModel'
+        analytics:
+          $ref: '#/components/schemas/AnalyticsConfigurationModel'
+    PlatformTokenPayloadModel:
+      type: object
+      properties:
+        version:
+          type: integer
+          format: int32
+          readOnly: true
+        body:
+          $ref: '#/components/schemas/PlatformTokenPayloadBodyModel'
+        tokenId:
+          type: string
+          readOnly: true
+        sub:
+          type: string
+        iss:
+          type: string
+          readOnly: true
+        exp:
+          type: integer
+          format: int64
+          readOnly: true
+        iat:
+          type: integer
+          format: int64
+          readOnly: true
+        jti:
+          type: string
+          readOnly: true
+    PlatformTokenSearchConfigurationModel:
+      type: object
+      properties:
+        userIds:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/ImpersonatedUserModel'
+    EventModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the user.
+        userDisplayName:
+          type: string
+          description: The display name of the user. **Example:** `Alice`
+      description: The user information to send along with usage analytics events.
+    ImpersonatedUserModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the security identity to impersonate.</br>**Example:** `asmith@example.com`
+        provider:
+          type: string
+          description: The security identity provider containing the security identity to impersonate.</br>**Example:** `Email Security Provider`
+        type:
+          type: string
+          description: The type of the security identity to impersonate.</br>**Default:** `User`</br> **Allowed values:** </br>- `User` </br>- `Group` </br>- `VirtualGroup` </br>- `Unknown`
+      description: The security identities to impersonate when authenticating queries with the API key. </br>**Note:** If specified, the API key must have the `IMPERSONATE` privilege.
+    GlobalPrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+        level:
+          type: string
+          description: The access level of the global privileges.`
+          example: GLOBAL
+      description: A global privilege.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

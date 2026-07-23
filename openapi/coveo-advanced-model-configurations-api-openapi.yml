@@ -1,0 +1,351 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Advanced Model Configurations API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Advanced Model Configurations
+paths:
+  /rest/organizations/{organizationId}/machinelearning/models/{modelId}/configs/{configurationType}:
+    get:
+      tags:
+      - Advanced Model Configurations
+      summary: Download the Specified Configuration File for the Model
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: download
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          oneOf:
+          - type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          oneOf:
+          - type: string
+        example: My_Model_ID
+      - name: configurationType
+        in: path
+        description: The type of advanced configuration file.
+        required: true
+        schema:
+          type: string
+          enum:
+          - STOPWORDS
+          - BLOCKLISTS
+          - ID_MAPPING
+          - DEFAULT_QUERIES
+        example: BLOCKLISTS
+      - name: languageCode
+        in: query
+        description: The language of the configuration file to retrieve. It must be an <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1 code</a>, or the string 'commons'
+        required: false
+        schema:
+          oneOf:
+          - type: string
+        example: en
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+      x-pretty-name: download
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/configs/paramId_get
+    put:
+      tags:
+      - Advanced Model Configurations
+      description: 'Upload configuration file for the model. Maximum file size allowed: 10 MB.<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: upload
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          oneOf:
+          - type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          oneOf:
+          - type: string
+        example: My_Model_ID
+      - name: configurationType
+        in: path
+        description: The type of advanced configuration file.
+        required: true
+        schema:
+          type: string
+          enum:
+          - STOPWORDS
+          - BLOCKLISTS
+          - ID_MAPPING
+          - DEFAULT_QUERIES
+        example: BLOCKLISTS
+      - name: languageCode
+        in: query
+        description: The language of the configuration file to retrieve. It must be an <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1 code</a>, or the string 'commons'
+        required: false
+        schema:
+          oneOf:
+          - type: string
+        example: en
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - configFile
+              type: object
+              properties:
+                configFile:
+                  type: string
+                  description: The configuration file to be uploaded.
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AdvancedRegistrationConfigFileCreationResponse'
+      x-pretty-name: upload
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/configs/paramId_put
+    delete:
+      tags:
+      - Advanced Model Configurations
+      summary: Delete Configuration File for the Model.
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"EDIT","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: deleteFile
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          oneOf:
+          - type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          oneOf:
+          - type: string
+        example: My_Model_ID
+      - name: configurationType
+        in: path
+        description: The type of advanced configuration file.
+        required: true
+        schema:
+          type: string
+          enum:
+          - STOPWORDS
+          - BLOCKLISTS
+          - ID_MAPPING
+          - DEFAULT_QUERIES
+        example: BLOCKLISTS
+      - name: languageCode
+        in: query
+        description: The language of the configuration file to retrieve. Only required when the specified modelConfigFileType is language-specific (e.g., STOPWORDS), and ignored otherwise. If specified, must be an <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1 code</a>, or the string 'commons'
+        required: false
+        schema:
+          oneOf:
+          - type: string
+        example: en
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: deleteFile
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: EDIT
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/configs/paramId_delete
+  /rest/organizations/{organizationId}/machinelearning/models/{modelId}/configs/status:
+    get:
+      tags:
+      - Advanced Model Configurations
+      summary: List Advanced Registration Configuration Files for the Model
+      description: '<details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAllConfigFilesStatus
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target Coveo Cloud organization
+        required: true
+        schema:
+          oneOf:
+          - type: string
+      - name: modelId
+        in: path
+        description: The unique identifier of the target model
+        required: true
+        schema:
+          oneOf:
+          - type: string
+        example: My_Model_ID
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AdvancedRegistrationConfigContentsResponse'
+      x-pretty-name: getAllConfigFilesStatus
+      x-required-privilege:
+        owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COVEO_ML
+        targetDomain: MODELS
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/configs/status_get
+components:
+  schemas:
+    AdvancedRegistrationConfigContentsResponse:
+      required:
+      - advancedRegistrationConfigFiles
+      - modelId
+      - orgId
+      type: object
+      properties:
+        modelId:
+          $ref: '#/components/schemas/RegistrationId'
+        advancedRegistrationConfigFiles:
+          type: object
+          additionalProperties:
+            type: array
+            description: Advanced Registration Config Files
+            items:
+              $ref: '#/components/schemas/FileInfo'
+          description: Advanced Registration Config Files
+        orgId:
+          $ref: '#/components/schemas/OrgId'
+    AdvancedRegistrationConfigFileCreationResponse:
+      type: object
+      properties:
+        modelId:
+          $ref: '#/components/schemas/RegistrationId'
+        filePath:
+          $ref: '#/components/schemas/Key'
+    OrgId:
+      type: object
+    RegistrationId:
+      type: object
+      properties:
+        modelId:
+          type: string
+    Key:
+      type: object
+    FileInfo:
+      type: object
+      properties:
+        languageCode:
+          type: string
+          description: Language Code
+        modifiedDate:
+          type: string
+          description: Modified Date
+          format: date-time
+        fileSizeInKb:
+          type: integer
+          description: File Size (kb)
+          format: int64
+        fileDisplayName:
+          type: string
+          description: fileDisplayName
+        md5Hash:
+          type: string
+          description: md5Hash
+      description: Advanced Registration Config Files
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

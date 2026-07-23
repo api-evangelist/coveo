@@ -1,0 +1,196 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Salesforce Sources API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Salesforce Sources
+paths:
+  /rest/organizations/{organizationId}/salesforce/defaultObjectsToGet:
+    get:
+      operationId: getSalesforceDefaultObjectsToGet
+      summary: Retrieves the Default Objects for a Salesforce Source
+      tags:
+      - Salesforce Sources
+      deprecated: false
+      parameters:
+      - name: preset
+        description: 'The preset name of default objects to get (Value: "B2BProduct")'
+        required: false
+        in: query
+        type: string
+      - name: organizationId
+        description: The organization ID
+        required: true
+        in: path
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SalesforceObjectToGet'
+      security:
+      - oauth2:
+        - full
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required
+definitions:
+  SalesforceObjectToGet:
+    type: object
+    properties:
+      objects:
+        description: The collection of objects to get
+        type: array
+        items:
+          $ref: '#/definitions/GenericObject'
+      mappings:
+        description: The collection of objects to get
+        type: array
+        items:
+          $ref: '#/definitions/GenericMapping'
+      fields:
+        type: array
+        items:
+          $ref: '#/definitions/GenericField'
+  SalesforceChildRelationships:
+    type: object
+    properties:
+      name:
+        description: The child relationship name
+        type: string
+      fields:
+        description: The child object fields to be indexed
+        type: array
+        items:
+          type: string
+      parentRelationships:
+        description: The fields from a parent objects that have a parent relationship with this object.
+        type: array
+        items:
+          $ref: '#/definitions/SalesforceParentRelationships'
+    required:
+    - name
+    - fields
+  GenericMapping:
+    type: object
+    properties:
+      kind:
+        description: The kind of the relationship.
+        type: string
+      fieldName:
+        description: The new field name.
+        type: string
+      extractionMethod:
+        description: The way to extract the information.
+        type: string
+      content:
+        description: The content of the new field.
+        type: string
+      type:
+        description: The specific type that this mapping apply to.
+        type: string
+    required:
+    - kind
+    - fieldName
+    - extractionMethod
+    - content
+  GenericObject:
+    type: object
+    properties:
+      ObjectName:
+        description: The object name
+        type: string
+      Fields:
+        description: The object fields to be indexed
+        type: array
+        items:
+          type: string
+      ParentRelationships:
+        description: The fields from a parent objects that have a parent relationship with this object.
+        type: array
+        items:
+          $ref: '#/definitions/SalesforceParentRelationships'
+      childRelationships:
+        description: The fields from a child objects that have a child relationship with this object.
+        type: array
+        items:
+          $ref: '#/definitions/SalesforceChildRelationships'
+      polymorphicRelationships:
+        description: The fields from an objects that have a Polymorphic relationship with this object.
+        type: array
+        items:
+          $ref: '#/definitions/SalesforcePolymorphicRelationships'
+    required:
+    - ObjectName
+    - Fields
+  SalesforceParentRelationships:
+    type: object
+    properties:
+      relationshipName:
+        description: The parent relationship name
+        type: string
+      fields:
+        description: The parent object fields to be indexed
+        type: array
+        items:
+          type: string
+    required:
+    - relationshipName
+    - fields
+  GenericField:
+    type: object
+    properties:
+      facet:
+        description: Whether Group By operations and Facet requests can be performed on the field.
+        type: boolean
+      multiValueFacet:
+        description: Whether the field contains multiple values (see also the multiValueFacetTokenizers property).
+        type: boolean
+      name:
+        description: The name of the field, also referred to as the field identifier, or fieldId.
+        type: string
+      sort:
+        description: Whether query results can be sorted based on the value of the field.
+        type: boolean
+      type:
+        description: WThe data type of the field. ("LONG", "LONG_64", "DOUBLE", "DATE" or "STRING")
+        type: string
+    required:
+    - name
+    - type
+  SalesforcePolymorphicRelationships:
+    type: object
+    properties:
+      name:
+        description: The child relationship name
+        type: string
+      objectName:
+        description: The object name to match
+        type: string
+      fields:
+        description: The object fields to be indexed
+        type: array
+        items:
+          type: string
+    required:
+    - name
+    - objectName
+    - fields

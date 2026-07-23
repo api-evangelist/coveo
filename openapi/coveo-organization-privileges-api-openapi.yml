@@ -1,0 +1,281 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Organization Privileges API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Organization Privileges
+paths:
+  /rest/organizations/{organizationId}/privileges/token:
+    get:
+      tags:
+      - Organization Privileges
+      summary: List Privileges for Access Token
+      description: List [privileges](https://docs.coveo.com/en/228/) of an access token in an [organization](https://docs.coveo.com/en/185/).
+      operationId: getOrganizationMemberPrivileges
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: accessToken
+        in: query
+        description: The access token for which to list privileges.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlobalPrivilegeModel'
+      x-pretty-name: getOrganizationMemberPrivileges
+      x-ui-operation-id: /rest/organizations/paramId/privileges/token_get
+    post:
+      tags:
+      - Organization Privileges
+      summary: List Privileges for Access Token
+      description: List [privileges](https://docs.coveo.com/en/228/) of an access token in an [organization](https://docs.coveo.com/en/185/).
+      operationId: getOrganizationMemberPrivilegesUsingPost
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: accessToken
+        in: query
+        description: The access token for which to list privileges.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlobalPrivilegeModel'
+      x-pretty-name: getOrganizationMemberPrivilegesUsingPost
+      x-ui-operation-id: /rest/organizations/paramId/privileges/token_post
+  /rest/organizations/{organizationId}/privileges:
+    get:
+      tags:
+      - Organization Privileges
+      summary: List Possible Privileges
+      description: 'Lists the possible [privileges](https://docs.coveo.com/en/228/) in an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getOrganizationPrivileges
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlobalPrivilegeModel'
+      x-pretty-name: getOrganizationPrivileges
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/privileges_get
+  /rest/organizations/{organizationId}/privileges/platformtokens:
+    get:
+      tags:
+      - Organization Privileges
+      summary: List Possible Platform Token Privileges
+      description: 'Lists possible Platform token [privileges](https://docs.coveo.com/en/228/) in an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getPlatformTokenPrivileges
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlobalPrivilegeModel'
+      x-pretty-name: getPlatformTokenPrivileges
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/privileges/platformtokens_get
+  /rest/organizations/{organizationId}/privileges/me:
+    get:
+      tags:
+      - Organization Privileges
+      summary: List Privileges for Current Member
+      description: List [privileges](https://docs.coveo.com/en/228/) of the current member in an [organization](https://docs.coveo.com/en/185/).
+      operationId: getOrganizationMemberPrivileges_1
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlobalPrivilegeModel'
+      x-pretty-name: getOrganizationMemberPrivileges
+      x-ui-operation-id: /rest/organizations/paramId/privileges/me_get
+  /rest/organizations/{organizationId}/privileges/apikeys:
+    get:
+      tags:
+      - Organization Privileges
+      summary: List Possible API Key Privileges
+      description: 'Lists possible API key [privileges](https://docs.coveo.com/en/228/) in an [organization](https://docs.coveo.com/en/185/).<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getApiKeyPrivileges
+      parameters:
+      - name: filter
+        in: query
+        description: Filter for privileges
+        required: false
+        schema:
+          type: string
+          enum:
+          - ALL
+          - CUSTOM
+          default: ALL
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `mycoveocloudv2organizationg8tp8wu3`
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/GlobalPrivilegeModel'
+      x-pretty-name: getApiKeyPrivileges
+      x-required-privilege:
+        owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: PLATFORM
+        targetDomain: ORGANIZATION
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/privileges/apikeys_get
+components:
+  schemas:
+    GlobalPrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+        level:
+          type: string
+          description: The access level of the global privileges.`
+          example: GLOBAL
+      description: A global privilege.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

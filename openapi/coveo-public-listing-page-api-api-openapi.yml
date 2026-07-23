@@ -1,0 +1,611 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Public Listing Page API API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Public Listing Page API
+paths:
+  /rest/organizations/{organizationId}/commerce/v2/listings/pages/bulk-update:
+    put:
+      tags:
+      - Public Listing Page API
+      summary: Update Multiple Listing Pages
+      description: 'Updates multiple Listing pages in a [listing](https://docs.coveo.com/en/m1sf3187/). Maximum 100 items per request..</br></br>**Required privilege:** Merchandising Hub - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"MERCHANDISING_HUB","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: bulkUpdate_1
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PublicListingPageRequestModel'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PublicListingPageResponseModel'
+      x-pretty-name: bulkUpdate
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: MERCHANDISING_HUB
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: MERCHANDISING_HUB
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/commerce/v2/listings/pages/bulk-update_put
+  /rest/organizations/{organizationId}/commerce/v2/listings/pages/bulk-delete:
+    post:
+      tags:
+      - Public Listing Page API
+      summary: Delete Multiple Listing Pages
+      description: 'Deletes multiple Listing pages in a [listing](https://docs.coveo.com/en/m1sf3187/). Maximum 100 items per request..</br></br>**Required privilege:** Merchandising Hub - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"MERCHANDISING_HUB","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: bulkDelete
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                format: uuid
+        required: true
+      responses:
+        '204':
+          description: No Content
+      x-pretty-name: bulkDelete
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: MERCHANDISING_HUB
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: MERCHANDISING_HUB
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/commerce/v2/listings/pages/bulk-delete_post
+  /rest/organizations/{organizationId}/commerce/v2/listings/pages/bulk-create:
+    post:
+      tags:
+      - Public Listing Page API
+      summary: Create Multiple Listing Pages
+      description: 'Creates multiple Listing pages in a [listing](https://docs.coveo.com/en/m1sf3187/). Maximum 100 items per request..</br></br>**Required privilege:** Merchandising Hub - Edit<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"MERCHANDISING_HUB","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: bulkCreate_1
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PublicListingPageRequestModel'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PublicListingPageResponseModel'
+      x-pretty-name: bulkCreate
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: MERCHANDISING_HUB
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: MERCHANDISING_HUB
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/commerce/v2/listings/pages/bulk-create_post
+  /rest/organizations/{organizationId}/commerce/v2/listings/pages:
+    get:
+      tags:
+      - Public Listing Page API
+      summary: Retrieves All Listing Pages and Their Page Rules for a Tracking ID Within an Organization
+      description: 'Lists all the Listing configuration, returning only essential fields, in an [organization](https://docs.coveo.com/en/185/).</br></br>**Required privilege:** Merchandising Hub - View<br /><br /><details><summary>Privilege required</summary>
+
+        ```
+
+        {"owner":"COMMERCE","targetDomain":"MERCHANDISING_HUB","type":"VIEW","targetId":"*"}
+
+        ```
+
+        </details>'
+      operationId: getAll_2
+      parameters:
+      - name: organizationId
+        in: path
+        description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).<br />**Example:** `acmecorporation8tp8wu3`
+        required: true
+        schema:
+          type: string
+      - name: trackingId
+        in: query
+        description: The unique identifier of the tracking target.
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: page
+        in: query
+        description: The 0-based index number of the page of listing configurations to retrieve.</br>**Minimum:** `0`</br>**Default:** `0`
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+          default: 0
+      - name: perPage
+        in: query
+        description: The number of listing configurations to list per page.</br>**Minimum:** `1`</br>**Maximum:** `1000`</br>**Default:** `10`
+        required: false
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          format: int32
+          default: 100
+      - name: filter
+        in: query
+        description: A filter expressed in JSON logic format.
+        required: false
+        schema:
+          type: string
+        example:
+          in:
+          - test
+          - var: url
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommercePageModelPublicListingPageResponseModel'
+      x-pretty-name: getAll
+      x-required-privilege:
+        owner: COMMERCE
+        targetDomain: MERCHANDISING_HUB
+        type: VIEW
+        targetId: '*'
+      x-required-privileges:
+      - owner: COMMERCE
+        targetDomain: MERCHANDISING_HUB
+        type: VIEW
+        targetId: '*'
+      x-ui-operation-id: /rest/organizations/paramId/commerce/v2/listings/pages_get
+components:
+  schemas:
+    FieldValueModel:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+      description: The value to apply the operator on.
+      example:
+        type: string
+        value: Blue
+      discriminator:
+        propertyName: type
+    CommercePageModelPublicListingPageResponseModel:
+      required:
+      - items
+      - totalEntries
+      - totalPages
+      type: object
+      properties:
+        items:
+          type: array
+          description: The retrieved page of items.
+          items:
+            $ref: '#/components/schemas/PublicListingPageResponseModel'
+        totalEntries:
+          type: integer
+          description: The total number of results that match the query.
+          format: int64
+        totalPages:
+          type: integer
+          description: The total number of pages of items available.
+          format: int32
+      description: Page
+    ListingPageApiPageRuleModel:
+      required:
+      - filters
+      - name
+      type: object
+      properties:
+        filters:
+          minItems: 1
+          type: array
+          description: A list of filters.
+          example:
+          - fieldName: price
+            operator: isExactly
+            value:
+              type: decimal
+              value: 99.99
+          - fieldName: item_count
+            operator: isBetween
+            value:
+              type: range
+              range:
+                from: 1000
+                to: 3000
+          items:
+            $ref: '#/components/schemas/QueryFilterModel'
+        locales:
+          uniqueItems: true
+          type: array
+          description: The list of locales the rule applies to. When empty, the rule applies to all locales.
+          example:
+          - language: en
+            country: US
+            currency: USD
+          items:
+            $ref: '#/components/schemas/RuleLocaleModel'
+        name:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The name of the rule.
+          example: 'Pin #1 Short Open-Front Sweater for Women/Boost blue surfboards/Hide green t-shirts'
+      description: List of rules associated to a listing page. Rules are used to determine the page's contents.
+      example:
+      - name: Include ec_category_slug contains canoes-kayaks/kayaks/sports-kayaks
+        locales:
+        - language: en
+          country: US
+          currency: USD
+        filters:
+        - fieldName: ec_category_slug
+          operator: contains
+          value:
+            type: array
+            values:
+            - canoes-kayaks/kayaks/sports-kayaks
+    PublicListingPageRequestModel:
+      required:
+      - name
+      - pageRules
+      - patterns
+      - trackingId
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the listing page.
+          format: uuid
+          readOnly: true
+          example: 533bba27-2a7f-18fb-b8ed-ed99c3f92f5c
+        name:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: A unique name for the listing configuration.
+          example: ACME Corp Summer Trends
+        patterns:
+          minItems: 1
+          type: array
+          description: Possible patterns matching values associated to a listing configuration.
+          example:
+          - url: https://sports.barca.group/plp/clothing/pants
+          items:
+            $ref: '#/components/schemas/MatchingConfigurationModel'
+        pageRules:
+          minItems: 1
+          type: array
+          description: List of rules associated to a listing page. Rules are used to determine the page's contents.
+          example:
+          - name: Include ec_category_slug contains canoes-kayaks/kayaks/sports-kayaks
+            locales:
+            - language: en
+              country: US
+              currency: USD
+            filters:
+            - fieldName: ec_category_slug
+              operator: contains
+              value:
+                type: array
+                values:
+                - canoes-kayaks/kayaks/sports-kayaks
+          items:
+            $ref: '#/components/schemas/ListingPageApiPageRuleModel'
+        trackingId:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The unique identifier of the tracking target.
+          example: acmecorporation_ca
+      description: PublicListingPageRequestModel
+    DecimalValueModel:
+      required:
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          value:
+            type: number
+            format: double
+    MatchingConfigurationModel:
+      required:
+      - url
+      type: object
+      properties:
+        url:
+          maxLength: 1024
+          minLength: 1
+          type: string
+          description: URL associated to a listing configuration used for pattern matching.
+      description: Possible patterns matching values associated to a listing configuration.
+      example:
+      - url: https://sports.barca.group/plp/clothing/pants
+    QueryFilterModel:
+      required:
+      - fieldName
+      - operator
+      type: object
+      properties:
+        fieldName:
+          pattern: '[a-z][a-z0-9_]*'
+          type: string
+          description: The name of the field to apply the filter on.
+          example: name
+        operator:
+          type: string
+          description: The operator to apply on the field.
+          example: isExactly
+          enum:
+          - isExactly
+          - isExactlyNot
+          - contains
+          - doesNotContain
+          - isAnyOf
+          - isDefined
+          - isNotDefined
+          - isBetween
+          - isGreaterThan
+          - isGreaterThanOrEqualTo
+          - isLessThan
+          - isLessThanOrEqualTo
+        value:
+          oneOf:
+          - $ref: '#/components/schemas/DecimalValueModel'
+          - $ref: '#/components/schemas/HierarchicMultiValueModel'
+          - $ref: '#/components/schemas/InclusiveRangeModel'
+          - $ref: '#/components/schemas/MultipleStringValuesModel'
+          - $ref: '#/components/schemas/SeedRelativeValueModel'
+          - $ref: '#/components/schemas/StringValueModel'
+      description: A list of filters.
+      example:
+      - fieldName: price
+        operator: isExactly
+        value:
+          type: decimal
+          value: 99.99
+      - fieldName: item_count
+        operator: isBetween
+        value:
+          type: range
+          range:
+            from: 1000
+            to: 3000
+    InclusiveRangeModel:
+      required:
+      - range
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          range:
+            $ref: '#/components/schemas/RangeModel'
+    PublicListingPageResponseModel:
+      required:
+      - pageRules
+      - patterns
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the listing page.
+          format: uuid
+          readOnly: true
+          example: 533bba27-2a7f-18fb-b8ed-ed99c3f92f5c
+        name:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: A unique name for the listing configuration.
+          example: ACME Corp Summer Trends
+        patterns:
+          minItems: 1
+          type: array
+          description: Possible patterns matching values associated to a listing configuration.
+          example:
+          - url: https://sports.barca.group/plp/clothing/pants
+          items:
+            $ref: '#/components/schemas/MatchingConfigurationModel'
+        pageRules:
+          minItems: 1
+          type: array
+          description: List of rules associated to a listing page. Rules are used to determine the page's contents.
+          example:
+          - name: Include ec_category_slug contains canoes-kayaks/kayaks/sports-kayaks
+            locales:
+            - language: en
+              country: US
+              currency: USD
+            filters:
+            - fieldName: ec_category_slug
+              operator: contains
+              value:
+                type: array
+                values:
+                - canoes-kayaks/kayaks/sports-kayaks
+          items:
+            $ref: '#/components/schemas/ListingPageApiPageRuleModel'
+        trackingId:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The unique identifier of the tracking target.
+          example: acmecorporation_ca
+        updatedAt:
+          type: integer
+          description: The date and time at which the entity was last updated.
+          format: int64
+          readOnly: true
+      description: PublicListingPageResponseModel
+    HierarchicMultiValueModel:
+      required:
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          value:
+            maxLength: 255
+            minLength: 0
+            type: string
+    MultipleStringValuesModel:
+      required:
+      - values
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          values:
+            minItems: 1
+            type: array
+            items:
+              maxLength: 255
+              minLength: 0
+              type: string
+    SeedRelativeValueModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+    RuleLocaleModel:
+      type: object
+      properties:
+        language:
+          type: string
+          description: An ISO 639-1 language code.
+          example: en
+        country:
+          type: string
+          description: An ISO 3166-1 alpha-2 country code.
+          example: US
+        currency:
+          type: string
+          description: An ISO 4217 currency code.
+          example: USD
+      description: The list of locales the synonym applies to. When empty, the synonym applies to all locales.
+      example:
+      - language: en
+        country: US
+        currency: USD
+    StringValueModel:
+      required:
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          value:
+            maxLength: 255
+            minLength: 0
+            type: string
+    RangeModel:
+      type: object
+      properties:
+        from:
+          type: number
+          format: double
+        to:
+          type: number
+          format: double
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

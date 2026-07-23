@@ -1,0 +1,544 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities Analytics API - Version 14 API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: Analytics API - Version 14
+paths:
+  /v14/analytics/click:
+    post:
+      tags:
+      - Analytics API - Version 14
+      summary: Adds a Click Event via POST
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_analytics_click
+      parameters:
+      - name: visitor
+        in: cookie
+        description: The unique identifier of the visitor. If not provided, a new identifier will be created and returned as a HTTP cookie.
+        deprecated: true
+        schema:
+          type: string
+      requestBody:
+        description: The click event to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClickEventModelV14'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddClickEventResponseV14'
+      deprecated: true
+  /v14/analytics/custom:
+    post:
+      tags:
+      - Analytics API - Version 14
+      summary: Adds a Custom Event via POST
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_analytics_custom
+      parameters:
+      - name: visitor
+        in: cookie
+        description: The unique identifier of the visitor. If not provided, a new identifier will be created and returned as a HTTP cookie.
+        deprecated: true
+        schema:
+          type: string
+      requestBody:
+        description: The custom event to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomEventModelV14'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddCustomEventResponseV14'
+      deprecated: true
+  /v14/analytics/search:
+    post:
+      tags:
+      - Analytics API - Version 14
+      summary: Adds a Search Event via POST
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_analytics_search
+      parameters:
+      - name: visitor
+        in: cookie
+        description: The unique identifier of the visitor. If not provided, a new identifier will be created and returned as a HTTP cookie.
+        deprecated: true
+        schema:
+          type: string
+      requestBody:
+        description: The search event to add.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchEventModelV14'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddSearchEventResponseV14'
+      deprecated: true
+  /v14/analytics/searches:
+    post:
+      tags:
+      - Analytics API - Version 14
+      summary: Adds Multiple Search Events via POST
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: post__v14_analytics_searches
+      parameters:
+      - name: visitor
+        in: cookie
+        description: The unique identifier of the visitor. If not provided, a new identifier will be created and returned as a HTTP cookie.
+        deprecated: true
+        schema:
+          type: string
+      requestBody:
+        description: The search events to add. Please note that that the clientId from the first search event will be used to compute the visit.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SearchEventModelV14'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddSearchEventResponseV14'
+      deprecated: true
+  /v14/analytics/monitoring/health:
+    get:
+      tags:
+      - Analytics API - Version 14
+      summary: Health Check for the Analytics Service
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_analytics_monitoring_health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/analytics/status:
+    get:
+      tags:
+      - Analytics API - Version 14
+      summary: Gets the Status of the Analytics Service
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_analytics_status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+      deprecated: true
+  /v14/analytics/visit:
+    get:
+      tags:
+      - Analytics API - Version 14
+      summary: Get the User Current Visit Informations
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: get__v14_analytics_visit
+      parameters:
+      - name: user
+        in: query
+        description: The unique identifier of the user performing the search event. If not provided, the username will be extracted from the token.
+        schema:
+          type: string
+      - name: visitor
+        in: cookie
+        description: The unique identifier of the visitor. If not provided, a new identifier will be created and returned as a HTTP cookie.
+        deprecated: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitInfoResponseV14'
+      deprecated: true
+    delete:
+      tags:
+      - Analytics API - Version 14
+      summary: Clears All Cookies Associated with This API
+      description: This endpoint is deprecated and will be removed on October 1st, 2024.
+      operationId: delete__v14_analytics_visit
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+      deprecated: true
+components:
+  schemas:
+    AddCustomEventResponseV14:
+      type: object
+      properties:
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided custom event
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to add custom event operation
+    ClickEventModelV14:
+      required:
+      - actionCause
+      - collectionName
+      - documentPosition
+      - documentUriHash
+      - language
+      - originLevel1
+      - originLevel2
+      - searchQueryUid
+      - sourceName
+      type: object
+      properties:
+        language:
+          type: string
+          description: The language that end user is using. Use ISO 639-1 codes. See <a href=http://en.wikipedia.org/wiki/ISO_639-1>ISO 639-1</a> for more information
+        userAgent:
+          type: string
+          description: The user agent string of the end user's browser. See <a href=http://en.wikipedia.org/wiki/User_agent>User Agent</a> for more information.
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension before adding customData
+          description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension before adding customData
+        anonymous:
+          type: boolean
+          description: Indicates if the user is anonymous.
+        username:
+          type: string
+          description: The unique identifier of the user performing the search event. If not provided, the username will be extracted from the token.
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the search event.
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active.
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active.
+        originLevel1:
+          type: string
+          description: The origin this event took place
+        originLevel2:
+          type: string
+          description: The origin this event took place
+        originLevel3:
+          type: string
+          description: The origin this event took place
+        device:
+          type: string
+          description: The name of the device that the end user is using
+          deprecated: true
+        mobile:
+          type: boolean
+          description: Whether the end user's device is a mobile device or not
+          deprecated: true
+        documentUri:
+          type: string
+          description: The @sysuri of the document that was clicked
+          deprecated: true
+        documentUriHash:
+          type: string
+          description: The @sysurihash of the document that was clicked
+        searchQueryUid:
+          type: string
+          description: The searchQueryUid of the search that returned the document that was clicked. This must be a valid searchQueryUid that contains the provided documentUri and documentUriHash.
+        collectionName:
+          type: string
+          description: The @syscollection of the document that was clicked
+        sourceName:
+          type: string
+          description: The @syssource of the document that was clicked
+        documentPosition:
+          type: integer
+          description: The position of the document (one-based) that was clicked in the list of resultsThis number must take into consideration pagination settings. If the pages contain ten results each, the third document of the second page is at the position 22.
+          format: int32
+        actionCause:
+          type: string
+          description: 'The type of operation that triggered this event. Example: ''firstSearch'', ''searchEnter'''
+        documentTitle:
+          type: string
+          description: The title of the document that was clicked.
+        documentUrl:
+          type: string
+          description: The URL of the document that was clicked.
+        queryPipeline:
+          type: string
+          description: The query pipeline of the search that returned the document that was clicked.
+        rankingModifier:
+          type: string
+          description: The ranking modifier that affected the clicked document.
+      description: An event that represents a result that was clicked
+    SearchEventModelV14:
+      required:
+      - actionCause
+      - contextual
+      - language
+      - originLevel1
+      - originLevel2
+      - queryText
+      - responseTime
+      - results
+      - searchQueryUid
+      type: object
+      properties:
+        language:
+          type: string
+          description: The language that end user is using. Use ISO 639-1 codes. See <a href=http://en.wikipedia.org/wiki/ISO_639-1>ISO 639-1</a> for more information
+        userAgent:
+          type: string
+          description: The user agent string of the end user's browser. See <a href=http://en.wikipedia.org/wiki/User_agent>User Agent</a> for more information.
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension before adding customData
+          description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension before adding customData
+        anonymous:
+          type: boolean
+          description: Indicates if the user is anonymous.
+        username:
+          type: string
+          description: The unique identifier of the user performing the search event. If not provided, the username will be extracted from the token.
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the search event.
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active.
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active.
+        originLevel1:
+          type: string
+          description: The origin this event took place
+        originLevel2:
+          type: string
+          description: The origin this event took place
+        originLevel3:
+          type: string
+          description: The origin this event took place
+        device:
+          type: string
+          description: The name of the device that the end user is using
+          deprecated: true
+        mobile:
+          type: boolean
+          description: Whether the end user's device is a mobile device or not
+          deprecated: true
+        searchQueryUid:
+          type: string
+          description: The unique identifier of the search event. Must be a UUID
+        queryText:
+          type: string
+          description: The text that was searched
+        actionCause:
+          type: string
+          description: 'The type of operation that triggered this event. Example: ''firstSearch'', ''searchEnter'''
+        advancedQuery:
+          type: string
+          description: The advanced part of the query that was sent to the index. Usually this contains various query elements that were not manually added by the user.
+        numberOfResults:
+          type: integer
+          description: The number of results found. Must be equal to or greater than zero
+          format: int32
+        contextual:
+          type: boolean
+          description: Indicates if the query is modified by contextual filters (for instance, a query to find similar documents)
+        responseTime:
+          type: integer
+          description: The time, in milliseconds, between the moment the query was sent and the moment the results were received. Must be greater than zero
+          format: int32
+        results:
+          type: array
+          description: The results of this search event
+          items:
+            $ref: '#/components/schemas/ResultModelV14'
+        queryPipeline:
+          type: string
+          description: The query pipeline of the search event.
+        userGroups:
+          type: array
+          description: The groups that the end user performing the event is a member of
+          items:
+            type: string
+      description: An event that represents a search that was done to the index
+    ResultModelV14:
+      required:
+      - documentUri
+      - documentUriHash
+      type: object
+      properties:
+        documentUri:
+          type: string
+          description: The @sysuri of this document
+        documentUriHash:
+          type: string
+          description: The @sysurihash of this document
+      description: A search result
+    AddClickEventResponseV14:
+      type: object
+      properties:
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided click event
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to add click event operation
+    AddSearchEventResponseV14:
+      required:
+      - searchEventUid
+      type: object
+      properties:
+        searchEventUid:
+          type: string
+          description: The searchEventUid associated with the provided search event
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided search event
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to add search event operations
+    StatusResponse:
+      type: object
+      description: Service's status information
+    VisitInfoResponseV14:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The visit id.
+        visitorId:
+          type: string
+          description: The visitor id.
+      description: The user current visit
+    CustomEventModelV14:
+      required:
+      - eventType
+      - eventValue
+      - language
+      - originLevel1
+      - originLevel2
+      type: object
+      properties:
+        language:
+          type: string
+          description: The language that end user is using. Use ISO 639-1 codes. See <a href=http://en.wikipedia.org/wiki/ISO_639-1>ISO 639-1</a> for more information
+        userAgent:
+          type: string
+          description: The user agent string of the end user's browser. See <a href=http://en.wikipedia.org/wiki/User_agent>User Agent</a> for more information.
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension before adding customData
+          description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension before adding customData
+        anonymous:
+          type: boolean
+          description: Indicates if the user is anonymous.
+        username:
+          type: string
+          description: The unique identifier of the user performing the search event. If not provided, the username will be extracted from the token.
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the search event.
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active.
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active.
+        originLevel1:
+          type: string
+          description: The origin this event took place
+        originLevel2:
+          type: string
+          description: The origin this event took place
+        originLevel3:
+          type: string
+          description: The origin this event took place
+        device:
+          type: string
+          description: The name of the device that the end user is using
+          deprecated: true
+        mobile:
+          type: boolean
+          description: Whether the end user's device is a mobile device or not
+          deprecated: true
+        eventType:
+          type: string
+          description: The type of this event
+        eventValue:
+          type: string
+          description: The type of operation that triggered this event
+        lastSearchQueryUid:
+          type: string
+          description: The searchQueryUid of the last search event that occurred before this event
+      description: An event that represents a custom action.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required

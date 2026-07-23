@@ -1,0 +1,1114 @@
+openapi: 3.0.1
+info:
+  title: Coveo Activity Activities IPX Configuration API
+  description: API for Coveo Platform
+  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: Coveo
+    url: https://connect.coveo.com/s/discussions
+  version: 1.0.0
+servers:
+- url: https://platform.cloud.coveo.com
+  description: Coveo public API endpoint
+security:
+- oauth2:
+  - full
+tags:
+- name: IPX Configuration
+paths:
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces:
+    get:
+      operationId: get-all-ipx-interface-configs
+      summary: List All IPX Interface Configurations
+      description: Lists the IPX interface configurations in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      responses:
+        '200':
+          description: Ok
+    post:
+      operationId: create-ipx-interface-config
+      summary: Create IPX Interface Configuration
+      description: Create an IPX interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - in: query
+        name: createPipelines
+        description: If true, pipelines, conditions and models will be created for the IPX interface.
+        schema:
+          type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ipx-interface-config'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ipx-interface-config-id'
+  /rest/organizations/{organizationId}/ipxinterface/v1/projects/interfaces:
+    get:
+      operationId: get-project-ipx-interface-configs
+      summary: List IPX Interface Configurations in Project
+      description: Lists the IPX interface configurations in a [Coveo organization](https://docs.coveo.com/en/185/) and a [project](https://docs.coveo.com/en/n7ef0517/manage-an-organization/manage-projects).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/projectId'
+      responses:
+        '200':
+          description: Ok
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces/{interfaceId}:
+    get:
+      operationId: get-ipx-interface-config
+      summary: Show IPX Interface Configuration
+      description: Shows an IPX interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ipx-interface-config-id'
+        '404':
+          description: Not Found
+    put:
+      operationId: update-ipx-interface-config
+      summary: Update IPX Interface Configuration
+      description: Updates an IPX interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ipx-interface-config'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ipx-interface-config-id'
+        '404':
+          description: Not Found
+    delete:
+      operationId: delete-ipx-interface-config
+      summary: Delete IPX Interface Configuration
+      description: Deletes an IPX interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces/{interfaceId}/versions:
+    get:
+      operationId: get-ipx-interface-versions
+      summary: Get Versions for an IPX Interface
+      description: Get a list of versions of the [IPX](https://docs.coveo.com/en/n47d1000/) interface of a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      - $ref: '#/components/parameters/versions-page'
+      - $ref: '#/components/parameters/versions-per-page'
+      - $ref: '#/components/parameters/versions-filter'
+      - $ref: '#/components/parameters/versions-order'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterfaceVersionInfoPage'
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces/{interfaceId}/versions/{versionNumber}:
+    get:
+      operationId: get-ipx-interface-version
+      summary: Get an IPX Interface Version
+      description: Get information about a specific version of an [IPX](https://docs.coveo.com/en/n47d1000/) interface.
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      - $ref: '#/components/parameters/version-number'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/IpxInterfaceVersionInfo'
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces/{interfaceId}/versions/{versionNumber}/restore:
+    post:
+      operationId: restore-ipx-interface-version
+      summary: Restore an IPX Interface Version
+      description: Restore the current [IPX](https://docs.coveo.com/en/n47d1000/) interface to a specific version.
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      - $ref: '#/components/parameters/version-number'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VersionLabelParams'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ipx-interface-config-id'
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces/{interfaceId}/versions/{versionNumber}/label:
+    put:
+      operationId: update-ipx-interface-version-label
+      summary: Update an IPX Interface Version Label
+      description: Update the label for a specific [IPX](https://docs.coveo.com/en/n47d1000/) interface version.
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      - $ref: '#/components/parameters/version-number'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VersionLabelParams'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterfaceVersionInfo'
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces/{interfaceId}/preview:
+    post:
+      operationId: preview-ipx-interface
+      summary: Preview IPX Interface
+      description: Generate the markup of an IPX interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ipx-interface-config-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            text/html:
+              schema:
+                type: string
+                example: <atomic-search-interface></atomic-search-interface>
+        '404':
+          description: Not Found
+        '401':
+          description: Unauthorized
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces/{interfaceId}/edit:
+    get:
+      operationId: get-ipx-interface-edit
+      summary: Get IPX Interface Builder
+      description: Get the builder for an IPX interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            text/html:
+              schema:
+                type: string
+        '404':
+          description: Not Found
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces/{interfaceId}/login:
+    get:
+      operationId: get-ipx-interface-login
+      summary: Get IPX Interface Login
+      description: Get the login page for an IPX interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            text/html:
+              schema:
+                type: string
+        '404':
+          description: Not Found
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces/{interfaceId}/token:
+    get:
+      operationId: get-ipx-interface-token
+      summary: Get IPX Interface Search Token
+      description: Get the search token for an IPX interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  token:
+                    type: string
+        '404':
+          description: Not Found
+  /rest/organizations/{organizationId}/ipxinterface/v1/interfaces/{interfaceId}/pipelines:
+    get:
+      operationId: get-ipx-interface-pipelines
+      summary: Get IPX Interface Pipelines
+      description: Get the pipelines used by an IPX interface in a [Coveo organization](https://docs.coveo.com/en/185/) in the builder context.
+      tags:
+      - IPX Configuration
+      parameters:
+      - $ref: '#/components/parameters/organization-id'
+      - $ref: '#/components/parameters/interface-id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pipelines-status'
+        '404':
+          description: Not Found
+components:
+  schemas:
+    pipelines-status:
+      type: array
+      description: A list containing the pipeline(s) used by the interface.
+      items:
+        $ref: '#/components/schemas/pipeline-status'
+    CreatedChangeInfo:
+      allOf:
+      - $ref: '#/components/schemas/ChangeInfo'
+      - type: object
+        description: Information about the version creation.
+    associated-pipeline:
+      type: object
+      description: The associated pipeline.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the search pipeline.
+          example: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+        name:
+          type: string
+          description: The name of the search pipeline.
+          example: My pipeline
+        pipelineType:
+          type: string
+          description: The type of the pipeline.
+          example: search
+        conditionId:
+          type: string
+          description: The unique identifier of the condition.
+          example: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
+        models:
+          type: array
+          description: The list of models.
+          items:
+            properties:
+              modelId:
+                type: string
+                description: The unique identifier of the model.
+                example: cccccccc-cccc-cccc-cccc-cccccccccccc
+              modelDisplayName:
+                type: string
+                description: The name of the model.
+                example: My model
+              engineId:
+                type: string
+                description: The type of the model.
+                example: topclicks
+              exportPeriod:
+                type: string
+                description: The export period of the model.
+                example: P3M
+              intervalTime:
+                type: integer
+                description: The interval time of the model.
+                example: 1
+              intervalUnit:
+                type: string
+                description: The interval unit of the model.
+                example: WEEK
+              exportOffset:
+                type: string
+                description: The export offset of the model.
+                example: PT0S
+              extraConfig:
+                type: object
+                description: The extra configuration of the model.
+                properties:
+                  commerceSupport:
+                    type: object
+                    description: Whether the model should support commerce use-cases.
+                    properties:
+                      enabled:
+                        type: boolean
+    InterfaceVersionInfoPage:
+      allOf:
+      - $ref: '#/components/schemas/Page'
+      - type: object
+        properties:
+          items:
+            type: array
+            description: The list of interface versions.
+            items:
+              $ref: '#/components/schemas/InterfaceVersionInfo'
+    ChangeInfo:
+      type: object
+      properties:
+        by:
+          type: string
+          description: The identity of the user who performed the change.
+        date:
+          type: string
+          description: The date and time at which the change was performed, in ISO-8601 format.
+        firstName:
+          type: string
+          description: The first name of the user who performed the change.
+        lastName:
+          type: string
+          description: The last name of the user who performed the change.
+    VersionLabelParams:
+      type: object
+      properties:
+        label:
+          type: string
+          description: The label to set on the version. This value can be empty.
+          required: true
+    UpdatedChangeInfo:
+      allOf:
+      - $ref: '#/components/schemas/ChangeInfo'
+      - type: object
+        description: Information about the most recent version update.
+    pipeline-status:
+      type: object
+      description: The status of a pipeline.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the pipeline.
+          example: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+        name:
+          type: string
+          description: The name of the pipeline.
+          example: My pipeline
+        pipelineType:
+          type: string
+          description: The type of the pipeline.
+          example: search
+        conditionId:
+          type: string
+          description: The unique identifier of the associated condition.
+          example: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
+        models:
+          type: array
+          items:
+            description: The list of models used by the pipeline.
+            properties:
+              id:
+                type: string
+                description: The unique identifier of the model.
+                example: cccccccc-cccc-cccc-cccc-cccccccccccc
+              modelStatus:
+                type: string
+                description: The status of the model.
+                example: ACTIVE
+              modelEngine:
+                type: string
+                description: The type of the model.
+                example: genqa
+    ipx-interface-config-id:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the search interface configuration.
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          description: A short descriptive name to help manage IPXs.
+          example: ExStore
+        title:
+          type: string
+          description: The title of the IPX interface configuration. Will be displayed as the HTML page title.
+          example: My IPX example
+        facets:
+          type: array
+          description: The list of facets to display in the IPX interface.
+          items:
+            properties:
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the facet is based.
+              label:
+                type: string
+                description: The label of the facet.
+          example:
+          - field: source
+            label: Source
+          - field: objecttype
+            label: Object Type
+        tabs:
+          type: array
+          description: The list of tabs to display in the IPX interface.
+          items:
+            properties:
+              label:
+                type: string
+                description: The label of the facet.
+              conditions:
+                type: array
+                description: The conditions of the tab to use on fields.
+                items:
+                  properties:
+                    conditionType:
+                      type: string
+                      description: The type of condition to apply on a field.
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                    values:
+                      type: array
+                      description: The value to use for the tab condition.
+          example:
+          - label: All
+            conditions: []
+          - label: Pdf
+            conditions:
+              conditionType: mustMatch
+              field: fileType
+              values:
+              - pdf
+        container:
+          type: object
+          description: The IPX container that defines how to display the IPX search interface on your web page.
+          properties:
+            button:
+              type: object
+              description: The IPX button.
+              properties:
+                label:
+                  type: string
+                  description: The label of the button.
+                  example: Coveo search
+                openIcon:
+                  type: string
+                  description: The SVG open icon of the button.
+                  example: <svg viewBox='0 0 10 10' ... ></svg
+            targetSelector:
+              type: string
+              description: CSS selector to target the HTML element on your web page.
+              example: '#sidepanel'
+            usesTargetSelector:
+              type: boolean
+              description: Whether to use the target selector.
+        footer:
+          type: array
+          description: The list of the IPX footer parts.
+          items:
+            properties:
+              label:
+                type: string
+                description: The footer part's label to display.
+                example: Coveo
+              link:
+                type: string
+                description: The redirect URL.
+                example: https://www.coveo.com
+              icon:
+                type: string
+                description: The SVG logo to display.
+                example: <svg viewBox='0 0 10 10' ... ></svg
+        resultTemplates:
+          type: array
+          description: The list of IPX result templates.
+          items:
+            properties:
+              name:
+                type: string
+                description: The result template name.
+              layout:
+                type: string
+                description: The result template layout.
+              badge:
+                type: object
+                description: The result template badge.
+                properties:
+                  field:
+                    type: string
+                    description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                  color:
+                    type: string
+                    description: The color of the result template badge.
+              details:
+                type: array
+                description: The result template details.
+                items:
+                  properties:
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                    label:
+                      type: string
+                      description: The label of the result template detail.
+              conditions:
+                type: array
+                description: The conditions of the tab to use on fields.
+                items:
+                  properties:
+                    conditionType:
+                      type: string
+                      description: The type of condition to apply on a field.
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                    values:
+                      type: array
+                      description: The value to use for the tab condition.
+          example:
+          - name: Default
+            layout: default
+            badge:
+              field: documenttype
+              color: '#d057bf'
+            details:
+            - field: source
+              label: source
+            conditions: []
+          - name: My Custom Template
+            layout: default
+            badge:
+              field: documenttype
+              color: '#e4e3e3'
+            details:
+            - field: source
+              label: source
+            conditions:
+            - conditionType: isDefined
+              field: filetype
+            - conditionType: mustMatch
+              field: sourcetype
+              values:
+              - youtube
+        style:
+          type: object
+          description: The IPX styling.
+          properties:
+            fontFamily:
+              type: string
+              description: The font-family
+              example: Comic Sans MS
+            colors:
+              type: object
+              description: All changeable HEX colors of the IPX interface.
+              properties:
+                primary:
+                  type: string
+                  description: The primary color.
+                  example: '#1372ec'
+                neutral:
+                  type: string
+                  description: The secondary color.
+                background:
+                  type: string
+                  description: The background color.
+                visitedLink:
+                  type: string
+                  description: The visited link color.
+                titles:
+                  type: string
+                  description: The color of the titles.
+                button:
+                  type: string
+                  description: The color of the IPX button.
+                buttonLabel:
+                  type: string
+                  description: The color of the IPX button label.
+        settings:
+          type: object
+          description: The IPX settings.
+          properties:
+            smartSnippets:
+              type: object
+              description: The smart snippets settings.
+              properties:
+                enabled:
+                  type: boolean
+            genQA:
+              type: object
+              description: Whether to enable GenQA.
+              properties:
+                enabled:
+                  type: boolean
+                allowed:
+                  type: boolean
+            peopleAlsoAsk:
+              type: object
+              description: Whether to enable People Also Ask.
+              properties:
+                enabled:
+                  type: boolean
+            disableDynamicNavigation:
+              type: boolean
+              description: Whether to disable dynamic navigation.
+              properties:
+                enabled:
+                  type: boolean
+        pipelines:
+          type: object
+          description: The IPX pipelines, conditions and models that were created on IPX creation.
+          properties:
+            searchPipeline:
+              $ref: '#/components/schemas/associated-pipeline'
+            recsPipeline:
+              $ref: '#/components/schemas/associated-pipeline'
+        created:
+          type: string
+          format: date-time
+          description: The creation timestamp. (ISO 8601)
+          example: '2021-12-31T12:46:00.000Z'
+        createdBy:
+          type: string
+          description: The creator principal.
+          example: jdoe@gmail.com-google
+        updated:
+          type: string
+          format: date-time
+          description: The last update timestamp. (ISO 8601)
+          example: '2001-12-31T13:03:00.000Z'
+        updatedBy:
+          type: string
+          description: The last updater principal.
+          example: jdoe@gmail.com-google
+      required:
+      - id
+      - name
+    Page:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          description: The total number of pages.
+        totalEntries:
+          type: integer
+          description: The total number of items.
+    InterfaceVersionInfo:
+      type: object
+      properties:
+        version:
+          type: integer
+          description: The sequential number attributed to the version.
+        label:
+          type: string
+          description: An optional label describing the version changes.
+          required: false
+        created:
+          type: object
+          $ref: '#/components/schemas/CreatedChangeInfo'
+        updated:
+          type: object
+          $ref: '#/components/schemas/UpdatedChangeInfo'
+        isPublished:
+          type: boolean
+          description: Indicates whether the version is currently published.
+        restoredFromVersion:
+          type: integer
+          description: Indicates the origin of the current version, if it was restored.
+          required: false
+    ipx-interface-config:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A short descriptive name to help manage IPXs.
+          example: ExStore
+        facets:
+          type: array
+          description: The list of facets to display in the IPX interface.
+          items:
+            properties:
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the facet is based.
+              label:
+                type: string
+                description: The label of the facet.
+          example:
+          - field: source
+            label: Source
+          - field: objecttype
+            label: Object Type
+        tabs:
+          type: array
+          description: The list of tabs to display in the IPX interface.
+          items:
+            properties:
+              label:
+                type: string
+                description: The label of the facet.
+              conditions:
+                type: array
+                description: The conditions of the tab to use on fields.
+                items:
+                  properties:
+                    conditionType:
+                      type: string
+                      description: The type of condition to apply on a field.
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                    values:
+                      type: array
+                      description: The value to use for the tab condition.
+          example:
+          - label: All
+            conditions: []
+          - label: Pdf
+            conditions:
+              conditionType: mustMatch
+              field: fileType
+              values:
+              - pdf
+        container:
+          type: object
+          description: The IPX container that defines how to display the IPX search interface on your web page.
+          properties:
+            button:
+              type: object
+              description: The IPX button.
+              properties:
+                label:
+                  type: string
+                  description: The label of the button.
+                  example: Coveo search
+                openIcon:
+                  type: string
+                  description: The SVG open icon of the button.
+                  example: <svg viewBox='0 0 10 10' ... ></svg
+            targetSelector:
+              type: string
+              description: CSS selector to target the HTML element on your web page.
+              example: '#sidepanel'
+            usesTargetSelector:
+              type: boolean
+              description: Whether to use the target selector.
+        footer:
+          type: array
+          description: The list of the IPX footer parts.
+          items:
+            properties:
+              label:
+                type: string
+                description: The footer part's label to display.
+                example: Coveo
+              link:
+                type: string
+                description: The redirect URL.
+                example: https://www.coveo.com
+              icon:
+                type: string
+                description: The SVG logo to display.
+                example: <svg viewBox='0 0 10 10' ... ></svg
+        resultTemplates:
+          type: array
+          description: The list of IPX result templates.
+          items:
+            properties:
+              name:
+                type: string
+                description: The result template name.
+              layout:
+                type: string
+                description: The result template layout.
+              badge:
+                type: object
+                description: The result template badge.
+                properties:
+                  field:
+                    type: string
+                    description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                  color:
+                    type: string
+                    description: The color of the result template badge.
+              details:
+                type: array
+                description: The result template details.
+                items:
+                  properties:
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                    label:
+                      type: string
+                      description: The label of the result template detail.
+              conditions:
+                type: array
+                description: The conditions of the tab to use on fields.
+                items:
+                  properties:
+                    conditionType:
+                      type: string
+                      description: The type of condition to apply on a field.
+                    field:
+                      type: string
+                      description: The [field](https://docs.coveo.com/en/200) on which the tab is based.
+                    values:
+                      type: array
+                      description: The value to use for the tab condition.
+          example:
+          - name: Default
+            layout: default
+            badge:
+              field: documenttype
+              color: '#d057bf'
+            details:
+            - field: source
+              label: source
+            conditions: []
+          - name: My Custom Template
+            layout: default
+            badge:
+              field: documenttype
+              color: '#e4e3e3'
+            details:
+            - field: source
+              label: source
+            conditions:
+            - conditionType: isDefined
+              field: filetype
+            - conditionType: mustMatch
+              field: sourcetype
+              values:
+              - youtube
+        style:
+          type: object
+          description: The IPX styling.
+          properties:
+            fontFamily:
+              type: string
+              description: The font-family
+              example: Comic Sans MS
+            colors:
+              type: object
+              description: All changeable HEX colors of the IPX interface.
+              properties:
+                primary:
+                  type: string
+                  description: The primary color.
+                  example: '#1372ec'
+                neutral:
+                  type: string
+                  description: The secondary color.
+                background:
+                  type: string
+                  description: The background color.
+                visitedLink:
+                  type: string
+                  description: The visited link color.
+                titles:
+                  type: string
+                  description: The color of the titles.
+                button:
+                  type: string
+                  description: The color of the IPX button.
+                buttonLabel:
+                  type: string
+                  description: The color of the IPX button label.
+        settings:
+          type: object
+          description: The IPX settings.
+          properties:
+            smartSnippets:
+              type: object
+              description: The smart snippets settings.
+              properties:
+                enabled:
+                  type: boolean
+            genQA:
+              type: object
+              description: Whether to enable GenQA.
+              properties:
+                enabled:
+                  type: boolean
+                allowed:
+                  type: boolean
+            peopleAlsoAsk:
+              type: object
+              description: Whether to enable People Also Ask.
+              properties:
+                enabled:
+                  type: boolean
+            disableDynamicNavigation:
+              type: boolean
+              description: Whether to disable dynamic navigation.
+              properties:
+                enabled:
+                  type: boolean
+        pipelines:
+          type: object
+          description: The IPX pipelines, conditions and models that were created on IPX creation.
+          properties:
+            searchPipeline:
+              $ref: '#/components/schemas/associated-pipeline'
+            recsPipeline:
+              $ref: '#/components/schemas/associated-pipeline'
+      required:
+      - name
+  parameters:
+    versions-page:
+      name: page
+      description: The 0-based number of the page of versions to list.
+      in: query
+      schema:
+        type: integer
+        default: 0
+        minimum: 0
+        maximum: 100
+    versions-per-page:
+      name: perPage
+      description: The number of versions to include per page.
+      in: query
+      schema:
+        type: integer
+        default: 10
+        minimum: 1
+        maximum: 100
+    projectId:
+      name: projectId
+      description: The id of the project to which the resource belongs.
+      in: query
+      schema:
+        type: string
+    version-number:
+      name: versionNumber
+      description: The sequential number identifying a version.
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    versions-filter:
+      name: filter
+      description: A substring that must appear in a version label for this version to appear in results.
+      in: query
+      schema:
+        type: string
+    page:
+      name: page
+      description: The 0-based number of the page of configurations to list.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+    perPage:
+      name: perPage
+      description: The maximum number of configurations to include per page.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 20
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
+      schema:
+        type: string
+    filter:
+      name: filter
+      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
+      example: Store
+      in: query
+      schema:
+        type: string
+    interface-id:
+      name: interfaceId
+      description: The unique identifier of the target search interface.
+      example: 123e4567-e89b-12d3-a456-426614174000
+      in: path
+      required: true
+      schema:
+        type: string
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    versions-order:
+      name: order
+      description: 'The sort direction of the versions based on the version number.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        default: desc
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+          scopes:
+            full: required
