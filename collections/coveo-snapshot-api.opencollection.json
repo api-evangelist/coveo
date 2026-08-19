@@ -1,0 +1,477 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Coveo Activity Activities Snapshot API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "authorization_code",
+      "authorizationUrl": "https://platform.cloud.coveo.com/oauth/authorize",
+      "accessTokenUrl": "https://platform.cloud.coveo.com/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Snapshot",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Push Snapshot to Target Organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots/:snapshotId/push",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`"
+              },
+              {
+                "name": "targetOrganizationId",
+                "value": "",
+                "type": "query",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/) where to send the snapshot.<br/>**Example:** `destinationorganizationg7dg3gd`"
+              },
+              {
+                "name": "developerNotes",
+                "value": "",
+                "type": "query",
+                "description": "A note you can attach to your snapshot.<br/>**Example:** `pipeline snapshot`"
+              }
+            ]
+          },
+          "docs": "Pushes a snapshot to an organization.</br>**Required privileges:**<br/>- `Snapshot - Edit` in both organizations.<br/>- `View` in the original organization on all [domains](https://docs.coveo.com/en/2819/) targeted by the snapshot.<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"EDIT\",\"targetId\":\"*\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "Validate Snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots/:snapshotId/dryrun",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`"
+              },
+              {
+                "name": "deleteMissingResources",
+                "value": "",
+                "type": "query",
+                "description": "Whether to simulate the deletion of organization resources not present in the snapshot.<br/>**Default:** `false`"
+              },
+              {
+                "name": "deletionScope",
+                "value": "",
+                "type": "query",
+                "description": "**Note:** only applies when `deleteMissingResources` is set to `true`.<br/>The scope of the resources on which to calculate deletions.<br/>**Default:** `ONLY_TYPES_FROM_SNAPSHOT`"
+              },
+              {
+                "name": "performAutoSynchronization",
+                "value": "",
+                "type": "query",
+                "description": "Whether to automatically synchronize resources in the snapshot with corresponding organization resources.<br/>**Default:** `true`"
+              },
+              {
+                "name": "autoSynchronizationThreshold",
+                "value": "",
+                "type": "query",
+                "description": "If autoSynchronization is set to true, this score controls how lenient the pairing of values will be.<br/>The value should be set to 1.00 or lower.  A value of 1 will require an exact match for synchronization of fields."
+              }
+            ]
+          },
+          "docs": "Checks the effects of applying a snapshot to an organization.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> - `View` on all domains corresponding to the resources targeted by the snapshot<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"EDIT\",\"targetId\":\"*\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "Apply Snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots/:snapshotId/apply",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`"
+              },
+              {
+                "name": "deleteMissingResources",
+                "value": "",
+                "type": "query",
+                "description": "Whether to delete organization resources not present in the snapshot.<br/>**Default:** `false`"
+              },
+              {
+                "name": "deletionScope",
+                "value": "",
+                "type": "query",
+                "description": "**Note:** only applies when `deleteMissingResources` is set to `true`.<br/>The scope of the resources on which to calculate deletions.<br/>**Default:** `ONLY_TYPES_FROM_SNAPSHOT`"
+              },
+              {
+                "name": "isTransient",
+                "value": "",
+                "type": "query",
+                "description": "Whether to delete the snapshot after it has been applied.<br/>**Default:** `false`"
+              },
+              {
+                "name": "validationRequired",
+                "value": "",
+                "type": "query",
+                "description": "Whether to check the effects of applying the snapshot before actually applying it.When this parameter is set to true, if an operation is found to be invalid during the validation, the service stops and returns an error report.<br/>**Default:** `false`"
+              },
+              {
+                "name": "performAutoSynchronization",
+                "value": "",
+                "type": "query",
+                "description": "Whether to automatically synchronize resources in the snapshot with corresponding organization resources.<br/>**Default:** `true`"
+              },
+              {
+                "name": "autoSynchronizationThreshold",
+                "value": "",
+                "type": "query",
+                "description": "If autoSynchronization is set to true, this score controls how lenient the pairing of values will be.<br/>The value should be set to 1.00 or lower.  A value of 1 will require an exact match for synchronization of fields."
+              }
+            ]
+          },
+          "docs": "Applies a snapshot to an organization.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> - `Edit` on all domains corresponding to the resources targeted by the snapshot<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"EDIT\",\"targetId\":\"*\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "List Snapshots",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "includeReports",
+                "value": "",
+                "type": "query",
+                "description": "Whether to include snapshot reports in the response.<br/>**Default:** `true`"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sortingOrder",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sortingType",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Lists the snapshots in an [organization](https://docs.coveo.com/en/185/).</br>**Required privilege:** `Snapshot - View`<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"VIEW\",\"targetId\":\"*\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "Create Snapshot from Configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a snapshot from a configuration.</br>**Required privilege:**` Snapshot - Edit`<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"EDIT\",\"targetId\":\"{snapshotId}\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "Create Organization Snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots/self",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "targetOrganizationId",
+                "value": "",
+                "type": "query",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/) where to send the snapshot.<br/>**Example:** `destinationorganizationg7dg3gd`<br/>By default, the snapshot remains in the original organization."
+              },
+              {
+                "name": "developerNotes",
+                "value": "",
+                "type": "query",
+                "description": "A note you can attach to your snapshot.<br/>**Example:** `pipeline snapshot`"
+              },
+              {
+                "name": "includeChildrenResources",
+                "value": "",
+                "type": "query",
+                "description": "Whether to include child resources in the snapshot.<br/>For example, when creating a snapshot of a query pipeline resource, if the `includeChildrenResources` parameter is set to true, the [pipeline's statements](https://docs.coveo.com/en/236/) will be included in the snapshot.<br/>**Default:** `true`"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a snapshot of an organization and optionally sends it to another organization.</br>**Required privileges:**<br/> - `Snapshot - Edit`<br/> - `View` on all domains corresponding to the resources to include in the snapshot.<br>- If exporting to another organization, you also need `Snapshot - Edit` privilege in that target organization.<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"CREATE\",\"targetId\":\"*\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "Create Snapshot from File",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots/file",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "snapshotFileType",
+                "value": "",
+                "type": "query",
+                "description": "The type of the file containing the configuration.<br/>**Possible values:**<br/> - `JSON`: the configuration is in one single JSON file.<br/> - `ZIP`: the configuration is separated into several JSON files, each containing one or more resources, without overlap between files"
+              },
+              {
+                "name": "developerNotes",
+                "value": "",
+                "type": "query",
+                "description": "A note you can attach to your snapshot.<br/>**Example:** `pipeline snapshot`"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a snapshot from a file containing the configuration (or multiple files zipped into one).</br>**Required privilege:** `Snapshot - Edit`<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"CREATE\",\"targetId\":\"*\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "Show Snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots/:snapshotId",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`"
+              },
+              {
+                "name": "includeReports",
+                "value": "",
+                "type": "query",
+                "description": "Whether to include reports with the snapshot.<br/>**Default:** `true`"
+              },
+              {
+                "name": "reportInclusion",
+                "value": "",
+                "type": "query",
+                "description": "The level of detail of the report.<br/>**Possible values:**<br/> - `NONE`: no report.<br/> - `SUMMARY`: only report on the latest operation of every kind (dry run, application, synchronization, diff report generation).<br/> - `ALL`: all reports.<br/>**Default:** `SUMMARY`"
+              }
+            ]
+          },
+          "docs": "Shows a snapshot in an organization.</br>**Required privilege:** `Snapshot - View`<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"VIEW\",\"targetId\":\"*\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "Delete Snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots/:snapshotId",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`"
+              }
+            ]
+          },
+          "docs": "Deletes a snapshot in an organization.</br>**Required privilege:** `Snapshot - Edit`<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"EDIT\",\"targetId\":\"*\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "Create URL to Retrieve Snapshot Content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots/:snapshotId/url",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`"
+              },
+              {
+                "name": "contentType",
+                "value": "",
+                "type": "query",
+                "description": "The version of the snapshot to show.<br/>**Possible values:**<br/> - `PRIMARY`: The actual snapshot content.<br/> - `CURRENT_STATE`: The resources targeted by the snapshot as they were in the target organization itself at the moment of the last dry run operation. This is useful to compare with the actual snapshot content (`PRIMARY`) before applying it.<br/>**Default:** `PRIMARY`"
+              }
+            ]
+          },
+          "docs": "Creates a URL from which to retrieve the content of a snapshot.</br>**Required privileges:**<br/>- `Snapshot - View`<br/>- `View` on all domains corresponding to the resources included in the snapshot<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"VIEW\",\"targetId\":\"*\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "Show Snapshot Diff Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots/:snapshotId/diff",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`"
+              },
+              {
+                "name": "relativeReportId",
+                "value": "",
+                "type": "query",
+                "description": "The unique identifier of the dry-run operation report associated with the target diff report."
+              },
+              {
+                "name": "numberOfLinesMax",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of lines before the diff is downloaded to a file."
+              }
+            ]
+          },
+          "docs": "Shows the diff report for the target snapshot and dry-run report.</br>**Required privilege:** `Snapshot - View`<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"EDIT\",\"targetId\":\"*\"}\n```\n</details>"
+        },
+        {
+          "info": {
+            "name": "Retrieve Snapshot Content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://platform.cloud.coveo.com/rest/organizations/:organizationId/snapshots/:snapshotId/content",
+            "params": [
+              {
+                "name": "organizationId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the [organization](https://docs.coveo.com/en/185/).<br/>**Example:** `startingorganizationg8tp8wu3`"
+              },
+              {
+                "name": "snapshotId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the target snapshot.<br/>**Example:** `startingorganization-xzgbf5rdaiqtaznvh74zdwcedi`"
+              },
+              {
+                "name": "contentFormat",
+                "value": "",
+                "type": "query",
+                "description": "The format of the snapshot content.<br> **FLAT:** Content unified into a single file<br>**SPLIT_PER_TYPE:** Content split into one file per resource type"
+              }
+            ]
+          },
+          "docs": "Retrieves a ZIP file holding the content of the target snapshot, in the target format.</br>**Required privileges:**<br/>- `Snapshot - View`<br/>- `View` on all domains corresponding to the resources included in the snapshot<br /><br /><details><summary>Privilege required</summary>\n```\n{\"owner\":\"PLATFORM\",\"targetDomain\":\"SNAPSHOTS\",\"type\":\"VIEW\",\"targetId\":\"*\"}\n```\n</details>"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
