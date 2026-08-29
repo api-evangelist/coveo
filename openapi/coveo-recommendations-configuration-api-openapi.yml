@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Recommendations Configuration API
+  title: Coveo Commerce Recommendations Configuration API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -665,62 +665,6 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/recommendations/slots/names_get
 components:
   schemas:
-    SlotStrategiesModel:
-      type: object
-      properties:
-        seedType:
-          type: string
-          description: The seed type for the slot.
-          enum:
-          - unseeded
-          - product
-          - cart
-          - purchased
-        strategies:
-          type: array
-          description: The strategies for the slot.
-          items:
-            $ref: '#/components/schemas/StrategiesModel'
-    Headline:
-      required:
-      - headline
-      - language
-      type: object
-      properties:
-        headline:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: Localized recommendation headlines.
-          example: '[{"headline":"You might be interested in","language":"en"}]'
-        language:
-          minLength: 1
-          type: string
-      description: Localized recommendation headlines.
-      example:
-      - headline: You might be interested in
-        language: en
-    StrategiesModel:
-      type: object
-      properties:
-        strategy:
-          type: string
-          description: The [strategy](https://docs.coveo.com/en/3132/glossary/product-recommendations) to use for recommendations.
-          example: popular_bought
-          enum:
-          - bought_together
-          - popular_bought
-          - popular_viewed
-          - viewed_together
-        seed:
-          type: string
-          description: 'The seed number for the [slot configuration](https://docs.coveo.com/en/o9b80563/glossary/recommendation-slot/).  One of: unseeded, single, multi.'
-          example: unseeded
-          enum:
-          - unseeded
-          - single
-          - multi
-      description: The strategies for the slot.
     SlotSettingsModel:
       required:
       - headlines
@@ -786,6 +730,83 @@ components:
           type: integer
           description: Products to be returned.
           format: int32
+    CommercePageModelSlotConfigurationModel:
+      required:
+      - items
+      - totalEntries
+      - totalPages
+      type: object
+      properties:
+        items:
+          type: array
+          description: The retrieved page of items.
+          items:
+            $ref: '#/components/schemas/SlotConfigurationModel'
+        totalEntries:
+          type: integer
+          description: The total number of results that match the query.
+          format: int64
+        totalPages:
+          type: integer
+          description: The total number of pages of items available.
+          format: int32
+      description: Page
+    SlotConfigurationNameModel:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the configuration (search or listing) this rule belongs to.
+          format: uuid
+          readOnly: true
+          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
+        name:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: A unique name for the [slot configuration](https://docs.coveo.com/en/o9b80563/glossary/recommendation-slot/).
+          example: Homepage Primary.
+      description: The retrieved page of items.
+    SlotStrategiesModel:
+      type: object
+      properties:
+        seedType:
+          type: string
+          description: The seed type for the slot.
+          enum:
+          - unseeded
+          - product
+          - cart
+          - purchased
+        strategies:
+          type: array
+          description: The strategies for the slot.
+          items:
+            $ref: '#/components/schemas/StrategiesModel'
+    Recommendation.QueryConfigurationModel:
+      required:
+      - additionalFields
+      type: object
+      properties:
+        additionalFields:
+          uniqueItems: true
+          type: array
+          description: To retrieve [additional fields](https://docs.coveo.com/en/n73f0502#create-additional-commerce-fields) you have created, that aren’t part of the [standard commerce fields](https://docs.coveo.com/en/n73f0502#standard-commerce-fields), specify them here. These fields appear in the `additionalFields` object in the response.
+          example:
+          - color
+          - shirtsize
+          items:
+            type: string
+        perPage:
+          maximum: 100
+          minimum: 0
+          type: integer
+          description: The number of results to include per page.<br/><br/><b>Note:</b> The specified value applies only to parent items, not their grouped children. Query performance may be affected when returned items include many grouped products.
+          format: int32
+          example: 20
+      description: Query configuration.
     SlotConfigurationModel:
       required:
       - headlines
@@ -878,6 +899,46 @@ components:
           default: 1
         queryConfiguration:
           $ref: '#/components/schemas/Recommendation.QueryConfigurationModel'
+    Headline:
+      required:
+      - headline
+      - language
+      type: object
+      properties:
+        headline:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: Localized recommendation headlines.
+          example: '[{"headline":"You might be interested in","language":"en"}]'
+        language:
+          minLength: 1
+          type: string
+      description: Localized recommendation headlines.
+      example:
+      - headline: You might be interested in
+        language: en
+    StrategiesModel:
+      type: object
+      properties:
+        strategy:
+          type: string
+          description: The [strategy](https://docs.coveo.com/en/3132/glossary/product-recommendations) to use for recommendations.
+          example: popular_bought
+          enum:
+          - bought_together
+          - popular_bought
+          - popular_viewed
+          - viewed_together
+        seed:
+          type: string
+          description: 'The seed number for the [slot configuration](https://docs.coveo.com/en/o9b80563/glossary/recommendation-slot/).  One of: unseeded, single, multi.'
+          example: unseeded
+          enum:
+          - unseeded
+          - single
+          - multi
+      description: The strategies for the slot.
     CommercePageModelSlotConfigurationNameModel:
       required:
       - items
@@ -899,67 +960,6 @@ components:
           description: The total number of pages of items available.
           format: int32
       description: Page
-    CommercePageModelSlotConfigurationModel:
-      required:
-      - items
-      - totalEntries
-      - totalPages
-      type: object
-      properties:
-        items:
-          type: array
-          description: The retrieved page of items.
-          items:
-            $ref: '#/components/schemas/SlotConfigurationModel'
-        totalEntries:
-          type: integer
-          description: The total number of results that match the query.
-          format: int64
-        totalPages:
-          type: integer
-          description: The total number of pages of items available.
-          format: int32
-      description: Page
-    SlotConfigurationNameModel:
-      required:
-      - name
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the configuration (search or listing) this rule belongs to.
-          format: uuid
-          readOnly: true
-          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
-        name:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: A unique name for the [slot configuration](https://docs.coveo.com/en/o9b80563/glossary/recommendation-slot/).
-          example: Homepage Primary.
-      description: The retrieved page of items.
-    Recommendation.QueryConfigurationModel:
-      required:
-      - additionalFields
-      type: object
-      properties:
-        additionalFields:
-          uniqueItems: true
-          type: array
-          description: To retrieve [additional fields](https://docs.coveo.com/en/n73f0502#create-additional-commerce-fields) you have created, that aren’t part of the [standard commerce fields](https://docs.coveo.com/en/n73f0502#standard-commerce-fields), specify them here. These fields appear in the `additionalFields` object in the response.
-          example:
-          - color
-          - shirtsize
-          items:
-            type: string
-        perPage:
-          maximum: 100
-          minimum: 0
-          type: integer
-          description: The number of results to include per page.<br/><br/><b>Note:</b> The specified value applies only to parent items, not their grouped children. Query performance may be affected when returned items include many grouped products.
-          format: int32
-          example: 20
-      description: Query configuration.
   securitySchemes:
     oauth2:
       type: oauth2

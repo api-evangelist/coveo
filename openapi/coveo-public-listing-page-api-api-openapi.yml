@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Public Listing Page API API
+  title: Coveo Commerce Public Listing Page API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -244,40 +244,6 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/listings/pages_get
 components:
   schemas:
-    FieldValueModel:
-      required:
-      - type
-      type: object
-      properties:
-        type:
-          type: string
-      description: The value to apply the operator on.
-      example:
-        type: string
-        value: Blue
-      discriminator:
-        propertyName: type
-    CommercePageModelPublicListingPageResponseModel:
-      required:
-      - items
-      - totalEntries
-      - totalPages
-      type: object
-      properties:
-        items:
-          type: array
-          description: The retrieved page of items.
-          items:
-            $ref: '#/components/schemas/PublicListingPageResponseModel'
-        totalEntries:
-          type: integer
-          description: The total number of results that match the query.
-          format: int64
-        totalPages:
-          type: integer
-          description: The total number of pages of items available.
-          format: int32
-      description: Page
     ListingPageApiPageRuleModel:
       required:
       - filters
@@ -333,60 +299,6 @@ components:
             type: array
             values:
             - canoes-kayaks/kayaks/sports-kayaks
-    PublicListingPageRequestModel:
-      required:
-      - name
-      - pageRules
-      - patterns
-      - trackingId
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the listing page.
-          format: uuid
-          readOnly: true
-          example: 533bba27-2a7f-18fb-b8ed-ed99c3f92f5c
-        name:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: A unique name for the listing configuration.
-          example: ACME Corp Summer Trends
-        patterns:
-          minItems: 1
-          type: array
-          description: Possible patterns matching values associated to a listing configuration.
-          example:
-          - url: https://sports.barca.group/plp/clothing/pants
-          items:
-            $ref: '#/components/schemas/MatchingConfigurationModel'
-        pageRules:
-          minItems: 1
-          type: array
-          description: List of rules associated to a listing page. Rules are used to determine the page's contents.
-          example:
-          - name: Include ec_category_slug contains canoes-kayaks/kayaks/sports-kayaks
-            locales:
-            - language: en
-              country: US
-              currency: USD
-            filters:
-            - fieldName: ec_category_slug
-              operator: contains
-              value:
-                type: array
-                values:
-                - canoes-kayaks/kayaks/sports-kayaks
-          items:
-            $ref: '#/components/schemas/ListingPageApiPageRuleModel'
-        trackingId:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The unique identifier of the tracking target.
-          example: acmecorporation_ca
-      description: PublicListingPageRequestModel
     DecimalValueModel:
       required:
       - value
@@ -398,19 +310,106 @@ components:
           value:
             type: number
             format: double
-    MatchingConfigurationModel:
+    CommercePageModelPublicListingPageResponseModel:
       required:
-      - url
+      - items
+      - totalEntries
+      - totalPages
       type: object
       properties:
-        url:
-          maxLength: 1024
-          minLength: 1
+        items:
+          type: array
+          description: The retrieved page of items.
+          items:
+            $ref: '#/components/schemas/PublicListingPageResponseModel'
+        totalEntries:
+          type: integer
+          description: The total number of results that match the query.
+          format: int64
+        totalPages:
+          type: integer
+          description: The total number of pages of items available.
+          format: int32
+      description: Page
+    InclusiveRangeModel:
+      required:
+      - range
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          range:
+            $ref: '#/components/schemas/RangeModel'
+    RangeModel:
+      type: object
+      properties:
+        from:
+          type: number
+          format: double
+        to:
+          type: number
+          format: double
+    StringValueModel:
+      required:
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          value:
+            maxLength: 255
+            minLength: 0
+            type: string
+    FieldValueModel:
+      required:
+      - type
+      type: object
+      properties:
+        type:
           type: string
-          description: URL associated to a listing configuration used for pattern matching.
-      description: Possible patterns matching values associated to a listing configuration.
+      description: The value to apply the operator on.
       example:
-      - url: https://sports.barca.group/plp/clothing/pants
+        type: string
+        value: Blue
+      discriminator:
+        propertyName: type
+    MultipleStringValuesModel:
+      required:
+      - values
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          values:
+            minItems: 1
+            type: array
+            items:
+              maxLength: 255
+              minLength: 0
+              type: string
+    RuleLocaleModel:
+      type: object
+      properties:
+        language:
+          type: string
+          description: An ISO 639-1 language code.
+          example: en
+        country:
+          type: string
+          description: An ISO 3166-1 alpha-2 country code.
+          example: US
+        currency:
+          type: string
+          description: An ISO 4217 currency code.
+          example: USD
+      description: The list of locales the synonym applies to. When empty, the synonym applies to all locales.
+      example:
+      - language: en
+        country: US
+        currency: USD
     QueryFilterModel:
       required:
       - fieldName
@@ -461,16 +460,31 @@ components:
           range:
             from: 1000
             to: 3000
-    InclusiveRangeModel:
+    HierarchicMultiValueModel:
       required:
-      - range
+      - value
       type: object
       allOf:
       - $ref: '#/components/schemas/FieldValueModel'
       - type: object
         properties:
-          range:
-            $ref: '#/components/schemas/RangeModel'
+          value:
+            maxLength: 255
+            minLength: 0
+            type: string
+    MatchingConfigurationModel:
+      required:
+      - url
+      type: object
+      properties:
+        url:
+          maxLength: 1024
+          minLength: 1
+          type: string
+          description: URL associated to a listing configuration used for pattern matching.
+      description: Possible patterns matching values associated to a listing configuration.
+      example:
+      - url: https://sports.barca.group/plp/clothing/pants
     PublicListingPageResponseModel:
       required:
       - pageRules
@@ -528,78 +542,64 @@ components:
           format: int64
           readOnly: true
       description: PublicListingPageResponseModel
-    HierarchicMultiValueModel:
+    PublicListingPageRequestModel:
       required:
-      - value
+      - name
+      - pageRules
+      - patterns
+      - trackingId
       type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel'
-      - type: object
-        properties:
-          value:
-            maxLength: 255
-            minLength: 0
-            type: string
-    MultipleStringValuesModel:
-      required:
-      - values
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel'
-      - type: object
-        properties:
-          values:
-            minItems: 1
-            type: array
-            items:
-              maxLength: 255
-              minLength: 0
-              type: string
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the listing page.
+          format: uuid
+          readOnly: true
+          example: 533bba27-2a7f-18fb-b8ed-ed99c3f92f5c
+        name:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: A unique name for the listing configuration.
+          example: ACME Corp Summer Trends
+        patterns:
+          minItems: 1
+          type: array
+          description: Possible patterns matching values associated to a listing configuration.
+          example:
+          - url: https://sports.barca.group/plp/clothing/pants
+          items:
+            $ref: '#/components/schemas/MatchingConfigurationModel'
+        pageRules:
+          minItems: 1
+          type: array
+          description: List of rules associated to a listing page. Rules are used to determine the page's contents.
+          example:
+          - name: Include ec_category_slug contains canoes-kayaks/kayaks/sports-kayaks
+            locales:
+            - language: en
+              country: US
+              currency: USD
+            filters:
+            - fieldName: ec_category_slug
+              operator: contains
+              value:
+                type: array
+                values:
+                - canoes-kayaks/kayaks/sports-kayaks
+          items:
+            $ref: '#/components/schemas/ListingPageApiPageRuleModel'
+        trackingId:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The unique identifier of the tracking target.
+          example: acmecorporation_ca
+      description: PublicListingPageRequestModel
     SeedRelativeValueModel:
       type: object
       allOf:
       - $ref: '#/components/schemas/FieldValueModel'
-    RuleLocaleModel:
-      type: object
-      properties:
-        language:
-          type: string
-          description: An ISO 639-1 language code.
-          example: en
-        country:
-          type: string
-          description: An ISO 3166-1 alpha-2 country code.
-          example: US
-        currency:
-          type: string
-          description: An ISO 4217 currency code.
-          example: USD
-      description: The list of locales the synonym applies to. When empty, the synonym applies to all locales.
-      example:
-      - language: en
-        country: US
-        currency: USD
-    StringValueModel:
-      required:
-      - value
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel'
-      - type: object
-        properties:
-          value:
-            maxLength: 255
-            minLength: 0
-            type: string
-    RangeModel:
-      type: object
-      properties:
-        from:
-          type: number
-          format: double
-        to:
-          type: number
-          format: double
   securitySchemes:
     oauth2:
       type: oauth2

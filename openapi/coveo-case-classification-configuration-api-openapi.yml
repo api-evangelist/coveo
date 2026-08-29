@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Case Classification Configuration API
+  title: Coveo Machine Learning Configuration Case Classification Configuration API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -232,6 +232,81 @@ components:
           description: The name of the field, also referred to as the field identifier.<br />**Example:** `article_description`
           example: article_description
       description: The list of non-empty fields for at least one item.
+    CaseClassificationValueCountResponse:
+      type: object
+      properties:
+        valueCount:
+          type: integer
+          description: Number of different field values
+          format: int32
+        areMoreValuesAvailable:
+          type: boolean
+          description: Indicates more field values available
+    ContentFieldsResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The query used to retrieve item information.
+          example: '@language="English" AND @documenttype=="SupportArticle"'
+        fields:
+          type: array
+          description: The list of non-empty fields for at least one item.
+          items:
+            $ref: '#/components/schemas/FieldCandidateModel'
+    CaseClassificationDocumentCountResponse:
+      type: object
+      properties:
+        documentCount:
+          type: integer
+          description: Number of items
+          format: int64
+    CaseExtractionPeriodModel:
+      type: object
+      properties:
+        exportPeriod:
+          type: string
+          description: The period during which the cases must be taken into account by the model when rebuilding. The `exportPeriod` uses the moment when the model was last generated as a base. Must be in the ISO8601 period format, with only one non-null time unit (i.e., PyY, PmM or PdD).<br />**Example:** `P6M`
+          example: P6M
+        startTime:
+          type: integer
+          description: The beginning of the period during which the cases must be taken into account by the model. Is incompatible with `exportPeriod` and requires an `endTime`.<br />**Example:** `1098908390000`
+          format: int64
+          example: 1098908390000
+        endTime:
+          type: integer
+          description: The end of the period during which the cases must be taken into account by the model. Is incompatible with `exportPeriod` and requires a `startTime`.<br />**Example:** `1098908390000`
+          format: int64
+          example: 1098908390000
+        dateField:
+          type: string
+          description: The field that identifies the support cases' creation date.<br />**Example:** `sfdate`
+          example: sfdate
+      description: The period during which the cases will be extracted.
+    CaseFilterConditionModel:
+      required:
+      - field
+      - operator
+      - value
+      type: object
+      properties:
+        field:
+          type: string
+          description: The field to use for the filter.<br />**Example:** `author`
+          example: author
+        operator:
+          type: string
+          description: The operator to use for the condition.<br />**Example:** `EQUALS`
+          example: EQUALS
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - EQUALS, NOT_EQUALS
+        value:
+          type: string
+          description: The value to use for the filter.<br />**Example:** `John Smith`
+          example: John Smith
+      description: A custom case filter condition.
     CaseClassificationPreviewResponse:
       type: object
       properties:
@@ -291,81 +366,6 @@ components:
         caseExtractionPeriod:
           $ref: '#/components/schemas/CaseExtractionPeriodModel'
       description: The configuration for the Case Classification preview.
-    CaseExtractionPeriodModel:
-      type: object
-      properties:
-        exportPeriod:
-          type: string
-          description: The period during which the cases must be taken into account by the model when rebuilding. The `exportPeriod` uses the moment when the model was last generated as a base. Must be in the ISO8601 period format, with only one non-null time unit (i.e., PyY, PmM or PdD).<br />**Example:** `P6M`
-          example: P6M
-        startTime:
-          type: integer
-          description: The beginning of the period during which the cases must be taken into account by the model. Is incompatible with `exportPeriod` and requires an `endTime`.<br />**Example:** `1098908390000`
-          format: int64
-          example: 1098908390000
-        endTime:
-          type: integer
-          description: The end of the period during which the cases must be taken into account by the model. Is incompatible with `exportPeriod` and requires a `startTime`.<br />**Example:** `1098908390000`
-          format: int64
-          example: 1098908390000
-        dateField:
-          type: string
-          description: The field that identifies the support cases' creation date.<br />**Example:** `sfdate`
-          example: sfdate
-      description: The period during which the cases will be extracted.
-    CaseClassificationDocumentCountResponse:
-      type: object
-      properties:
-        documentCount:
-          type: integer
-          description: Number of items
-          format: int64
-    CaseFilterConditionModel:
-      required:
-      - field
-      - operator
-      - value
-      type: object
-      properties:
-        field:
-          type: string
-          description: The field to use for the filter.<br />**Example:** `author`
-          example: author
-        operator:
-          type: string
-          description: The operator to use for the condition.<br />**Example:** `EQUALS`
-          example: EQUALS
-          enum:
-          - EQUALS
-          - NOT_EQUALS
-          - EQUALS, NOT_EQUALS
-        value:
-          type: string
-          description: The value to use for the filter.<br />**Example:** `John Smith`
-          example: John Smith
-      description: A custom case filter condition.
-    CaseClassificationValueCountResponse:
-      type: object
-      properties:
-        valueCount:
-          type: integer
-          description: Number of different field values
-          format: int32
-        areMoreValuesAvailable:
-          type: boolean
-          description: Indicates more field values available
-    ContentFieldsResponse:
-      type: object
-      properties:
-        query:
-          type: string
-          description: The query used to retrieve item information.
-          example: '@language="English" AND @documenttype=="SupportArticle"'
-        fields:
-          type: array
-          description: The list of non-empty fields for at least one item.
-          items:
-            $ref: '#/components/schemas/FieldCandidateModel'
   securitySchemes:
     oauth2:
       type: oauth2

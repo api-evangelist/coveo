@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Machine Learning Models API
+  title: Coveo Machine Learning Machine Learning Models API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -102,7 +102,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/Information To Update Model'
+                $ref: '#/components/schemas/Information_To_Update_Model'
       x-pretty-name: updateModelInformationById
       x-required-privilege:
         owner: COVEO_ML
@@ -191,7 +191,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/Registration Response'
+                $ref: '#/components/schemas/Registration_Response'
       x-pretty-name: register
       x-required-privilege:
         owner: COVEO_ML
@@ -289,7 +289,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/Model With Additional Information'
+                $ref: '#/components/schemas/Model_With_Additional_Information'
       x-pretty-name: getModelDetailsById
       x-required-privilege:
         owner: COVEO_ML
@@ -333,7 +333,7 @@ paths:
                 uniqueItems: true
                 type: array
                 items:
-                  $ref: '#/components/schemas/Model With Additional Information'
+                  $ref: '#/components/schemas/Model_With_Additional_Information'
       x-pretty-name: listModelsWithDetails
       x-required-privilege:
         owner: COVEO_ML
@@ -398,14 +398,132 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/machinelearning/engines/paramId/models/paramId_delete
 components:
   schemas:
-    ModelVersion:
+    Registration_Response:
+      required:
+      - engineId
+      - exportPeriod
+      - intervalTime
+      - intervalUnit
       type: object
       properties:
-        patchVersion:
+        commandLineParameters:
+          type: array
+          description: 'DEPRECATED: no longer supported as of Dec 2023'
+          readOnly: true
+          deprecated: true
+          items:
+            type: string
+            description: 'DEPRECATED: no longer supported as of Dec 2023'
+            readOnly: true
+            deprecated: true
+        commonFilter:
+          type: string
+          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
+          example: country=='United States'
+        customEventFilter:
+          type: string
+          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined with the AND operator
+          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
+        viewEventFilter:
+          type: string
+          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
+          example: viewContentType=@'product'
+        engineId:
+          type: string
+          description: The id of the engine
+          example: topclicks
+        exportOffset:
+          type: string
+          description: The offset period to apply to the export. An undefined `exportOffset` means that the `exportPeriod` is based on the moment when the model was generated. An `exportOffset` of `P1W` means that the `exportPeriod` is based on the moment one week before the model was generated. If specified, must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1W
+          deprecated: true
+        exportPeriod:
+          type: string
+          description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1D
+        intervalTime:
           type: integer
-          format: int64
-      description: The version of the model
-      example: 1.23.4567890
+          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
+          format: int32
+          example: 1
+        extraConfig:
+          type: object
+          description: A JSON object representing the additional configuration to pass to a model configuration
+          example:
+            someKey: value
+        intervalUnit:
+          type: string
+          description: The duration unit of the interval between each run of the job. See `intervalTime`
+          example: WEEK
+          enum:
+          - DAY
+          - WEEK
+          - MONTH
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Cloud V2 administration console
+          example: MyModelDisplayName
+        modelName:
+          type: string
+          description: The model name
+          example: remove_me_model_name
+        searchEventFilter:
+          type: string
+          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters are joined with the AND operator
+          example: (originLevel1=~'search' OR originLevel1=~'listings')
+        startTime:
+          type: string
+          description: A timestamp indicating when to begin the first job (in milliseconds since UNIX epoch format). If no start date is specified, the job starts immediately
+          format: date-time
+          readOnly: true
+          deprecated: true
+        versionMatcher:
+          $ref: '#/components/schemas/VersionExpression'
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        modelId:
+          type: string
+          description: The unique identifier of the target model
+          example: My_Model_ID
+        endTime:
+          type: string
+          description: The epoch date when the schedule will end. If there is no end date, the schedule will last forever.
+          format: date-time
+          readOnly: true
+          deprecated: true
+        platformVersion:
+          type: integer
+          format: int32
+          deprecated: true
+          enum:
+          - 1
+          - 2
+        orgId:
+          type: string
+          description: The unique identifier of the target Coveo Cloud organization
+          example: MyCoveoOrganization
+        resourceId:
+          type: string
+          deprecated: true
+    RegistrationId:
+      type: object
+      properties:
+        modelId:
+          type: string
     IdAndDisplayNameModel:
       type: object
       properties:
@@ -416,16 +534,287 @@ components:
       description: 'DEPRECATED: not supported as of Jan 2026'
       readOnly: true
       deprecated: true
-    EngineVersion:
-      type: object
-      description: The version of the engine
-      example: 1.23.4+build.567
-    RegistrationId:
+    ModelErrorDescription:
       type: object
       properties:
-        modelId:
+        customer_errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerError'
+    Registration:
+      required:
+      - engineId
+      - exportPeriod
+      - intervalTime
+      - intervalUnit
+      type: object
+      properties:
+        commandLineParameters:
+          type: array
+          description: 'DEPRECATED: no longer supported as of Dec 2023'
+          readOnly: true
+          deprecated: true
+          items:
+            type: string
+            description: 'DEPRECATED: no longer supported as of Dec 2023'
+            readOnly: true
+            deprecated: true
+        commonFilter:
           type: string
-    Model With Additional Information:
+          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
+          example: country=='United States'
+        customEventFilter:
+          type: string
+          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined with the AND operator
+          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
+        viewEventFilter:
+          type: string
+          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
+          example: viewContentType=@'product'
+        engineId:
+          type: string
+          description: The id of the engine
+          example: topclicks
+        exportOffset:
+          type: string
+          description: The offset period to apply to the export. An undefined `exportOffset` means that the `exportPeriod` is based on the moment when the model was generated. An `exportOffset` of `P1W` means that the `exportPeriod` is based on the moment one week before the model was generated. If specified, must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1W
+          deprecated: true
+        exportPeriod:
+          type: string
+          description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1D
+        intervalTime:
+          type: integer
+          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
+          format: int32
+          example: 1
+        extraConfig:
+          type: object
+          description: A JSON object representing the additional configuration to pass to a model configuration
+          example:
+            someKey: value
+        intervalUnit:
+          type: string
+          description: The duration unit of the interval between each run of the job. See `intervalTime`
+          example: WEEK
+          enum:
+          - DAY
+          - WEEK
+          - MONTH
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Cloud V2 administration console
+          example: MyModelDisplayName
+        modelName:
+          type: string
+          description: The model name
+          example: remove_me_model_name
+        searchEventFilter:
+          type: string
+          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters are joined with the AND operator
+          example: (originLevel1=~'search' OR originLevel1=~'listings')
+        startTime:
+          type: string
+          description: 'DEPRECATED: no longer supported as of March 2026'
+          format: date-time
+          readOnly: true
+          deprecated: true
+        versionMatcher:
+          $ref: '#/components/schemas/VersionExpression'
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+      description: The registration's information
+    ReadablePeriod:
+      type: object
+      properties:
+        periodType:
+          $ref: '#/components/schemas/PeriodType'
+    VersionExpression:
+      type: object
+      description: 'DEPRECATED: no longer supported as of Dec 2025'
+      readOnly: true
+      deprecated: true
+    OrgId:
+      type: object
+    Model:
+      required:
+      - engineId
+      - exportPeriod
+      - intervalTime
+      - intervalUnit
+      type: object
+      properties:
+        commandLineParameters:
+          type: array
+          description: 'DEPRECATED: no longer supported as of Dec 2023'
+          readOnly: true
+          deprecated: true
+          items:
+            type: string
+            description: 'DEPRECATED: no longer supported as of Dec 2023'
+            readOnly: true
+            deprecated: true
+        commonFilter:
+          type: string
+          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
+          example: country=='United States'
+        customEventFilter:
+          type: string
+          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined with the AND operator
+          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
+        viewEventFilter:
+          type: string
+          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
+          example: viewContentType=@'product'
+        engineId:
+          type: string
+          description: The id of the engine
+          example: topclicks
+        exportOffset:
+          type: string
+          description: The offset period to apply to the export. An undefined `exportOffset` means that the `exportPeriod` is based on the moment when the model was generated. An `exportOffset` of `P1W` means that the `exportPeriod` is based on the moment one week before the model was generated. If specified, must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1W
+          deprecated: true
+        exportPeriod:
+          type: string
+          description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+          example: P1D
+        intervalTime:
+          type: integer
+          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
+          format: int32
+          example: 1
+        extraConfig:
+          type: object
+          description: A JSON object representing the additional configuration to pass to a model configuration
+          example:
+            someKey: value
+        intervalUnit:
+          type: string
+          description: The duration unit of the interval between each run of the job. See `intervalTime`
+          example: WEEK
+          enum:
+          - DAY
+          - WEEK
+          - MONTH
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Cloud V2 administration console
+          example: MyModelDisplayName
+        modelName:
+          type: string
+          description: The model name
+          example: remove_me_model_name
+        searchEventFilter:
+          type: string
+          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters are joined with the AND operator
+          example: (originLevel1=~'search' OR originLevel1=~'listings')
+        startTime:
+          type: string
+          description: 'DEPRECATED: no longer supported as of March 2026'
+          format: date-time
+          readOnly: true
+          deprecated: true
+        versionMatcher:
+          $ref: '#/components/schemas/VersionExpression'
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          description: 'DEPRECATED: not supported as of Jan 2026'
+          readOnly: true
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        status:
+          type: string
+          enum:
+          - COMPLETED
+          - COMPLETED_DEGRADED
+          - SCHEDULED
+          - ERROR
+          - IN_PROGRESS
+          - ONLINE
+          - ONLINE_DEGRADED
+          - OFFLINE
+          - IN_QUEUE
+          - BUILDING
+          - FAILED
+          - IN_QUEUE_UPDATING
+          - IN_PROGRESS_UPDATING
+          - UPDATING
+          - UPDATE_FAILED
+        modelActivenessState:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - ARCHIVED
+          - ARCHIVED_PENDING_REBUILD
+        orgId:
+          $ref: '#/components/schemas/OrgId'
+        id:
+          type: string
+          description: The unique identifier of the target model
+          example: My_Model_ID
+        engineVersion:
+          $ref: '#/components/schemas/EngineVersion'
+        modelVersion:
+          $ref: '#/components/schemas/ModelVersion'
+        modelCreationTime:
+          type: string
+          description: The time when the model will be / was created
+          format: date-time
+        previousModelUpdateTime:
+          type: string
+          description: The moment when the model was last updated.
+          format: date-time
+        nextModelUpdateTime:
+          type: string
+          description: The next scheduled moment for starting the model update process.
+          format: date-time
+        platformVersion:
+          type: integer
+          format: int32
+          deprecated: true
+          enum:
+          - 1
+          - 2
+        registrationKey:
+          $ref: '#/components/schemas/RegistrationKey'
+        modelSizeStatistic:
+          type: integer
+          description: The model size statistic. Depending on the model type, this value represents the number of items or queries on which the model was built.
+          format: int32
+          example: 1
+        daysUntilArchival:
+          type: integer
+          format: int64
+        modelErrorDescription:
+          $ref: '#/components/schemas/ModelErrorDescription'
+    Model_With_Additional_Information:
       required:
       - engineId
       - exportPeriod
@@ -594,130 +983,93 @@ components:
             type: object
             description: Contains metadata and information about the model
           description: Contains metadata and information about the model
-    Registration Response:
-      required:
-      - engineId
-      - exportPeriod
-      - intervalTime
-      - intervalUnit
+    RegistrationKey:
       type: object
       properties:
-        commandLineParameters:
-          type: array
-          description: 'DEPRECATED: no longer supported as of Dec 2023'
-          readOnly: true
-          deprecated: true
-          items:
-            type: string
-            description: 'DEPRECATED: no longer supported as of Dec 2023'
-            readOnly: true
-            deprecated: true
-        commonFilter:
-          type: string
-          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
-          example: country=='United States'
-        customEventFilter:
-          type: string
-          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined with the AND operator
-          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
-        viewEventFilter:
-          type: string
-          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
-          example: viewContentType=@'product'
         engineId:
-          type: string
-          description: The id of the engine
-          example: topclicks
-        exportOffset:
-          type: string
-          description: The offset period to apply to the export. An undefined `exportOffset` means that the `exportPeriod` is based on the moment when the model was generated. An `exportOffset` of `P1W` means that the `exportPeriod` is based on the moment one week before the model was generated. If specified, must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
-          example: P1W
-          deprecated: true
-        exportPeriod:
-          type: string
-          description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
-          example: P1D
-        intervalTime:
-          type: integer
-          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
-          format: int32
-          example: 1
-        extraConfig:
-          type: object
-          description: A JSON object representing the additional configuration to pass to a model configuration
-          example:
-            someKey: value
-        intervalUnit:
-          type: string
-          description: The duration unit of the interval between each run of the job. See `intervalTime`
-          example: WEEK
-          enum:
-          - DAY
-          - WEEK
-          - MONTH
-        modelDisplayName:
-          type: string
-          description: The model display name in the Coveo Cloud V2 administration console
-          example: MyModelDisplayName
-        modelName:
-          type: string
-          description: The model name
-          example: remove_me_model_name
-        searchEventFilter:
-          type: string
-          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters are joined with the AND operator
-          example: (originLevel1=~'search' OR originLevel1=~'listings')
-        startTime:
-          type: string
-          description: A timestamp indicating when to begin the first job (in milliseconds since UNIX epoch format). If no start date is specified, the job starts immediately
-          format: date-time
-          readOnly: true
-          deprecated: true
-        versionMatcher:
-          $ref: '#/components/schemas/VersionExpression'
-        groupsThatCanEdit:
-          uniqueItems: true
-          type: array
-          description: 'DEPRECATED: not supported as of Jan 2026'
-          readOnly: true
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        apiKeysThatCanEdit:
-          uniqueItems: true
-          type: array
-          description: 'DEPRECATED: not supported as of Jan 2026'
-          readOnly: true
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        modelId:
-          type: string
-          description: The unique identifier of the target model
-          example: My_Model_ID
-        endTime:
-          type: string
-          description: The epoch date when the schedule will end. If there is no end date, the schedule will last forever.
-          format: date-time
-          readOnly: true
-          deprecated: true
-        platformVersion:
-          type: integer
-          format: int32
-          deprecated: true
-          enum:
-          - 1
-          - 2
+          $ref: '#/components/schemas/EngineId'
         orgId:
+          $ref: '#/components/schemas/OrgId'
+        modelName:
+          $ref: '#/components/schemas/ModelName'
+        key:
           type: string
-          description: The unique identifier of the target Coveo Cloud organization
-          example: MyCoveoOrganization
-        resourceId:
-          type: string
-          deprecated: true
-    OrgId:
+        id:
+          $ref: '#/components/schemas/RegistrationId'
+    EngineId:
       type: object
-    Information To Update Model:
+    ModelName:
+      type: object
+    Period:
+      type: object
+      properties:
+        weeks:
+          type: integer
+          format: int32
+        months:
+          type: integer
+          format: int32
+        seconds:
+          type: integer
+          format: int32
+        days:
+          type: integer
+          format: int32
+        years:
+          type: integer
+          format: int32
+        hours:
+          type: integer
+          format: int32
+        minutes:
+          type: integer
+          format: int32
+        millis:
+          type: integer
+          format: int32
+        periodType:
+          $ref: '#/components/schemas/PeriodType'
+        values:
+          type: array
+          items:
+            type: integer
+            format: int32
+        periodInternal:
+          $ref: '#/components/schemas/ReadablePeriod'
+        period:
+          $ref: '#/components/schemas/ReadablePeriod'
+        fieldTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DurationFieldType'
+      description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
+      example: P1D
+    CustomerError:
+      type: object
+      properties:
+        precision:
+          type: string
+        description:
+          type: string
+        troubleshoot:
+          type: string
+        errorCode:
+          type: string
+        errorType:
+          type: string
+    ModelVersion:
+      type: object
+      properties:
+        patchVersion:
+          type: integer
+          format: int64
+      description: The version of the model
+      example: 1.23.4567890
+    EngineVersion:
+      type: object
+      description: The version of the engine
+      example: 1.23.4+build.567
+    Information_To_Update_Model:
       required:
       - exportPeriod
       - intervalTime
@@ -790,131 +1142,6 @@ components:
           deprecated: true
         versionMatcher:
           $ref: '#/components/schemas/VersionExpression'
-    VersionExpression:
-      type: object
-      description: 'DEPRECATED: no longer supported as of Dec 2025'
-      readOnly: true
-      deprecated: true
-    ModelErrorDescription:
-      type: object
-      properties:
-        customer_errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomerError'
-    ModelName:
-      type: object
-    CustomerError:
-      type: object
-      properties:
-        precision:
-          type: string
-        description:
-          type: string
-        troubleshoot:
-          type: string
-        errorCode:
-          type: string
-        errorType:
-          type: string
-    Registration:
-      required:
-      - engineId
-      - exportPeriod
-      - intervalTime
-      - intervalUnit
-      type: object
-      properties:
-        commandLineParameters:
-          type: array
-          description: 'DEPRECATED: no longer supported as of Dec 2023'
-          readOnly: true
-          deprecated: true
-          items:
-            type: string
-            description: 'DEPRECATED: no longer supported as of Dec 2023'
-            readOnly: true
-            deprecated: true
-        commonFilter:
-          type: string
-          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
-          example: country=='United States'
-        customEventFilter:
-          type: string
-          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined with the AND operator
-          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
-        viewEventFilter:
-          type: string
-          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
-          example: viewContentType=@'product'
-        engineId:
-          type: string
-          description: The id of the engine
-          example: topclicks
-        exportOffset:
-          type: string
-          description: The offset period to apply to the export. An undefined `exportOffset` means that the `exportPeriod` is based on the moment when the model was generated. An `exportOffset` of `P1W` means that the `exportPeriod` is based on the moment one week before the model was generated. If specified, must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
-          example: P1W
-          deprecated: true
-        exportPeriod:
-          type: string
-          description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
-          example: P1D
-        intervalTime:
-          type: integer
-          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
-          format: int32
-          example: 1
-        extraConfig:
-          type: object
-          description: A JSON object representing the additional configuration to pass to a model configuration
-          example:
-            someKey: value
-        intervalUnit:
-          type: string
-          description: The duration unit of the interval between each run of the job. See `intervalTime`
-          example: WEEK
-          enum:
-          - DAY
-          - WEEK
-          - MONTH
-        modelDisplayName:
-          type: string
-          description: The model display name in the Coveo Cloud V2 administration console
-          example: MyModelDisplayName
-        modelName:
-          type: string
-          description: The model name
-          example: remove_me_model_name
-        searchEventFilter:
-          type: string
-          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters are joined with the AND operator
-          example: (originLevel1=~'search' OR originLevel1=~'listings')
-        startTime:
-          type: string
-          description: 'DEPRECATED: no longer supported as of March 2026'
-          format: date-time
-          readOnly: true
-          deprecated: true
-        versionMatcher:
-          $ref: '#/components/schemas/VersionExpression'
-        groupsThatCanEdit:
-          uniqueItems: true
-          type: array
-          description: 'DEPRECATED: not supported as of Jan 2026'
-          readOnly: true
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        apiKeysThatCanEdit:
-          uniqueItems: true
-          type: array
-          description: 'DEPRECATED: not supported as of Jan 2026'
-          readOnly: true
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-      description: The registration's information
     PeriodType:
       type: object
       properties:
@@ -925,233 +1152,6 @@ components:
       properties:
         name:
           type: string
-    RegistrationKey:
-      type: object
-      properties:
-        engineId:
-          $ref: '#/components/schemas/EngineId'
-        orgId:
-          $ref: '#/components/schemas/OrgId'
-        modelName:
-          $ref: '#/components/schemas/ModelName'
-        key:
-          type: string
-        id:
-          $ref: '#/components/schemas/RegistrationId'
-    ReadablePeriod:
-      type: object
-      properties:
-        periodType:
-          $ref: '#/components/schemas/PeriodType'
-    EngineId:
-      type: object
-    Model:
-      required:
-      - engineId
-      - exportPeriod
-      - intervalTime
-      - intervalUnit
-      type: object
-      properties:
-        commandLineParameters:
-          type: array
-          description: 'DEPRECATED: no longer supported as of Dec 2023'
-          readOnly: true
-          deprecated: true
-          items:
-            type: string
-            description: 'DEPRECATED: no longer supported as of Dec 2023'
-            readOnly: true
-            deprecated: true
-        commonFilter:
-          type: string
-          description: The filter to apply to the common event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
-          example: country=='United States'
-        customEventFilter:
-          type: string
-          description: The filter to apply to the custom event dimensions in the export. Multiple filter parameters are joined with the AND operator
-          example: (customEventValue=='submitButton') AND (customEventType=='caseCreation')
-        viewEventFilter:
-          type: string
-          description: The filter to apply to the view event dimensions (shared by all event types) in the export. Multiple filter parameters are joined with the AND operator
-          example: viewContentType=@'product'
-        engineId:
-          type: string
-          description: The id of the engine
-          example: topclicks
-        exportOffset:
-          type: string
-          description: The offset period to apply to the export. An undefined `exportOffset` means that the `exportPeriod` is based on the moment when the model was generated. An `exportOffset` of `P1W` means that the `exportPeriod` is based on the moment one week before the model was generated. If specified, must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
-          example: P1W
-          deprecated: true
-        exportPeriod:
-          type: string
-          description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
-          example: P1D
-        intervalTime:
-          type: integer
-          description: The number of `intervalUnit` between each run of the job, should be greater than or equal to 1
-          format: int32
-          example: 1
-        extraConfig:
-          type: object
-          description: A JSON object representing the additional configuration to pass to a model configuration
-          example:
-            someKey: value
-        intervalUnit:
-          type: string
-          description: The duration unit of the interval between each run of the job. See `intervalTime`
-          example: WEEK
-          enum:
-          - DAY
-          - WEEK
-          - MONTH
-        modelDisplayName:
-          type: string
-          description: The model display name in the Coveo Cloud V2 administration console
-          example: MyModelDisplayName
-        modelName:
-          type: string
-          description: The model name
-          example: remove_me_model_name
-        searchEventFilter:
-          type: string
-          description: The filter to apply to the click and search event dimensions in the export. Multiple filter parameters are joined with the AND operator
-          example: (originLevel1=~'search' OR originLevel1=~'listings')
-        startTime:
-          type: string
-          description: 'DEPRECATED: no longer supported as of March 2026'
-          format: date-time
-          readOnly: true
-          deprecated: true
-        versionMatcher:
-          $ref: '#/components/schemas/VersionExpression'
-        groupsThatCanEdit:
-          uniqueItems: true
-          type: array
-          description: 'DEPRECATED: not supported as of Jan 2026'
-          readOnly: true
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        apiKeysThatCanEdit:
-          uniqueItems: true
-          type: array
-          description: 'DEPRECATED: not supported as of Jan 2026'
-          readOnly: true
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        status:
-          type: string
-          enum:
-          - COMPLETED
-          - COMPLETED_DEGRADED
-          - SCHEDULED
-          - ERROR
-          - IN_PROGRESS
-          - ONLINE
-          - ONLINE_DEGRADED
-          - OFFLINE
-          - IN_QUEUE
-          - BUILDING
-          - FAILED
-          - IN_QUEUE_UPDATING
-          - IN_PROGRESS_UPDATING
-          - UPDATING
-          - UPDATE_FAILED
-        modelActivenessState:
-          type: string
-          enum:
-          - ACTIVE
-          - INACTIVE
-          - ARCHIVED
-          - ARCHIVED_PENDING_REBUILD
-        orgId:
-          $ref: '#/components/schemas/OrgId'
-        id:
-          type: string
-          description: The unique identifier of the target model
-          example: My_Model_ID
-        engineVersion:
-          $ref: '#/components/schemas/EngineVersion'
-        modelVersion:
-          $ref: '#/components/schemas/ModelVersion'
-        modelCreationTime:
-          type: string
-          description: The time when the model will be / was created
-          format: date-time
-        previousModelUpdateTime:
-          type: string
-          description: The moment when the model was last updated.
-          format: date-time
-        nextModelUpdateTime:
-          type: string
-          description: The next scheduled moment for starting the model update process.
-          format: date-time
-        platformVersion:
-          type: integer
-          format: int32
-          deprecated: true
-          enum:
-          - 1
-          - 2
-        registrationKey:
-          $ref: '#/components/schemas/RegistrationKey'
-        modelSizeStatistic:
-          type: integer
-          description: The model size statistic. Depending on the model type, this value represents the number of items or queries on which the model was built.
-          format: int32
-          example: 1
-        daysUntilArchival:
-          type: integer
-          format: int64
-        modelErrorDescription:
-          $ref: '#/components/schemas/ModelErrorDescription'
-    Period:
-      type: object
-      properties:
-        weeks:
-          type: integer
-          format: int32
-        months:
-          type: integer
-          format: int32
-        seconds:
-          type: integer
-          format: int32
-        days:
-          type: integer
-          format: int32
-        years:
-          type: integer
-          format: int32
-        hours:
-          type: integer
-          format: int32
-        minutes:
-          type: integer
-          format: int32
-        millis:
-          type: integer
-          format: int32
-        periodType:
-          $ref: '#/components/schemas/PeriodType'
-        values:
-          type: array
-          items:
-            type: integer
-            format: int32
-        periodInternal:
-          $ref: '#/components/schemas/ReadablePeriod'
-        period:
-          $ref: '#/components/schemas/ReadablePeriod'
-        fieldTypes:
-          type: array
-          items:
-            $ref: '#/components/schemas/DurationFieldType'
-      description: The period to export data from. Unless an `exportOffset` is specified, the `exportPeriod` uses the moment when the model was generated as a base. Must be in the ISO8601 period format (i.e., `PyYmMwWdDThHmMsS`)
-      example: P1D
   securitySchemes:
     oauth2:
       type: oauth2

@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Users API
+  title: Coveo Authorization Server Users API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -89,6 +89,29 @@ paths:
       x-ui-operation-id: /rest/users/paramId/realms_get
 components:
   schemas:
+    RealmModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: The realm to add.
     UserRealmModel:
       type: object
       properties:
@@ -106,17 +129,20 @@ components:
           type: string
           description: The username of the user.</br>**Example:** `jsmith@email.com-google`
         name:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The full name of the user.</br>**Example:** `John Smith`
-          nullable: true
         firstName:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The first name of the user.</br>**Example:** `John`
-          nullable: true
         lastName:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The last name of the user.</br>**Example:** `Smith`
-          nullable: true
         email:
           type: string
           description: The email address of the user.</br>**Example:**`jsmith@email.com`
@@ -402,16 +428,18 @@ components:
           - ZR
           - ZW
         providerUsername:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The username of the user for the corresponding provider.</br>**Example:** `jsmith@email.com`
-          nullable: true
         providerUserId:
           type: string
           description: The unique identifier of the user for the provider.</br>**Example:** `office365`
         provider:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The provider of the user.
-          nullable: true
           enum:
           - SALESFORCE
           - SALESFORCE_SANDBOX
@@ -420,9 +448,10 @@ components:
           - SAML
           - EMAIL
         samlIdentityProviderId:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The unique identifier of the SAML identity provider the user is a part of.</br>**Example:** `myprovider`
-          nullable: true
         realms:
           type: array
           description: The realms the user is a part of.
@@ -456,34 +485,12 @@ components:
             description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen": "v2.5652.11"}`</br>*Default:* `{}`'
           description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen": "v2.5652.11"}`</br>*Default:* `{}`'
         lastUsedDate:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The last day the user has logged in into the platform
           format: date-time
-          nullable: true
       description: A user.
-    RealmModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
-        provider:
-          type: string
-          description: The provider of the realm.
-          enum:
-          - SALESFORCE
-          - SALESFORCE_SANDBOX
-          - GOOGLE
-          - OFFICE365
-          - SAML
-          - EMAIL
-        displayName:
-          type: string
-          description: The display name of the realm.</br>**Example:** `example.com`
-        samlIdentityProviderId:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `myprovider`
-      description: The realm to add.
   securitySchemes:
     oauth2:
       type: oauth2

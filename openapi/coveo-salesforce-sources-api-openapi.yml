@@ -1,18 +1,19 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Salesforce Sources API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+  title: Coveo Schema Service Salesforce Sources API
   version: 1.0.0
+  description: Documentation for Coveo Schema Service
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: ''
+    url: ''
+    email: support@coveo.com
+  license:
+    name: ''
+    url: ''
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Salesforce Sources
 paths:
@@ -28,169 +29,173 @@ paths:
         description: 'The preset name of default objects to get (Value: "B2BProduct")'
         required: false
         in: query
-        type: string
+        schema:
+          type: string
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/SalesforceObjectToGet'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesforceObjectToGet'
       security:
       - oauth2:
         - full
 components:
+  schemas:
+    SalesforceParentRelationships:
+      type: object
+      properties:
+        relationshipName:
+          description: The parent relationship name
+          type: string
+        fields:
+          description: The parent object fields to be indexed
+          type: array
+          items:
+            type: string
+      required:
+      - relationshipName
+      - fields
+    SalesforceChildRelationships:
+      type: object
+      properties:
+        name:
+          description: The child relationship name
+          type: string
+        fields:
+          description: The child object fields to be indexed
+          type: array
+          items:
+            type: string
+        parentRelationships:
+          description: The fields from a parent objects that have a parent relationship with this object.
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceParentRelationships'
+      required:
+      - name
+      - fields
+    GenericField:
+      type: object
+      properties:
+        facet:
+          description: Whether Group By operations and Facet requests can be performed on the field.
+          type: boolean
+        multiValueFacet:
+          description: Whether the field contains multiple values (see also the multiValueFacetTokenizers property).
+          type: boolean
+        name:
+          description: The name of the field, also referred to as the field identifier, or fieldId.
+          type: string
+        sort:
+          description: Whether query results can be sorted based on the value of the field.
+          type: boolean
+        type:
+          description: WThe data type of the field. ("LONG", "LONG_64", "DOUBLE", "DATE" or "STRING")
+          type: string
+      required:
+      - name
+      - type
+    GenericMapping:
+      type: object
+      properties:
+        kind:
+          description: The kind of the relationship.
+          type: string
+        fieldName:
+          description: The new field name.
+          type: string
+        extractionMethod:
+          description: The way to extract the information.
+          type: string
+        content:
+          description: The content of the new field.
+          type: string
+        type:
+          description: The specific type that this mapping apply to.
+          type: string
+      required:
+      - kind
+      - fieldName
+      - extractionMethod
+      - content
+    SalesforceObjectToGet:
+      type: object
+      properties:
+        objects:
+          description: The collection of objects to get
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericObject'
+        mappings:
+          description: The collection of objects to get
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericMapping'
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericField'
+    SalesforcePolymorphicRelationships:
+      type: object
+      properties:
+        name:
+          description: The child relationship name
+          type: string
+        objectName:
+          description: The object name to match
+          type: string
+        fields:
+          description: The object fields to be indexed
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - objectName
+      - fields
+    GenericObject:
+      type: object
+      properties:
+        ObjectName:
+          description: The object name
+          type: string
+        Fields:
+          description: The object fields to be indexed
+          type: array
+          items:
+            type: string
+        ParentRelationships:
+          description: The fields from a parent objects that have a parent relationship with this object.
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceParentRelationships'
+        childRelationships:
+          description: The fields from a child objects that have a child relationship with this object.
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceChildRelationships'
+        polymorphicRelationships:
+          description: The fields from an objects that have a Polymorphic relationship with this object.
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforcePolymorphicRelationships'
+      required:
+      - ObjectName
+      - Fields
   securitySchemes:
     oauth2:
       type: oauth2
       flows:
-        authorizationCode:
-          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+        implicit:
           scopes:
-            full: required
-definitions:
-  SalesforceObjectToGet:
-    type: object
-    properties:
-      objects:
-        description: The collection of objects to get
-        type: array
-        items:
-          $ref: '#/definitions/GenericObject'
-      mappings:
-        description: The collection of objects to get
-        type: array
-        items:
-          $ref: '#/definitions/GenericMapping'
-      fields:
-        type: array
-        items:
-          $ref: '#/definitions/GenericField'
-  SalesforceChildRelationships:
-    type: object
-    properties:
-      name:
-        description: The child relationship name
-        type: string
-      fields:
-        description: The child object fields to be indexed
-        type: array
-        items:
-          type: string
-      parentRelationships:
-        description: The fields from a parent objects that have a parent relationship with this object.
-        type: array
-        items:
-          $ref: '#/definitions/SalesforceParentRelationships'
-    required:
-    - name
-    - fields
-  GenericMapping:
-    type: object
-    properties:
-      kind:
-        description: The kind of the relationship.
-        type: string
-      fieldName:
-        description: The new field name.
-        type: string
-      extractionMethod:
-        description: The way to extract the information.
-        type: string
-      content:
-        description: The content of the new field.
-        type: string
-      type:
-        description: The specific type that this mapping apply to.
-        type: string
-    required:
-    - kind
-    - fieldName
-    - extractionMethod
-    - content
-  GenericObject:
-    type: object
-    properties:
-      ObjectName:
-        description: The object name
-        type: string
-      Fields:
-        description: The object fields to be indexed
-        type: array
-        items:
-          type: string
-      ParentRelationships:
-        description: The fields from a parent objects that have a parent relationship with this object.
-        type: array
-        items:
-          $ref: '#/definitions/SalesforceParentRelationships'
-      childRelationships:
-        description: The fields from a child objects that have a child relationship with this object.
-        type: array
-        items:
-          $ref: '#/definitions/SalesforceChildRelationships'
-      polymorphicRelationships:
-        description: The fields from an objects that have a Polymorphic relationship with this object.
-        type: array
-        items:
-          $ref: '#/definitions/SalesforcePolymorphicRelationships'
-    required:
-    - ObjectName
-    - Fields
-  SalesforceParentRelationships:
-    type: object
-    properties:
-      relationshipName:
-        description: The parent relationship name
-        type: string
-      fields:
-        description: The parent object fields to be indexed
-        type: array
-        items:
-          type: string
-    required:
-    - relationshipName
-    - fields
-  GenericField:
-    type: object
-    properties:
-      facet:
-        description: Whether Group By operations and Facet requests can be performed on the field.
-        type: boolean
-      multiValueFacet:
-        description: Whether the field contains multiple values (see also the multiValueFacetTokenizers property).
-        type: boolean
-      name:
-        description: The name of the field, also referred to as the field identifier, or fieldId.
-        type: string
-      sort:
-        description: Whether query results can be sorted based on the value of the field.
-        type: boolean
-      type:
-        description: WThe data type of the field. ("LONG", "LONG_64", "DOUBLE", "DATE" or "STRING")
-        type: string
-    required:
-    - name
-    - type
-  SalesforcePolymorphicRelationships:
-    type: object
-    properties:
-      name:
-        description: The child relationship name
-        type: string
-      objectName:
-        description: The object name to match
-        type: string
-      fields:
-        description: The object fields to be indexed
-        type: array
-        items:
-          type: string
-    required:
-    - name
-    - objectName
-    - fields
+            full: full
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+      description: OAuth2

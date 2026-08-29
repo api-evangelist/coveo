@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Vault API
+  title: Coveo Migration Vault API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -390,6 +390,14 @@ components:
           - UNKNOWN
         id:
           type: string
+    SnapshotVaultEntryState:
+      type: object
+      properties:
+        missingVaultEntries:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
     PageModelVaultEntryModel:
       type: object
       properties:
@@ -403,48 +411,6 @@ components:
         totalPages:
           type: integer
           format: int32
-    VaultEntryModel:
-      type: object
-      properties:
-        organizationId:
-          type: string
-        key:
-          type: string
-        value:
-          type: string
-        valueType:
-          type: string
-          enum:
-          - BOOLEAN
-          - FLOAT
-          - INTEGER
-          - STRING
-        vaultVisibilityType:
-          type: string
-          enum:
-          - PUBLIC
-          - OBFUSCATED
-          - STRICT
-        attributeReferences:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/AttributeReferenceModel'
-        scopes:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/ScopeModel'
-        public:
-          type: boolean
-    SnapshotVaultEntryState:
-      type: object
-      properties:
-        missingVaultEntries:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
     AttributeReferenceModel:
       type: object
       properties:
@@ -484,6 +450,40 @@ components:
           - TRACKING_ID
           - TRIGGER
           - UNKNOWN
+    VaultEntryModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        key:
+          type: string
+        value:
+          type: string
+        valueType:
+          type: string
+          enum:
+          - BOOLEAN
+          - FLOAT
+          - INTEGER
+          - STRING
+        vaultVisibilityType:
+          type: string
+          enum:
+          - PUBLIC
+          - OBFUSCATED
+          - STRICT
+        attributeReferences:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeReferenceModel'
+        scopes:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/ScopeModel'
+        public:
+          type: boolean
   securitySchemes:
     oauth2:
       type: oauth2

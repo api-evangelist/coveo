@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Model Associations API
+  title: Coveo Machine Learning Configuration Model Associations API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -81,6 +81,46 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/querypipelines/paramId/associations_get
 components:
   schemas:
+    ModelStatusInfoModel:
+      type: object
+      properties:
+        modelStatus:
+          type: string
+          description: The status of the model.
+          example: ACTIVE
+          enum:
+          - ARCHIVED
+          - SOON_TO_BE_ARCHIVED
+          - BUILD_IN_PROGRESS
+          - ERROR
+          - ERROR_INTERNAL
+          - LIMITED
+          - ACTIVE
+          - INACTIVE
+        daysUntilArchival:
+          type: integer
+          description: The remaining days until the model is archived.
+          format: int64
+          example: 2
+        activeModelBuildDate:
+          type: string
+          description: The epoch timestamp, in milliseconds, of when the active model was built. This field is empty if there are no active models.
+          format: date-time
+        lastBuildStatus:
+          type: string
+          description: The status of the model.
+          example: ACTIVE
+          enum:
+          - ARCHIVED
+          - SOON_TO_BE_ARCHIVED
+          - BUILD_IN_PROGRESS
+          - ERROR
+          - ERROR_INTERNAL
+          - LIMITED
+          - ACTIVE
+          - INACTIVE
+      description: The current status of the model..
+      example: "{\n \"modelStatus\": \"BUILDING\",\n \"daysUntilArchival\" : 3\n }"
     QueryPipelineMLAssociationModel:
       type: object
       properties:
@@ -123,59 +163,6 @@ components:
           description: The additional parameters to send to Coveo ML.
           example:
             submodel: user
-    PageModelQueryPipelineMLAssociationModel:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueryPipelineMLAssociationModel'
-        totalEntries:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-    ModelStatusInfoModel:
-      type: object
-      properties:
-        modelStatus:
-          type: string
-          description: The status of the model.
-          example: ACTIVE
-          enum:
-          - ARCHIVED
-          - SOON_TO_BE_ARCHIVED
-          - BUILD_IN_PROGRESS
-          - ERROR
-          - ERROR_INTERNAL
-          - LIMITED
-          - ACTIVE
-          - INACTIVE
-        daysUntilArchival:
-          type: integer
-          description: The remaining days until the model is archived.
-          format: int64
-          example: 2
-        activeModelBuildDate:
-          type: string
-          description: The epoch timestamp, in milliseconds, of when the active model was built. This field is empty if there are no active models.
-          format: date-time
-        lastBuildStatus:
-          type: string
-          description: The status of the model.
-          example: ACTIVE
-          enum:
-          - ARCHIVED
-          - SOON_TO_BE_ARCHIVED
-          - BUILD_IN_PROGRESS
-          - ERROR
-          - ERROR_INTERNAL
-          - LIMITED
-          - ACTIVE
-          - INACTIVE
-      description: The current status of the model..
-      example: "{\n \"modelStatus\": \"BUILDING\",\n \"daysUntilArchival\" : 3\n }"
     QueryPipelineConditionModel:
       type: object
       properties:
@@ -194,6 +181,19 @@ components:
             left:
               object: advancedQuery
             right: a
+    PageModelQueryPipelineMLAssociationModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueryPipelineMLAssociationModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
   securitySchemes:
     oauth2:
       type: oauth2

@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Salesforce Source Configuration API
+  title: Coveo Source Salesforce Source Configuration API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -701,6 +701,89 @@ paths:
       x-ui-operation-id: /rest/sourceconfiguration/salesforce/objects/paramId/paramId_get
 components:
   schemas:
+    SalesforceObject:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - SERVICE_CLOUD
+          - CHATTER
+          - CONTENT
+          - KNOWLEDGEBASE
+          - CUSTOM
+        name:
+          type: string
+        label:
+          type: string
+        indexed:
+          type: boolean
+        filesIndexed:
+          type: boolean
+        canHaveFiles:
+          type: boolean
+        custom:
+          type: boolean
+        hasCustomFiletype:
+          type: boolean
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceField'
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceRelationship'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceCondition'
+        searchable:
+          type: boolean
+        categories:
+          type: array
+          items:
+            type: string
+            enum:
+            - SERVICE_CLOUD
+            - EXPERIENCE_CLOUD
+            - KNOWLEDGE
+            - CUSTOM_OBJECT
+            - STANDARD
+            - CHATTER
+    MappingModel:
+      type: object
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+          deprecated: true
+          enum:
+          - COMMON
+          - MAPPING
+        type:
+          type: string
+        fieldName:
+          type: string
+        extractionMethod:
+          type: string
+        content:
+          type: string
+          deprecated: true
+        rules:
+          type: array
+          items:
+            type: string
+        fieldTypeHint:
+          type: string
+          enum:
+          - LONG
+          - LONG_64
+          - DOUBLE
+          - DATE
+          - STRING
+          - VECTOR
     SalesforceField:
       type: object
       properties:
@@ -765,39 +848,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SalesforceInConditionValue'
-    MappingModel:
-      type: object
-      properties:
-        id:
-          type: string
-        kind:
-          type: string
-          deprecated: true
-          enum:
-          - COMMON
-          - MAPPING
-        type:
-          type: string
-        fieldName:
-          type: string
-        extractionMethod:
-          type: string
-        content:
-          type: string
-          deprecated: true
-        rules:
-          type: array
-          items:
-            type: string
-        fieldTypeHint:
-          type: string
-          enum:
-          - LONG
-          - LONG_64
-          - DOUBLE
-          - DATE
-          - STRING
-          - VECTOR
     SalesforceInConditionValue:
       type: object
       properties:
@@ -838,56 +888,6 @@ components:
             $ref: '#/components/schemas/SalesforceCondition'
         createRecord:
           type: boolean
-    SalesforceObject:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - SERVICE_CLOUD
-          - CHATTER
-          - CONTENT
-          - KNOWLEDGEBASE
-          - CUSTOM
-        name:
-          type: string
-        label:
-          type: string
-        indexed:
-          type: boolean
-        filesIndexed:
-          type: boolean
-        canHaveFiles:
-          type: boolean
-        custom:
-          type: boolean
-        hasCustomFiletype:
-          type: boolean
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceField'
-        relationships:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceRelationship'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceCondition'
-        searchable:
-          type: boolean
-        categories:
-          type: array
-          items:
-            type: string
-            enum:
-            - SERVICE_CLOUD
-            - EXPERIENCE_CLOUD
-            - KNOWLEDGE
-            - CUSTOM_OBJECT
-            - STANDARD
-            - CHATTER
   securitySchemes:
     oauth2:
       type: oauth2

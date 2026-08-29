@@ -1,17 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Statistics API - Version 14 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+  title: Usage Analytics Read Statistics API - Version 14 API
+  version: '1.0'
 servers:
-- url: https://platform.cloud.coveo.com
+- url: https://analytics.cloud.coveo.com/rest/ua
   description: Coveo public API endpoint
 security:
-- oauth2:
+- v8:
   - full
 tags:
 - name: Statistics API - Version 14
@@ -570,52 +565,23 @@ paths:
       deprecated: true
 components:
   schemas:
-    SummaryStatisticsPojo:
-      type: object
-      properties: {}
-      description: The sum, average, max and min for the requested metrics.
-    EventPojo:
-      type: object
-      properties: {}
-      description: The visit's events
-    GraphAggregatedDataResponseV14:
+    DataPoint:
       required:
-      - dataPoints
-      - totals
+      - datas
+      - dateTime
       type: object
       properties:
-        dataPoints:
-          type: array
-          description: A collection of data points
-          items:
-            $ref: '#/components/schemas/DataPoint'
-        totals:
+        dateTime:
+          type: string
+          description: The moment in time that this point represents
+          format: date-time
+        datas:
           type: object
           additionalProperties:
             type: number
-            description: The totals for the requested metrics.
-          description: The totals for the requested metrics.
-        stats:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/SummaryStatisticsPojo'
-          description: The sum, average, max and min for the requested metrics.
-      description: The data points to be used in a graph, aggregated by the specified time interval.
-    VisitsStatisticsResponseV14:
-      required:
-      - visits
-      type: object
-      properties:
-        visits:
-          type: array
-          description: The visits matching the specified criteria
-          items:
-            $ref: '#/components/schemas/VisitStatisticsResponseV15'
-        totalNumberOfVisits:
-          type: integer
-          description: The total number of visits matching
-          format: int32
-      description: The visits matching the specified criteria
+            description: The metric values
+          description: The metric values
+      description: A collection of data points
     VisitStatisticsResponseV15:
       required:
       - visitId
@@ -649,9 +615,37 @@ components:
             description: The global values by metrics. Usually a unique count, a daily count or daily average
           description: The global values by metrics. Usually a unique count, a daily count or daily average
       description: The global aggregated values by metrics
-    StatusResponse:
+    GraphAggregatedDataResponseV14:
+      required:
+      - dataPoints
+      - totals
       type: object
-      description: Service's status information
+      properties:
+        dataPoints:
+          type: array
+          description: A collection of data points
+          items:
+            $ref: '#/components/schemas/DataPoint'
+        totals:
+          type: object
+          additionalProperties:
+            type: number
+            description: The totals for the requested metrics.
+          description: The totals for the requested metrics.
+        stats:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SummaryStatisticsPojo'
+          description: The sum, average, max and min for the requested metrics.
+      description: The data points to be used in a graph, aggregated by the specified time interval.
+    SummaryStatisticsPojo:
+      type: object
+      properties: {}
+      description: The sum, average, max and min for the requested metrics.
+    EventPojo:
+      type: object
+      properties: {}
+      description: The visit's events
     CombinedDataResponseV14:
       required:
       - combinations
@@ -677,29 +671,29 @@ components:
           description: The total number of combinations available
           format: int32
       description: The values of the metrics combined by dimensions
-    DataPoint:
+    VisitsStatisticsResponseV14:
       required:
-      - datas
-      - dateTime
+      - visits
       type: object
       properties:
-        dateTime:
-          type: string
-          description: The moment in time that this point represents
-          format: date-time
-        datas:
-          type: object
-          additionalProperties:
-            type: number
-            description: The metric values
-          description: The metric values
-      description: A collection of data points
+        visits:
+          type: array
+          description: The visits matching the specified criteria
+          items:
+            $ref: '#/components/schemas/VisitStatisticsResponseV15'
+        totalNumberOfVisits:
+          type: integer
+          description: The total number of visits matching
+          format: int32
+      description: The visits matching the specified criteria
+    StatusResponse:
+      type: object
+      description: Service's status information
   securitySchemes:
-    oauth2:
+    v8:
       type: oauth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: ''

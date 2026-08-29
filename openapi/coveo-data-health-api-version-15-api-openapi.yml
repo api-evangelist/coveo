@@ -1,17 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Data Health API - Version 15 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+  title: Usage Analytics Read Data Health API - Version 15 API
+  version: '1.0'
 servers:
-- url: https://platform.cloud.coveo.com
+- url: https://analytics.cloud.coveo.com/rest/ua
   description: Coveo public API endpoint
 security:
-- oauth2:
+- v8:
   - full
 tags:
 - name: Data Health API - Version 15
@@ -571,25 +566,39 @@ paths:
                 $ref: '#/components/schemas/ListFacetValuesResponseV15'
 components:
   schemas:
-    OverviewResponseV15:
+    GroupDetailResponseV15:
       type: object
       properties:
-        score:
-          type: number
-          description: The overall score.
-        totalValidations:
-          type: integer
-          description: The total number of validations performed.
-        failedValidations:
-          type: integer
-          description: The number of validations that failed.
-        severityBreakdown:
+        criteria:
+          type: array
+          description: The criteria.
+          items:
+            $ref: '#/components/schemas/GroupDetailListItemV15'
+      description: A list of criteria detail information.
+    GetEventPayloadResponseV15:
+      type: object
+      properties:
+        eventId:
+          type: string
+          description: The ID of the event.
+        timestamp:
+          type: string
+          description: The timestamp of the event, in ISO8601 format.
+        eventPayload:
           type: object
-          additionalProperties:
-            type: integer
-            description: A breakdown of the proportion of failures associated with different rule severities.
-          description: A breakdown of the proportion of failures associated with different rule severities.
-      description: An overview of the data health of an organization.
+          description: The raw payload of the event.
+      description: An event's payload.
+    ListFacetValuesResponseV15:
+      required:
+      - values
+      type: object
+      properties:
+        values:
+          type: array
+          description: The values for this facet
+          items:
+            $ref: '#/components/schemas/FacetValueV15'
+      description: The values available for the facet
     FacetValueV15:
       required:
       - count
@@ -604,61 +613,52 @@ components:
           description: The count for this facet value.
           format: int64
       description: A facet value and the associated count.
-    GroupDetailListItemV15:
+    GroupListingResponseV15:
       type: object
       properties:
-        id:
-          type: string
-          description: The criterion's identifier.
-        category:
-          type: string
-          description: The criterion's category.
-        severity:
-          type: string
-          description: The criterion's severity.
-          enum:
-          - LOW
-          - MEDIUM
-          - HIGH
-          - CRITICAL
-        score:
-          type: number
-          description: The score for the criterion.
-        scope:
-          type: string
-          description: The scope of the criterion.
-        scopeValue:
-          type: string
-          description: The value associated with that criterion's scope.
-        totalValidations:
-          type: integer
-          description: The total number of validations performed.
-        failedValidations:
-          type: integer
-          description: The number of validations that failed.
+        groups:
+          type: array
+          description: The groups.
+          items:
+            $ref: '#/components/schemas/GroupListingListItemV15'
       description: A list of groups.
-    GroupListingListItemV15:
+    ValidationErrorV15:
+      required:
+      - code
+      - message
+      - path
       type: object
       properties:
-        group:
+        code:
           type: string
-          description: The group's name.
-        score:
-          type: number
-          description: The overall score.
-        totalValidations:
-          type: integer
-          description: The total number of validations performed.
-        failedValidations:
-          type: integer
-          description: The number of validations that failed.
-        severityBreakdown:
-          type: object
-          additionalProperties:
-            type: integer
-            description: A breakdown of the proportion of failures associated with different rule severities.
-          description: A breakdown of the proportion of failures associated with different rule severities.
-      description: An entry in a list of groups.
+          description: The error code.
+        path:
+          type: string
+          description: The path of the parameter causing the error.
+        message:
+          type: string
+          description: A description of the error.
+      description: A validation error found on an event.
+    EventProblemsResponseV15:
+      required:
+      - pagination
+      type: object
+      properties:
+        problems:
+          type: array
+          description: The problems.
+          items:
+            $ref: '#/components/schemas/EventProblemsListItemV15'
+      description: A list of events problems.
+    ListEventsResponseV15:
+      type: object
+      properties:
+        events:
+          type: array
+          description: The events.
+          items:
+            $ref: '#/components/schemas/ListEventsListItemV15'
+      description: A list of events.
     ListEventsListItemV15:
       required:
       - clientId
@@ -701,119 +701,6 @@ components:
           items:
             $ref: '#/components/schemas/ValidationErrorV15'
       description: An entry in a list of events.
-    FailedInstancesResponseV15:
-      type: object
-      properties:
-        failedInstances:
-          type: array
-          description: The failed instances.
-          items:
-            $ref: '#/components/schemas/FailedInstancesListItemV15'
-      description: A list of failed instances.
-    ListFacetValuesResponseV15:
-      required:
-      - values
-      type: object
-      properties:
-        values:
-          type: array
-          description: The values for this facet
-          items:
-            $ref: '#/components/schemas/FacetValueV15'
-      description: The values available for the facet
-    GroupListingResponseV15:
-      type: object
-      properties:
-        groups:
-          type: array
-          description: The groups.
-          items:
-            $ref: '#/components/schemas/GroupListingListItemV15'
-      description: A list of groups.
-    ValidationErrorV15:
-      required:
-      - code
-      - message
-      - path
-      type: object
-      properties:
-        code:
-          type: string
-          description: The error code.
-        path:
-          type: string
-          description: The path of the parameter causing the error.
-        message:
-          type: string
-          description: A description of the error.
-      description: A validation error found on an event.
-    EventProblemsResponseV15:
-      required:
-      - pagination
-      type: object
-      properties:
-        problems:
-          type: array
-          description: The problems.
-          items:
-            $ref: '#/components/schemas/EventProblemsListItemV15'
-      description: A list of events problems.
-    FailedInstancesListItemV15:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          description: The failed instance's timestamp, in ISO 8601 format.
-        eventId:
-          type: string
-          description: The failed instance's eventId.
-        visitId:
-          type: string
-          description: The failed instance's visitId.
-        clientId:
-          type: string
-          description: The failed instance's clientId
-        scope:
-          type: string
-          description: The scope of the failed instance.
-          enum:
-          - EVENT
-          - VISIT
-      description: A failed instance.
-    GetEventPayloadResponseV15:
-      type: object
-      properties:
-        eventId:
-          type: string
-          description: The ID of the event.
-        timestamp:
-          type: string
-          description: The timestamp of the event, in ISO8601 format.
-        eventPayload:
-          type: object
-          description: The raw payload of the event.
-      description: An event's payload.
-    ListEventsResponseV15:
-      type: object
-      properties:
-        events:
-          type: array
-          description: The events.
-          items:
-            $ref: '#/components/schemas/ListEventsListItemV15'
-      description: A list of events.
-    StatusResponse:
-      type: object
-      description: Service's status information
-    GroupDetailResponseV15:
-      type: object
-      properties:
-        criteria:
-          type: array
-          description: The criteria.
-          items:
-            $ref: '#/components/schemas/GroupDetailListItemV15'
-      description: A list of criteria detail information.
     EventProblemsListItemV15:
       type: object
       properties:
@@ -850,12 +737,119 @@ components:
             type: string
             description: A list of timestamps associated with the sampleEvents
       description: An entry in a list of events problems.
+    GroupListingListItemV15:
+      type: object
+      properties:
+        group:
+          type: string
+          description: The group's name.
+        score:
+          type: number
+          description: The overall score.
+        totalValidations:
+          type: integer
+          description: The total number of validations performed.
+        failedValidations:
+          type: integer
+          description: The number of validations that failed.
+        severityBreakdown:
+          type: object
+          additionalProperties:
+            type: integer
+            description: A breakdown of the proportion of failures associated with different rule severities.
+          description: A breakdown of the proportion of failures associated with different rule severities.
+      description: An entry in a list of groups.
+    FailedInstancesResponseV15:
+      type: object
+      properties:
+        failedInstances:
+          type: array
+          description: The failed instances.
+          items:
+            $ref: '#/components/schemas/FailedInstancesListItemV15'
+      description: A list of failed instances.
+    FailedInstancesListItemV15:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The failed instance's timestamp, in ISO 8601 format.
+        eventId:
+          type: string
+          description: The failed instance's eventId.
+        visitId:
+          type: string
+          description: The failed instance's visitId.
+        clientId:
+          type: string
+          description: The failed instance's clientId
+        scope:
+          type: string
+          description: The scope of the failed instance.
+          enum:
+          - EVENT
+          - VISIT
+      description: A failed instance.
+    OverviewResponseV15:
+      type: object
+      properties:
+        score:
+          type: number
+          description: The overall score.
+        totalValidations:
+          type: integer
+          description: The total number of validations performed.
+        failedValidations:
+          type: integer
+          description: The number of validations that failed.
+        severityBreakdown:
+          type: object
+          additionalProperties:
+            type: integer
+            description: A breakdown of the proportion of failures associated with different rule severities.
+          description: A breakdown of the proportion of failures associated with different rule severities.
+      description: An overview of the data health of an organization.
+    GroupDetailListItemV15:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The criterion's identifier.
+        category:
+          type: string
+          description: The criterion's category.
+        severity:
+          type: string
+          description: The criterion's severity.
+          enum:
+          - LOW
+          - MEDIUM
+          - HIGH
+          - CRITICAL
+        score:
+          type: number
+          description: The score for the criterion.
+        scope:
+          type: string
+          description: The scope of the criterion.
+        scopeValue:
+          type: string
+          description: The value associated with that criterion's scope.
+        totalValidations:
+          type: integer
+          description: The total number of validations performed.
+        failedValidations:
+          type: integer
+          description: The number of validations that failed.
+      description: A list of groups.
+    StatusResponse:
+      type: object
+      description: Service's status information
   securitySchemes:
-    oauth2:
+    v8:
       type: oauth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: ''

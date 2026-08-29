@@ -1,17 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Secure Data Sharing API - Version 15 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+  title: Usage Analytics Read Secure Data Sharing API - Version 15 API
+  version: '1.0'
 servers:
-- url: https://platform.cloud.coveo.com
+- url: https://analytics.cloud.coveo.com/rest/ua
   description: Coveo public API endpoint
 security:
-- oauth2:
+- v8:
   - full
 tags:
 - name: Secure Data Sharing API - Version 15
@@ -104,6 +99,36 @@ paths:
                 $ref: '#/components/schemas/SnowflakeDataSharingRegionsResponseV15'
 components:
   schemas:
+    SnowflakeDataSharingRegionsResponseV15:
+      required:
+      - primaryRegion
+      - secondaryRegions
+      type: object
+      properties:
+        primaryRegion:
+          type: string
+          description: The primary Snowflake region.
+        secondaryRegions:
+          uniqueItems: true
+          type: array
+          description: Other supported Snowflake regions.
+          items:
+            type: string
+            description: Other supported Snowflake regions.
+      description: The Snowflake regions supported for Secure Data Sharing.
+    SnowflakeDataSharingAccountModelV15:
+      required:
+      - accountLocator
+      - snowflakeRegion
+      type: object
+      properties:
+        accountLocator:
+          type: string
+          description: The Snowflake account locator.
+        snowflakeRegion:
+          type: string
+          description: The Snowflake region identifier.
+      description: Snowflake account information for Secure Data Sharing.
     SnowflakeDataSharingAccountResponseV15:
       required:
       - locator
@@ -136,42 +161,11 @@ components:
           type: string
           description: The error message in case of an 'UNKNOWN' or 'INVALID' status.
       description: The details of a Snowflake account for Secure Data Sharing.
-    SnowflakeDataSharingRegionsResponseV15:
-      required:
-      - primaryRegion
-      - secondaryRegions
-      type: object
-      properties:
-        primaryRegion:
-          type: string
-          description: The primary Snowflake region.
-        secondaryRegions:
-          uniqueItems: true
-          type: array
-          description: Other supported Snowflake regions.
-          items:
-            type: string
-            description: Other supported Snowflake regions.
-      description: The Snowflake regions supported for Secure Data Sharing.
-    SnowflakeDataSharingAccountModelV15:
-      required:
-      - accountLocator
-      - snowflakeRegion
-      type: object
-      properties:
-        accountLocator:
-          type: string
-          description: The Snowflake account locator.
-        snowflakeRegion:
-          type: string
-          description: The Snowflake region identifier.
-      description: Snowflake account information for Secure Data Sharing.
   securitySchemes:
-    oauth2:
+    v8:
       type: oauth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: ''

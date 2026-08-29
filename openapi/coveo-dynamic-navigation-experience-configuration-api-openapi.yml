@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Dynamic Navigation Experience Configuration API
+  title: Coveo Machine Learning Configuration Dynamic Navigation Experience Configuration API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -505,99 +505,18 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/dne/autoselectionfieldcandidates_get
 components:
   schemas:
-    DneNewConfigurationModel:
-      required:
-      - modelDisplayName
-      type: object
-      properties:
-        modelDisplayName:
-          type: string
-          description: The model display name in the Coveo Administration console.<br />**Example:** `MyModelDisplayName`
-          example: MyModelDisplayName
-        exportPeriod:
-          type: string
-          description: The period of UA data to learn from when rebuilding the model. The `exportPeriod` uses the moment when the model was last generated as a base. Must be in the ISO8601 period format (i.e., PyYmMwWdDThHmMsS).<br />**Example:** `P1M`
-          example: P1M
-        intervalTime:
-          type: integer
-          description: 'The number of `intervalUnit` to wait between each rebuild of the model.
-
-
-            Must be greater than or equal to `1`.<br />**Example:** `1`'
-          format: int32
-          example: 1
-          enum:
-          - null
-        intervalUnit:
-          type: string
-          description: The duration unit to use when interpreting the rebuild `intervalTime` for the model.<br />**Example:** `WEEK`
-          example: WEEK
-          enum:
-          - DAY,WEEK,MONTH
-        commonFilter:
-          type: string
-          description: 'The filter to apply to the ’Common’ event dimensions (shared by all event types) of the UA data to learn from when rebuilding the model.
-
-
-            See [Usge Analytics Read Filter Syntax](https://docs.coveo.com/en/2727/).<br />**Example:** `(originlevel1 == "My Hub")`'
-          example: (originlevel1 == "My Hub")
-        searchEventFilter:
-          type: string
-          description: 'The filter to apply to the ‘Click’ and ‘Search’ event dimensions of the UA data to learn from when rebuilding the model.
-
-
-            See [Usge Analytics Read Filter Syntax](https://docs.coveo.com/en/2727/).<br />**Example:** `(originlevel1 == "My Hub")`'
-          example: (originlevel1 == "My Hub")
-        fieldsToAutoSelect:
-          type: array
-          description: The names of the fields to consider for automatic selection. **Note:** Once set, this property cannot be updated.<br />**Example:** `["filetype", "category"]`
-          example:
-          - filetype
-          - category
-          items:
-            type: string
-            description: The names of the fields to consider for automatic selection. **Note:** Once set, this property cannot be updated.<br />**Example:** `["filetype", "category"]`
-            example: '["filetype","category"]'
-        documentExtractionQuery:
-          type: string
-          description: The query that determines the documents to extract. Use the `POST /rest/organizations/{organizationId}/machinelearning/configuration/dne/documentextractionquery` endpoint to generate the proper query. **Note:** Once set, this property cannot be updated.<br />**Example:** `(@filetype OR @category) AND @source==("My source")`
-          example: (@filetype OR @category) AND @source==("My source")
-        viewAllContent:
-          type: boolean
-          description: Whether to allow the model to extract secured documents. **Note:** Once set, this property cannot be updated.
-      description: The configuration for the creation of a DNE model.
-    SourceModel:
+    AutoSelectionFieldCandidateModel:
       type: object
       properties:
         name:
           type: string
-          description: The name of the source.<br />**Example:** `SalesforceCatalog`
-          example: SalesforceCatalog
-        numberOfDocuments:
-          type: integer
-          description: The total number of documents in that source.<br />**Example:** `100`
-          format: int32
-          example: 100
-      description: A source, in regards to documents availability.
-    DocumentExtractionPreviewModel:
-      type: object
-      properties:
-        numberOfDocuments:
-          type: integer
-          description: The total number of documents that would be extracted.<br />**Example:** `1000`
-          format: int32
-          example: 1000
-        recommendedNumberOfDocuments:
-          type: integer
-          description: The recommended maximum number of documents to extract to avoid performance issues.<br />**Example:** `1000000`
-          format: int32
-          example: 1000000
-        sources:
-          type: array
-          description: The sources from which the documents would be extracted.
-          items:
-            $ref: '#/components/schemas/SourceModel'
-      description: A preview of what would happen if a specific document extraction was executed.
+          description: The name of the field, also referred to as the field identifier.<br />**Example:** `category`
+          example: category
+        description:
+          type: string
+          description: The description of the field.<br />**Example:** `The category the product belongs to.`
+          example: The category the product belongs to.
+      description: A candidate field for autoselection.
     DocumentExtractionQueryModel:
       type: object
       properties:
@@ -622,31 +541,6 @@ components:
             description: The names of the sources to consider for the document extraction query. If unspecified, documents from any sources may be included in the preview.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
             example: '["CommunityArticles","SalesforceCatalog"]'
       description: The constraints for the document extraction query of a DNE model.
-    AutoSelectionFieldCandidateModel:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the field, also referred to as the field identifier.<br />**Example:** `category`
-          example: category
-        description:
-          type: string
-          description: The description of the field.<br />**Example:** `The category the product belongs to.`
-          example: The category the product belongs to.
-      description: A candidate field for autoselection.
-    PageModelAutoSelectionFieldCandidateModel:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/AutoSelectionFieldCandidateModel'
-        totalEntries:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
     DneConfigurationModel:
       required:
       - modelDisplayName
@@ -712,6 +606,112 @@ components:
           description: The unique identifier of the target machine learning model.<br />**Example:** `My_Model_ID`
           example: My_Model_ID
       description: The configuration for the update of a DNE model.
+    DocumentExtractionPreviewModel:
+      type: object
+      properties:
+        numberOfDocuments:
+          type: integer
+          description: The total number of documents that would be extracted.<br />**Example:** `1000`
+          format: int32
+          example: 1000
+        recommendedNumberOfDocuments:
+          type: integer
+          description: The recommended maximum number of documents to extract to avoid performance issues.<br />**Example:** `1000000`
+          format: int32
+          example: 1000000
+        sources:
+          type: array
+          description: The sources from which the documents would be extracted.
+          items:
+            $ref: '#/components/schemas/SourceModel'
+      description: A preview of what would happen if a specific document extraction was executed.
+    DneNewConfigurationModel:
+      required:
+      - modelDisplayName
+      type: object
+      properties:
+        modelDisplayName:
+          type: string
+          description: The model display name in the Coveo Administration console.<br />**Example:** `MyModelDisplayName`
+          example: MyModelDisplayName
+        exportPeriod:
+          type: string
+          description: The period of UA data to learn from when rebuilding the model. The `exportPeriod` uses the moment when the model was last generated as a base. Must be in the ISO8601 period format (i.e., PyYmMwWdDThHmMsS).<br />**Example:** `P1M`
+          example: P1M
+        intervalTime:
+          type: integer
+          description: 'The number of `intervalUnit` to wait between each rebuild of the model.
+
+
+            Must be greater than or equal to `1`.<br />**Example:** `1`'
+          format: int32
+          example: 1
+          enum:
+          - null
+        intervalUnit:
+          type: string
+          description: The duration unit to use when interpreting the rebuild `intervalTime` for the model.<br />**Example:** `WEEK`
+          example: WEEK
+          enum:
+          - DAY,WEEK,MONTH
+        commonFilter:
+          type: string
+          description: 'The filter to apply to the ’Common’ event dimensions (shared by all event types) of the UA data to learn from when rebuilding the model.
+
+
+            See [Usge Analytics Read Filter Syntax](https://docs.coveo.com/en/2727/).<br />**Example:** `(originlevel1 == "My Hub")`'
+          example: (originlevel1 == "My Hub")
+        searchEventFilter:
+          type: string
+          description: 'The filter to apply to the ‘Click’ and ‘Search’ event dimensions of the UA data to learn from when rebuilding the model.
+
+
+            See [Usge Analytics Read Filter Syntax](https://docs.coveo.com/en/2727/).<br />**Example:** `(originlevel1 == "My Hub")`'
+          example: (originlevel1 == "My Hub")
+        fieldsToAutoSelect:
+          type: array
+          description: The names of the fields to consider for automatic selection. **Note:** Once set, this property cannot be updated.<br />**Example:** `["filetype", "category"]`
+          example:
+          - filetype
+          - category
+          items:
+            type: string
+            description: The names of the fields to consider for automatic selection. **Note:** Once set, this property cannot be updated.<br />**Example:** `["filetype", "category"]`
+            example: '["filetype","category"]'
+        documentExtractionQuery:
+          type: string
+          description: The query that determines the documents to extract. Use the `POST /rest/organizations/{organizationId}/machinelearning/configuration/dne/documentextractionquery` endpoint to generate the proper query. **Note:** Once set, this property cannot be updated.<br />**Example:** `(@filetype OR @category) AND @source==("My source")`
+          example: (@filetype OR @category) AND @source==("My source")
+        viewAllContent:
+          type: boolean
+          description: Whether to allow the model to extract secured documents. **Note:** Once set, this property cannot be updated.
+      description: The configuration for the creation of a DNE model.
+    PageModelAutoSelectionFieldCandidateModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutoSelectionFieldCandidateModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    SourceModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the source.<br />**Example:** `SalesforceCatalog`
+          example: SalesforceCatalog
+        numberOfDocuments:
+          type: integer
+          description: The total number of documents in that source.<br />**Example:** `100`
+          format: int32
+          example: 100
+      description: A source, in regards to documents availability.
   securitySchemes:
     oauth2:
       type: oauth2

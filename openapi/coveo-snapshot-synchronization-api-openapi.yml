@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Snapshot Synchronization API
+  title: Coveo Migration Snapshot Synchronization API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -369,6 +369,20 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization_post
 components:
   schemas:
+    ReportResourceAlreadyLinkedModel:
+      type: object
+      properties:
+        resourceName:
+          type: string
+          description: The unique identifier of the resource in the snapshot that allows tracking across organizations.
+          example: '`myrankingexpression_aAePCD`'
+        displayName:
+          type: string
+          description: The name of the resource in your organization.
+          example: '`myrankingexpression`'
+        linkModel:
+          $ref: '#/components/schemas/LinkModel'
+      description: A preexisting link.
     LinkModel:
       type: object
       properties:
@@ -422,27 +436,72 @@ components:
           description: The unique identifier of the resource in the destination organization.
           example: destinationorganizationg7dg3gd-qvml6dkyvouchhehsjhxxbkgqq
       description: The link definition.
-    ReportResourceSynchronizationOperationsModel:
+    MatchModel:
       type: object
       properties:
-        resourceName:
-          type: string
-          description: The unique identifier of the resource in the snapshot that allows tracking across organizations.
-          example: '`myrankingexpression_aAePCD`'
+        linkModel:
+          $ref: '#/components/schemas/LinkModel'
+        associationScore:
+          type: number
+          description: A number between `0` and `1` denoting the degree of confidence in the match, where`1` is the highest and `0` is the lowest.
+          format: float
         displayName:
           type: string
-          description: The name of the resource in your organization.
-          example: '`myrankingexpression`'
-        parentResourceId:
+          description: The human-readable name of the resource in the target organization.
+          example: myextension
+      description: The matches of the resource.
+    SynchronizationReportLinkOperationsModel:
+      type: object
+      properties:
+        linksCreated:
+          type: integer
+          description: The number of synchronization links created.
+          format: int32
+        linksOverridden:
+          type: integer
+          description: The number of synchronization links overridden.
+          format: int32
+        linksInError:
+          type: integer
+          description: The number of synchronization links in error.
+          format: int32
+      description: A summary of the outcome of the link operations.
+    SynchronizationPlanModel:
+      type: object
+      properties:
+        id:
           type: string
-          description: The resourceId of the parent resource, if applicable.
-          example: mypipeline_f8dh8sh4
-        matches:
-          type: array
-          description: The matches of the resource.
-          items:
-            $ref: '#/components/schemas/MatchModel'
-      description: The links of the resource.
+          description: The unique identifier of the snapshot synchronization plan.
+          example: destinationorganizationg7dg3gd-vfjwjnn6shwxjjd5vujhu22k5u
+        snapshotId:
+          type: string
+          description: The unique identifier of the target snapshot.
+          example: destinationorganizationg7dg3gd-wbbkq2fg6zprmdsegcqfbocdwq
+        status:
+          type: string
+          description: The status of the snapshot synchronization plan.
+          enum:
+          - CREATING
+          - CREATED
+          - IN_ERROR
+        alreadyLinkedResources:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            description: For each resource type, the pre-existing links, if applicable.
+            items:
+              $ref: '#/components/schemas/ReportResourceAlreadyLinkedModel'
+          description: For each resource type, the pre-existing links, if applicable.
+        resourceSynchronizationOperations:
+          type: object
+          additionalProperties:
+            type: array
+            description: The link operations performed when applying the synchronization plan.
+            items:
+              $ref: '#/components/schemas/ReportResourceSynchronizationOperationsModel'
+          description: The link operations performed when applying the synchronization plan.
+      description: The updated synchronization plan.
     SynchronizationReportModel:
       type: object
       properties:
@@ -508,23 +567,7 @@ components:
             description: An object containing details about link operation failures, if applicable.
           description: An object containing details about link operation failures, if applicable.
       description: A snapshot synchronization report.
-    SynchronizationReportLinkOperationsModel:
-      type: object
-      properties:
-        linksCreated:
-          type: integer
-          description: The number of synchronization links created.
-          format: int32
-        linksOverridden:
-          type: integer
-          description: The number of synchronization links overridden.
-          format: int32
-        linksInError:
-          type: integer
-          description: The number of synchronization links in error.
-          format: int32
-      description: A summary of the outcome of the link operations.
-    ReportResourceAlreadyLinkedModel:
+    ReportResourceSynchronizationOperationsModel:
       type: object
       properties:
         resourceName:
@@ -535,59 +578,16 @@ components:
           type: string
           description: The name of the resource in your organization.
           example: '`myrankingexpression`'
-        linkModel:
-          $ref: '#/components/schemas/LinkModel'
-      description: A preexisting link.
-    SynchronizationPlanModel:
-      type: object
-      properties:
-        id:
+        parentResourceId:
           type: string
-          description: The unique identifier of the snapshot synchronization plan.
-          example: destinationorganizationg7dg3gd-vfjwjnn6shwxjjd5vujhu22k5u
-        snapshotId:
-          type: string
-          description: The unique identifier of the target snapshot.
-          example: destinationorganizationg7dg3gd-wbbkq2fg6zprmdsegcqfbocdwq
-        status:
-          type: string
-          description: The status of the snapshot synchronization plan.
-          enum:
-          - CREATING
-          - CREATED
-          - IN_ERROR
-        alreadyLinkedResources:
-          type: object
-          additionalProperties:
-            uniqueItems: true
-            type: array
-            description: For each resource type, the pre-existing links, if applicable.
-            items:
-              $ref: '#/components/schemas/ReportResourceAlreadyLinkedModel'
-          description: For each resource type, the pre-existing links, if applicable.
-        resourceSynchronizationOperations:
-          type: object
-          additionalProperties:
-            type: array
-            description: The link operations performed when applying the synchronization plan.
-            items:
-              $ref: '#/components/schemas/ReportResourceSynchronizationOperationsModel'
-          description: The link operations performed when applying the synchronization plan.
-      description: The updated synchronization plan.
-    MatchModel:
-      type: object
-      properties:
-        linkModel:
-          $ref: '#/components/schemas/LinkModel'
-        associationScore:
-          type: number
-          description: A number between `0` and `1` denoting the degree of confidence in the match, where`1` is the highest and `0` is the lowest.
-          format: float
-        displayName:
-          type: string
-          description: The human-readable name of the resource in the target organization.
-          example: myextension
-      description: The matches of the resource.
+          description: The resourceId of the parent resource, if applicable.
+          example: mypipeline_f8dh8sh4
+        matches:
+          type: array
+          description: The matches of the resource.
+          items:
+            $ref: '#/components/schemas/MatchModel'
+      description: The links of the resource.
   securitySchemes:
     oauth2:
       type: oauth2

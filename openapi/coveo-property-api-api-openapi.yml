@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Property API API
+  title: Coveo Analytics Admin Property API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -316,6 +316,56 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/analyticsadmin/v1/properties_post
 components:
   schemas:
+    PageModelPropertyModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    PropertyActionResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    PropertyModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+          description: The Organization Id that owns the property.
+        trackingId:
+          type: string
+          description: The string used to represent the tracking ID when sending a event request.
+        displayName:
+          type: string
+          description: The name used for the property in the UI.
+        projectIds:
+          type:
+          - array
+          - 'null'
+          description: Optional list of project identifiers the property is mapped to.
+          items:
+            type:
+            - string
+            - 'null'
+            description: Optional list of project identifiers the property is mapped to.
+        defaultTimeZone:
+          type:
+          - string
+          - 'null'
+          description: Optional time zone used in reporting.
+        defaultCurrency:
+          type:
+          - string
+          - 'null'
+          description: Optional currency used in reporting.
     ListPropertiesRequest:
       type: object
       properties:
@@ -359,52 +409,6 @@ components:
             type: string
             description: Optional filter on tracking ids.
             example: '["default","my_tracking_id"]'
-    PropertyActionResponse:
-      type: object
-      properties:
-        message:
-          type: string
-    PageModelPropertyModel:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PropertyModel'
-        totalEntries:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-    PropertyModel:
-      type: object
-      properties:
-        organizationId:
-          type: string
-          description: The Organization Id that owns the property.
-        trackingId:
-          type: string
-          description: The string used to represent the tracking ID when sending a event request.
-        displayName:
-          type: string
-          description: The name used for the property in the UI.
-        projectIds:
-          type: array
-          description: Optional list of project identifiers the property is mapped to.
-          nullable: true
-          items:
-            type: string
-            description: Optional list of project identifiers the property is mapped to.
-            nullable: true
-        defaultTimeZone:
-          type: string
-          description: Optional time zone used in reporting.
-          nullable: true
-        defaultCurrency:
-          type: string
-          description: Optional currency used in reporting.
-          nullable: true
   securitySchemes:
     oauth2:
       type: oauth2

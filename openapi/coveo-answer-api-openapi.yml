@@ -1,18 +1,14 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Answer API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  title: Coveo Customer Service API Service Answer API
+  description: Documentation for Coveo Customer Service API Service
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
   contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+    name: support@coveo.com
   version: 1.0.0
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Answer
   x-displayName: Answer
@@ -52,10 +48,186 @@ paths:
       - oauth2:
         - full
 components:
+  parameters:
+    OrganizationIdPath:
+      name: organizationId
+      in: path
+      description: The unique identifier of the target Coveo Cloud organization.
+      required: true
+      schema:
+        type: string
+    ConfigIdPath:
+      name: configId
+      in: path
+      description: The unique identifier of the answer configuration.
+      required: true
+      schema:
+        type: string
   schemas:
-    AnalyticsRequestParameters:
+    Tab:
+      type:
+      - string
+      - 'null'
+      description: 'The second level of origin of the request, typically the identifier of the selected tab in the graphical search interface from which the request originates.
+
+
+        Coveo Machine Learning models use this information to provide contextually relevant output.
+
+
+        **Note:** When logging a **Search** usage analytics event for a query, the `originLevel2` field of that event should be set to the `tab` value of the query (or to the `"default"` string, if no `tab` value was specified in the query).
+
+
+        See also the `searchHub` parameter.
+
+        '
+      example: ForumTab
+    GenQAResponse:
       type: object
-      nullable: true
+      required:
+      - payloadType
+      - payload
+      properties:
+        payloadType:
+          type: string
+          description: Type of the contained GenQA payload (e.g., genqa.headerMessageType).
+        payload:
+          type: string
+          format: json
+          description: JSON-encoded string containing the actual message payload.
+        finishReason:
+          type:
+          - string
+          - 'null'
+          enum:
+          - COMPLETED
+          - ERROR
+          description: Reason for stream termination, if applicable.
+        errorMessage:
+          type:
+          - string
+          - 'null'
+          description: Error message if the stream failed.
+        statusCode:
+          type:
+          - integer
+          - 'null'
+          description: HTTP status code associated with the message, if applicable.
+    Timezone:
+      type:
+      - string
+      - 'null'
+      description: 'The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression and result items.
+
+
+        If not specified, the default time zone of the server hosting the index is used.
+
+
+        **Note:** While no Coveo Machine Learning model uses this information, it can nevertheless affect the ranking scores (and thus, potentially the order) of result items, as ranking expressions may be based on time constants.
+
+        '
+      example: America/New_York
+    MlParameters:
+      type:
+      - object
+      - 'null'
+      description: 'A map of options to pass to the Coveo ML models associated with the request''s target query pipeline.
+
+
+        **Available parameters:**
+
+        - `considerUserContext` (boolean): Whether the models should attempt to leverage the `context` object of the request to personalize their output. Applies to ER models only. Default is `true`.
+
+        - `maxActionsHistoryItemsToConsider` (unsigned integer): The maximum number of items in the `actionsHistory` array of the request that should be taken into account by the models. Applies to ER models only. By default, all `actionsHistory` items are considered.
+
+        - `num` (unsigned integer): The maximum number of recommendations/suggestions to request from the models. Must be in range [1, 50], if specified. Applies to ART, ER, and QS models. Default depends on model configuration.
+
+        - `padding` (string enum): The kind of padding the models should complete their output with, if their maximum number of recommendations/suggestions (i.e., `num`) has not been reached. Applies to ER models only. Allowed values are `popular` (i.e., pad recommendations with all time most popular items) and `trending` (i.e., pad recommendations with items that have recently been increasingly popular). By default, no padding applies.
+
+        - `wordSelection` (string): The ITD keyword selection options the models should use. Applies only to ART models with ITD enabled. If specified, must be a string in the format `option:value`. The only available option is `wordsKept` (i.e., the maximum number of `lq` keywords to inject in `q`); its default value is `5`.
+
+        - `minNumberOfWords` (unsigned integer): The minimum number of words a query suggestion may contain to be returned by the model. Applies to QS models only. Must be in range [1, 10] Default is `1`, which implies that the model will return all candidates.
+
+        - `itemId` (string): The unique identifier (e.g., SKU) of a product to get recommendations for. Only applies when querying a Product Recommendations model with an association strategy considering a single item as an input.
+
+        - `itemIds` (array of strings): The unique identifiers (e.g., SKUs) of the products to get recommendations for. Only applies when querying a Product Recommendations model with an association strategy considering multiple items as an input.
+
+        - `categoryFilter` (string): The name of a category of products to get recommendations for.
+
+        - `brandFilter` (string): The name of a brand of products to get recommendations for.
+
+        - `filters` (map of strings): The dimensions along with the values to be used at query time by the model as filters for potential suggestions. Only applies to ART, QS, and DNE models that don''t use the default `filterFields` advanced parameter values. **Example:** `"filters": { "originContext": "<MY-VALUE>", "originLevel2": "<MY-VALUE>" }`.
+
+
+        **Examples:**
+
+        - `{"num": 3, "padding": "trending", "maxActionsHistoryItemsToConsider": 10, "considerUserContext": false}`
+
+        - `{"wordSelection": "wordsKept:4"}`
+
+        '
+      example:
+        num: 3
+        padding: trending
+    ActionHistory:
+      required:
+      - name
+      - time
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The action history event name.
+
+
+            Possible values:
+
+
+            - **Query**
+
+            - **PageView**'
+          example: PageView
+        value:
+          type: string
+          description: The action history value, which is either a query expression or a page URI, depending on the action history event `name`.
+        time:
+          type: string
+          description: The time when the action history event was sent from the client.
+    Context:
+      type:
+      - object
+      - 'null'
+      additionalProperties: true
+      description: 'The custom context information to send along with the request. Must be a dictionary of key-value pairs (JSON) where each key is a string, and each value is either a string or an array of strings.
+
+
+        Coveo Machine Learning models may use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the `$context` object.
+
+
+        **Note:** When logging a **Search** usage analytics event for a query, the `customData` field of that event should include the same data as the `context` parameter of the query. However, each `context` key included in `customData` must be prefixed by `context_` (e.g., the `userRoles` key in `context` becomes `context_userRoles` in `customData`).
+
+
+        See also the `referrer` parameter.
+
+
+        **Example** `{"userAgeRange":"25-35","userRoles":["PremiumCustomer","ProductReviewer"]}`'
+    Locale:
+      type:
+      - string
+      - 'null'
+      description: 'The locale of the current user. Must comply with IETF''s [BCP 47](http://www.rfc-editor.org/rfc/bcp/bcp47.txt) definition.
+
+
+        Coveo Machine Learning models use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the `$locale` object.
+
+
+        **Note:** When logging a **Search** usage analytics event, the `language` field of that event should match the language part of the `locale` value of the query (e.g., `en-US` in `locale` becomes `en` in `language`).
+
+        '
+      example: en-US
+    AnalyticsRequestParameters:
+      type:
+      - object
+      - 'null'
       properties:
         capture:
           type: boolean
@@ -109,8 +281,9 @@ components:
 
             **Note**: This information can be obtained from `coveo.analytics.js`.'
           anyOf:
-          - type: string
-            nullable: true
+          - type:
+            - string
+            - 'null'
           - type: integer
         userIp:
           type: string
@@ -179,28 +352,50 @@ components:
           - currency
           properties:
             country:
-              type: string
-              nullable: true
+              type:
+              - string
+              - 'null'
               example: US
               description: The country of the storefront in ISO 3166 — Country Codes format.
             currency:
-              type: string
-              nullable: true
+              type:
+              - string
+              - 'null'
               example: USD
               description: The selected currency of the cart and transactions.
-    Locale:
-      type: string
-      nullable: true
-      description: 'The locale of the current user. Must comply with IETF''s [BCP 47](http://www.rfc-editor.org/rfc/bcp/bcp47.txt) definition.
+    SearchHub:
+      type:
+      - string
+      - 'null'
+      description: 'The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates.
 
 
-        Coveo Machine Learning models use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the `$locale` object.
+        Coveo Machine Learning models use this information to provide contextually relevant output.
 
 
-        **Note:** When logging a **Search** usage analytics event, the `language` field of that event should match the language part of the `locale` value of the query (e.g., `en-US` in `locale` becomes `en` in `language`).
+        **Notes:**
+
+
+        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
+
+        - When logging a **Search** usage analytics event for a query, the `originLevel1` field of that event should be set to the value of the `searchHub` search request parameter.
+
+
+        See also the `tab` parameter.
 
         '
-      example: en-US
+      example: CustomerPortal
+    PipelineRuleParameters:
+      type:
+      - object
+      - 'null'
+      additionalProperties: true
+      maxProperties: 255
+      description: "This defines generic parameters to be used by rules.\nIt defines the \"scopes\", or in other words, the rules in which the parameters should be used.\nThe generic parameters are defined within a particular scope and are only be accessible inside of it.\nThis is a read-only parameter, so its value will not be overridden.\n\n`{\n  \"scope\": {\n    \"parameterName\" : \"parameterValue\"\n  }\n}`\n\nWhile using Gen AI, if additional document fields are required for the resulting\ncitations, these fields can be specified through the 'citationsFieldToInclude'\nproperty of the 'mlGenerativeQuestionAnswering' scope.\n\n> **Note:**\n> Getting dictionary fields for citations is not supported.\n\n**Examples:**\n- `{\"mlGenerativeQuestionAnswering\": { \"responseFormat\": { \"answerStyle\": \"bullet\" } } }`\n- `{\"mlGenerativeQuestionAnswering\": { \"citationsFieldToInclude\": [\"field1\", \"field2\"] } }`\n\nMax Size: 1KB\n"
+      example:
+        genqa:
+          responseFormat:
+            answerStyle: bullet
     AnswerSearchRequest:
       type: object
       properties:
@@ -443,87 +638,10 @@ components:
           $ref: '#/components/schemas/MlParameters'
         pipelineRuleParameters:
           $ref: '#/components/schemas/PipelineRuleParameters'
-    Timezone:
-      type: string
-      nullable: true
-      description: 'The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression and result items.
-
-
-        If not specified, the default time zone of the server hosting the index is used.
-
-
-        **Note:** While no Coveo Machine Learning model uses this information, it can nevertheless affect the ranking scores (and thus, potentially the order) of result items, as ranking expressions may be based on time constants.
-
-        '
-      example: America/New_York
-    Tab:
-      type: string
-      nullable: true
-      description: 'The second level of origin of the request, typically the identifier of the selected tab in the graphical search interface from which the request originates.
-
-
-        Coveo Machine Learning models use this information to provide contextually relevant output.
-
-
-        **Note:** When logging a **Search** usage analytics event for a query, the `originLevel2` field of that event should be set to the `tab` value of the query (or to the `"default"` string, if no `tab` value was specified in the query).
-
-
-        See also the `searchHub` parameter.
-
-        '
-      example: ForumTab
-    SearchHub:
-      type: string
-      nullable: true
-      description: 'The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates.
-
-
-        Coveo Machine Learning models use this information to provide contextually relevant output.
-
-
-        **Notes:**
-
-
-        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
-
-        - When logging a **Search** usage analytics event for a query, the `originLevel1` field of that event should be set to the value of the `searchHub` search request parameter.
-
-
-        See also the `tab` parameter.
-
-        '
-      example: CustomerPortal
-    GenQAResponse:
-      type: object
-      required:
-      - payloadType
-      - payload
-      properties:
-        payloadType:
-          type: string
-          description: Type of the contained GenQA payload (e.g., genqa.headerMessageType).
-        payload:
-          type: string
-          format: json
-          description: JSON-encoded string containing the actual message payload.
-        finishReason:
-          type: string
-          nullable: true
-          enum:
-          - COMPLETED
-          - ERROR
-          description: Reason for stream termination, if applicable.
-        errorMessage:
-          type: string
-          nullable: true
-          description: Error message if the stream failed.
-        statusCode:
-          type: integer
-          nullable: true
-          description: HTTP status code associated with the message, if applicable.
     Referrer:
-      type: string
-      nullable: true
+      type:
+      - string
+      - 'null'
       description: 'The third level of origin of the request, typically the URL of the page that linked to the search interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).
 
 
@@ -538,8 +656,9 @@ components:
         '
       example: http://www.example.com/
     MaximumAge:
-      type: integer
-      nullable: true
+      type:
+      - integer
+      - 'null'
       description: 'The maximum age of cached results, in milliseconds.
 
 
@@ -556,84 +675,10 @@ components:
       format: int32
       example: 1800000
       default: -1
-    MlParameters:
-      type: object
-      nullable: true
-      description: 'A map of options to pass to the Coveo ML models associated with the request''s target query pipeline.
-
-
-        **Available parameters:**
-
-        - `considerUserContext` (boolean): Whether the models should attempt to leverage the `context` object of the request to personalize their output. Applies to ER models only. Default is `true`.
-
-        - `maxActionsHistoryItemsToConsider` (unsigned integer): The maximum number of items in the `actionsHistory` array of the request that should be taken into account by the models. Applies to ER models only. By default, all `actionsHistory` items are considered.
-
-        - `num` (unsigned integer): The maximum number of recommendations/suggestions to request from the models. Must be in range [1, 50], if specified. Applies to ART, ER, and QS models. Default depends on model configuration.
-
-        - `padding` (string enum): The kind of padding the models should complete their output with, if their maximum number of recommendations/suggestions (i.e., `num`) has not been reached. Applies to ER models only. Allowed values are `popular` (i.e., pad recommendations with all time most popular items) and `trending` (i.e., pad recommendations with items that have recently been increasingly popular). By default, no padding applies.
-
-        - `wordSelection` (string): The ITD keyword selection options the models should use. Applies only to ART models with ITD enabled. If specified, must be a string in the format `option:value`. The only available option is `wordsKept` (i.e., the maximum number of `lq` keywords to inject in `q`); its default value is `5`.
-
-        - `minNumberOfWords` (unsigned integer): The minimum number of words a query suggestion may contain to be returned by the model. Applies to QS models only. Must be in range [1, 10] Default is `1`, which implies that the model will return all candidates.
-
-        - `itemId` (string): The unique identifier (e.g., SKU) of a product to get recommendations for. Only applies when querying a Product Recommendations model with an association strategy considering a single item as an input.
-
-        - `itemIds` (array of strings): The unique identifiers (e.g., SKUs) of the products to get recommendations for. Only applies when querying a Product Recommendations model with an association strategy considering multiple items as an input.
-
-        - `categoryFilter` (string): The name of a category of products to get recommendations for.
-
-        - `brandFilter` (string): The name of a brand of products to get recommendations for.
-
-        - `filters` (map of strings): The dimensions along with the values to be used at query time by the model as filters for potential suggestions. Only applies to ART, QS, and DNE models that don''t use the default `filterFields` advanced parameter values. **Example:** `"filters": { "originContext": "<MY-VALUE>", "originLevel2": "<MY-VALUE>" }`.
-
-
-        **Examples:**
-
-        - `{"num": 3, "padding": "trending", "maxActionsHistoryItemsToConsider": 10, "considerUserContext": false}`
-
-        - `{"wordSelection": "wordsKept:4"}`
-
-        '
-      example:
-        num: 3
-        padding: trending
-    PipelineRuleParameters:
-      type: object
-      nullable: true
-      additionalProperties: true
-      maxProperties: 255
-      description: "This defines generic parameters to be used by rules.\nIt defines the \"scopes\", or in other words, the rules in which the parameters should be used.\nThe generic parameters are defined within a particular scope and are only be accessible inside of it.\nThis is a read-only parameter, so its value will not be overridden.\n\n`{\n  \"scope\": {\n    \"parameterName\" : \"parameterValue\"\n  }\n}`\n\nWhile using Gen AI, if additional document fields are required for the resulting\ncitations, these fields can be specified through the 'citationsFieldToInclude'\nproperty of the 'mlGenerativeQuestionAnswering' scope.\n\n> **Note:**\n> Getting dictionary fields for citations is not supported.\n\n**Examples:**\n- `{\"mlGenerativeQuestionAnswering\": { \"responseFormat\": { \"answerStyle\": \"bullet\" } } }`\n- `{\"mlGenerativeQuestionAnswering\": { \"citationsFieldToInclude\": [\"field1\", \"field2\"] } }`\n\nMax Size: 1KB\n"
-      example:
-        genqa:
-          responseFormat:
-            answerStyle: bullet
-    ActionHistory:
-      required:
-      - name
-      - time
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'The action history event name.
-
-
-            Possible values:
-
-
-            - **Query**
-
-            - **PageView**'
-          example: PageView
-        value:
-          type: string
-          description: The action history value, which is either a query expression or a page URI, depending on the action history event `name`.
-        time:
-          type: string
-          description: The time when the action history event was sent from the client.
     Pipeline:
-      type: string
-      nullable: true
+      type:
+      - string
+      - 'null'
       description: 'The name of the query pipeline to use for this request (bypassing its conditions, if it has any).
 
 
@@ -655,47 +700,21 @@ components:
 
         '
       example: CustomerQueryPipeline
-    Context:
-      type: object
-      nullable: true
-      additionalProperties: true
-      description: 'The custom context information to send along with the request. Must be a dictionary of key-value pairs (JSON) where each key is a string, and each value is either a string or an array of strings.
-
-
-        Coveo Machine Learning models may use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the `$context` object.
-
-
-        **Note:** When logging a **Search** usage analytics event for a query, the `customData` field of that event should include the same data as the `context` parameter of the query. However, each `context` key included in `customData` must be prefixed by `context_` (e.g., the `userRoles` key in `context` becomes `context_userRoles` in `customData`).
-
-
-        See also the `referrer` parameter.
-
-
-        **Example** `{"userAgeRange":"25-35","userRoles":["PremiumCustomer","ProductReviewer"]}`'
   examples:
-    HeaderMessage:
-      summary: Header
-      description: "This is the decoded content of the `payload`:\n\n```json\n{\n  \"answerStyle\": \"default\",\n  \"contentFormat\": \"text/markdown\"\n}\n```\n"
-      value:
-        payloadType: genqa.headerMessageType
-        payload: JSON omitted for readability. See description above.
-        finishReason: null
-        errorMessage: null
-        statusCode: null
-    CitationsMessage:
-      summary: Citations
-      description: "This is the decoded content of the `payload`:\n\n```javascript\n{\n  \"citations\": [\n    {\n      \"id\": \"abc123\",                                           // The unique citation ID.          Required.\n      \"title\": \"Coveo Search Best Practices\",                   // The item title. It may be empty. Required.\n      \"uri\": \"https://example.com/docs/search\",                 // The item URI.                    Required.\n      \"permanentid\": \"xyz789\",                                  // The item permanent ID.           Required.\n      \"clickUri\": \"https://example.com/docs/search\",            // The item click URI.              Required.\n      \"text\": \"This document describes best practices\",         // The item excerpt.                Required.\n      \"fields\": {\n        \"urihash\": \"def456\",                                    // The item URI hash.               Required.\n        \"clickableuri\": \"https://example.com/docs/search\",      // The hyperlinkable item URI.      Optional.\n        \"date\": 1680700000,                                     // The item date (Unix timestamp).  Optional.\n        \"filetype\": \"html\",                                     // The item file type.              Optional.\n        \"language\": [\"en\"],                                     // The item language(s).            Optional.\n        \"objecttype\": \"document\",                               // The item object type.            Optional.\n        \"parents\": \"parent-id-123\",                             // The item parents.                Optional.\n        \"permanentid\": \"xyz789\",                                // The item permanent ID.           Optional.\n        \"size\": 2048,                                           // The item size in bytes.          Optional.\n        \"source\": \"Documentation\",                              // The item source.                 Optional.\n        \"sourcetype\": \"Web\"                                     // The item source type.            Optional.\n      }\n    }\n  ]\n}\n```\n"
-      value:
-        payloadType: genqa.citationsType
-        payload: JSON omitted for readability. See description above.
-        finishReason: null
-        errorMessage: null
-        statusCode: null
     AnswerMessage:
       summary: Answer Content
       description: "This is the decoded content of the `payload`:\n\n```json\n{\n  \"textDelta\": \"This is the next part of the answer.\"\n}\n```\n"
       value:
         payloadType: genqa.messageType
+        payload: JSON omitted for readability. See description above.
+        finishReason: null
+        errorMessage: null
+        statusCode: null
+    HeaderMessage:
+      summary: Header
+      description: "This is the decoded content of the `payload`:\n\n```json\n{\n  \"answerStyle\": \"default\",\n  \"contentFormat\": \"text/markdown\"\n}\n```\n"
+      value:
+        payloadType: genqa.headerMessageType
         payload: JSON omitted for readability. See description above.
         finishReason: null
         errorMessage: null
@@ -709,27 +728,30 @@ components:
         finishReason: completed
         errorMessage: null
         statusCode: 200
-  parameters:
-    ConfigIdPath:
-      name: configId
-      in: path
-      description: The unique identifier of the answer configuration.
-      required: true
-      schema:
-        type: string
-    OrganizationIdPath:
-      name: organizationId
-      in: path
-      description: The unique identifier of the target Coveo Cloud organization.
-      required: true
-      schema:
-        type: string
+    CitationsMessage:
+      summary: Citations
+      description: "This is the decoded content of the `payload`:\n\n```javascript\n{\n  \"citations\": [\n    {\n      \"id\": \"abc123\",                                           // The unique citation ID.          Required.\n      \"title\": \"Coveo Search Best Practices\",                   // The item title. It may be empty. Required.\n      \"uri\": \"https://example.com/docs/search\",                 // The item URI.                    Required.\n      \"permanentid\": \"xyz789\",                                  // The item permanent ID.           Required.\n      \"clickUri\": \"https://example.com/docs/search\",            // The item click URI.              Required.\n      \"text\": \"This document describes best practices\",         // The item excerpt.                Required.\n      \"fields\": {\n        \"urihash\": \"def456\",                                    // The item URI hash.               Required.\n        \"clickableuri\": \"https://example.com/docs/search\",      // The hyperlinkable item URI.      Optional.\n        \"date\": 1680700000,                                     // The item date (Unix timestamp).  Optional.\n        \"filetype\": \"html\",                                     // The item file type.              Optional.\n        \"language\": [\"en\"],                                     // The item language(s).            Optional.\n        \"objecttype\": \"document\",                               // The item object type.            Optional.\n        \"parents\": \"parent-id-123\",                             // The item parents.                Optional.\n        \"permanentid\": \"xyz789\",                                // The item permanent ID.           Optional.\n        \"size\": 2048,                                           // The item size in bytes.          Optional.\n        \"source\": \"Documentation\",                              // The item source.                 Optional.\n        \"sourcetype\": \"Web\"                                     // The item source type.            Optional.\n      }\n    }\n  ]\n}\n```\n"
+      value:
+        payloadType: genqa.citationsType
+        payload: JSON omitted for readability. See description above.
+        finishReason: null
+        errorMessage: null
+        statusCode: null
   securitySchemes:
     oauth2:
       type: oauth2
+      description: OAuth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: full
+x-tagGroups:
+- name: Coveo Customer Service API Service
+  tags:
+  - Case Assist
+  - Insight Panel
+- name: Coveo Answer API
+  tags:
+  - Answer
+  - CRGA For Cases

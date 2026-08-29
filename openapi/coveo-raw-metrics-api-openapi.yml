@@ -1,18 +1,19 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Raw Metrics API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+  title: Coveo Search Usage Metrics Service Raw Metrics API
   version: 1.0.0
+  description: Documentation for Coveo Search Usage Metrics Service
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: ''
+    url: ''
+    email: support@coveo.com
+  license:
+    name: ''
+    url: ''
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Raw Metrics
 paths:
@@ -28,12 +29,15 @@ paths:
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/RestListOfMetrics'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestListOfMetrics'
       security:
       - oauth2:
         - full
@@ -47,26 +51,31 @@ paths:
       parameters:
       - name: minimumQueries
         description: The minimum number of queries required for a search hub to be listed
-        default: '1'
         required: false
         in: query
-        type: string
+        schema:
+          type: string
+          default: '1'
       - name: month
         description: The month to report for
         example: Specify '2024-02' for February 2024.
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/RestListOfSearchHubMetrics'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestListOfSearchHubMetrics'
       security:
       - oauth2:
         - full
@@ -82,32 +91,39 @@ paths:
         description: The last day to report for
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: from
         description: The first day to report for
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: metric
         description: The raw metric to report on
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       - name: searchHub
         description: The name of the search hub to report on
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/RestListOfMetricValues'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestListOfMetricValues'
       security:
       - oauth2:
         - full
@@ -123,154 +139,161 @@ paths:
         description: The last month to report for
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: from
         description: The first month to report for
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: metric
         description: The raw metric to report on
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       - name: searchHub
         description: The name of the search hub to report on
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/RestListOfMetricValues'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestListOfMetricValues'
       security:
       - oauth2:
         - full
 components:
+  schemas:
+    RestListOfSearchHubMetrics:
+      type: object
+      properties:
+        searchHubs:
+          description: The list of search hubs
+          type: array
+          items:
+            $ref: '#/components/schemas/RestSearchHubMetrics'
+      required:
+      - searchHubs
+    RestMetric:
+      type: object
+      properties:
+        id:
+          example: '"queries"'
+          description: The ID of the metric
+          type: string
+        label:
+          example: '"Normal Queries"'
+          description: The display name of the metric
+          type: string
+        productId:
+          example: '"01t0d000001abCdEFG"'
+          description: The productId associated to a metric
+          type: string
+        slidingWindowInMonths:
+          example: 3
+          description: The size of the sliding window to use, in months.
+          type: integer
+          format: int32
+      required:
+      - id
+    RestListOfMetricValues:
+      type: object
+      properties:
+        values:
+          description: The list of daily metric values
+          type: array
+          items:
+            $ref: '#/components/schemas/RestMetricValueforDate'
+      required:
+      - values
+    RestMetricValueforDate:
+      type: object
+      properties:
+        date:
+          example: '"2019-01-01"'
+          description: The date for the usage metric value
+          type: string
+        value:
+          example: 123
+          description: The numeric metric value
+          type: integer
+          format: int64
+      required:
+      - date
+      - value
+    RestListOfMetrics:
+      type: object
+      properties:
+        metrics:
+          description: The list of metrics
+          type: array
+          items:
+            $ref: '#/components/schemas/RestMetric'
+      required:
+      - metrics
+    RestSearchHubMetrics:
+      type: object
+      properties:
+        searchHub:
+          example: '"myhub"'
+          description: The name of the search hub
+          type: string
+        assignment:
+          example: '"qpm"'
+          description: The usage buckets to which the search hub is assigned
+          type: string
+        normalQueries:
+          example: 123
+          description: The number of normal queries
+          type: integer
+          format: int64
+        recommendationQueries:
+          example: 123
+          description: The number of recommendation queries
+          type: integer
+          format: int64
+        users:
+          example: 123
+          description: The number of distinct users
+          type: integer
+          format: int64
+        staticQueries:
+          example: 123
+          description: The number of distinct persistent queries
+          type: integer
+          format: int64
+        productListingQueries:
+          example: 123
+          description: '**Deprecated** The number of product listing queries'
+          type: integer
+          format: int64
+      required:
+      - searchHub
+      - assignment
+      - normalQueries
+      - recommendationQueries
+      - users
+      - staticQueries
+      - productListingQueries
   securitySchemes:
     oauth2:
       type: oauth2
       flows:
-        authorizationCode:
-          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+        implicit:
           scopes:
-            full: required
-definitions:
-  RestListOfMetricValues:
-    type: object
-    properties:
-      values:
-        description: The list of daily metric values
-        type: array
-        items:
-          $ref: '#/definitions/RestMetricValueforDate'
-    required:
-    - values
-  RestListOfMetrics:
-    type: object
-    properties:
-      metrics:
-        description: The list of metrics
-        type: array
-        items:
-          $ref: '#/definitions/RestMetric'
-    required:
-    - metrics
-  RestMetric:
-    type: object
-    properties:
-      id:
-        example: '"queries"'
-        description: The ID of the metric
-        type: string
-      label:
-        example: '"Normal Queries"'
-        description: The display name of the metric
-        type: string
-      productId:
-        example: '"01t0d000001abCdEFG"'
-        description: The productId associated to a metric
-        type: string
-      slidingWindowInMonths:
-        example: 3
-        description: The size of the sliding window to use, in months.
-        type: integer
-        format: int32
-    required:
-    - id
-  RestListOfSearchHubMetrics:
-    type: object
-    properties:
-      searchHubs:
-        description: The list of search hubs
-        type: array
-        items:
-          $ref: '#/definitions/RestSearchHubMetrics'
-    required:
-    - searchHubs
-  RestSearchHubMetrics:
-    type: object
-    properties:
-      searchHub:
-        example: '"myhub"'
-        description: The name of the search hub
-        type: string
-      assignment:
-        example: '"qpm"'
-        description: The usage buckets to which the search hub is assigned
-        type: string
-      normalQueries:
-        example: 123
-        description: The number of normal queries
-        type: integer
-        format: int64
-      recommendationQueries:
-        example: 123
-        description: The number of recommendation queries
-        type: integer
-        format: int64
-      users:
-        example: 123
-        description: The number of distinct users
-        type: integer
-        format: int64
-      staticQueries:
-        example: 123
-        description: The number of distinct persistent queries
-        type: integer
-        format: int64
-      productListingQueries:
-        example: 123
-        description: '**Deprecated** The number of product listing queries'
-        type: integer
-        format: int64
-    required:
-    - searchHub
-    - assignment
-    - normalQueries
-    - recommendationQueries
-    - users
-    - staticQueries
-    - productListingQueries
-  RestMetricValueforDate:
-    type: object
-    properties:
-      date:
-        example: '"2019-01-01"'
-        description: The date for the usage metric value
-        type: string
-      value:
-        example: 123
-        description: The numeric metric value
-        type: integer
-        format: int64
-    required:
-    - date
-    - value
+            full: full
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+      description: OAuth2

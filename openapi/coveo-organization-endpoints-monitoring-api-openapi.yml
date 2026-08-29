@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Organization Endpoints Monitoring API
+  title: Coveo Organization Organization Endpoints Monitoring API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -225,6 +225,34 @@ paths:
       x-ui-operation-id: /rest/monitoring/global/organizations/paramId/endpoints/readiness_get
 components:
   schemas:
+    WrongEndpointUsageDetailsModel:
+      type: object
+      properties:
+        hostname:
+          type: string
+        requestDetails:
+          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
+        reason:
+          type: string
+          enum:
+          - DEPRECATED_ENDPOINT
+          - USING_PLATFORM_ENDPOINT_FOR_ANALYTICS
+          - USING_SEARCH_ENDPOINT_FOR_ANALYTICS
+          - USING_ADMIN_CUSTOM_ENDPOINT_FOR_SEARCH
+          - WRONG_ORGANIZATION
+          - USING_SEARCH_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
+          - USING_ANALYTICS_ENDPOINT_FOR_SEARCH
+          - USING_ANALYTICS_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
+        blockedAfter:
+          type: string
+          format: date-time
+    EndpointUsageDetailsModel:
+      type: object
+      properties:
+        hostname:
+          type: string
+        requestDetails:
+          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
     EndpointUsageRequestDetailsModel:
       type: object
       properties:
@@ -234,13 +262,6 @@ components:
         blockedRequestPercentage:
           type: number
           format: double
-    EndpointUsageDetailsModel:
-      type: object
-      properties:
-        hostname:
-          type: string
-        requestDetails:
-          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
     EndpointUsageDetailsPerServiceModel:
       type: object
       properties:
@@ -267,17 +288,6 @@ components:
         totalPages:
           type: integer
           format: int32
-    EndpointUsageModel:
-      type: object
-      properties:
-        organizationId:
-          type: string
-        customerEndpointUsageStatus:
-          $ref: '#/components/schemas/CustomerEndpointUsageStatusModel'
-        searchDetails:
-          $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
-        analyticsDetails:
-          $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
     SearchHubUsageDetailsModel:
       type: object
       properties:
@@ -339,27 +349,6 @@ components:
         totalRequestPercentage:
           type: number
           format: double
-    WrongEndpointUsageDetailsModel:
-      type: object
-      properties:
-        hostname:
-          type: string
-        requestDetails:
-          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
-        reason:
-          type: string
-          enum:
-          - DEPRECATED_ENDPOINT
-          - USING_PLATFORM_ENDPOINT_FOR_ANALYTICS
-          - USING_SEARCH_ENDPOINT_FOR_ANALYTICS
-          - USING_ADMIN_CUSTOM_ENDPOINT_FOR_SEARCH
-          - WRONG_ORGANIZATION
-          - USING_SEARCH_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
-          - USING_ANALYTICS_ENDPOINT_FOR_SEARCH
-          - USING_ANALYTICS_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
-        blockedAfter:
-          type: string
-          format: date-time
     RegionUsageModel:
       type: object
       properties:
@@ -374,6 +363,17 @@ components:
       properties:
         readyForSearch:
           type: boolean
+    EndpointUsageModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        customerEndpointUsageStatus:
+          $ref: '#/components/schemas/CustomerEndpointUsageStatusModel'
+        searchDetails:
+          $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
+        analyticsDetails:
+          $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
   securitySchemes:
     oauth2:
       type: oauth2

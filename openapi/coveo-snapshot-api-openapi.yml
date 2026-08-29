@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Snapshot API
+  title: Coveo Migration Snapshot API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -780,6 +780,41 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/content_get
 components:
   schemas:
+    DiffGenerationReportModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the report.
+          example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
+        snapshotId:
+          type: string
+          description: The unique identifier of the snapshot.
+        relativeReportId:
+          type: string
+          description: The unique identifier of the dry-run report that triggered the current diff generation.
+        updatedDate:
+          type: string
+          description: The report last update date in number of milliseconds since UNIX epoch.
+          format: date-time
+        status:
+          type: string
+          description: The status of the operation.
+          enum:
+          - PENDING
+          - IN_PROGRESS
+          - COMPLETED
+          - ABORTED
+        files:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UrlWithExpirationAndNumberOfLinesModel'
+          description: The generated files, separated by resource type.
+        contentPatchFiles:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UrlWithExpirationAndNumberOfLinesModel'
+          description: The generated content patch files, separated by resource type.
     CurrentStage:
       type: object
       properties:
@@ -801,71 +836,122 @@ components:
           - BINARY
           - PERCENTAGE
       description: The current stage being executed, with its related progress value.
-    SynchronizationReportModel:
+    SnapshotModel:
       type: object
       properties:
         id:
           type: string
-          description: The unique identifier of the synchronization operation.
-          example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
-        updatedDate:
+          description: The unique identifier of the target snapshot.
+          example: destinationorganizationg7dg3gd-8dfs7hj3k
+        createdBy:
           type: string
-          description: The date at which the report was created in number of milliseconds since UNIX epoch.
+          description: The username of the snapshot creator.
+          example: '`jdoe@example.com`'
+        createdDate:
+          type: string
+          description: The date of creation of the snapshot in number of milliseconds since UNIX epoch.
           format: date-time
-        synchronizationPlanId:
+        originId:
           type: string
-          description: The unique identifier of the synchronization plan.
-          example: '`startingorganizationg8tp8wu3-xqtzk7c2lnskasagcxy75xkgp`'
-        type:
+          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/) from whichthe snapshot originates, if it differs from the current organization.
+          example: '`startingorganizationg8tp8wu3`'
+        targetId:
           type: string
-          description: The synchronization operation type.
-          enum:
-          - CREATE_SNAPSHOT
-          - DRY_RUN
-          - APPLY
-          - CREATE_SYNCHRONIZATION_PLAN
-          - APPLY_SYNCHRONIZATION_PLAN
-          - GENERATE_DIFF
-        status:
+          description: The unique identifier of the organization in which the snapshot applies.
+          example: '`destinationorganizationg7dg3gd`'
+        developerNote:
           type: string
-          description: The synchronization operation status.
-          enum:
-          - PENDING
-          - IN_PROGRESS
-          - COMPLETED
-          - ABORTED
-        resultCode:
-          type: string
-          description: The synchronization operation result code at the end of the operation, if applicable.
-          enum:
-          - AUTO_SYNCHRONIZATION_FAILURE
-          - EXTERNAL_SERVICE_COMMUNICATION_ERROR
-          - RESOURCE_DEPENDENCY_CYCLE
-          - RESOURCES_IN_ERROR
-          - SUCCESS
-          - UNABLE_TO_PUSH_TO_ORGANIZATION
-          - UNABLE_TO_RETRIEVE_RESOURCES
-          - UNEXPECTED_ERROR
-          - UNSUPPORTED_RESOURCE
-        resourcesProcessed:
-          type: integer
-          description: The number of resources processed by the synchronization.
-          format: int32
-        linkOperations:
+          description: A note you can attach to your snapshot.
+          example: '`pipeline snapshot`'
+        reports:
+          type: array
+          description: The list of reports of events on the snapshot.
+          items:
+            $ref: '#/components/schemas/ReportModel'
+        synchronizationReports:
+          type: array
+          description: The list of synchronization reports on the snapshot.
+          items:
+            $ref: '#/components/schemas/SynchronizationReportModel'
+        diffGenerationReports:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiffGenerationReportModel'
+        contentSummary:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/SynchronizationReportLinkOperationsModel'
-          description: The summaries of the outcome of the link operations for the different resource types.
-        linkOperationDetails:
+            type: integer
+            description: 'A summary of the contents of the snapshot.<br/>**Example:**`{QUERY_PIPELINE: 1, RANKING_EXPRESSION: 1}`'
+            format: int32
+          description: 'A summary of the contents of the snapshot.<br/>**Example:**`{QUERY_PIPELINE: 1, RANKING_EXPRESSION: 1}`'
+        snapshotContentModel:
+          $ref: '#/components/schemas/SnapshotContentModel'
+      description: The snapshot configuration.
+    StreamingResponseBody:
+      type: object
+    SnapshotMetadataModel:
+      type: object
+      properties:
+        schemaVersion:
+          type: string
+          description: The schema version used to specify the snapshot content.
+          enum:
+          - v1
+      description: Metadata about the snapshot.
+    UrlWithExpirationAndNumberOfLinesModel:
+      type: object
+      properties:
+        url:
+          type: string
+        urlExpiration:
+          type: string
+          format: date-time
+        numberOfLines:
+          type: integer
+          format: int32
+      description: The generated content patch files, separated by resource type.
+    SnapshotContentModel:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/SnapshotMetadataModel'
+        resources:
+          type: object
+          additionalProperties:
+            type: array
+            description: The snapshot resources.
+            items:
+              $ref: '#/components/schemas/SnapshotResourceModel'
+          description: The snapshot resources.
+      description: The snapshot content.
+    SnapshotResourceModel:
+      type: object
+      properties:
+        resourceName:
+          type: string
+          description: The unique identifier of the resource that allows tracking across organizations.
+          example: myextension_aAePCD
+        parents:
+          type: object
+          additionalProperties:
+            type: string
+            description: The parents of the resource, if applicable.<br/>For example, a query pipeline ranking expression will have the parent query pipeline as a value in its `parents` object.
+          description: The parents of the resource, if applicable.<br/>For example, a query pipeline ranking expression will have the parent query pipeline as a value in its `parents` object.
+        model:
           type: object
           additionalProperties:
             type: object
-            additionalProperties:
-              type: string
-              description: An object containing details about link operation failures, if applicable.
-            description: An object containing details about link operation failures, if applicable.
-          description: An object containing details about link operation failures, if applicable.
-      description: A snapshot synchronization report.
+            description: The JSON configuration of the resource.
+          description: The JSON configuration of the resource.
+      description: The snapshot of a resource.
+    UrlWithExpirationModel:
+      type: object
+      properties:
+        url:
+          type: string
+        urlExpiration:
+          type: string
+          format: date-time
     ResultInformation:
       type: object
       properties:
@@ -874,8 +960,80 @@ components:
         message:
           type: string
       description: For each type of resource, an object containing failure details, if applicable.
-    StreamingResponseBody:
+    ReportResourceOperationsModel:
       type: object
+      properties:
+        resourcesCreated:
+          type: integer
+          description: The number of resources created by the operation.
+          format: int32
+        resourcesCreatedNames:
+          type: array
+          description: The `resourceName`s of the resources created by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources created by the operation.
+        resourcesUpdated:
+          type: integer
+          description: The number of resources updated by the operation.
+          format: int32
+        resourcesUpdatedNames:
+          type: array
+          description: The `resourceName`s of the resources updated by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources updated by the operation.
+        resourcesRecreated:
+          type: integer
+          description: The number of pre-existing resources recreated by the operation. This happens when a resource cannot be updated. For example, it is not possible to rename a query pipeline, so in such a case the pipeline would be deleted and created again with the desired name. This operation counts as one recreation.
+          format: int32
+        resourcesRecreatedNames:
+          type: array
+          description: The `resourceName`s of the resources recreated by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources recreated by the operation.
+        resourcesDeleted:
+          type: integer
+          description: The number of resources deleted by the operation.
+          format: int32
+        resourcesDeletedNames:
+          type: array
+          description: The `resourceName`s of the resources deleted by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources deleted by the operation.
+        resourcesSynchronized:
+          type: integer
+          description: The number of resources synchronized by the operation.
+          format: int32
+        resourcesSynchronizedNames:
+          type: array
+          description: The `resourceName`s of the resources synchronized by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources synchronized by the operation.
+        resourcesInError:
+          type: integer
+          description: The number of resources for which an error occurred during the operation.
+          format: int32
+        resourcesInErrorNames:
+          type: array
+          description: The `resourceName`s of the resources for which an error occurred during the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources for which an error occurred during the operation.
+        resourcesUnchanged:
+          type: integer
+          description: The number of resources unchanged by the operation.
+          format: int32
+        resourcesUnchangedNames:
+          type: array
+          description: The `resourceName`s of the resources unchanged by the operation.
+          items:
+            type: string
+            description: The `resourceName`s of the resources unchanged by the operation.
+      description: A summary of the outcome of the link operations.
     SynchronizationReportLinkOperationsModel:
       type: object
       properties:
@@ -892,40 +1050,6 @@ components:
           description: The number of synchronization links in error.
           format: int32
       description: A summary of the outcome of the link operations.
-    SnapshotMetadataModel:
-      type: object
-      properties:
-        schemaVersion:
-          type: string
-          description: The schema version used to specify the snapshot content.
-          enum:
-          - v1
-      description: Metadata about the snapshot.
-    ExportConfigurationModel:
-      type: object
-      properties:
-        resourcesToExport:
-          type: object
-          additionalProperties:
-            type: array
-            description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:** `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
-            items:
-              type: string
-              description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:** `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
-          description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:** `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
-      description: The export configuration model that specifies the resources to include in the snapshot.
-    UrlWithExpirationAndNumberOfLinesModel:
-      type: object
-      properties:
-        url:
-          type: string
-        urlExpiration:
-          type: string
-          format: date-time
-        numberOfLines:
-          type: integer
-          format: int32
-      description: The generated content patch files, separated by resource type.
     ReportModel:
       type: object
       properties:
@@ -1008,208 +1132,84 @@ components:
             description: For each type of resource, an object containing failure details, if applicable.
           description: For each type of resource, an object containing failure details, if applicable.
       description: A snapshot event report.
-    SnapshotModel:
+    SynchronizationReportModel:
       type: object
       properties:
         id:
           type: string
-          description: The unique identifier of the target snapshot.
-          example: destinationorganizationg7dg3gd-8dfs7hj3k
-        createdBy:
-          type: string
-          description: The username of the snapshot creator.
-          example: '`jdoe@example.com`'
-        createdDate:
-          type: string
-          description: The date of creation of the snapshot in number of milliseconds since UNIX epoch.
-          format: date-time
-        originId:
-          type: string
-          description: The unique identifier of the [organization](https://docs.coveo.com/en/185/) from whichthe snapshot originates, if it differs from the current organization.
-          example: '`startingorganizationg8tp8wu3`'
-        targetId:
-          type: string
-          description: The unique identifier of the organization in which the snapshot applies.
-          example: '`destinationorganizationg7dg3gd`'
-        developerNote:
-          type: string
-          description: A note you can attach to your snapshot.
-          example: '`pipeline snapshot`'
-        reports:
-          type: array
-          description: The list of reports of events on the snapshot.
-          items:
-            $ref: '#/components/schemas/ReportModel'
-        synchronizationReports:
-          type: array
-          description: The list of synchronization reports on the snapshot.
-          items:
-            $ref: '#/components/schemas/SynchronizationReportModel'
-        diffGenerationReports:
-          type: array
-          items:
-            $ref: '#/components/schemas/DiffGenerationReportModel'
-        contentSummary:
-          type: object
-          additionalProperties:
-            type: integer
-            description: 'A summary of the contents of the snapshot.<br/>**Example:**`{QUERY_PIPELINE: 1, RANKING_EXPRESSION: 1}`'
-            format: int32
-          description: 'A summary of the contents of the snapshot.<br/>**Example:**`{QUERY_PIPELINE: 1, RANKING_EXPRESSION: 1}`'
-        snapshotContentModel:
-          $ref: '#/components/schemas/SnapshotContentModel'
-      description: The snapshot configuration.
-    ReportResourceOperationsModel:
-      type: object
-      properties:
-        resourcesCreated:
-          type: integer
-          description: The number of resources created by the operation.
-          format: int32
-        resourcesCreatedNames:
-          type: array
-          description: The `resourceName`s of the resources created by the operation.
-          items:
-            type: string
-            description: The `resourceName`s of the resources created by the operation.
-        resourcesUpdated:
-          type: integer
-          description: The number of resources updated by the operation.
-          format: int32
-        resourcesUpdatedNames:
-          type: array
-          description: The `resourceName`s of the resources updated by the operation.
-          items:
-            type: string
-            description: The `resourceName`s of the resources updated by the operation.
-        resourcesRecreated:
-          type: integer
-          description: The number of pre-existing resources recreated by the operation. This happens when a resource cannot be updated. For example, it is not possible to rename a query pipeline, so in such a case the pipeline would be deleted and created again with the desired name. This operation counts as one recreation.
-          format: int32
-        resourcesRecreatedNames:
-          type: array
-          description: The `resourceName`s of the resources recreated by the operation.
-          items:
-            type: string
-            description: The `resourceName`s of the resources recreated by the operation.
-        resourcesDeleted:
-          type: integer
-          description: The number of resources deleted by the operation.
-          format: int32
-        resourcesDeletedNames:
-          type: array
-          description: The `resourceName`s of the resources deleted by the operation.
-          items:
-            type: string
-            description: The `resourceName`s of the resources deleted by the operation.
-        resourcesSynchronized:
-          type: integer
-          description: The number of resources synchronized by the operation.
-          format: int32
-        resourcesSynchronizedNames:
-          type: array
-          description: The `resourceName`s of the resources synchronized by the operation.
-          items:
-            type: string
-            description: The `resourceName`s of the resources synchronized by the operation.
-        resourcesInError:
-          type: integer
-          description: The number of resources for which an error occurred during the operation.
-          format: int32
-        resourcesInErrorNames:
-          type: array
-          description: The `resourceName`s of the resources for which an error occurred during the operation.
-          items:
-            type: string
-            description: The `resourceName`s of the resources for which an error occurred during the operation.
-        resourcesUnchanged:
-          type: integer
-          description: The number of resources unchanged by the operation.
-          format: int32
-        resourcesUnchangedNames:
-          type: array
-          description: The `resourceName`s of the resources unchanged by the operation.
-          items:
-            type: string
-            description: The `resourceName`s of the resources unchanged by the operation.
-      description: A summary of the outcome of the link operations.
-    UrlWithExpirationModel:
-      type: object
-      properties:
-        url:
-          type: string
-        urlExpiration:
-          type: string
-          format: date-time
-    DiffGenerationReportModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the report.
+          description: The unique identifier of the synchronization operation.
           example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
-        snapshotId:
-          type: string
-          description: The unique identifier of the snapshot.
-        relativeReportId:
-          type: string
-          description: The unique identifier of the dry-run report that triggered the current diff generation.
         updatedDate:
           type: string
-          description: The report last update date in number of milliseconds since UNIX epoch.
+          description: The date at which the report was created in number of milliseconds since UNIX epoch.
           format: date-time
+        synchronizationPlanId:
+          type: string
+          description: The unique identifier of the synchronization plan.
+          example: '`startingorganizationg8tp8wu3-xqtzk7c2lnskasagcxy75xkgp`'
+        type:
+          type: string
+          description: The synchronization operation type.
+          enum:
+          - CREATE_SNAPSHOT
+          - DRY_RUN
+          - APPLY
+          - CREATE_SYNCHRONIZATION_PLAN
+          - APPLY_SYNCHRONIZATION_PLAN
+          - GENERATE_DIFF
         status:
           type: string
-          description: The status of the operation.
+          description: The synchronization operation status.
           enum:
           - PENDING
           - IN_PROGRESS
           - COMPLETED
           - ABORTED
-        files:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UrlWithExpirationAndNumberOfLinesModel'
-          description: The generated files, separated by resource type.
-        contentPatchFiles:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UrlWithExpirationAndNumberOfLinesModel'
-          description: The generated content patch files, separated by resource type.
-    SnapshotResourceModel:
-      type: object
-      properties:
-        resourceName:
+        resultCode:
           type: string
-          description: The unique identifier of the resource that allows tracking across organizations.
-          example: myextension_aAePCD
-        parents:
+          description: The synchronization operation result code at the end of the operation, if applicable.
+          enum:
+          - AUTO_SYNCHRONIZATION_FAILURE
+          - EXTERNAL_SERVICE_COMMUNICATION_ERROR
+          - RESOURCE_DEPENDENCY_CYCLE
+          - RESOURCES_IN_ERROR
+          - SUCCESS
+          - UNABLE_TO_PUSH_TO_ORGANIZATION
+          - UNABLE_TO_RETRIEVE_RESOURCES
+          - UNEXPECTED_ERROR
+          - UNSUPPORTED_RESOURCE
+        resourcesProcessed:
+          type: integer
+          description: The number of resources processed by the synchronization.
+          format: int32
+        linkOperations:
           type: object
           additionalProperties:
-            type: string
-            description: The parents of the resource, if applicable.<br/>For example, a query pipeline ranking expression will have the parent query pipeline as a value in its `parents` object.
-          description: The parents of the resource, if applicable.<br/>For example, a query pipeline ranking expression will have the parent query pipeline as a value in its `parents` object.
-        model:
+            $ref: '#/components/schemas/SynchronizationReportLinkOperationsModel'
+          description: The summaries of the outcome of the link operations for the different resource types.
+        linkOperationDetails:
           type: object
           additionalProperties:
             type: object
-            description: The JSON configuration of the resource.
-          description: The JSON configuration of the resource.
-      description: The snapshot of a resource.
-    SnapshotContentModel:
+            additionalProperties:
+              type: string
+              description: An object containing details about link operation failures, if applicable.
+            description: An object containing details about link operation failures, if applicable.
+          description: An object containing details about link operation failures, if applicable.
+      description: A snapshot synchronization report.
+    ExportConfigurationModel:
       type: object
       properties:
-        metadata:
-          $ref: '#/components/schemas/SnapshotMetadataModel'
-        resources:
+        resourcesToExport:
           type: object
           additionalProperties:
             type: array
-            description: The snapshot resources.
+            description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:** `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
             items:
-              $ref: '#/components/schemas/SnapshotResourceModel'
-          description: The snapshot resources.
-      description: The snapshot content.
+              type: string
+              description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:** `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
+          description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:** `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
+      description: The export configuration model that specifies the resources to include in the snapshot.
   securitySchemes:
     oauth2:
       type: oauth2

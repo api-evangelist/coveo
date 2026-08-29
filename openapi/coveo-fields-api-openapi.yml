@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Fields API
+  title: Coveo Field Fields API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -530,6 +530,70 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/indexes/fields/batch/delete/results_delete
 components:
   schemas:
+    FieldListingFilters:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A substring that must appear in the `name` property of a [field](https://docs.coveo.com/en/200/) in order for this field to be included in the results.<br />**Example:** `author`
+          example: author
+        type:
+          type: string
+          description: The type of [field](https://docs.coveo.com/en/200/) to list.<br /> See [Field Types](https://docs.coveo.com/en/1833/#field-type).<br />**Allowed values:** <br /> - `ALL` <br /> - `LONG` <br /> - `LONG_64` <br /> - `DOUBLE` <br /> - `DATE` <br /> - `STRING`<br />
+          example: STRING
+          enum:
+          - LONG
+          - LONG_64
+          - DOUBLE
+          - DATE
+          - STRING
+          - VECTOR
+        origin:
+          type: string
+          description: 'The origin of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:** <br /> - `ALL` <br /> - `USER`: Created by a [Coveo Cloud organization](https://docs.coveo.com/en/185/) [member](https://docs.coveo.com/en/2869/) or by a source addition (each source comes with a set of standard fields).<br /> - `SYSTEM`: Required by the Coveo index and applies to all sources.<br /><br />**Default:** `ALL`'
+          example: ALL
+          enum:
+          - ALL
+          - USER
+          - SYSTEM
+          default: ALL
+        facet:
+          type: string
+          description: The facet status of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:** <br /> - `ALL` <br /> - `TRUE_ONLY`<br /> - `FALSE_ONLY`<br /><br />**Default:** `ALL`
+          example: ALL
+          enum:
+          - ALL
+          - TRUE_ONLY
+          - FALSE_ONLY
+          default: ALL
+        automaticFacetsCandidate:
+          type: string
+          description: The automatic facet candidate status of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:** <br /> - `ALL` <br /> - `TRUE_ONLY`<br /> - `FALSE_ONLY`<br /><br />**Default:** `ALL`
+          example: ALL
+          enum:
+          - ALL
+          - TRUE_ONLY
+          - FALSE_ONLY
+          default: ALL
+        sort:
+          type: string
+          description: The sort status of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:** <br /> - `ALL` <br /> - `TRUE_ONLY`<br /> - `FALSE_ONLY`<br /><br />**Default:** `ALL`
+          example: ALL
+          enum:
+          - ALL
+          - TRUE_ONLY
+          - FALSE_ONLY
+          default: ALL
+        projectId:
+          type: string
+          description: Only return fields assigned to a projectId. <br />**Optional <br />**Default:** Null
+        fieldNames:
+          type: array
+          description: Only return fields whose ids are present in this list. <br />**Optional <br />**Default:** Null
+          items:
+            type: string
+            description: Only return fields whose ids are present in this list. <br />**Optional <br />**Default:** Null
+      description: Filters to narrow down the returned [fields](https://docs.coveo.com/en/200/).
     PageModelFieldModel:
       type: object
       properties:
@@ -685,98 +749,6 @@ components:
             type: string
             description: List of Project IDs a [field](https://docs.coveo.com/en/200/) can be associated with.<br />**Note:** This is an optional list of `STRING`<br />**Default:** `null`
       description: The information to create the new field with.
-    BatchOperationProgressModelFieldModel:
-      type: object
-      properties:
-        batchOperationId:
-          type: string
-        status:
-          type: string
-          enum:
-          - IN_PROGRESS
-          - COMPLETED
-        batchOperationResourcesStatus:
-          type: array
-          items:
-            $ref: '#/components/schemas/BatchOperationResourceStatusModelFieldModel'
-    FieldListingFilters:
-      type: object
-      properties:
-        name:
-          type: string
-          description: A substring that must appear in the `name` property of a [field](https://docs.coveo.com/en/200/) in order for this field to be included in the results.<br />**Example:** `author`
-          example: author
-        type:
-          type: string
-          description: The type of [field](https://docs.coveo.com/en/200/) to list.<br /> See [Field Types](https://docs.coveo.com/en/1833/#field-type).<br />**Allowed values:** <br /> - `ALL` <br /> - `LONG` <br /> - `LONG_64` <br /> - `DOUBLE` <br /> - `DATE` <br /> - `STRING`<br />
-          example: STRING
-          enum:
-          - LONG
-          - LONG_64
-          - DOUBLE
-          - DATE
-          - STRING
-          - VECTOR
-        origin:
-          type: string
-          description: 'The origin of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:** <br /> - `ALL` <br /> - `USER`: Created by a [Coveo Cloud organization](https://docs.coveo.com/en/185/) [member](https://docs.coveo.com/en/2869/) or by a source addition (each source comes with a set of standard fields).<br /> - `SYSTEM`: Required by the Coveo index and applies to all sources.<br /><br />**Default:** `ALL`'
-          example: ALL
-          enum:
-          - ALL
-          - USER
-          - SYSTEM
-          default: ALL
-        facet:
-          type: string
-          description: The facet status of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:** <br /> - `ALL` <br /> - `TRUE_ONLY`<br /> - `FALSE_ONLY`<br /><br />**Default:** `ALL`
-          example: ALL
-          enum:
-          - ALL
-          - TRUE_ONLY
-          - FALSE_ONLY
-          default: ALL
-        automaticFacetsCandidate:
-          type: string
-          description: The automatic facet candidate status of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:** <br /> - `ALL` <br /> - `TRUE_ONLY`<br /> - `FALSE_ONLY`<br /><br />**Default:** `ALL`
-          example: ALL
-          enum:
-          - ALL
-          - TRUE_ONLY
-          - FALSE_ONLY
-          default: ALL
-        sort:
-          type: string
-          description: The sort status of the [fields](https://docs.coveo.com/en/200/) to list.<br />**Allowed values:** <br /> - `ALL` <br /> - `TRUE_ONLY`<br /> - `FALSE_ONLY`<br /><br />**Default:** `ALL`
-          example: ALL
-          enum:
-          - ALL
-          - TRUE_ONLY
-          - FALSE_ONLY
-          default: ALL
-        projectId:
-          type: string
-          description: Only return fields assigned to a projectId. <br />**Optional <br />**Default:** Null
-        fieldNames:
-          type: array
-          description: Only return fields whose ids are present in this list. <br />**Optional <br />**Default:** Null
-          items:
-            type: string
-            description: Only return fields whose ids are present in this list. <br />**Optional <br />**Default:** Null
-      description: Filters to narrow down the returned [fields](https://docs.coveo.com/en/200/).
-    BatchOperationResourceStatusModelFieldModel:
-      type: object
-      properties:
-        resourceModel:
-          $ref: '#/components/schemas/FieldModel'
-        operationResult:
-          type: string
-          enum:
-          - SUCCESS
-          - ERROR
-        errorDetails:
-          type: string
-        successful:
-          type: boolean
     FieldListingOptions:
       type: object
       properties:
@@ -805,6 +777,34 @@ components:
         filters:
           $ref: '#/components/schemas/FieldListingFilters'
       description: Options to control the pagination and filtering of [fields](https://docs.coveo.com/en/200/).
+    BatchOperationResourceStatusModelFieldModel:
+      type: object
+      properties:
+        resourceModel:
+          $ref: '#/components/schemas/FieldModel'
+        operationResult:
+          type: string
+          enum:
+          - SUCCESS
+          - ERROR
+        errorDetails:
+          type: string
+        successful:
+          type: boolean
+    BatchOperationProgressModelFieldModel:
+      type: object
+      properties:
+        batchOperationId:
+          type: string
+        status:
+          type: string
+          enum:
+          - IN_PROGRESS
+          - COMPLETED
+        batchOperationResourcesStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/BatchOperationResourceStatusModelFieldModel'
   securitySchemes:
     oauth2:
       type: oauth2

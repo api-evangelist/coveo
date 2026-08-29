@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
   title: Coveo Activity Activities API
   description: API for Coveo Platform
@@ -399,174 +399,142 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/activities/operationtypes_get
 components:
   schemas:
-    ActivityAbortedByModel:
+    PageModelActivityModel:
       type: object
       properties:
-        displayName:
-          type: string
-          description: The display name of the [activity](https://docs.coveo.com/en/173/) that was aborted.</br>**Example:** `MyActivity`
-        userId:
-          type: string
-          description: The unique identifier of the user who aborted the execution of the activity.</br>**Example:** `asmith@example.com`
-        abortedByType:
-          type: string
-          description: 'The entity type that aborted the [activity](https://docs.coveo.com/en/173/).</br>**Allowed values:**</br>- `USER`: A user aborted the activity</br>- `SYSTEM`: A Coveo Cloud platform process aborted the activity'
-          enum:
-          - USER
-          - SYSTEM
-        relatedActivityId:
-          type: string
-          description: The unique identifier of the activity that was aborted.</br>**Example:** `128a706128d54btm98df8a98015301be`
-        relatedActivity:
-          type: string
-          description: The type of [activity](https://docs.coveo.com/en/173/) that was aborted.
-          enum:
-          - APPLY
-          - ARCHIVE
-          - ARCHIVE_WARNING
-          - BACKUP
-          - CHANGE_ONLINE
-          - CHANGE_READ_ONLY
-          - COMMIT
-          - CONFIG_CHANGE
-          - CONFIG_CREATE
-          - CREATE
-          - DECLINE
-          - DELETE
-          - DISABLE
-          - DUPLICATE
-          - ENABLE
-          - ENABLE_DISABLED_ENTITIES
-          - EXPORT
-          - FULL_REFRESH
-          - HORIZONTAL_SCALING
-          - IDLE
-          - IMPORT
-          - INCREMENTAL_REFRESH
-          - LIMIT_ALMOST_REACHED
-          - LIMIT_EXCEEDED
-          - LIMIT_REACHED
-          - LOG_REQUEST
-          - METADATA_REPORT
-          - MODEL_BUILD
-          - MODEL_REFRESH
-          - ORG_PROVISIONING_CHECK
-          - PAUSE
-          - PAUSE_ON_ERROR
-          - REBUILD
-          - REFRESH
-          - REFRESH_CANCEL
-          - REFRESH_ENTITIES_IN_ERROR
-          - REFRESH_ENTITIES_NOT_UPDATED
-          - REFRESH_ENTITY
-          - REMEDIATE
-          - RESIZE
-          - RESTORE
-          - RESUME
-          - ROTATE
-          - SCHEDULE_CHANGE
-          - SCHEDULE_CREATE
-          - SCHEDULE_DELETE
-          - SEARCH_CERTIFICATE_UPDATE
-          - SEARCH_INCIDENT
-          - SEND_RESOURCE_SNAPSHOT
-          - START
-          - STOP
-          - SYNCHRONIZE
-          - TEST
-          - UPDATE
-          - UPGRADE
-          - UPGRADE_REVERT
-          - VALIDATE
-          - VERTICAL_SCALING
-        relatedActivityResourceType:
-          type: string
-          description: The [resource](https://docs.coveo.com/en/2820/) type of the aborted activity.</br>**Example:** `FIELD`
-      description: An entity that aborted an [activity](https://docs.coveo.com/en/173/).
-    ActivityTriggerByModel:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivityModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    ActivityFacetModel:
       type: object
       properties:
-        id:
-          type: string
-          description: The unique identifier of the entity that triggered the activity.</br>**Example:** `asmith@example.com-google`
-        type:
-          type: string
-          description: The type of entity that triggered the activity.
-          enum:
-          - USER
-          - SYSTEM
-        displayName:
-          type: string
-          description: The display name of the entity that triggered the activity.</br>**Example:** `asmith@example.com`
-        relatedActivityId:
-          type: string
-          description: The unique identifier of the [activity](https://docs.coveo.com/en/173/) that was triggered.</br>**Example:** `128a706128d54btm98df8a98015301be`
-        relatedActivity:
-          type: string
-          description: The [activity](https://docs.coveo.com/en/173/) operation that was triggered.
-          enum:
-          - APPLY
-          - ARCHIVE
-          - ARCHIVE_WARNING
-          - BACKUP
-          - CHANGE_ONLINE
-          - CHANGE_READ_ONLY
-          - COMMIT
-          - CONFIG_CHANGE
-          - CONFIG_CREATE
-          - CREATE
-          - DECLINE
-          - DELETE
-          - DISABLE
-          - DUPLICATE
-          - ENABLE
-          - ENABLE_DISABLED_ENTITIES
-          - EXPORT
-          - FULL_REFRESH
-          - HORIZONTAL_SCALING
-          - IDLE
-          - IMPORT
-          - INCREMENTAL_REFRESH
-          - LIMIT_ALMOST_REACHED
-          - LIMIT_EXCEEDED
-          - LIMIT_REACHED
-          - LOG_REQUEST
-          - METADATA_REPORT
-          - MODEL_BUILD
-          - MODEL_REFRESH
-          - ORG_PROVISIONING_CHECK
-          - PAUSE
-          - PAUSE_ON_ERROR
-          - REBUILD
-          - REFRESH
-          - REFRESH_CANCEL
-          - REFRESH_ENTITIES_IN_ERROR
-          - REFRESH_ENTITIES_NOT_UPDATED
-          - REFRESH_ENTITY
-          - REMEDIATE
-          - RESIZE
-          - RESTORE
-          - RESUME
-          - ROTATE
-          - SCHEDULE_CHANGE
-          - SCHEDULE_CREATE
-          - SCHEDULE_DELETE
-          - SEARCH_CERTIFICATE_UPDATE
-          - SEARCH_INCIDENT
-          - SEND_RESOURCE_SNAPSHOT
-          - START
-          - STOP
-          - SYNCHRONIZE
-          - TEST
-          - UPDATE
-          - UPGRADE
-          - UPGRADE_REVERT
-          - VALIDATE
-          - VERTICAL_SCALING
-        relatedActivityResourceType:
-          type: string
-          description: The [resource](https://docs.coveo.com/en/2820/) type of the related activity.</br>**Example:** `SUCCESS`
-      description: An operation that triggered an [activity](https://docs.coveo.com/en/173/).
+        sections:
+          type: array
+          description: The retrieved _section_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
+          items:
+            type: string
+            description: The retrieved _section_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
+            enum:
+            - CONTENT
+            - COMMERCE
+            - SEARCH
+            - ANALYTICS
+            - ORGANIZATION
+            - PROJECT
+            - AI_AND_ML
+            - INTERNAL
+        operations:
+          type: array
+          description: The retrieved _operation_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
+          items:
+            type: string
+            description: The retrieved _operation_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
+            enum:
+            - APPLY
+            - ARCHIVE
+            - ARCHIVE_WARNING
+            - BACKUP
+            - CHANGE_ONLINE
+            - CHANGE_READ_ONLY
+            - COMMIT
+            - CONFIG_CHANGE
+            - CONFIG_CREATE
+            - CREATE
+            - DECLINE
+            - DELETE
+            - DISABLE
+            - DUPLICATE
+            - ENABLE
+            - ENABLE_DISABLED_ENTITIES
+            - EXPORT
+            - FULL_REFRESH
+            - HORIZONTAL_SCALING
+            - IDLE
+            - IMPORT
+            - INCREMENTAL_REFRESH
+            - LIMIT_ALMOST_REACHED
+            - LIMIT_EXCEEDED
+            - LIMIT_REACHED
+            - LOG_REQUEST
+            - METADATA_REPORT
+            - MODEL_BUILD
+            - MODEL_REFRESH
+            - ORG_PROVISIONING_CHECK
+            - PAUSE
+            - PAUSE_ON_ERROR
+            - REBUILD
+            - REFRESH
+            - REFRESH_CANCEL
+            - REFRESH_ENTITIES_IN_ERROR
+            - REFRESH_ENTITIES_NOT_UPDATED
+            - REFRESH_ENTITY
+            - REMEDIATE
+            - RESIZE
+            - RESTORE
+            - RESUME
+            - ROTATE
+            - SCHEDULE_CHANGE
+            - SCHEDULE_CREATE
+            - SCHEDULE_DELETE
+            - SEARCH_CERTIFICATE_UPDATE
+            - SEARCH_INCIDENT
+            - SEND_RESOURCE_SNAPSHOT
+            - START
+            - STOP
+            - SYNCHRONIZE
+            - TEST
+            - UPDATE
+            - UPGRADE
+            - UPGRADE_REVERT
+            - VALIDATE
+            - VERTICAL_SCALING
+        states:
+          type: array
+          description: The retrieved _state_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
+          items:
+            type: string
+            description: The retrieved _state_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
+            enum:
+            - NOT_EXECUTED
+            - EXECUTING
+            - PAUSED
+            - EXECUTED
+        resultTypes:
+          type: array
+          description: The retrieved _result type_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
+          items:
+            type: string
+            description: The retrieved _result type_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
+            enum:
+            - SUCCESS
+            - ERROR
+            - ABORT
+        resourceIds:
+          type: array
+          description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) ID [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i", "mycoveocloudorganizationg8tp8wu3-rnj3eisk4as63kx7zc4ch4keja", "MAPPING_EXTENSION"]`
+          items:
+            type: string
+            description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) ID [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i", "mycoveocloudorganizationg8tp8wu3-rnj3eisk4as63kx7zc4ch4keja", "MAPPING_EXTENSION"]`
+        resourceTypes:
+          type: array
+          description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) _type_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["EXPORTS", "SECURITY_PROVIDER"]`
+          items:
+            type: string
+            description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) _type_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["EXPORTS", "SECURITY_PROVIDER"]`
+        organizationIds:
+          type: array
+          description: The retrieved _organization ID_ [activity](https://docs.coveo.com/en/173/) facet values. For internal use only.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3", "anotherorganizationgbg4hy"]`
+          items:
+            type: string
+            description: The retrieved _organization ID_ [activity](https://docs.coveo.com/en/173/) facet values. For internal use only.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3", "anotherorganizationgbg4hy"]`
+      description: The filters to apply when retrieving [activity](https://docs.coveo.com/en/173/) facets.
     ActivityModel:
       type: object
       properties:
@@ -732,142 +700,174 @@ components:
           type: string
           description: A short description of the event that occurred.</br>**Example:** `Organization '{orgId}' expired.`
       description: An [activity](https://docs.coveo.com/en/173/).
-    PageModelActivityModel:
+    ActivityTriggerByModel:
       type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ActivityModel'
-        totalEntries:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-    ActivityFacetModel:
+        id:
+          type: string
+          description: The unique identifier of the entity that triggered the activity.</br>**Example:** `asmith@example.com-google`
+        type:
+          type: string
+          description: The type of entity that triggered the activity.
+          enum:
+          - USER
+          - SYSTEM
+        displayName:
+          type: string
+          description: The display name of the entity that triggered the activity.</br>**Example:** `asmith@example.com`
+        relatedActivityId:
+          type: string
+          description: The unique identifier of the [activity](https://docs.coveo.com/en/173/) that was triggered.</br>**Example:** `128a706128d54btm98df8a98015301be`
+        relatedActivity:
+          type: string
+          description: The [activity](https://docs.coveo.com/en/173/) operation that was triggered.
+          enum:
+          - APPLY
+          - ARCHIVE
+          - ARCHIVE_WARNING
+          - BACKUP
+          - CHANGE_ONLINE
+          - CHANGE_READ_ONLY
+          - COMMIT
+          - CONFIG_CHANGE
+          - CONFIG_CREATE
+          - CREATE
+          - DECLINE
+          - DELETE
+          - DISABLE
+          - DUPLICATE
+          - ENABLE
+          - ENABLE_DISABLED_ENTITIES
+          - EXPORT
+          - FULL_REFRESH
+          - HORIZONTAL_SCALING
+          - IDLE
+          - IMPORT
+          - INCREMENTAL_REFRESH
+          - LIMIT_ALMOST_REACHED
+          - LIMIT_EXCEEDED
+          - LIMIT_REACHED
+          - LOG_REQUEST
+          - METADATA_REPORT
+          - MODEL_BUILD
+          - MODEL_REFRESH
+          - ORG_PROVISIONING_CHECK
+          - PAUSE
+          - PAUSE_ON_ERROR
+          - REBUILD
+          - REFRESH
+          - REFRESH_CANCEL
+          - REFRESH_ENTITIES_IN_ERROR
+          - REFRESH_ENTITIES_NOT_UPDATED
+          - REFRESH_ENTITY
+          - REMEDIATE
+          - RESIZE
+          - RESTORE
+          - RESUME
+          - ROTATE
+          - SCHEDULE_CHANGE
+          - SCHEDULE_CREATE
+          - SCHEDULE_DELETE
+          - SEARCH_CERTIFICATE_UPDATE
+          - SEARCH_INCIDENT
+          - SEND_RESOURCE_SNAPSHOT
+          - START
+          - STOP
+          - SYNCHRONIZE
+          - TEST
+          - UPDATE
+          - UPGRADE
+          - UPGRADE_REVERT
+          - VALIDATE
+          - VERTICAL_SCALING
+        relatedActivityResourceType:
+          type: string
+          description: The [resource](https://docs.coveo.com/en/2820/) type of the related activity.</br>**Example:** `SUCCESS`
+      description: An operation that triggered an [activity](https://docs.coveo.com/en/173/).
+    ActivityAbortedByModel:
       type: object
       properties:
-        sections:
-          type: array
-          description: The retrieved _section_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
-          items:
-            type: string
-            description: The retrieved _section_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
-            enum:
-            - CONTENT
-            - COMMERCE
-            - SEARCH
-            - ANALYTICS
-            - ORGANIZATION
-            - PROJECT
-            - AI_AND_ML
-            - INTERNAL
-        operations:
-          type: array
-          description: The retrieved _operation_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
-          items:
-            type: string
-            description: The retrieved _operation_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
-            enum:
-            - APPLY
-            - ARCHIVE
-            - ARCHIVE_WARNING
-            - BACKUP
-            - CHANGE_ONLINE
-            - CHANGE_READ_ONLY
-            - COMMIT
-            - CONFIG_CHANGE
-            - CONFIG_CREATE
-            - CREATE
-            - DECLINE
-            - DELETE
-            - DISABLE
-            - DUPLICATE
-            - ENABLE
-            - ENABLE_DISABLED_ENTITIES
-            - EXPORT
-            - FULL_REFRESH
-            - HORIZONTAL_SCALING
-            - IDLE
-            - IMPORT
-            - INCREMENTAL_REFRESH
-            - LIMIT_ALMOST_REACHED
-            - LIMIT_EXCEEDED
-            - LIMIT_REACHED
-            - LOG_REQUEST
-            - METADATA_REPORT
-            - MODEL_BUILD
-            - MODEL_REFRESH
-            - ORG_PROVISIONING_CHECK
-            - PAUSE
-            - PAUSE_ON_ERROR
-            - REBUILD
-            - REFRESH
-            - REFRESH_CANCEL
-            - REFRESH_ENTITIES_IN_ERROR
-            - REFRESH_ENTITIES_NOT_UPDATED
-            - REFRESH_ENTITY
-            - REMEDIATE
-            - RESIZE
-            - RESTORE
-            - RESUME
-            - ROTATE
-            - SCHEDULE_CHANGE
-            - SCHEDULE_CREATE
-            - SCHEDULE_DELETE
-            - SEARCH_CERTIFICATE_UPDATE
-            - SEARCH_INCIDENT
-            - SEND_RESOURCE_SNAPSHOT
-            - START
-            - STOP
-            - SYNCHRONIZE
-            - TEST
-            - UPDATE
-            - UPGRADE
-            - UPGRADE_REVERT
-            - VALIDATE
-            - VERTICAL_SCALING
-        states:
-          type: array
-          description: The retrieved _state_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
-          items:
-            type: string
-            description: The retrieved _state_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
-            enum:
-            - NOT_EXECUTED
-            - EXECUTING
-            - PAUSED
-            - EXECUTED
-        resultTypes:
-          type: array
-          description: The retrieved _result type_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
-          items:
-            type: string
-            description: The retrieved _result type_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.
-            enum:
-            - SUCCESS
-            - ERROR
-            - ABORT
-        resourceIds:
-          type: array
-          description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) ID [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i", "mycoveocloudorganizationg8tp8wu3-rnj3eisk4as63kx7zc4ch4keja", "MAPPING_EXTENSION"]`
-          items:
-            type: string
-            description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) ID [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i", "mycoveocloudorganizationg8tp8wu3-rnj3eisk4as63kx7zc4ch4keja", "MAPPING_EXTENSION"]`
-        resourceTypes:
-          type: array
-          description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) _type_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["EXPORTS", "SECURITY_PROVIDER"]`
-          items:
-            type: string
-            description: The retrieved [_resource_](https://docs.coveo.com/en/2820/) _type_ [activity](https://docs.coveo.com/en/173/) [facet](https://docs.coveo.com/en/198/) values.</br>**Example:** `["EXPORTS", "SECURITY_PROVIDER"]`
-        organizationIds:
-          type: array
-          description: The retrieved _organization ID_ [activity](https://docs.coveo.com/en/173/) facet values. For internal use only.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3", "anotherorganizationgbg4hy"]`
-          items:
-            type: string
-            description: The retrieved _organization ID_ [activity](https://docs.coveo.com/en/173/) facet values. For internal use only.</br>**Example:** `["mycoveocloudorganizationg8tp8wu3", "anotherorganizationgbg4hy"]`
-      description: The filters to apply when retrieving [activity](https://docs.coveo.com/en/173/) facets.
+        displayName:
+          type: string
+          description: The display name of the [activity](https://docs.coveo.com/en/173/) that was aborted.</br>**Example:** `MyActivity`
+        userId:
+          type: string
+          description: The unique identifier of the user who aborted the execution of the activity.</br>**Example:** `asmith@example.com`
+        abortedByType:
+          type: string
+          description: 'The entity type that aborted the [activity](https://docs.coveo.com/en/173/).</br>**Allowed values:**</br>- `USER`: A user aborted the activity</br>- `SYSTEM`: A Coveo Cloud platform process aborted the activity'
+          enum:
+          - USER
+          - SYSTEM
+        relatedActivityId:
+          type: string
+          description: The unique identifier of the activity that was aborted.</br>**Example:** `128a706128d54btm98df8a98015301be`
+        relatedActivity:
+          type: string
+          description: The type of [activity](https://docs.coveo.com/en/173/) that was aborted.
+          enum:
+          - APPLY
+          - ARCHIVE
+          - ARCHIVE_WARNING
+          - BACKUP
+          - CHANGE_ONLINE
+          - CHANGE_READ_ONLY
+          - COMMIT
+          - CONFIG_CHANGE
+          - CONFIG_CREATE
+          - CREATE
+          - DECLINE
+          - DELETE
+          - DISABLE
+          - DUPLICATE
+          - ENABLE
+          - ENABLE_DISABLED_ENTITIES
+          - EXPORT
+          - FULL_REFRESH
+          - HORIZONTAL_SCALING
+          - IDLE
+          - IMPORT
+          - INCREMENTAL_REFRESH
+          - LIMIT_ALMOST_REACHED
+          - LIMIT_EXCEEDED
+          - LIMIT_REACHED
+          - LOG_REQUEST
+          - METADATA_REPORT
+          - MODEL_BUILD
+          - MODEL_REFRESH
+          - ORG_PROVISIONING_CHECK
+          - PAUSE
+          - PAUSE_ON_ERROR
+          - REBUILD
+          - REFRESH
+          - REFRESH_CANCEL
+          - REFRESH_ENTITIES_IN_ERROR
+          - REFRESH_ENTITIES_NOT_UPDATED
+          - REFRESH_ENTITY
+          - REMEDIATE
+          - RESIZE
+          - RESTORE
+          - RESUME
+          - ROTATE
+          - SCHEDULE_CHANGE
+          - SCHEDULE_CREATE
+          - SCHEDULE_DELETE
+          - SEARCH_CERTIFICATE_UPDATE
+          - SEARCH_INCIDENT
+          - SEND_RESOURCE_SNAPSHOT
+          - START
+          - STOP
+          - SYNCHRONIZE
+          - TEST
+          - UPDATE
+          - UPGRADE
+          - UPGRADE_REVERT
+          - VALIDATE
+          - VERTICAL_SCALING
+        relatedActivityResourceType:
+          type: string
+          description: The [resource](https://docs.coveo.com/en/2820/) type of the aborted activity.</br>**Example:** `FIELD`
+      description: An entity that aborted an [activity](https://docs.coveo.com/en/173/).
   securitySchemes:
     oauth2:
       type: oauth2

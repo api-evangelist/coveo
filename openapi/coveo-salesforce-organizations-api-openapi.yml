@@ -1,18 +1,19 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Salesforce Organizations API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+  title: Coveo Schema Service Salesforce Organizations API
   version: 1.0.0
+  description: Documentation for Coveo Schema Service
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: ''
+    url: ''
+    email: support@coveo.com
+  license:
+    name: ''
+    url: ''
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Salesforce Organizations
 paths:
@@ -28,28 +29,33 @@ paths:
         description: The instance URI of the Salesforce organization
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: sessionId
         description: Deprecated, use the appropriate 'X-Salesforce-Session-ID' header instead
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: version
         description: 'The schema version to use. Allowed values: ["0" (CloudV1), "1" (Legacy), "2" (Current)]'
-        default: '2'
         required: false
         in: query
-        type: string
+        schema:
+          type: string
+          default: '2'
       - name: presets
         description: 'The schema presets to apply. Allowed values: ["servicecloud", "knowledge", "content", "chatter"]'
         required: false
         in: query
-        type: string
+        schema:
+          type: string
       - name: X-Salesforce-Session-ID
         description: The Salesforce session ID to use
         required: true
         in: header
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: No response
@@ -64,47 +70,55 @@ paths:
       - Salesforce Organizations
       deprecated: false
       parameters:
-      - name: body
-        required: true
-        in: body
-        schema:
-          $ref: '#/definitions/LoadObjectsParams'
       - name: instanceUri
         description: The instance URI of the Salesforce organization
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: sessionId
         description: Deprecated, use the appropriate 'X-Salesforce-Session-ID' header instead
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: version
         description: 'The schema version to use. Allowed values: ["0" (CloudV1), "1" (Legacy), "2" (Current)]'
-        default: '2'
         required: false
         in: query
-        type: string
+        schema:
+          type: string
+          default: '2'
       - name: presets
         description: 'The schema presets to apply. Allowed values: ["servicecloud", "knowledge", "content", "chatter"]'
         required: false
         in: query
-        type: string
+        schema:
+          type: string
       - name: X-Salesforce-Session-ID
         description: The Salesforce session ID to use
         required: true
         in: header
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ObjectDescription'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ObjectDescription'
       security:
       - oauth2:
         - full
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoadObjectsParams'
+        required: true
   /rest/salesforce/schema/organization:
     get:
       operationId: loadOrganization
@@ -117,285 +131,292 @@ paths:
         description: The instance URI of the Salesforce organization
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: sessionId
         description: Deprecated, use the appropriate 'X-Salesforce-Session-ID' header instead
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: version
         description: 'The schema version to use. Allowed values: ["0" (CloudV1), "1" (Legacy), "2" (Current)]'
-        default: '2'
         required: false
         in: query
-        type: string
+        schema:
+          type: string
+          default: '2'
       - name: presets
         description: 'The schema presets to apply. Allowed values: ["servicecloud", "knowledge", "content", "chatter"]'
         required: false
         in: query
-        type: string
+        schema:
+          type: string
       - name: X-Salesforce-Session-ID
         description: The Salesforce session ID to use
         required: true
         in: header
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/OrganizationDescription'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationDescription'
       security:
       - oauth2:
         - full
 components:
+  schemas:
+    DataCategoryGroupDescription:
+      type: object
+      properties:
+        name:
+          type: string
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataCategoryValueDescription'
+      required:
+      - name
+      - values
+    OrganizationDescription:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObjectSummary'
+        knowledgeLanguages:
+          type: array
+          items:
+            type: string
+        dataCategoryGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataCategoryGroupDescription'
+      required:
+      - organizationId
+      - objects
+      - knowledgeLanguages
+      - dataCategoryGroups
+    ObjectSummary:
+      type: object
+      properties:
+        objectType:
+          type: string
+        label:
+          type: string
+        searchable:
+          type: boolean
+        queryable:
+          type: boolean
+        replicateable:
+          type: boolean
+        keyPrefix:
+          type: string
+        isCustomObject:
+          type: boolean
+        isKnowledgeObject:
+          type: boolean
+        hasCustomFileType:
+          type: boolean
+        shouldIndexByDefault:
+          type: boolean
+      required:
+      - objectType
+      - label
+      - searchable
+      - queryable
+      - replicateable
+      - isCustomObject
+      - isKnowledgeObject
+      - hasCustomFileType
+      - shouldIndexByDefault
+    MappingDescription:
+      type: object
+      properties:
+        extractionMethod:
+          type: string
+        content:
+          type: string
+        fieldTypeHint:
+          type: string
+      required:
+      - extractionMethod
+      - content
+    RelationshipDescription:
+      type: object
+      properties: {}
+    LoadObjectsParams:
+      type: object
+      properties:
+        names:
+          description: The object names to load.
+          type: array
+          items:
+            type: string
+      required:
+      - names
+    ObjectDescription:
+      type: object
+      properties:
+        objectType:
+          type: string
+        fieldsByName:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/FieldDescription'
+        fieldsByCoveoName:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FieldDescription'
+        fieldsBySalesforceName:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/FieldDescription'
+        relationshipsByName:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RelationshipDescription'
+        label:
+          type: string
+        searchable:
+          type: boolean
+        queryable:
+          type: boolean
+        replicateable:
+          type: boolean
+        keyPrefix:
+          type: string
+        isCustomObject:
+          type: boolean
+        isKnowledgeObject:
+          type: boolean
+        hasCustomFileType:
+          type: boolean
+        shouldIndexByDefault:
+          type: boolean
+        titleFields:
+          type: array
+          items:
+            type: string
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldDescription'
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelationshipDescription'
+      required:
+      - objectType
+      - label
+      - searchable
+      - queryable
+      - replicateable
+      - isCustomObject
+      - isKnowledgeObject
+      - hasCustomFileType
+      - shouldIndexByDefault
+      - titleFields
+      - fields
+      - relationships
+      - fieldsByName
+      - fieldsByCoveoName
+      - fieldsBySalesforceName
+      - relationshipsByName
+    FieldDescription:
+      type: object
+      properties:
+        name:
+          type: string
+        coveoName:
+          type: string
+        salesforceName:
+          type: string
+        label:
+          type: string
+        kind:
+          type: string
+        custom:
+          type: boolean
+        virtual:
+          type: boolean
+        retrievable:
+          type: boolean
+        filterable:
+          type: boolean
+        sortable:
+          type: boolean
+        multiValue:
+          type: boolean
+        mandatory:
+          type: boolean
+        shouldIndexByDefault:
+          type: boolean
+        dataCategoryGroup:
+          type: string
+        mapping:
+          $ref: '#/components/schemas/MappingDescription'
+        legacyFieldInformation:
+          $ref: '#/components/schemas/LegacyFieldInformation'
+      required:
+      - name
+      - coveoName
+      - salesforceName
+      - label
+      - kind
+      - custom
+      - virtual
+      - retrievable
+      - filterable
+      - sortable
+      - multiValue
+      - mandatory
+      - shouldIndexByDefault
+    LegacyFieldInformation:
+      type: object
+      properties:
+        relationshipName:
+          type: string
+        relationshipNameField:
+          type: string
+        polymorphic:
+          type: boolean
+        referenceTypes:
+          type: array
+          items:
+            type: string
+      required:
+      - relationshipName
+      - relationshipNameField
+      - polymorphic
+      - referenceTypes
+    DataCategoryValueDescription:
+      type: object
+      properties:
+        name:
+          type: string
+        label:
+          type: string
+      required:
+      - name
+      - label
   securitySchemes:
     oauth2:
       type: oauth2
       flows:
-        authorizationCode:
-          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+        implicit:
           scopes:
-            full: required
-definitions:
-  ObjectSummary:
-    type: object
-    properties:
-      objectType:
-        type: string
-      label:
-        type: string
-      searchable:
-        type: boolean
-      queryable:
-        type: boolean
-      replicateable:
-        type: boolean
-      keyPrefix:
-        type: string
-      isCustomObject:
-        type: boolean
-      isKnowledgeObject:
-        type: boolean
-      hasCustomFileType:
-        type: boolean
-      shouldIndexByDefault:
-        type: boolean
-    required:
-    - objectType
-    - label
-    - searchable
-    - queryable
-    - replicateable
-    - isCustomObject
-    - isKnowledgeObject
-    - hasCustomFileType
-    - shouldIndexByDefault
-  LegacyFieldInformation:
-    type: object
-    properties:
-      relationshipName:
-        type: string
-      relationshipNameField:
-        type: string
-      polymorphic:
-        type: boolean
-      referenceTypes:
-        type: array
-        items:
-          type: string
-    required:
-    - relationshipName
-    - relationshipNameField
-    - polymorphic
-    - referenceTypes
-  OrganizationDescription:
-    type: object
-    properties:
-      organizationId:
-        type: string
-      objects:
-        type: array
-        items:
-          $ref: '#/definitions/ObjectSummary'
-      knowledgeLanguages:
-        type: array
-        items:
-          type: string
-      dataCategoryGroups:
-        type: array
-        items:
-          $ref: '#/definitions/DataCategoryGroupDescription'
-    required:
-    - organizationId
-    - objects
-    - knowledgeLanguages
-    - dataCategoryGroups
-  ObjectDescription:
-    type: object
-    properties:
-      objectType:
-        type: string
-      fieldsByName:
-        type: object
-        additionalProperties:
-          type: array
-          items:
-            $ref: '#/definitions/FieldDescription'
-      fieldsByCoveoName:
-        type: object
-        additionalProperties:
-          $ref: '#/definitions/FieldDescription'
-      fieldsBySalesforceName:
-        type: object
-        additionalProperties:
-          type: array
-          items:
-            $ref: '#/definitions/FieldDescription'
-      relationshipsByName:
-        type: object
-        additionalProperties:
-          $ref: '#/definitions/RelationshipDescription'
-      label:
-        type: string
-      searchable:
-        type: boolean
-      queryable:
-        type: boolean
-      replicateable:
-        type: boolean
-      keyPrefix:
-        type: string
-      isCustomObject:
-        type: boolean
-      isKnowledgeObject:
-        type: boolean
-      hasCustomFileType:
-        type: boolean
-      shouldIndexByDefault:
-        type: boolean
-      titleFields:
-        type: array
-        items:
-          type: string
-      fields:
-        type: array
-        items:
-          $ref: '#/definitions/FieldDescription'
-      relationships:
-        type: array
-        items:
-          $ref: '#/definitions/RelationshipDescription'
-    required:
-    - objectType
-    - label
-    - searchable
-    - queryable
-    - replicateable
-    - isCustomObject
-    - isKnowledgeObject
-    - hasCustomFileType
-    - shouldIndexByDefault
-    - titleFields
-    - fields
-    - relationships
-    - fieldsByName
-    - fieldsByCoveoName
-    - fieldsBySalesforceName
-    - relationshipsByName
-  FieldDescription:
-    type: object
-    properties:
-      name:
-        type: string
-      coveoName:
-        type: string
-      salesforceName:
-        type: string
-      label:
-        type: string
-      kind:
-        type: string
-      custom:
-        type: boolean
-      virtual:
-        type: boolean
-      retrievable:
-        type: boolean
-      filterable:
-        type: boolean
-      sortable:
-        type: boolean
-      multiValue:
-        type: boolean
-      mandatory:
-        type: boolean
-      shouldIndexByDefault:
-        type: boolean
-      dataCategoryGroup:
-        type: string
-      mapping:
-        $ref: '#/definitions/MappingDescription'
-      legacyFieldInformation:
-        $ref: '#/definitions/LegacyFieldInformation'
-    required:
-    - name
-    - coveoName
-    - salesforceName
-    - label
-    - kind
-    - custom
-    - virtual
-    - retrievable
-    - filterable
-    - sortable
-    - multiValue
-    - mandatory
-    - shouldIndexByDefault
-  LoadObjectsParams:
-    type: object
-    properties:
-      names:
-        description: The object names to load.
-        type: array
-        items:
-          type: string
-    required:
-    - names
-  DataCategoryGroupDescription:
-    type: object
-    properties:
-      name:
-        type: string
-      values:
-        type: array
-        items:
-          $ref: '#/definitions/DataCategoryValueDescription'
-    required:
-    - name
-    - values
-  DataCategoryValueDescription:
-    type: object
-    properties:
-      name:
-        type: string
-      label:
-        type: string
-    required:
-    - name
-    - label
-  MappingDescription:
-    type: object
-    properties:
-      extractionMethod:
-        type: string
-      content:
-        type: string
-      fieldTypeHint:
-        type: string
-    required:
-    - extractionMethod
-    - content
-  RelationshipDescription:
-    type: object
-    properties: {}
+            full: full
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+      description: OAuth2

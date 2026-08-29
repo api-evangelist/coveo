@@ -1,18 +1,14 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities CRGA For Cases API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  title: Coveo Customer Service API Service CRGA For Cases API
+  description: Documentation for Coveo Customer Service API Service
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
   contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+    name: support@coveo.com
   version: 1.0.0
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: CRGA For Cases
   x-displayName: CRGA For Cases
@@ -102,27 +98,6 @@ paths:
         - full
 components:
   schemas:
-    caseDescriptionKey:
-      type: string
-      description: The case context key used to store the case description. It is used by the case answering model.
-      example: case-description
-    prapiModelId:
-      type: string
-      description: The unique identifier of the passage retrieval machine-learning model.
-      example: myorganization1234_chunksretrieval_00000000_0000_0000_0000_000000000000
-    LfcaConfigurationPatchRequest:
-      type: object
-      properties:
-        gencasereformulationModelId:
-          $ref: '#/components/schemas/gencasereformulationModelId'
-        gencaseansweringModelId:
-          $ref: '#/components/schemas/gencaseansweringModelId'
-        prapiModelId:
-          $ref: '#/components/schemas/prapiModelId'
-        caseTitleKey:
-          $ref: '#/components/schemas/caseTitleKey'
-        caseDescriptionKey:
-          $ref: '#/components/schemas/caseDescriptionKey'
     LfcaConfiguration:
       type: object
       required:
@@ -142,18 +117,39 @@ components:
           $ref: '#/components/schemas/caseTitleKey'
         caseDescriptionKey:
           $ref: '#/components/schemas/caseDescriptionKey'
-    gencaseansweringModelId:
+    prapiModelId:
       type: string
-      description: The unique identifier of the case answering machine-learning model.
-      example: myorganization1234_gencaseanswering_00000000_0000_0000_0000_000000000000
+      description: The unique identifier of the passage retrieval machine-learning model.
+      example: myorganization1234_chunksretrieval_00000000_0000_0000_0000_000000000000
     gencasereformulationModelId:
       type: string
       description: The unique identifier of the case reformulation machine-learning model.
       example: myorganization1234_gencasereformulation_00000000_0000_0000_0000_000000000000
+    gencaseansweringModelId:
+      type: string
+      description: The unique identifier of the case answering machine-learning model.
+      example: myorganization1234_gencaseanswering_00000000_0000_0000_0000_000000000000
     caseTitleKey:
       type: string
       description: The case context key used to store the case title. It is used by the case answering model.
       example: case-title
+    LfcaConfigurationPatchRequest:
+      type: object
+      properties:
+        gencasereformulationModelId:
+          $ref: '#/components/schemas/gencasereformulationModelId'
+        gencaseansweringModelId:
+          $ref: '#/components/schemas/gencaseansweringModelId'
+        prapiModelId:
+          $ref: '#/components/schemas/prapiModelId'
+        caseTitleKey:
+          $ref: '#/components/schemas/caseTitleKey'
+        caseDescriptionKey:
+          $ref: '#/components/schemas/caseDescriptionKey'
+    caseDescriptionKey:
+      type: string
+      description: The case context key used to store the case description. It is used by the case answering model.
+      example: case-description
   parameters:
     OrganizationIdPath:
       name: organizationId
@@ -172,9 +168,18 @@ components:
   securitySchemes:
     oauth2:
       type: oauth2
+      description: OAuth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: full
+x-tagGroups:
+- name: Coveo Customer Service API Service
+  tags:
+  - Case Assist
+  - Insight Panel
+- name: Coveo Answer API
+  tags:
+  - Answer
+  - CRGA For Cases

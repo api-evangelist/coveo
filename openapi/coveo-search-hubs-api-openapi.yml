@@ -1,18 +1,19 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Search Hubs API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+  title: Coveo Search Usage Metrics Service Search Hubs API
   version: 1.0.0
+  description: Documentation for Coveo Search Usage Metrics Service
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: ''
+    url: ''
+    email: support@coveo.com
+  license:
+    name: ''
+    url: ''
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Search Hubs
 paths:
@@ -24,23 +25,25 @@ paths:
       - Search Hubs
       deprecated: false
       parameters:
-      - name: hub
-        description: The search hub data
-        required: true
-        in: body
-        schema:
-          $ref: '#/definitions/RestSearchHub'
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: No response
       security:
       - oauth2:
         - full
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestSearchHub'
+        description: The search hub data
+        required: true
     get:
       operationId: listSearchHubs
       summary: Lists the Search Hubs for an Organization
@@ -50,41 +53,48 @@ paths:
       parameters:
       - name: minimumQueries
         description: The minimum number of queries required for a search hub to be listed
-        default: '1'
         required: false
         in: query
-        type: string
+        schema:
+          type: string
+          default: '1'
       - name: filter
         description: The free-form string to filter the returned list based on the values of the search hub attributes.
         required: false
         in: query
-        type: string
+        schema:
+          type: string
       - name: pageSize
         description: The maximum number of organizations to list per page.
-        default: '100'
         required: false
         in: query
-        type: integer
-        format: int32
+        schema:
+          type: integer
+          format: int32
+          default: '100'
       - name: page
         description: The 0-based index number of the page to list.
-        default: '0'
         required: false
         in: query
-        type: integer
-        format: int32
+        schema:
+          type: integer
+          format: int32
+          default: '0'
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/RestSearchHub'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RestSearchHub'
       security:
       - oauth2:
         - full
@@ -100,12 +110,14 @@ paths:
         description: The search hub name
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: No response
@@ -123,17 +135,21 @@ paths:
         description: The search hub name
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/RestSearchHub'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestSearchHub'
       security:
       - oauth2:
         - full
@@ -144,28 +160,31 @@ paths:
       - Search Hubs
       deprecated: false
       parameters:
-      - name: hub
-        description: The search hub data
-        required: true
-        in: body
-        schema:
-          $ref: '#/definitions/RestSearchHub'
       - name: hubName
         description: The search hub name
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: No response
       security:
       - oauth2:
         - full
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestSearchHub'
+        description: The search hub data
+        required: true
   /rest/organizations/{organizationId}/searchusagemetrics/hubs/{hubName}/bucket:
     put:
       operationId: updateSearchHubBucket
@@ -178,17 +197,20 @@ paths:
         description: The search hub bucket
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: hubName
         description: The search hub name
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: No response
@@ -196,30 +218,30 @@ paths:
       - oauth2:
         - full
 components:
+  schemas:
+    RestSearchHub:
+      type: object
+      properties:
+        name:
+          example: '"myhub"'
+          description: The name of the search hub
+          type: string
+        bucket:
+          example: '"qpm"'
+          description: The usage bucket to count queries from this hub into
+          type: string
+        description:
+          example: '"Public search page"'
+          description: A description for the search hub
+          type: string
+      required:
+      - name
   securitySchemes:
     oauth2:
       type: oauth2
       flows:
-        authorizationCode:
-          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+        implicit:
           scopes:
-            full: required
-definitions:
-  RestSearchHub:
-    type: object
-    properties:
-      name:
-        example: '"myhub"'
-        description: The name of the search hub
-        type: string
-      bucket:
-        example: '"qpm"'
-        description: The usage bucket to count queries from this hub into
-        type: string
-      description:
-        example: '"Public search page"'
-        description: A description for the search hub
-        type: string
-    required:
-    - name
+            full: full
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+      description: OAuth2

@@ -1,17 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Statistics API - Version 15 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+  title: Usage Analytics Read Statistics API - Version 15 API
+  version: '1.0'
 servers:
-- url: https://platform.cloud.coveo.com
+- url: https://analytics.cloud.coveo.com/rest/ua
   description: Coveo public API endpoint
 security:
-- oauth2:
+- v8:
   - full
 tags:
 - name: Statistics API - Version 15
@@ -717,6 +712,23 @@ paths:
           description: No content
 components:
   schemas:
+    DataPoint:
+      required:
+      - datas
+      - dateTime
+      type: object
+      properties:
+        dateTime:
+          type: string
+          description: The moment in time that this point represents
+          format: date-time
+        datas:
+          type: object
+          additionalProperties:
+            type: number
+            description: The metric values
+          description: The metric values
+      description: A collection of data points
     GlobalAggregatedDataResponseV15:
       required:
       - globalDatas
@@ -732,10 +744,55 @@ components:
             description: The global values by metrics. Usually a unique count, a daily count or daily average
           description: The global values by metrics. Usually a unique count, a daily count or daily average
       description: The global aggregated values by metrics
+    VisitStatisticsResponseV15:
+      required:
+      - visitId
+      type: object
+      properties:
+        visitId:
+          type: string
+          description: The visit id
+        events:
+          type: array
+          description: The visit's events
+          items:
+            $ref: '#/components/schemas/EventPojo'
+        numberOfEvents:
+          type: integer
+          description: The number of events
+          format: int32
+      description: The visit matching the specified criteria
+    GraphAggregatedDataResponseV15:
+      required:
+      - dataPoints
+      - totals
+      type: object
+      properties:
+        dataPoints:
+          type: array
+          description: A collection of data points
+          items:
+            $ref: '#/components/schemas/DataPoint'
+        totals:
+          type: object
+          additionalProperties:
+            type: number
+            description: The totals for the requested metrics.
+          description: The totals for the requested metrics.
+        stats:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SummaryStatisticsPojo'
+          description: The sum, average, max and min for the requested metrics.
+      description: The data points to be used in a graph, aggregated by the specified time interval.
     SummaryStatisticsPojo:
       type: object
       properties: {}
       description: The sum, average, max and min for the requested metrics.
+    EventPojo:
+      type: object
+      properties: {}
+      description: The visit's events
     CombinedDataResponseV15:
       required:
       - combinations
@@ -761,54 +818,6 @@ components:
           description: The total number of combinations available
           format: int32
       description: The values of the metrics combined by dimensions
-    EventPojo:
-      type: object
-      properties: {}
-      description: The visit's events
-    GraphAggregatedDataResponseV15:
-      required:
-      - dataPoints
-      - totals
-      type: object
-      properties:
-        dataPoints:
-          type: array
-          description: A collection of data points
-          items:
-            $ref: '#/components/schemas/DataPoint'
-        totals:
-          type: object
-          additionalProperties:
-            type: number
-            description: The totals for the requested metrics.
-          description: The totals for the requested metrics.
-        stats:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/SummaryStatisticsPojo'
-          description: The sum, average, max and min for the requested metrics.
-      description: The data points to be used in a graph, aggregated by the specified time interval.
-    VisitStatisticsResponseV15:
-      required:
-      - visitId
-      type: object
-      properties:
-        visitId:
-          type: string
-          description: The visit id
-        events:
-          type: array
-          description: The visit's events
-          items:
-            $ref: '#/components/schemas/EventPojo'
-        numberOfEvents:
-          type: integer
-          description: The number of events
-          format: int32
-      description: The visit matching the specified criteria
-    StatusResponse:
-      type: object
-      description: Service's status information
     VisitsStatisticsResponseV15:
       required:
       - visits
@@ -824,29 +833,14 @@ components:
           description: The total number of visits matching
           format: int32
       description: The visits matching the specified criteria
-    DataPoint:
-      required:
-      - datas
-      - dateTime
+    StatusResponse:
       type: object
-      properties:
-        dateTime:
-          type: string
-          description: The moment in time that this point represents
-          format: date-time
-        datas:
-          type: object
-          additionalProperties:
-            type: number
-            description: The metric values
-          description: The metric values
-      description: A collection of data points
+      description: Service's status information
   securitySchemes:
-    oauth2:
+    v8:
       type: oauth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: ''

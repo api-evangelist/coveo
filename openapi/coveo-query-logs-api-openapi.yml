@@ -1,18 +1,19 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Query Logs API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+  title: Coveo Search Usage Metrics Service Query Logs API
   version: 1.0.0
+  description: Documentation for Coveo Search Usage Metrics Service
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: ''
+    url: ''
+    email: support@coveo.com
+  license:
+    name: ''
+    url: ''
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Query Logs
 paths:
@@ -28,27 +29,33 @@ paths:
         description: The last day to retrieve
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: from
         description: The first day to retrieve
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: hubName
         description: The search hub name
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: organizationId
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/RestLogUrl'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestLogUrl'
       security:
       - oauth2:
         - full
@@ -64,47 +71,53 @@ paths:
         description: The organization ID
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       - name: hubName
         description: The search hub name
         required: true
         in: path
-        type: string
+        schema:
+          type: string
       - name: from
         description: The first day to retrieve
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       - name: to
         description: The last day to retrieve
         required: true
         in: query
-        type: string
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/RestLogUrl'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestLogUrl'
       security:
       - oauth2:
         - full
 components:
+  schemas:
+    RestLogUrl:
+      type: object
+      properties:
+        url:
+          example: '"https://platform.cloud.coveo.com/some/url"'
+          description: The URL to use to download the query logs
+          type: string
+      required:
+      - url
   securitySchemes:
     oauth2:
       type: oauth2
       flows:
-        authorizationCode:
-          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+        implicit:
           scopes:
-            full: required
-definitions:
-  RestLogUrl:
-    type: object
-    properties:
-      url:
-        example: '"https://platform.cloud.coveo.com/some/url"'
-        description: The URL to use to download the query logs
-        type: string
-    required:
-    - url
+            full: full
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+      description: OAuth2

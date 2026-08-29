@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Facet Field Configurations API
+  title: Coveo Commerce Facet Field Configurations API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -214,102 +214,6 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/tracking-ids/paramId/facet/fields_get
 components:
   schemas:
-    HierarchicalFacetFieldModel:
-      required:
-      - displayNames
-      - field
-      - initialNumberOfValues
-      - sortCriteria
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FacetFieldModel'
-      - type: object
-        properties:
-          id:
-            type: string
-            description: The unique identifier of the facet field configuration.
-            format: uuid
-            example: 755e2dd8-3a8f-19fb-b9ed-ed89c4f83c3b
-          field:
-            maxLength: 255
-            minLength: 0
-            type: string
-            description: The name of the underlying index field. This property can't be updated after creation.
-            example: ec_category
-          type:
-            type: string
-            description: The type of the facet field.
-            example: HIERARCHICAL
-            enum:
-            - REGULAR
-            - CONTINUOUS
-            - NUMERICAL_RANGES
-            - HIERARCHICAL
-          displayNames:
-            uniqueItems: true
-            type: array
-            description: A list of localized display names for the facet field. When a localized display name is not provided for a given language, the index non-localized display name is used. If a non-localized display name is not configured, the index field name is used.
-            items:
-              $ref: '#/components/schemas/LocalizedValueModel'
-          injectionDepth:
-            minimum: 1000
-            type: integer
-            description: "The maximum number of items to scan for facet values.\n<br/>When value is not provided:<br/>\n    <ul>\n        <li>Creation: defaults to `1000`</li>\n        <li>Update: preserves existing database value</li>\n    </ul>\n"
-            format: int32
-            default: 1000
-          sortCriteria:
-            type: string
-            description: The criteria used to sort facet field values.
-            example: relevance
-            enum:
-            - RELEVANCE
-            - ALPHANUMERIC
-            - OCCURRENCES
-          initialNumberOfValues:
-            maximum: 200
-            minimum: 1
-            type: integer
-            description: The initial number of facet values shown.
-            format: int32
-          useInFilterSuggestions:
-            type: boolean
-            description: Whether the facet field can be used in filter suggestions. See [here](https://docs.coveo.com/en/o8ce0240#headless-implementation) for more guidance.
-    LocalizedValueModel:
-      required:
-      - language
-      - value
-      type: object
-      properties:
-        language:
-          minLength: 1
-          type: string
-          description: An ISO 639-1 language code.
-          example: en
-        value:
-          type: string
-          description: The localized value
-          example: Hello
-      description: A list of localized display names for the facet field. When a localized display name is not provided for a given language, the index non-localized display name is used. If a non-localized display name is not configured, the index field name is used.
-    ManualNumericalRangesDetailsModel:
-      required:
-      - ranges
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/NumericalRangesDetailsModel'
-      - type: object
-        properties:
-          type:
-            type: string
-            description: The type of numerical range.
-            example: MANUAL
-            enum:
-            - AUTOMATIC_EVEN
-            - MANUAL
-          ranges:
-            minItems: 1
-            type: array
-            items:
-              $ref: '#/components/schemas/NumericalRangeModel'
     NumericalRangesDetailsModel:
       type: object
       properties:
@@ -320,130 +224,6 @@ components:
           - MANUAL
       discriminator:
         propertyName: type
-    PaginatedResponseFacetFieldModel:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        items:
-          type: array
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/ContinuousFacetFieldModel'
-            - $ref: '#/components/schemas/HierarchicalFacetFieldModel'
-            - $ref: '#/components/schemas/NumericalRangesFacetFieldModel'
-            - $ref: '#/components/schemas/RegularFacetFieldModel'
-    NumericalRangeModel:
-      type: object
-      properties:
-        start:
-          type: number
-          format: double
-        end:
-          type: number
-          format: double
-    FacetFieldModel:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - REGULAR
-          - CONTINUOUS
-          - NUMERICAL_RANGES
-          - HIERARCHICAL
-      discriminator:
-        propertyName: type
-    AutomaticEvenNumericalRangesDetailsModel:
-      required:
-      - numberOfRanges
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/NumericalRangesDetailsModel'
-      - type: object
-        properties:
-          type:
-            type: string
-            description: The type of numerical range.
-            example: AUTOMATIC_EVEN
-            enum:
-            - AUTOMATIC_EVEN
-            - MANUAL
-          numberOfRanges:
-            maximum: 10
-            minimum: 2
-            type: integer
-            description: The number of ranges to generate.
-            format: int32
-            example: 4
-    LocalizedPinnedFacetValuesModel:
-      required:
-      - language
-      - values
-      type: object
-      properties:
-        language:
-          minLength: 1
-          type: string
-          description: The IETF language tag for which the pinned values applies.
-          example: en
-        values:
-          maxItems: 100
-          minItems: 0
-          type: array
-          description: Identifies the facet values that must appear at the top, in this order. Facet values that are not pinned will be sorted according to the `sortCriteria`.
-          example:
-          - Small
-          - Medium
-          - Large
-          items:
-            minLength: 1
-            type: string
-            description: Identifies the facet values that must appear at the top, in this order. Facet values that are not pinned will be sorted according to the `sortCriteria`.
-            example: '["Small","Medium","Large"]'
-      description: A list of pinned facet values. Pinned values are always shown at the top of the facet in the provided order when there is at least one product that matches the pinned value.
-      default: []
-    ContinuousFacetFieldModel:
-      required:
-      - displayNames
-      - field
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FacetFieldModel'
-      - type: object
-        properties:
-          id:
-            type: string
-            description: The unique identifier of the facet field configuration.
-            format: uuid
-            example: 755e2dd8-3a8f-19fb-b9ed-ed89c4f83c3b
-          field:
-            maxLength: 255
-            minLength: 0
-            type: string
-            description: The name of the underlying index field. This property can't be updated after creation.
-            example: ec_price
-          type:
-            type: string
-            description: The type of the facet field.
-            example: CONTINUOUS
-            enum:
-            - REGULAR
-            - CONTINUOUS
-            - NUMERICAL_RANGES
-            - HIERARCHICAL
-          displayNames:
-            uniqueItems: true
-            type: array
-            description: A list of localized display names for the facet field. When a localized display name is not provided for a given language, the index non-localized display name is used. If a non-localized display name is not configured, the index field name is used.
-            items:
-              $ref: '#/components/schemas/LocalizedValueModel'
-          injectionDepth:
-            minimum: 1000
-            type: integer
-            description: "The maximum number of items to scan for facet values.\n<br/>When value is not provided:<br/>\n    <ul>\n        <li>Creation: defaults to `1000`</li>\n        <li>Update: preserves existing database value</li>\n    </ul>\n"
-            format: int32
-            default: 1000
     NumericalRangesFacetFieldModel:
       required:
       - displayNames
@@ -490,6 +270,63 @@ components:
             oneOf:
             - $ref: '#/components/schemas/AutomaticEvenNumericalRangesDetailsModel'
             - $ref: '#/components/schemas/ManualNumericalRangesDetailsModel'
+    LocalizedValueModel:
+      required:
+      - language
+      - value
+      type: object
+      properties:
+        language:
+          minLength: 1
+          type: string
+          description: An ISO 639-1 language code.
+          example: en
+        value:
+          type: string
+          description: The localized value
+          example: Hello
+      description: A list of localized display names for the facet field. When a localized display name is not provided for a given language, the index non-localized display name is used. If a non-localized display name is not configured, the index field name is used.
+    ContinuousFacetFieldModel:
+      required:
+      - displayNames
+      - field
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FacetFieldModel'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier of the facet field configuration.
+            format: uuid
+            example: 755e2dd8-3a8f-19fb-b9ed-ed89c4f83c3b
+          field:
+            maxLength: 255
+            minLength: 0
+            type: string
+            description: The name of the underlying index field. This property can't be updated after creation.
+            example: ec_price
+          type:
+            type: string
+            description: The type of the facet field.
+            example: CONTINUOUS
+            enum:
+            - REGULAR
+            - CONTINUOUS
+            - NUMERICAL_RANGES
+            - HIERARCHICAL
+          displayNames:
+            uniqueItems: true
+            type: array
+            description: A list of localized display names for the facet field. When a localized display name is not provided for a given language, the index non-localized display name is used. If a non-localized display name is not configured, the index field name is used.
+            items:
+              $ref: '#/components/schemas/LocalizedValueModel'
+          injectionDepth:
+            minimum: 1000
+            type: integer
+            description: "The maximum number of items to scan for facet values.\n<br/>When value is not provided:<br/>\n    <ul>\n        <li>Creation: defaults to `1000`</li>\n        <li>Update: preserves existing database value</li>\n    </ul>\n"
+            format: int32
+            default: 1000
     RegularFacetFieldModel:
       required:
       - displayNames
@@ -581,6 +418,169 @@ components:
         totalPages:
           type: integer
           format: int32
+    ManualNumericalRangesDetailsModel:
+      required:
+      - ranges
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/NumericalRangesDetailsModel'
+      - type: object
+        properties:
+          type:
+            type: string
+            description: The type of numerical range.
+            example: MANUAL
+            enum:
+            - AUTOMATIC_EVEN
+            - MANUAL
+          ranges:
+            minItems: 1
+            type: array
+            items:
+              $ref: '#/components/schemas/NumericalRangeModel'
+    FacetFieldModel:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - REGULAR
+          - CONTINUOUS
+          - NUMERICAL_RANGES
+          - HIERARCHICAL
+      discriminator:
+        propertyName: type
+    LocalizedPinnedFacetValuesModel:
+      required:
+      - language
+      - values
+      type: object
+      properties:
+        language:
+          minLength: 1
+          type: string
+          description: The IETF language tag for which the pinned values applies.
+          example: en
+        values:
+          maxItems: 100
+          minItems: 0
+          type: array
+          description: Identifies the facet values that must appear at the top, in this order. Facet values that are not pinned will be sorted according to the `sortCriteria`.
+          example:
+          - Small
+          - Medium
+          - Large
+          items:
+            minLength: 1
+            type: string
+            description: Identifies the facet values that must appear at the top, in this order. Facet values that are not pinned will be sorted according to the `sortCriteria`.
+            example: '["Small","Medium","Large"]'
+      description: A list of pinned facet values. Pinned values are always shown at the top of the facet in the provided order when there is at least one product that matches the pinned value.
+      default: []
+    HierarchicalFacetFieldModel:
+      required:
+      - displayNames
+      - field
+      - initialNumberOfValues
+      - sortCriteria
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FacetFieldModel'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier of the facet field configuration.
+            format: uuid
+            example: 755e2dd8-3a8f-19fb-b9ed-ed89c4f83c3b
+          field:
+            maxLength: 255
+            minLength: 0
+            type: string
+            description: The name of the underlying index field. This property can't be updated after creation.
+            example: ec_category
+          type:
+            type: string
+            description: The type of the facet field.
+            example: HIERARCHICAL
+            enum:
+            - REGULAR
+            - CONTINUOUS
+            - NUMERICAL_RANGES
+            - HIERARCHICAL
+          displayNames:
+            uniqueItems: true
+            type: array
+            description: A list of localized display names for the facet field. When a localized display name is not provided for a given language, the index non-localized display name is used. If a non-localized display name is not configured, the index field name is used.
+            items:
+              $ref: '#/components/schemas/LocalizedValueModel'
+          injectionDepth:
+            minimum: 1000
+            type: integer
+            description: "The maximum number of items to scan for facet values.\n<br/>When value is not provided:<br/>\n    <ul>\n        <li>Creation: defaults to `1000`</li>\n        <li>Update: preserves existing database value</li>\n    </ul>\n"
+            format: int32
+            default: 1000
+          sortCriteria:
+            type: string
+            description: The criteria used to sort facet field values.
+            example: relevance
+            enum:
+            - RELEVANCE
+            - ALPHANUMERIC
+            - OCCURRENCES
+          initialNumberOfValues:
+            maximum: 200
+            minimum: 1
+            type: integer
+            description: The initial number of facet values shown.
+            format: int32
+          useInFilterSuggestions:
+            type: boolean
+            description: Whether the facet field can be used in filter suggestions. See [here](https://docs.coveo.com/en/o8ce0240#headless-implementation) for more guidance.
+    AutomaticEvenNumericalRangesDetailsModel:
+      required:
+      - numberOfRanges
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/NumericalRangesDetailsModel'
+      - type: object
+        properties:
+          type:
+            type: string
+            description: The type of numerical range.
+            example: AUTOMATIC_EVEN
+            enum:
+            - AUTOMATIC_EVEN
+            - MANUAL
+          numberOfRanges:
+            maximum: 10
+            minimum: 2
+            type: integer
+            description: The number of ranges to generate.
+            format: int32
+            example: 4
+    NumericalRangeModel:
+      type: object
+      properties:
+        start:
+          type: number
+          format: double
+        end:
+          type: number
+          format: double
+    PaginatedResponseFacetFieldModel:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        items:
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/ContinuousFacetFieldModel'
+            - $ref: '#/components/schemas/HierarchicalFacetFieldModel'
+            - $ref: '#/components/schemas/NumericalRangesFacetFieldModel'
+            - $ref: '#/components/schemas/RegularFacetFieldModel'
   securitySchemes:
     oauth2:
       type: oauth2

@@ -1,12 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Hosted Page API
-  description: API for Coveo Platform
+  title: Search Interface Service Hosted Page API
+  version: 1.0.0
+  description: Documentation for Search Interface Service
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+    name: support@coveo.com
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
@@ -147,21 +146,10 @@ paths:
                   contentType: text/html
 components:
   parameters:
-    order:
-      name: order
-      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+    projectId:
+      name: projectId
+      description: The id of the project to which the resource belongs.
       in: query
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-    organization-id:
-      name: organizationId
-      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
-      example: mycoveocloudv2organizationg8tp8wu3
-      in: path
-      required: true
       schema:
         type: string
     filter:
@@ -171,6 +159,15 @@ components:
       in: query
       schema:
         type: string
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
     page:
       name: page
       description: The 0-based number of the page of configurations to list.
@@ -187,25 +184,15 @@ components:
         type: integer
         minimum: 0
         maximum: 20
-    projectId:
-      name: projectId
-      description: The id of the project to which the resource belongs.
-      in: query
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
       schema:
         type: string
   schemas:
-    hostedpage-file-css:
-      type: object
-      description: CSS resource appended in the header, pertaining to a specific hosted page in the target Coveo organization.
-      properties:
-        inlineContent:
-          type: string
-          description: The content of the header `style` tag. If this property is defined, the `url` property should not be specified.
-          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
-        url:
-          type: string
-          description: The URL of CSS stylesheet. If this property is defined, the `inlineContent` property should not be specified.
-          example: https://static.cloud.coveo.com/atomic/v2/themes/coveo.css
     hostedpage-id:
       type: object
       properties:
@@ -253,6 +240,18 @@ components:
       - id
       - name
       - html
+    hostedpage-file-css:
+      type: object
+      description: CSS resource appended in the header, pertaining to a specific hosted page in the target Coveo organization.
+      properties:
+        inlineContent:
+          type: string
+          description: The content of the header `style` tag. If this property is defined, the `url` property should not be specified.
+          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
+        url:
+          type: string
+          description: The URL of CSS stylesheet. If this property is defined, the `inlineContent` property should not be specified.
+          example: https://static.cloud.coveo.com/atomic/v2/themes/coveo.css
     hostedpage:
       type: object
       properties:
@@ -294,9 +293,9 @@ components:
   securitySchemes:
     oauth2:
       type: oauth2
+      description: This API uses OAuth 2 with the implicit grant flow
       flows:
-        authorizationCode:
-          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+        implicit:
+          authorizationUrl: /oauth/authorize
           scopes:
-            full: required
+            full: full

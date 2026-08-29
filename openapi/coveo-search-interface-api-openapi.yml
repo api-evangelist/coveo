@@ -1,12 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Search Interface API
-  description: API for Coveo Platform
+  title: Service Search Interface API
+  version: 1.0.0
+  description: Documentation for Search Interface Service
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+    name: support@coveo.com
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
@@ -65,107 +64,6 @@ paths:
       - {}
 components:
   schemas:
-    interface-content:
-      type: object
-      properties:
-        pipeline:
-          type: string
-          description: The unique identifier of the query pipeline enforced in search requests.
-          example: 8652e601-fdc3-4ec9-90f8-510763ec0956
-        sources:
-          type: array
-          description: The list of sources with which to filter items in search requests. Only items from target sources may be returned.
-          example:
-          - sourceNameA
-          - sourceNameB
-          items:
-            type: string
-    interface-manifest-style:
-      type: object
-      description: The Atomic related styling in CSS format.
-      properties:
-        theme:
-          type: string
-          description: The CSS to set [Atomic theme variables](https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/#theme-variables).
-          example: ':root { --atomic-primary: #B6254F; }'
-        layout:
-          type: string
-          description: The page layout CSS.
-          example: 'body { margin: 0; }'
-    interface-manifest-result-template:
-      type: object
-      description: The Atomic result template configuration information.
-      properties:
-        markup:
-          type: string
-          description: The HTML markup of the content of the result template.
-          example: <atomic-result-link></atomic-result-link>
-        attributes:
-          type: object
-          description: The Atomic [result template component](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-template/)'s properties.
-          additionalProperties:
-            type: string
-          example:
-            must-match-source: salesforce
-    interface-access:
-      type: object
-      properties:
-        users:
-          $ref: '#/components/schemas/interface-user-list'
-        domains:
-          type: array
-          description: The list of domains that are allowed to access the search interface.
-          example:
-          - example.com
-          - sample.com
-          items:
-            type: string
-        sharingLinkEnabled:
-          type: boolean
-          example: true
-        sharingDomainEnabled:
-          type: boolean
-          example: true
-    interface-user-list:
-      type: array
-      description: The list of users that are allowed to access the search interface.
-      example:
-      - alice@example.com
-      - bob@example.com
-      items:
-        type: string
-    interface-manifest-results:
-      type: object
-      description: The Atomic results configuration information.
-      properties:
-        placeholder:
-          type: string
-          description: The placeholder for the result list and result templates.
-          example: --results--
-        attributes:
-          type: object
-          description: The Atomic [result list component](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/#properties)'s properties.
-          additionalProperties:
-            type: string
-          example:
-            display: grid
-            fields-to-include: source,filetype
-            density: comfortable
-        templates:
-          type: array
-          items:
-            $ref: '#/components/schemas/interface-manifest-result-template'
-    interface-manifest-request:
-      type: object
-      properties:
-        pagePlaceholders:
-          type: object
-          description: The placeholders for the page.
-          properties:
-            results:
-              type: string
-              description: A placeholder for the result list and result templates.
-              example: --results--
     interface-config:
       type: object
       properties:
@@ -241,6 +139,57 @@ components:
           - GRID
       required:
       - name
+    interface-manifest-results:
+      type: object
+      description: The Atomic results configuration information.
+      properties:
+        placeholder:
+          type: string
+          description: The placeholder for the result list and result templates.
+          example: --results--
+        attributes:
+          type: object
+          description: The Atomic [result list component](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/#properties)'s properties.
+          additionalProperties:
+            type: string
+          example:
+            display: grid
+            fields-to-include: source,filetype
+            density: comfortable
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/interface-manifest-result-template'
+    interface-manifest-result-template:
+      type: object
+      description: The Atomic result template configuration information.
+      properties:
+        markup:
+          type: string
+          description: The HTML markup of the content of the result template.
+          example: <atomic-result-link></atomic-result-link>
+        attributes:
+          type: object
+          description: The Atomic [result template component](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-template/)'s properties.
+          additionalProperties:
+            type: string
+          example:
+            must-match-source: salesforce
+    interface-content:
+      type: object
+      properties:
+        pipeline:
+          type: string
+          description: The unique identifier of the query pipeline enforced in search requests.
+          example: 8652e601-fdc3-4ec9-90f8-510763ec0956
+        sources:
+          type: array
+          description: The list of sources with which to filter items in search requests. Only items from target sources may be returned.
+          example:
+          - sourceNameA
+          - sourceNameB
+          items:
+            type: string
     interface-manifest:
       type: object
       properties:
@@ -259,15 +208,57 @@ components:
       - results
       - style
       - config
-  parameters:
-    organization-id:
-      name: organizationId
-      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
-      example: mycoveocloudv2organizationg8tp8wu3
-      in: path
-      required: true
-      schema:
+    interface-user-list:
+      type: array
+      description: The list of users that are allowed to access the search interface.
+      example:
+      - alice@example.com
+      - bob@example.com
+      items:
         type: string
+    interface-manifest-request:
+      type: object
+      properties:
+        pagePlaceholders:
+          type: object
+          description: The placeholders for the page.
+          properties:
+            results:
+              type: string
+              description: A placeholder for the result list and result templates.
+              example: --results--
+    interface-access:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/interface-user-list'
+        domains:
+          type: array
+          description: The list of domains that are allowed to access the search interface.
+          example:
+          - example.com
+          - sample.com
+          items:
+            type: string
+        sharingLinkEnabled:
+          type: boolean
+          example: true
+        sharingDomainEnabled:
+          type: boolean
+          example: true
+    interface-manifest-style:
+      type: object
+      description: The Atomic related styling in CSS format.
+      properties:
+        theme:
+          type: string
+          description: The CSS to set [Atomic theme variables](https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/#theme-variables).
+          example: ':root { --atomic-primary: #B6254F; }'
+        layout:
+          type: string
+          description: The page layout CSS.
+          example: 'body { margin: 0; }'
+  parameters:
     interface-id:
       name: interfaceId
       description: The unique identifier of the target search interface.
@@ -276,12 +267,20 @@ components:
       required: true
       schema:
         type: string
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
+      schema:
+        type: string
   securitySchemes:
     oauth2:
       type: oauth2
+      description: This API uses OAuth 2 with the implicit grant flow
       flows:
-        authorizationCode:
-          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+        implicit:
+          authorizationUrl: /oauth/authorize
           scopes:
-            full: required
+            full: full

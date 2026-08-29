@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Setup API
+  title: Coveo Commerce Setup API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -65,65 +65,6 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/setup_post
 components:
   schemas:
-    TrackingIdToCatalogMappingCatalogModelCatalogConfiguration:
-      type: object
-      properties:
-        product:
-          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfigurationProduct'
-        available:
-          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfigurationAvailability'
-      description: The configuration of the catalog
-    SetupResponseModel:
-      type: object
-      properties:
-        queryPipelines:
-          type: array
-          description: The list of query pipeline configurations created or modified.
-          items:
-            $ref: '#/components/schemas/QueryPipelineConfigurationModel'
-        globalConfigurationUpdated:
-          type: array
-          description: The list of updated global configurations.
-          items:
-            $ref: '#/components/schemas/GlobalConfigurationUpdatedModel'
-        trackingIdToCatalogMapping:
-          type: array
-          items:
-            $ref: '#/components/schemas/TrackingIdToCatalogMappingModel'
-    GlobalConfigurationUpdatedModel:
-      type: object
-      properties:
-        productGrouping:
-          type: string
-          description: 'Indicates whether the product grouping configuration was updated by the setup request. Possible values: `QUERY_PIPELINE` or `NONE`.'
-          example: NONE
-          enum:
-          - none
-          - query_pipeline
-        pipelineId:
-          type: string
-          description: The query pipelines updated by the setup request.
-          example: pipelineId
-      description: The list of updated global configurations.
-    ProductGrouping:
-      required:
-      - trackingId
-      type: object
-      properties:
-        trackingId:
-          type: string
-          description: The tracking id which we wish to applied global grouping to.
-          example: MyTrackingID
-        globalProductGroupingEnabled:
-          type: boolean
-      description: Indicates whether the pipeline should be grouped. Use this option to control the aggregation behavior of the pipeline. If null, the grouping will not be changed.
-    TrackingIdToCatalogMappingCatalogModelCatalogConfigurationAvailability:
-      type: object
-      properties:
-        idField:
-          type: string
-          description: The unique identifier of this availability in the catalog
-          example: availabilityid
     SetupRequestModel:
       required:
       - trackingIdToCatalogMapping
@@ -146,23 +87,68 @@ components:
           items:
             $ref: '#/components/schemas/PipelineSetup'
       description: The scaffolding to setup.
-    PipelineSetup:
-      required:
-      - pipelineId
+    SetupResponseModel:
       type: object
       properties:
-        pipelineId:
-          minLength: 1
+        queryPipelines:
+          type: array
+          description: The list of query pipeline configurations created or modified.
+          items:
+            $ref: '#/components/schemas/QueryPipelineConfigurationModel'
+        globalConfigurationUpdated:
+          type: array
+          description: The list of updated global configurations.
+          items:
+            $ref: '#/components/schemas/GlobalConfigurationUpdatedModel'
+        trackingIdToCatalogMapping:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingIdToCatalogMappingModel'
+    TrackingIdToCatalogMappingCatalogModelCatalogConfiguration:
+      type: object
+      properties:
+        product:
+          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfigurationProduct'
+        available:
+          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfigurationAvailability'
+      description: The configuration of the catalog
+    GlobalConfigurationUpdatedModel:
+      type: object
+      properties:
+        productGrouping:
           type: string
-          description: The identifier of the pipeline used to process the query.
-          example: 9716d88a-f02b-480e-bf44-ab1b1af165a8
-        pipelineProductGrouping:
-          $ref: '#/components/schemas/ProductGrouping'
-        deactivateRankingFactor:
-          type: boolean
-          description: Indicates whether the ranking factors should be deactivated for the pipeline. If null, the ranking factors will not be changed.
-          example: false
-      description: List of pipeline setups to configure
+          description: 'Indicates whether the product grouping configuration was updated by the setup request. Possible values: `QUERY_PIPELINE` or `NONE`.'
+          example: NONE
+          enum:
+          - none
+          - query_pipeline
+        pipelineId:
+          type: string
+          description: The query pipelines updated by the setup request.
+          example: pipelineId
+      description: The list of updated global configurations.
+    TrackingIdToCatalogMappingCatalogModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of this catalog
+          format: uuid
+          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
+        name:
+          type: string
+          description: The name of the catalog
+        sourceName:
+          type: string
+          description: The source name of the catalog
+          example: acmecorporation8tp8wu3-qwpdaajjq3ahak5wlq7adhciuq
+        availabilitySourceName:
+          type: string
+          description: The source name containing the availability for the catalog
+          example: availabilitysource
+        catalogConfiguration:
+          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfiguration'
+      description: This will contain the full catalog info as per the catalog resource
     TrackingIdToCatalogMappingSetupModel:
       required:
       - catalogName
@@ -216,6 +202,42 @@ components:
         pipelineProductGroupingEnabled:
           type: boolean
       description: The list of query pipeline configurations created or modified.
+    ProductGrouping:
+      required:
+      - trackingId
+      type: object
+      properties:
+        trackingId:
+          type: string
+          description: The tracking id which we wish to applied global grouping to.
+          example: MyTrackingID
+        globalProductGroupingEnabled:
+          type: boolean
+      description: Indicates whether the pipeline should be grouped. Use this option to control the aggregation behavior of the pipeline. If null, the grouping will not be changed.
+    TrackingIdToCatalogMappingCatalogModelCatalogConfigurationAvailability:
+      type: object
+      properties:
+        idField:
+          type: string
+          description: The unique identifier of this availability in the catalog
+          example: availabilityid
+    PipelineSetup:
+      required:
+      - pipelineId
+      type: object
+      properties:
+        pipelineId:
+          minLength: 1
+          type: string
+          description: The identifier of the pipeline used to process the query.
+          example: 9716d88a-f02b-480e-bf44-ab1b1af165a8
+        pipelineProductGrouping:
+          $ref: '#/components/schemas/ProductGrouping'
+        deactivateRankingFactor:
+          type: boolean
+          description: Indicates whether the ranking factors should be deactivated for the pipeline. If null, the ranking factors will not be changed.
+          example: false
+      description: List of pipeline setups to configure
     TrackingIdToCatalogMappingModel:
       required:
       - catalogName
@@ -250,28 +272,6 @@ components:
           example: true
         catalog:
           $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModel'
-    TrackingIdToCatalogMappingCatalogModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of this catalog
-          format: uuid
-          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
-        name:
-          type: string
-          description: The name of the catalog
-        sourceName:
-          type: string
-          description: The source name of the catalog
-          example: acmecorporation8tp8wu3-qwpdaajjq3ahak5wlq7adhciuq
-        availabilitySourceName:
-          type: string
-          description: The source name containing the availability for the catalog
-          example: availabilitysource
-        catalogConfiguration:
-          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfiguration'
-      description: This will contain the full catalog info as per the catalog resource
   securitySchemes:
     oauth2:
       type: oauth2

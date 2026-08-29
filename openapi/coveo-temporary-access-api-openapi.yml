@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Temporary Access API
+  title: Coveo Authorization Server Temporary Access API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -446,6 +446,30 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/access/temporary/active_get
 components:
   schemas:
+    GlobalPrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+        level:
+          type: string
+          description: The access level of the global privileges.`
+          example: GLOBAL
+      description: A global privilege.
     TemporaryAccessModel:
       type: object
       properties:
@@ -481,6 +505,39 @@ components:
           description: The date at which the temporary access was revoked in number of milliseconds since UNIX epoch.</br>**Example:**`1556722981779`
           format: date-time
       description: Information pertaining to a temporary access in an organization.
+    RealmModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: The realm to add.
+    UserRealmModel:
+      type: object
+      properties:
+        member:
+          type: boolean
+        realm:
+          $ref: '#/components/schemas/RealmModel'
+        realmModel:
+          $ref: '#/components/schemas/RealmModel'
+      description: The realms the user is a part of.
     UserModel:
       type: object
       properties:
@@ -488,17 +545,20 @@ components:
           type: string
           description: The username of the user.</br>**Example:** `jsmith@email.com-google`
         name:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The full name of the user.</br>**Example:** `John Smith`
-          nullable: true
         firstName:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The first name of the user.</br>**Example:** `John`
-          nullable: true
         lastName:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The last name of the user.</br>**Example:** `Smith`
-          nullable: true
         email:
           type: string
           description: The email address of the user.</br>**Example:**`jsmith@email.com`
@@ -784,16 +844,18 @@ components:
           - ZR
           - ZW
         providerUsername:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The username of the user for the corresponding provider.</br>**Example:** `jsmith@email.com`
-          nullable: true
         providerUserId:
           type: string
           description: The unique identifier of the user for the provider.</br>**Example:** `office365`
         provider:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The provider of the user.
-          nullable: true
           enum:
           - SALESFORCE
           - SALESFORCE_SANDBOX
@@ -802,9 +864,10 @@ components:
           - SAML
           - EMAIL
         samlIdentityProviderId:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The unique identifier of the SAML identity provider the user is a part of.</br>**Example:** `myprovider`
-          nullable: true
         realms:
           type: array
           description: The realms the user is a part of.
@@ -838,68 +901,12 @@ components:
             description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen": "v2.5652.11"}`</br>*Default:* `{}`'
           description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen": "v2.5652.11"}`</br>*Default:* `{}`'
         lastUsedDate:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The last day the user has logged in into the platform
           format: date-time
-          nullable: true
       description: A user.
-    RealmModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
-        provider:
-          type: string
-          description: The provider of the realm.
-          enum:
-          - SALESFORCE
-          - SALESFORCE_SANDBOX
-          - GOOGLE
-          - OFFICE365
-          - SAML
-          - EMAIL
-        displayName:
-          type: string
-          description: The display name of the realm.</br>**Example:** `example.com`
-        samlIdentityProviderId:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `myprovider`
-      description: The realm to add.
-    UserRealmModel:
-      type: object
-      properties:
-        member:
-          type: boolean
-        realm:
-          $ref: '#/components/schemas/RealmModel'
-        realmModel:
-          $ref: '#/components/schemas/RealmModel'
-      description: The realms the user is a part of.
-    GlobalPrivilegeModel:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The type of the privilege.
-          example: VIEW
-        targetDomain:
-          type: string
-          description: The target domain of the privilege.
-          example: ORGANIZATION
-        targetId:
-          type: string
-          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
-          example: '*'
-        owner:
-          type: string
-          description: The owner of the privilege.
-          example: PLATFORM
-        level:
-          type: string
-          description: The access level of the global privileges.`
-          example: GLOBAL
-      description: A global privilege.
   securitySchemes:
     oauth2:
       type: oauth2

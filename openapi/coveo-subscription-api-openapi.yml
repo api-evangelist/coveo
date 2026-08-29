@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Subscription API
+  title: Coveo Notification Subscription API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -801,29 +801,6 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/subscriptions/me/paramId/test_post
 components:
   schemas:
-    SubscriptionStatisticsModel:
-      type: object
-      properties:
-        numberOfSuccess:
-          type: integer
-          description: The number of times today that the notification was successfully processed and sent to the expected email addresses or service URLs.
-          format: int32
-        numberOfFailures:
-          type: integer
-          description: The number of times today that the email or webhook server to which the notification was sent returned an error or could not be reached.
-          format: int32
-        numberOfErrors:
-          type: integer
-          description: The number of times today that an unexpected error occurred while Coveo was processing the notification.
-          format: int32
-        numberOfCancellations:
-          type: integer
-          description: The number of times today that the activity related to the notification occurred but did not cause a notification to be sent.
-          format: int32
-      description: The usage statistics of a [subscription](https://docs.coveo.com/en/248/).
-      externalDocs:
-        description: Review the usage statistics of an organization notification
-        url: https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#review-the-usage-statistics-of-an-organization-notification
     EditSubscriptionModel:
       type: object
       properties:
@@ -859,6 +836,74 @@ components:
         parameters:
           $ref: '#/components/schemas/SubscriptionParametersModel'
       description: The new configuration to update the [subscription](https://docs.coveo.com/en/248/) to.
+    SubscriptionStatusModel:
+      type: object
+      properties:
+        healthIndicator:
+          type: string
+          description: 'A general indication of how well the subscription is doing</br>**Allowed values:**</br>- `GOOD`: A very low percentage (i.e., less than 5%) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `WARNING`: A relatively low, but still significant percentage (i.e., between 5% and 20%) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `PROBLEMATIC`: A relatively high percentage (i.e., 20% or more) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `UNKNOWN`: No statistics are available for the subscription.'
+          enum:
+          - GOOD
+          - WARNING
+          - PROBLEMATIC
+          - UNKNOWN
+        statistics:
+          $ref: '#/components/schemas/SubscriptionStatisticsModel'
+        latestResponseMessage:
+          type: string
+          description: The response message from the most recent service request.
+          example: '`200 OK`'
+      description: The [status of the subscription](https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#subscription-status).</br>See [Review the usage statistics of an organization notification](https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#review-the-usage-statistics-of-an-organization-notification).
+    SubscriptionStatisticsModel:
+      type: object
+      properties:
+        numberOfSuccess:
+          type: integer
+          description: The number of times today that the notification was successfully processed and sent to the expected email addresses or service URLs.
+          format: int32
+        numberOfFailures:
+          type: integer
+          description: The number of times today that the email or webhook server to which the notification was sent returned an error or could not be reached.
+          format: int32
+        numberOfErrors:
+          type: integer
+          description: The number of times today that an unexpected error occurred while Coveo was processing the notification.
+          format: int32
+        numberOfCancellations:
+          type: integer
+          description: The number of times today that the activity related to the notification occurred but did not cause a notification to be sent.
+          format: int32
+      description: The usage statistics of a [subscription](https://docs.coveo.com/en/248/).
+      externalDocs:
+        description: Review the usage statistics of an organization notification
+        url: https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#review-the-usage-statistics-of-an-organization-notification
+    SubscriptionParametersModel:
+      type: object
+      properties:
+        groupId:
+          type: string
+          description: The unique identifier of the [group](https://docs.coveo.com/en/2867/) the subscription is intended for.
+        emailRecipients:
+          type: array
+          description: A list of email addresses to send notifications to.
+          example: '[`jsmith@example.com`]'
+          items:
+            type: string
+            description: A list of email addresses to send notifications to.
+            example: '[`jsmith@example.com`]'
+        serviceUrl:
+          type: string
+          description: The URL the subscription sends its HTTP POST requests to.</br>**Note:** Only relevant for subscriptions of type `WEB_HOOK`.
+          example: http://www.example.com/myendpoint
+        fromDisplayName:
+          type: string
+          description: The display name to use for the `from` field of the email.</br>**Note:** Only relevant for subscriptions of type `EMAIL` or `EMAIL_JSON`.
+          example: My Coveo Cloud Organization Notification
+        emailSubject:
+          type: string
+          description: The subject of the email notification to be sent.</br>**Note:** Only relevant for subscriptions of type `EMAIL` or `EMAIL_JSON`.
+          example: Refresh failed on "My Coveo Cloud Organization"
+      description: Parameters specifying the [notification](https://docs.coveo.com/en/221/) sent by the [subscription](https://docs.coveo.com/en/248/).
     SubscriptionModel:
       type: object
       properties:
@@ -929,33 +974,6 @@ components:
             type: string
             description: The list of unsubscribed emails of the given subscription.
       description: A [subscription](https://docs.coveo.com/en/248/).
-    SubscriptionParametersModel:
-      type: object
-      properties:
-        groupId:
-          type: string
-          description: The unique identifier of the [group](https://docs.coveo.com/en/2867/) the subscription is intended for.
-        emailRecipients:
-          type: array
-          description: A list of email addresses to send notifications to.
-          example: '[`jsmith@example.com`]'
-          items:
-            type: string
-            description: A list of email addresses to send notifications to.
-            example: '[`jsmith@example.com`]'
-        serviceUrl:
-          type: string
-          description: The URL the subscription sends its HTTP POST requests to.</br>**Note:** Only relevant for subscriptions of type `WEB_HOOK`.
-          example: http://www.example.com/myendpoint
-        fromDisplayName:
-          type: string
-          description: The display name to use for the `from` field of the email.</br>**Note:** Only relevant for subscriptions of type `EMAIL` or `EMAIL_JSON`.
-          example: My Coveo Cloud Organization Notification
-        emailSubject:
-          type: string
-          description: The subject of the email notification to be sent.</br>**Note:** Only relevant for subscriptions of type `EMAIL` or `EMAIL_JSON`.
-          example: Refresh failed on "My Coveo Cloud Organization"
-      description: Parameters specifying the [notification](https://docs.coveo.com/en/221/) sent by the [subscription](https://docs.coveo.com/en/248/).
     SubscriptionPatternModel:
       type: object
       properties:
@@ -1021,24 +1039,6 @@ components:
       externalDocs:
         description: Organization Notification JSON Filter Reference
         url: https://docs.coveo.com/en/1660/
-    SubscriptionStatusModel:
-      type: object
-      properties:
-        healthIndicator:
-          type: string
-          description: 'A general indication of how well the subscription is doing</br>**Allowed values:**</br>- `GOOD`: A very low percentage (i.e., less than 5%) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `WARNING`: A relatively low, but still significant percentage (i.e., between 5% and 20%) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `PROBLEMATIC`: A relatively high percentage (i.e., 20% or more) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `UNKNOWN`: No statistics are available for the subscription.'
-          enum:
-          - GOOD
-          - WARNING
-          - PROBLEMATIC
-          - UNKNOWN
-        statistics:
-          $ref: '#/components/schemas/SubscriptionStatisticsModel'
-        latestResponseMessage:
-          type: string
-          description: The response message from the most recent service request.
-          example: '`200 OK`'
-      description: The [status of the subscription](https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#subscription-status).</br>See [Review the usage statistics of an organization notification](https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#review-the-usage-statistics-of-an-organization-notification).
   securitySchemes:
     oauth2:
       type: oauth2

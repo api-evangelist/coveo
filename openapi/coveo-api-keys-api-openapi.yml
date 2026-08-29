@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Api Keys API
+  title: Coveo Authorization Server Api Keys API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -660,6 +660,24 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/apikeys/delete/bulk_post
 components:
   schemas:
+    ApiKeyAdditionalConfigurationModel:
+      type: object
+      properties:
+        commerce:
+          $ref: '#/components/schemas/CommerceApiKeyConfigurationModel'
+        search:
+          $ref: '#/components/schemas/SearchApiKeyConfigurationModel'
+        analytics:
+          $ref: '#/components/schemas/AnalyticsConfigurationModel'
+      description: The additional configuration to attach to the API key.
+    IdAndDisplayNameModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+      description: The unique identifiers of the organizations by which the SAML identity provider is used.
     RestException:
       type: object
       properties:
@@ -669,69 +687,7 @@ components:
           type: string
         requestID:
           type: string
-    IdAndDisplayNameModel:
-      type: object
-      properties:
-        id:
-          type: string
-        displayName:
-          type: string
-      description: The unique identifiers of the organizations by which the SAML identity provider is used.
-    EnforcedQueryPipelineConfigurationModel:
-      type: object
-      properties:
-        searchHub:
-          type: string
-          description: The search hub to enforce on the queries using the API key. </br>**Example:** `SupportHub`
-      description: The query pipeline configuration to enforce on the API key.
-    ApiKeyExposureReportResponse:
-      type: object
-      properties:
-        apiKeyLoggerId:
-          type: string
-          description: The unique identifier of the API key.
-          readOnly: true
-          example: t4hk287bfj5sg6wskg64ckk5a
-        severity:
-          type: string
-          description: The severity of the exposure report.
-          readOnly: true
-          example: CRITICAL
-          enum:
-          - CRITICAL
-          - HIGH
-          - MEDIUM
-          - LOW
-          - WARN
-        deactivationDate:
-          type: string
-          description: The expected deactivation date of the API key according to the severity.
-          format: date-time
-          readOnly: true
-        creationType:
-          type: string
-          description: The creation type of the exposure report
-          readOnly: true
-          example: MANUAL
-          enum:
-          - MANUAL
-          - AUTOMATED
-        createdBy:
-          $ref: '#/components/schemas/UserModel'
-        reasons:
-          type: array
-          description: The reasons for the API key exposure.
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/ApiKeyExposureReportReasonResponse'
-        createdDate:
-          type: string
-          description: The date when the exposure report was created.
-          format: date-time
-          readOnly: true
-      description: An API key Exposure Report
-      readOnly: true
-    ApiKeyResponse:
+    ApiKeyWithValueResponse:
       type: object
       properties:
         groupsThatCanEdit:
@@ -746,9 +702,8 @@ components:
             $ref: '#/components/schemas/IdAndDisplayNameModel'
         value:
           type: string
-          description: The value of the API key (Masked).
+          description: The value of the API key.
           readOnly: true
-          example: xx*****1343
         id:
           type: string
           description: The unique identifier of the API key.
@@ -855,22 +810,16 @@ components:
           readOnly: true
         exposureReport:
           $ref: '#/components/schemas/ApiKeyExposureReportResponse'
+        rotationSecret:
+          type: string
+          description: The secret used to rotate the API key.
+          readOnly: true
         resourceId:
           type: string
-      description: An API key with masked value
+      description: An API key with a non-masked value
       externalDocs:
         description: Use API key authentication with the Search API
         url: https://docs.coveo.com/en/105/
-    ApiKeyAdditionalConfigurationModel:
-      type: object
-      properties:
-        commerce:
-          $ref: '#/components/schemas/CommerceApiKeyConfigurationModel'
-        search:
-          $ref: '#/components/schemas/SearchApiKeyConfigurationModel'
-        analytics:
-          $ref: '#/components/schemas/AnalyticsConfigurationModel'
-      description: The additional configuration to attach to the API key.
     ApiKeyExposureReportReasonResponse:
       type: object
       properties:
@@ -879,9 +828,10 @@ components:
           description: Unique identifier of the exposure reason
           example: 123e4567-e89b-12d3-a456-426614174000
         reason:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Reason for the API key exposure
-          nullable: true
           example: The API key was found on a public repository
         source:
           type: string
@@ -891,9 +841,10 @@ components:
           - GITHUB
           - MANUAL
         url:
-          type: string
+          type:
+          - string
+          - 'null'
           description: URL where the API key was found
-          nullable: true
           example: https://example.com
         createdDate:
           type: string
@@ -902,36 +853,133 @@ components:
           example: '2023-10-01T12:00:00Z'
       description: Response containing the reason for API key exposure, it contain at least one of the reason or url
       readOnly: true
+    UserRealmModel:
+      type: object
+      properties:
+        member:
+          type: boolean
+        realm:
+          $ref: '#/components/schemas/RealmModel'
+        realmModel:
+          $ref: '#/components/schemas/RealmModel'
+      description: The realms the user is a part of.
+    EventModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the user.
+        userDisplayName:
+          type: string
+          description: The display name of the user. **Example:** `Alice`
+      description: The user information to send along with usage analytics events.
+    EnforcedQueryPipelineConfigurationModel:
+      type: object
+      properties:
+        searchHub:
+          type: string
+          description: The search hub to enforce on the queries using the API key. </br>**Example:** `SupportHub`
+      description: The query pipeline configuration to enforce on the API key.
+    ApiKeyCreationRequest:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        displayName:
+          maxLength: 125
+          type: string
+          description: The display name for the API key.
+          example: PushAPIKey
+        description:
+          maxLength: 1000
+          type: string
+          description: A brief description of the API key.
+          example: API key used for managing sources.
+        privileges:
+          uniqueItems: true
+          type: array
+          description: A set of privileges.
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        enabled:
+          type: boolean
+          description: Whether the API key is enabled.
+        allowedIps:
+          type: array
+          description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+          items:
+            type: string
+            description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+        deniedIps:
+          type: array
+          description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+          items:
+            type: string
+            description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
+            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
+        additionalConfiguration:
+          $ref: '#/components/schemas/ApiKeyAdditionalConfigurationModel'
+        lifetimeDuration:
+          type: string
+          description: The lifetime duration until the api key expiration. Represented in ISO 8601 format.
+          writeOnly: true
+          example: P1M
+        overrideTemplatePrivileges:
+          uniqueItems: true
+          type: array
+          description: The privileges that will be used to override the privileges of the template - Specifically to add target ids
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        rotationEnabled:
+          type: boolean
+          description: If true, the API key can be rotated programmatically.
+          writeOnly: true
+          default: false
+      description: Model for the creation of an API key.
+      externalDocs:
+        description: Use API key authentication with the Search API
+        url: https://docs.coveo.com/en/105/
+    RealmModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: The realm to add.
     AnalyticsConfigurationModel:
       type: object
       properties:
         event:
           $ref: '#/components/schemas/EventModel'
       description: The user information to send to Coveo Usage Analytics
-    DuplicatedApiKeyRequest:
-      type: object
-      properties:
-        displayName:
-          maxLength: 1000
-          type: string
-          description: The display name for the API key.
-          writeOnly: true
-          example: PushAPIKey
-        description:
-          maxLength: 1000
-          type: string
-          description: A brief description of the API key.
-          writeOnly: true
-          example: API key used for managing sources.
-        lifetimeDuration:
-          type: string
-          description: The lifetime duration until the api key expiration. Represented in ISO 8601 format.
-          writeOnly: true
-          example: P1M
-      description: Request model for the duplication of an API key
-      externalDocs:
-        description: Use API key authentication with the Search API
-        url: https://docs.coveo.com/en/105/
     UserModel:
       type: object
       properties:
@@ -939,17 +987,20 @@ components:
           type: string
           description: The username of the user.</br>**Example:** `jsmith@email.com-google`
         name:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The full name of the user.</br>**Example:** `John Smith`
-          nullable: true
         firstName:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The first name of the user.</br>**Example:** `John`
-          nullable: true
         lastName:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The last name of the user.</br>**Example:** `Smith`
-          nullable: true
         email:
           type: string
           description: The email address of the user.</br>**Example:**`jsmith@email.com`
@@ -1235,16 +1286,18 @@ components:
           - ZR
           - ZW
         providerUsername:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The username of the user for the corresponding provider.</br>**Example:** `jsmith@email.com`
-          nullable: true
         providerUserId:
           type: string
           description: The unique identifier of the user for the provider.</br>**Example:** `office365`
         provider:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The provider of the user.
-          nullable: true
           enum:
           - SALESFORCE
           - SALESFORCE_SANDBOX
@@ -1253,9 +1306,10 @@ components:
           - SAML
           - EMAIL
         samlIdentityProviderId:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The unique identifier of the SAML identity provider the user is a part of.</br>**Example:** `myprovider`
-          nullable: true
         realms:
           type: array
           description: The realms the user is a part of.
@@ -1289,12 +1343,84 @@ components:
             description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen": "v2.5652.11"}`</br>*Default:* `{}`'
           description: 'A collection of key-value pairs that can be used for custom features.</br><b>Example:</b> `{"lastWhatsNewSeen": "v2.5652.11"}`</br>*Default:* `{}`'
         lastUsedDate:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The last day the user has logged in into the platform
           format: date-time
-          nullable: true
       description: A user.
-    ApiKeyWithValueResponse:
+    DuplicatedApiKeyRequest:
+      type: object
+      properties:
+        displayName:
+          maxLength: 1000
+          type: string
+          description: The display name for the API key.
+          writeOnly: true
+          example: PushAPIKey
+        description:
+          maxLength: 1000
+          type: string
+          description: A brief description of the API key.
+          writeOnly: true
+          example: API key used for managing sources.
+        lifetimeDuration:
+          type: string
+          description: The lifetime duration until the api key expiration. Represented in ISO 8601 format.
+          writeOnly: true
+          example: P1M
+      description: Request model for the duplication of an API key
+      externalDocs:
+        description: Use API key authentication with the Search API
+        url: https://docs.coveo.com/en/105/
+    ApiKeyExposureReportResponse:
+      type: object
+      properties:
+        apiKeyLoggerId:
+          type: string
+          description: The unique identifier of the API key.
+          readOnly: true
+          example: t4hk287bfj5sg6wskg64ckk5a
+        severity:
+          type: string
+          description: The severity of the exposure report.
+          readOnly: true
+          example: CRITICAL
+          enum:
+          - CRITICAL
+          - HIGH
+          - MEDIUM
+          - LOW
+          - WARN
+        deactivationDate:
+          type: string
+          description: The expected deactivation date of the API key according to the severity.
+          format: date-time
+          readOnly: true
+        creationType:
+          type: string
+          description: The creation type of the exposure report
+          readOnly: true
+          example: MANUAL
+          enum:
+          - MANUAL
+          - AUTOMATED
+        createdBy:
+          $ref: '#/components/schemas/UserModel'
+        reasons:
+          type: array
+          description: The reasons for the API key exposure.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ApiKeyExposureReportReasonResponse'
+        createdDate:
+          type: string
+          description: The date when the exposure report was created.
+          format: date-time
+          readOnly: true
+      description: An API key Exposure Report
+      readOnly: true
+    ApiKeyResponse:
       type: object
       properties:
         groupsThatCanEdit:
@@ -1309,8 +1435,9 @@ components:
             $ref: '#/components/schemas/IdAndDisplayNameModel'
         value:
           type: string
-          description: The value of the API key.
+          description: The value of the API key (Masked).
           readOnly: true
+          example: xx*****1343
         id:
           type: string
           description: The unique identifier of the API key.
@@ -1417,13 +1544,9 @@ components:
           readOnly: true
         exposureReport:
           $ref: '#/components/schemas/ApiKeyExposureReportResponse'
-        rotationSecret:
-          type: string
-          description: The secret used to rotate the API key.
-          readOnly: true
         resourceId:
           type: string
-      description: An API key with a non-masked value
+      description: An API key with masked value
       externalDocs:
         description: Use API key authentication with the Search API
         url: https://docs.coveo.com/en/105/
@@ -1451,6 +1574,36 @@ components:
       externalDocs:
         description: Privilege reference
         url: https://docs.coveo.com/en/1707/
+    ImpersonatedUserModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the security identity to impersonate.</br>**Example:** `asmith@example.com`
+        provider:
+          type: string
+          description: The security identity provider containing the security identity to impersonate.</br>**Example:** `Email Security Provider`
+        type:
+          type: string
+          description: The type of the security identity to impersonate.</br>**Default:** `User`</br> **Allowed values:** </br>- `User` </br>- `Group` </br>- `VirtualGroup` </br>- `Unknown`
+      description: The security identities to impersonate when authenticating queries with the API key. </br>**Note:** If specified, the API key must have the `IMPERSONATE` privilege.
+    CommerceApiKeyConfigurationModel:
+      type: object
+      properties:
+        catalogId:
+          type: string
+          description: The catalogId to enforce on the queries using the API key. </br>**Example:** `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
+      description: The commerce configuration to enforce on the queries using the API key.
+    ImpersonationRestrictionsModel:
+      type: object
+      properties:
+        allowedUserIds:
+          uniqueItems: true
+          type: array
+          description: The security identities to impersonate.
+          items:
+            $ref: '#/components/schemas/ImpersonatedUserModel'
+      description: The security identities to impersonate when authenticating queries with the API key.
     SearchApiKeyConfigurationModel:
       type: object
       properties:
@@ -1465,79 +1618,6 @@ components:
           items:
             $ref: '#/components/schemas/ImpersonatedUserModel'
       description: The Search API configuration to enforce in the API key.
-    EventModel:
-      type: object
-      properties:
-        userId:
-          type: string
-          description: The unique identifier of the user.
-        userDisplayName:
-          type: string
-          description: The display name of the user. **Example:** `Alice`
-      description: The user information to send along with usage analytics events.
-    RealmModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
-        provider:
-          type: string
-          description: The provider of the realm.
-          enum:
-          - SALESFORCE
-          - SALESFORCE_SANDBOX
-          - GOOGLE
-          - OFFICE365
-          - SAML
-          - EMAIL
-        displayName:
-          type: string
-          description: The display name of the realm.</br>**Example:** `example.com`
-        samlIdentityProviderId:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `myprovider`
-      description: The realm to add.
-    ImpersonationRestrictionsModel:
-      type: object
-      properties:
-        allowedUserIds:
-          uniqueItems: true
-          type: array
-          description: The security identities to impersonate.
-          items:
-            $ref: '#/components/schemas/ImpersonatedUserModel'
-      description: The security identities to impersonate when authenticating queries with the API key.
-    UserRealmModel:
-      type: object
-      properties:
-        member:
-          type: boolean
-        realm:
-          $ref: '#/components/schemas/RealmModel'
-        realmModel:
-          $ref: '#/components/schemas/RealmModel'
-      description: The realms the user is a part of.
-    CommerceApiKeyConfigurationModel:
-      type: object
-      properties:
-        catalogId:
-          type: string
-          description: The catalogId to enforce on the queries using the API key. </br>**Example:** `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
-      description: The commerce configuration to enforce on the queries using the API key.
-    ImpersonatedUserModel:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the security identity to impersonate.</br>**Example:** `asmith@example.com`
-        provider:
-          type: string
-          description: The security identity provider containing the security identity to impersonate.</br>**Example:** `Email Security Provider`
-        type:
-          type: string
-          description: The type of the security identity to impersonate.</br>**Default:** `User`</br> **Allowed values:** </br>- `User` </br>- `Group` </br>- `VirtualGroup` </br>- `Unknown`
-      description: The security identities to impersonate when authenticating queries with the API key. </br>**Note:** If specified, the API key must have the `IMPERSONATE` privilege.
     ApiKeyRotationRequest:
       required:
       - rotationSecret
@@ -1559,77 +1639,6 @@ components:
           description: The rotation secret for the API key being rotated.
           writeOnly: true
       description: Request Model to rotate an API key
-    ApiKeyCreationRequest:
-      type: object
-      properties:
-        groupsThatCanEdit:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        apiKeysThatCanEdit:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        displayName:
-          maxLength: 125
-          type: string
-          description: The display name for the API key.
-          example: PushAPIKey
-        description:
-          maxLength: 1000
-          type: string
-          description: A brief description of the API key.
-          example: API key used for managing sources.
-        privileges:
-          uniqueItems: true
-          type: array
-          description: A set of privileges.
-          items:
-            $ref: '#/components/schemas/PrivilegeModel'
-        enabled:
-          type: boolean
-          description: Whether the API key is enabled.
-        allowedIps:
-          type: array
-          description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
-          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
-          items:
-            type: string
-            description: A set of public IP addresses allowed to use the API key. If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
-            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
-        deniedIps:
-          type: array
-          description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
-          example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
-          items:
-            type: string
-            description: A set of public IP addresses that will be denied access when attempting to use the API key.</br>**Notes:**</br>- IP ranges using CIDR notation are also supported.</br>- If an IP address is included in both the `allowedIps` and the `deniedIps`, the IP address will be denied.
-            example: '[`"70.32.10.85"`, `"29.186.225.13"`]'
-        additionalConfiguration:
-          $ref: '#/components/schemas/ApiKeyAdditionalConfigurationModel'
-        lifetimeDuration:
-          type: string
-          description: The lifetime duration until the api key expiration. Represented in ISO 8601 format.
-          writeOnly: true
-          example: P1M
-        overrideTemplatePrivileges:
-          uniqueItems: true
-          type: array
-          description: The privileges that will be used to override the privileges of the template - Specifically to add target ids
-          writeOnly: true
-          items:
-            $ref: '#/components/schemas/PrivilegeModel'
-        rotationEnabled:
-          type: boolean
-          description: If true, the API key can be rotated programmatically.
-          writeOnly: true
-          default: false
-      description: Model for the creation of an API key.
-      externalDocs:
-        description: Use API key authentication with the Search API
-        url: https://docs.coveo.com/en/105/
     ApiKeyUpdateRequest:
       type: object
       properties:

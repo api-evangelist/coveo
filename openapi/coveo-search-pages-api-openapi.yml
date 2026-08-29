@@ -1,18 +1,15 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Search Pages API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  description: Service in charge of CRUD operations for Coveo Cloud hosted search pages
+  title: Coveo Search Pages API
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
   contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+    name: Coveo Community
+    url: https://answers.coveo.com/
+  version: '1.0'
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - description: Manage Classic hosted search pages
   name: Search Pages
@@ -23,204 +20,242 @@ paths:
       - OAuth2:
         - full
       description: 'Gets the JSON definition of search pages hosted in the target Coveo Cloud organization. <br/><br/>**Required privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
-      produces:
-      - application/json
       tags:
       - Search Pages
       summary: List Search Pages
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The _name_ metadata value of a specific search page to retrieve (e.g., _mysearchpage_).
+        schema:
+          type: string
+      - description: The _name_ metadata value of a specific search page to retrieve (e.g., _mysearchpage_).
         name: name
         in: query
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/swaggermodels.ResponsePage'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/swaggermodels.ResponsePage'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
     post:
       security:
       - OAuth2:
         - full
       description: 'Creates a new empty search page in the target Coveo Cloud organization. <br/><br/>**Required privilege:** Search Pages - Create<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "CREATE", "targetId": "*" }```</details>'
-      consumes:
-      - application/json
-      produces:
-      - application/json
       tags:
       - Search Pages
       summary: Create Search Page
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - description: The new page metadata.
-        name: payload
-        in: body
-        required: true
         schema:
-          $ref: '#/definitions/swaggermodels.RequestCreateEmptyPage'
+          type: string
       responses:
         '201':
           description: Created
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponsePage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponsePage'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/swaggermodels.RequestCreateEmptyPage'
+        description: The new page metadata.
+        required: true
   /rest/organizations/{organizationID}/pages/ids:
     post:
       security:
       - OAuth2:
         - full
       description: 'Gets the JSON definition of search pages hosted in the target Coveo Cloud organization. <br/><br/>**Required privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
-      produces:
-      - application/json
       tags:
       - Search Pages
       summary: List Search Pages by Ids
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - description: The list of ids
-        name: payload
-        in: body
-        required: true
         schema:
-          type: array
-          items:
-            type: string
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/swaggermodels.ResponsePage'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/swaggermodels.ResponsePage'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        description: The list of ids
+        required: true
   /rest/organizations/{organizationID}/pages/project/id:
     get:
       security:
       - OAuth2:
         - full
       description: 'lists Pages by project id in a [Coveo Cloud organization](https://docs.coveo.com/en/185/). <br/><br/>**Required privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
-      produces:
-      - application/json
       tags:
       - Search Pages
       summary: List Pages by Project ID
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The _projectid_ of the pages.
+        schema:
+          type: string
+      - description: The _projectid_ of the pages.
         name: projectid
         in: query
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/swaggermodels.ResponsePage'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/swaggermodels.ResponsePage'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
   /rest/organizations/{organizationID}/pages/{pageID}:
     get:
       security:
       - OAuth2:
         - full
       description: 'Gets the JSON definition of a specific search page hosted in the target Coveo Cloud organization. <br/><br/>**Required privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
-      produces:
-      - application/json
       tags:
       - Search Pages
       summary: Get Search Page
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page to retrieve (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page to retrieve (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponsePage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponsePage'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
     put:
       security:
       - OAuth2:
@@ -230,37 +265,46 @@ paths:
       - Search Pages
       summary: Update Search Page Metadata
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
-      - description: The updated search page metadata.
-        name: payload
-        in: body
-        required: true
         schema:
-          $ref: '#/definitions/swaggermodels.RequestUpdatePageMetadata'
+          type: string
       responses:
         '204':
           description: The search page was successfully updated.
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/swaggermodels.RequestUpdatePageMetadata'
+        description: The updated search page metadata.
+        required: true
     delete:
       security:
       - OAuth2:
@@ -270,70 +314,86 @@ paths:
       - Search Pages
       summary: Delete a Search Page or in-App Widget
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
+        schema:
+          type: string
       responses:
         '204':
           description: The search page was successfully deleted
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
   /rest/organizations/{organizationID}/pages/{pageID}/header:
     get:
       security:
       - OAuth2:
         - full
       description: 'Gets the JSON definition of a specific search page header hosted in the target Coveo Cloud organization. <br/><br/>**Required privilege:** Search Pages - View<br/><details><summary>Privilege required</summary>```{ "owner": "SEARCH_API", "targetDomain": "SEARCH_PAGES", "type": "VIEW", "targetId": "*" }```</details>'
-      produces:
-      - application/json
       tags:
       - Search Pages
       summary: Get Search Page Header
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page to view (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page to view (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/swaggermodels.PageHeaderSharedModel'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.PageHeaderSharedModel'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
     put:
       security:
       - OAuth2:
@@ -343,39 +403,50 @@ paths:
       - Search Pages
       summary: Reorder Resources in Search Page Header
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
-      - description: The reordered resources.
-        name: payload
-        in: body
-        required: true
         schema:
-          $ref: '#/definitions/swaggermodels.UpdateHeaderResourcesModel'
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/swaggermodels.PageHeaderSharedModel'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.PageHeaderSharedModel'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/swaggermodels.UpdateHeaderResourcesModel'
+        description: The reordered resources.
+        required: true
   /rest/organizations/{organizationID}/pages/{pageID}/header/css:
     post:
       security:
@@ -386,39 +457,50 @@ paths:
       - Search Pages
       summary: Create CSS Resource in a Search Page Header
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
-      - description: The CSS resource to append.
-        name: payload
-        in: body
-        required: true
         schema:
-          $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.CSSResourceSharedModel'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/swaggermodels.CSSResourceSharedModel'
+        description: The CSS resource to append.
+        required: true
   /rest/organizations/{organizationID}/pages/{pageID}/header/css/{resourceName}:
     put:
       security:
@@ -429,48 +511,62 @@ paths:
       - Search Pages
       summary: Update CSS Resource in Search Page Header.
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
-      - type: string
-        description: The name identifier of the CSS resource (e.g., 'myresource').
+        schema:
+          type: string
+      - description: The name identifier of the CSS resource (e.g., 'myresource').
         name: resourceName
         in: path
         required: true
-      - description: The updated CSS resource.
-        name: payload
-        in: body
-        required: true
         schema:
-          $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.CSSResourceSharedModel'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '404':
           description: Not Found
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorNotFound'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorNotFound'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/swaggermodels.CSSResourceSharedModel'
+        description: The updated CSS resource.
+        required: true
     delete:
       security:
       - OAuth2:
@@ -480,40 +576,51 @@ paths:
       - Search Pages
       summary: Delete CSS Resource in Search Page Header.
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
-      - type: string
-        description: The name identifier of the CSS resource (e.g., 'myresource').
+        schema:
+          type: string
+      - description: The name identifier of the CSS resource (e.g., 'myresource').
         name: resourceName
         in: path
         required: true
+        schema:
+          type: string
       responses:
         '204':
           description: The resource was successfully deleted
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '404':
           description: Not Found
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorNotFound'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorNotFound'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
   /rest/organizations/{organizationID}/pages/{pageID}/header/javascript:
     post:
       security:
@@ -524,39 +631,50 @@ paths:
       - Search Pages
       summary: Append JavaScript Resource to Search Page Header.
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
-      - description: The JavaScript resource to append.
-        name: payload
-        in: body
-        required: true
         schema:
-          $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.JavaScriptResourceSharedModel'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/swaggermodels.JavaScriptResourceSharedModel'
+        description: The JavaScript resource to append.
+        required: true
   /rest/organizations/{organizationID}/pages/{pageID}/header/javascript/{resourceName}:
     put:
       security:
@@ -567,48 +685,62 @@ paths:
       - Search Pages
       summary: Update JavaScript Resource in Search Page Header.
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
-      - type: string
-        description: The name identifier of the JavaScript resource (e.g., 'myresource').
+        schema:
+          type: string
+      - description: The name identifier of the JavaScript resource (e.g., 'myresource').
         name: resourceName
         in: path
         required: true
-      - description: The updated JavaScript resource.
-        name: payload
-        in: body
-        required: true
         schema:
-          $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.JavaScriptResourceSharedModel'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '404':
           description: Not Found
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorNotFound'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorNotFound'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/swaggermodels.JavaScriptResourceSharedModel'
+        description: The updated JavaScript resource.
+        required: true
     delete:
       security:
       - OAuth2:
@@ -618,40 +750,51 @@ paths:
       - Search Pages
       summary: Delete JavaScript Resource in Search Page Header.
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
-      - type: string
-        description: The name identifier of the JavaScript resource (e.g., 'myresource').
+        schema:
+          type: string
+      - description: The name identifier of the JavaScript resource (e.g., 'myresource').
         name: resourceName
         in: path
         required: true
+        schema:
+          type: string
       responses:
         '204':
           description: The resource was successfully deleted
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '404':
           description: Not Found
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorNotFound'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorNotFound'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
   /rest/organizations/{organizationID}/pages/{pageID}/searchui:
     get:
       security:
@@ -662,33 +805,43 @@ paths:
       - Search Pages
       summary: Get Search Page JavaScript Search Framework Information
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
+        schema:
+          type: string
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseSearchUIUpgradeInfo'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseSearchUIUpgradeInfo'
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
     put:
       security:
       - OAuth2:
@@ -698,238 +851,247 @@ paths:
       - Search Pages
       summary: Change the JavaScript Search Framework Resources
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
+        schema:
+          type: string
+      - description: The unique identifier of the search page to delete (e.g., '12b627f9-e3aa-49db-a0f5-5c0c1392e59e').
         name: pageID
         in: path
         required: true
-      - type: string
-        description: The major version identifier of the JavaScript Search Framework version to upgrade the target search page to (e.g., _2_).
+        schema:
+          type: string
+      - description: The major version identifier of the JavaScript Search Framework version to upgrade the target search page to (e.g., _2_).
         name: major
         in: query
         required: true
-      - type: string
-        description: The minor version identifier of the JavaScript Search Framework version to upgrade the target search page to (e.g., _4710_).
+        schema:
+          type: string
+      - description: The minor version identifier of the JavaScript Search Framework version to upgrade the target search page to (e.g., _4710_).
         name: minor
         in: query
         required: true
+        schema:
+          type: string
       responses:
         '204':
           description: The search page was successfully updated.
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
 components:
+  schemas:
+    swaggermodels.CSSResourceSharedModel:
+      type: object
+      properties:
+        inlineContent:
+          description: The content of the header "style" tag.
+          type: string
+          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
+        name:
+          description: The identifier of the header "style" tag.
+          type: string
+          example: CoveoSearchUI
+        url:
+          description: The URL of CSS stylesheet.
+          type: string
+          example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
+    coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasJavaScript:
+      type: object
+      properties:
+        InlineContent:
+          type: string
+        Name:
+          type: string
+        URL:
+          type: string
+    coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasCSS:
+      type: object
+      properties:
+        InlineContent:
+          type: string
+        Name:
+          type: string
+        URL:
+          type: string
+    swaggermodels.ResponseApplicationErrorInternalServerError:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 500
+        message:
+          type: string
+    swaggermodels.UpdateHeaderResourcesModel:
+      type: object
+      properties:
+        css:
+          description: The name identifiers of all CSS resources in the search page header, in the desired order.
+          type: array
+          items:
+            type: string
+          example:
+          - myfirstCSS
+          - mysecondCSS
+        javascript:
+          description: The name identifiers of all JavaScript resources in the search page header, in the desired order.
+          type: array
+          items:
+            type: string
+          example:
+          - myfirstJS
+          - mysecondJS
+    swaggermodels.RequestCreateEmptyPage:
+      type: object
+      properties:
+        name:
+          description: A human-readable unique name for this search page. Can contain up to 50 alphanumeric, underscore, and hyphen characters.
+          type: string
+          maxLength: 50
+          minLength: 1
+          example: My-Search-Page_name
+        title:
+          description: A human-readable HTML title for this search page. Can contain up to 200 characters.
+          type: string
+          maxLength: 200
+          minLength: 1
+          example: My Search Page title
+    swaggermodels.ResponseSearchUIUpgradeInfo:
+      type: object
+      properties:
+        available:
+          description: Available contains the JavaScript Search Framework versions that can be used for this search page.
+          type: array
+          items:
+            $ref: '#/components/schemas/swaggermodels.ResponseSearchUIVersion'
+        current:
+          description: Current contains the JavaScript Search Framework version currently being used for this search page.
+          allOf:
+          - $ref: '#/components/schemas/swaggermodels.ResponseSearchUIVersion'
+        latest:
+          description: Latest contains the most recent JavaScript Search Framework version this search page can be upgrated to.
+          allOf:
+          - $ref: '#/components/schemas/swaggermodels.ResponseSearchUIVersion'
+        upgradable:
+          description: Upgradable indicates whether this search page can be upgraded to a newer JavaScript Search Framework version.
+          type: boolean
+    swaggermodels.JavaScriptResourceSharedModel:
+      type: object
+      properties:
+        inlineContent:
+          description: The content of the header "script" tag.
+          type: string
+          example: window.location = 'about:blank';
+        name:
+          description: The identifier of the header "script" tag.
+          type: string
+          example: CoveoSearchUI
+        url:
+          description: The URL of the JavaScript source file.
+          type: string
+          example: https://code.jquery.com/jquery-3.4.1.min.js
+    swaggermodels.ResponseApplicationErrorBadRequest:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 400
+        message:
+          type: string
+    swaggermodels.ResponseApplicationErrorUnauthorized:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 401
+        message:
+          type: string
+    swaggermodels.ResponsePage:
+      type: object
+      properties:
+        css:
+          type: array
+          items:
+            $ref: '#/components/schemas/coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasCSS'
+        html:
+          type: string
+        id:
+          type: string
+        javascript:
+          type: array
+          items:
+            $ref: '#/components/schemas/coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasJavaScript'
+        lastModified:
+          type: string
+        name:
+          type: string
+        title:
+          type: string
+    swaggermodels.ResponseApplicationErrorNotFound:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 404
+        message:
+          type: string
+    swaggermodels.RequestUpdatePageMetadata:
+      type: object
+      properties:
+        html:
+          type: string
+        name:
+          description: A human-readable unique name for this search page. Can contain up to 50 alphanumeric, underscore, and hyphen characters.
+          type: string
+          maxLength: 50
+          minLength: 1
+          example: My-Search-Page_name
+        title:
+          description: A human-readable HTML title for this search page. Can contain up to 200 characters.
+          type: string
+          maxLength: 200
+          minLength: 1
+          example: My Search Page title
+    swaggermodels.PageHeaderSharedModel:
+      type: object
+      properties:
+        css:
+          type: array
+          items:
+            $ref: '#/components/schemas/swaggermodels.CSSResourceSharedModel'
+        javascript:
+          type: array
+          items:
+            $ref: '#/components/schemas/swaggermodels.JavaScriptResourceSharedModel'
+    swaggermodels.ResponseSearchUIVersion:
+      type: object
+      properties:
+        major:
+          type: string
+        minor:
+          type: string
   securitySchemes:
-    oauth2:
+    OAuth2:
       type: oauth2
       flows:
-        authorizationCode:
-          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+        implicit:
           scopes:
-            full: required
-definitions:
-  swaggermodels.CSSResourceSharedModel:
-    type: object
-    properties:
-      inlineContent:
-        description: The content of the header "style" tag.
-        type: string
-        example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
-      name:
-        description: The identifier of the header "style" tag.
-        type: string
-        example: CoveoSearchUI
-      url:
-        description: The URL of CSS stylesheet.
-        type: string
-        example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
-  swaggermodels.RequestUpdatePageMetadata:
-    type: object
-    properties:
-      html:
-        type: string
-      name:
-        description: A human-readable unique name for this search page. Can contain up to 50 alphanumeric, underscore, and hyphen characters.
-        type: string
-        maxLength: 50
-        minLength: 1
-        example: My-Search-Page_name
-      title:
-        description: A human-readable HTML title for this search page. Can contain up to 200 characters.
-        type: string
-        maxLength: 200
-        minLength: 1
-        example: My Search Page title
-  coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasJavaScript:
-    type: object
-    properties:
-      InlineContent:
-        type: string
-      Name:
-        type: string
-      URL:
-        type: string
-  coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasCSS:
-    type: object
-    properties:
-      InlineContent:
-        type: string
-      Name:
-        type: string
-      URL:
-        type: string
-  swaggermodels.ResponseApplicationErrorInternalServerError:
-    type: object
-    properties:
-      errorCode:
-        type: integer
-        example: 500
-      message:
-        type: string
-  swaggermodels.JavaScriptResourceSharedModel:
-    type: object
-    properties:
-      inlineContent:
-        description: The content of the header "script" tag.
-        type: string
-        example: window.location = 'about:blank';
-      name:
-        description: The identifier of the header "script" tag.
-        type: string
-        example: CoveoSearchUI
-      url:
-        description: The URL of the JavaScript source file.
-        type: string
-        example: https://code.jquery.com/jquery-3.4.1.min.js
-  swaggermodels.RequestCreateEmptyPage:
-    type: object
-    properties:
-      name:
-        description: A human-readable unique name for this search page. Can contain up to 50 alphanumeric, underscore, and hyphen characters.
-        type: string
-        maxLength: 50
-        minLength: 1
-        example: My-Search-Page_name
-      title:
-        description: A human-readable HTML title for this search page. Can contain up to 200 characters.
-        type: string
-        maxLength: 200
-        minLength: 1
-        example: My Search Page title
-  swaggermodels.ResponseSearchUIUpgradeInfo:
-    type: object
-    properties:
-      available:
-        description: Available contains the JavaScript Search Framework versions that can be used for this search page.
-        type: array
-        items:
-          $ref: '#/definitions/swaggermodels.ResponseSearchUIVersion'
-      current:
-        description: Current contains the JavaScript Search Framework version currently being used for this search page.
-        allOf:
-        - $ref: '#/definitions/swaggermodels.ResponseSearchUIVersion'
-      latest:
-        description: Latest contains the most recent JavaScript Search Framework version this search page can be upgrated to.
-        allOf:
-        - $ref: '#/definitions/swaggermodels.ResponseSearchUIVersion'
-      upgradable:
-        description: Upgradable indicates whether this search page can be upgraded to a newer JavaScript Search Framework version.
-        type: boolean
-  swaggermodels.ResponseApplicationErrorNotFound:
-    type: object
-    properties:
-      errorCode:
-        type: integer
-        example: 404
-      message:
-        type: string
-  swaggermodels.PageHeaderSharedModel:
-    type: object
-    properties:
-      css:
-        type: array
-        items:
-          $ref: '#/definitions/swaggermodels.CSSResourceSharedModel'
-      javascript:
-        type: array
-        items:
-          $ref: '#/definitions/swaggermodels.JavaScriptResourceSharedModel'
-  swaggermodels.ResponseApplicationErrorUnauthorized:
-    type: object
-    properties:
-      errorCode:
-        type: integer
-        example: 401
-      message:
-        type: string
-  swaggermodels.ResponsePage:
-    type: object
-    properties:
-      css:
-        type: array
-        items:
-          $ref: '#/definitions/coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasCSS'
-      html:
-        type: string
-      id:
-        type: string
-      javascript:
-        type: array
-        items:
-          $ref: '#/definitions/coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasJavaScript'
-      lastModified:
-        type: string
-      name:
-        type: string
-      title:
-        type: string
-  swaggermodels.ResponseSearchUIVersion:
-    type: object
-    properties:
-      major:
-        type: string
-      minor:
-        type: string
-  swaggermodels.UpdateHeaderResourcesModel:
-    type: object
-    properties:
-      css:
-        description: The name identifiers of all CSS resources in the search page header, in the desired order.
-        type: array
-        items:
-          type: string
-        example:
-        - myfirstCSS
-        - mysecondCSS
-      javascript:
-        description: The name identifiers of all JavaScript resources in the search page header, in the desired order.
-        type: array
-        items:
-          type: string
-        example:
-        - myfirstJS
-        - mysecondJS
-  swaggermodels.ResponseApplicationErrorBadRequest:
-    type: object
-    properties:
-      errorCode:
-        type: integer
-        example: 400
-      message:
-        type: string
+            full: full
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize

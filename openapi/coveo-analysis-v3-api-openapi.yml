@@ -1,18 +1,17 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Analysis V3 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  title: Coveo Search Analysis V3 API
+  description: Documentation for Coveo Search API
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
   contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+    name: support@coveo.com
+  license:
+    name: ''
   version: 1.0.0
+  x-ApiVersion: V3
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Analysis V3
   x-displayName: Analysis V3
@@ -166,113 +165,7 @@ paths:
         - full
 components:
   schemas:
-    ReplayExecutionStepRankingWeightsRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayRule'
-    ProblemDetailResponse:
-      type: object
-      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-      minProperties: 1
-      properties:
-        status:
-          type: integer
-          minimum: 400
-          maximum: 599
-          description: The HTTP status code.
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type. This **shouldn't** change from one occurrence of the problem to another, except for localization purposes.
-        type:
-          type: string
-          format: URI
-          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies and provides human-readable documentation for the problem type. When this isn't present, its value is assumed to be "about:blank".
-        detail:
-          type: string
-          description: A human-readable explanation which is specific to this occurrence of the problem.
-        instance:
-          type: string
-          format: URI
-          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
-    ReplayRule:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          description: 'The identifier of the rule
-
-            '
-        condition:
-          $ref: '#/components/schemas/ReplayCondition'
-    ReplayExecutionStepFeaturedResultsRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayRule'
-      - $ref: '#/components/schemas/ReplayAffectedResults'
-    ReplayRankingInfoTermsWeight:
-      type: object
-      required:
-      - term
-      - weightInfo
-      properties:
-        term:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/ReplayRankingInfoWeights'
-            description: 'The weight factors applied to a specific term.
-
-              '
-        weightInfo:
-          $ref: '#/components/schemas/ReplayRankingInfoWeights'
-          description: 'A summary of the weight factors applied for these terms.
-
-            '
-    DictionaryFieldContext:
-      type: object
-      maxProperties: 255
-      additionalProperties:
-        type: string
-        maxLength: 255
-    ReplayExecutionStepBase:
-      type: object
-      required:
-      - durationInMs
-      properties:
-        durationInMs:
-          type: number
-          description: 'Duration of the replay step in milliseconds.
-
-            '
-    NotKeywordExpressionV2:
-      allOf:
-      - $ref: '#/components/schemas/NotExpressionV2'
-      - type: object
-        required:
-        - expression
-        properties:
-          expression:
-            $ref: '#/components/schemas/KeywordExpressionV2'
-    KeywordExpressionV2:
-      description: Test
-      type: object
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          enum:
-          - keyword
-          description: An expression to match a literal in an item. The `value` may also be expanded with stemming.
-        value:
-          type: string
-        stemming:
-          type: boolean
-          default: true
-          description: 'Whether to enable stemming or not. See [About Stemming](https://docs.coveo.com/en/1576/) to learn more.
-
-            '
-    ReplayExecutionStepRankingExpressions:
+    ReplayExecutionStepPostprocessingIntegrations:
       type: object
       required:
       - type
@@ -281,42 +174,55 @@ components:
         type:
           type: string
           enum:
-          - rankingExpressions
+          - postprocessingIntegrations
         name:
           type: string
           enum:
-          - Ranking Expressions
+          - Postprocessing Integrations
+        rankedResults:
+          type: array
+          description: 'Compared to the `results` property, `rankedResults` only return a list of document identifiers and their associated score.
+
+            This property allows to get the score of documents beyond the request page without affecting query performance.
+
+            This information impacts how the Generate Answering model will generate citations.'
+          items:
+            type: object
+            required:
+            - identifier
+            properties:
+              identifier:
+                type: string
+                description: Item identifier. Usually corresponds to the [permanentId](https://docs.coveo.com/en/1913/leverage-machine-learning/about-the-permanentid-field) field).
+              score:
+                type: integer
         applied:
           type: array
           items:
-            $ref: '#/components/schemas/ReplayExecutionStepRankingExpressionsRule'
+            $ref: '#/components/schemas/ReplayExecutionStepIntegrationsPostprocessingRule'
+    ReplayExecutionStepParamOverridesRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayRule'
+      - $ref: '#/components/schemas/ReplayAffectedRequestParameters'
+    IntegrationErrorInfo:
+      type: object
+      required:
+      - type
+      - message
+      properties:
+        type:
+          type: string
+          description: 'The type of the error.
+
+            '
+        details:
+          type: string
+          description: 'The details of the error.
+
+            '
     NewExpressionV2:
       description: As the expressions evolve, new expressions types might be added. To be forward compatible, you should always handle cases where something else could be returned.
-    ReplayExecutionStepPipelineSelectionPipeline:
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: string
-          description: The identifier of the selected query pipeline
-        name:
-          type: string
-          description: The name of the selected query pipeline
-        condition:
-          $ref: '#/components/schemas/ReplayCondition'
-    EmptyExpressionV2:
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          enum:
-          - empty
-          description: An empty value. This is returned when the optimized parsed query expression is empty.
-    ReplayExecutionStepPreprocessingIntegrations:
+    ReplayExecutionStepART:
       type: object
       required:
       - type
@@ -325,24 +231,23 @@ components:
         type:
           type: string
           enum:
-          - preprocessingIntegrations
+          - art
         name:
           type: string
           enum:
-          - Preprocessing Integrations
+          - Automatic Relevance Tuning
         applied:
           type: array
           items:
-            $ref: '#/components/schemas/ReplayExecutionStepIntegrationsPreprocessingRule'
-    PostprocessingStateResponse:
+            $ref: '#/components/schemas/ReplayExecutionStepARTRule'
+    ParseQueryExpressionToStructuredResponse:
       type: object
+      required:
+      - query
       properties:
-        extendedResults:
-          type: object
-          maxProperties: 100
-          additionalProperties:
-            type: string
-            maxLength: 100
+        structured:
+          $ref: '#/components/schemas/QueryExpressionV2'
+          description: A structured version of the parsed query.
     QueryExtensionInvocationExpressionV2:
       type: object
       required:
@@ -367,107 +272,184 @@ components:
             - type: string
             - type: boolean
             - $ref: '#/components/schemas/QueryExpressionV2'
-    ReplayIntegrationsProcessingFailure:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/IntegrationErrorInfo'
-    InspectReplayRequest:
+    ReplayExecutionStepPipelineSelectionPipeline:
       type: object
       required:
       - id
+      - name
       properties:
         id:
           type: string
-          description: The SearchUID of the request to replay.
-        dateRange:
-          type: object
-          description: The date range within which to look for the request.
-          required:
-          - from
-          properties:
-            from:
-              type: string
-              format: date-time
-              description: The inclusive date at which to start looking for the request.
-            to:
-              type: string
-              format: date-time
-              description: The inclusive date at which to stop looking for the SearchUID. When omitted searches up until the most recent requests.
-    DateRangeValueV2:
+          description: The identifier of the selected query pipeline
+        name:
+          type: string
+          description: The name of the selected query pipeline
+        condition:
+          $ref: '#/components/schemas/ReplayCondition'
+    ProblemDetailResponse:
+      type: object
+      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+      minProperties: 1
+      properties:
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+          description: The HTTP status code.
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. This **shouldn't** change from one occurrence of the problem to another, except for localization purposes.
+        type:
+          type: string
+          format: URI
+          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies and provides human-readable documentation for the problem type. When this isn't present, its value is assumed to be "about:blank".
+        detail:
+          type: string
+          description: A human-readable explanation which is specific to this occurrence of the problem.
+        instance:
+          type: string
+          format: URI
+          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+    FieldExistsExpressionV2:
       type: object
       required:
       - type
-      - dateRange
+      - fieldName
       properties:
         type:
           type: string
           enum:
-          - dateRange
-          description: A range of dates to compare to the `fieldName`.
-        dateRange:
-          type: object
-          required:
-          - from
-          - to
-          properties:
-            from:
-              type: string
-              format: date-time
-            to:
-              type: string
-              format: date-time
-    ReplayRankingInfoWeights:
+          - fieldExists
+          description: An expression that returns all of the items that have a field matching `fieldName`.
+        fieldName:
+          type: string
+    ReplayIntegrationPostprocessingOutcome:
+      anyOf:
+      - $ref: '#/components/schemas/ReplayIntegrationsPostprocessingChanges'
+      - $ref: '#/components/schemas/ReplayIntegrationsProcessingFailure'
+    EmptyExpressionV2:
       type: object
-      description: 'Map of ranking factors and respective scores.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - empty
+          description: An empty value. This is returned when the optimized parsed query expression is empty.
+    ReplayRankingInfoQueryRankingExpression:
+      type: object
+      required:
+      - expression
+      - origin
+      - score
+      properties:
+        expression:
+          type: string
+          description: The ranking expression.
+        origin:
+          type: string
+          description: The origin of the ranking expression.
+          example: query_pipeline
+        rule:
+          $ref: '#/components/schemas/ReplayRankingInfoQueryRankingExpressionRule'
+        score:
+          type: number
+          format: float
+          description: The score resulting from this ranking expression.
+    ReplayRankingInfoTermsWeight:
+      type: object
+      required:
+      - term
+      - weightInfo
+      properties:
+        term:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ReplayRankingInfoWeights'
+            description: 'The weight factors applied to a specific term.
 
-        '
-      additionalProperties:
-        type: number
-        format: float
-      example:
-        title: 1000
-        uri: 500
-        source: 240
-    IntegrationRankingFunction:
+              '
+        weightInfo:
+          $ref: '#/components/schemas/ReplayRankingInfoWeights'
+          description: 'A summary of the weight factors applied for these terms.
+
+            '
+    ReplayExecutionStepProductRecommendation:
+      type: object
+      required:
+      - type
+      - name
+      properties:
+        type:
+          type: string
+          enum:
+          - productRecommendation
+        name:
+          type: string
+          enum:
+          - Product Recommendation
+        applied:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayExecutionStepProductRecommendationRule'
+    IntegrationRankingExpression:
       type: object
       properties:
         expression:
           type: string
           maxLength: 2000
-        normalizeWeight:
-          type: boolean
         modifier:
           type: integer
+        isConstant:
+          type: boolean
+        applyToEveryResults:
+          type: boolean
+          description: known as `isDeterministic` in the Index API
+        tag:
+          type: string
+          description: Value used to populate the `rankingModifier` on documents.
         origin:
           $ref: '#/components/schemas/RankingOrigin'
-        top:
-          type: integer
-          format: int64
       required:
       - expression
-      - normalizeWeight
-    NumericValueV2:
-      type: object
-      required:
-      - type
-      - numeric
-      properties:
-        type:
-          type: string
-          enum:
-          - numeric
-          description: A numeric value to compare to.
-        numericValue:
-          type: number
-    ReplayExecutionStepSpecific:
+      - modifier
+      - isConstant
+      - applyToEveryResults
+    QueryExpressionSupportedV2:
       oneOf:
-      - $ref: '#/components/schemas/ReplayExecutionStepPipelineSelection'
-      - $ref: '#/components/schemas/ReplayExecutionStepRules'
-      - $ref: '#/components/schemas/ReplayExecutionStepIndexQuery'
-    ReplayExecutionStepRankingWeights:
+      - $ref: '#/components/schemas/AndExpressionV2'
+      - $ref: '#/components/schemas/OrExpressionV2'
+      - $ref: '#/components/schemas/NotExpressionV2'
+      - $ref: '#/components/schemas/FieldExpressionV2'
+      - $ref: '#/components/schemas/FieldExistsExpressionV2'
+      - $ref: '#/components/schemas/KeywordExpressionV2'
+      - $ref: '#/components/schemas/ExactMatchExpressionV2'
+      - $ref: '#/components/schemas/TermsToContainExpressionV2'
+      - $ref: '#/components/schemas/ObjectAccessExpressionV2'
+      - $ref: '#/components/schemas/QueryExtensionInvocationExpressionV2'
+      - $ref: '#/components/schemas/NearExpressionV2'
+      - $ref: '#/components/schemas/EmptyExpressionV2'
+      - $ref: '#/components/schemas/QuerySyntaxExpressionV2'
+      discriminator:
+        propertyName: type
+        mapping:
+          querySyntax: '#/components/schemas/QuerySyntaxExpressionV2'
+          near: '#/components/schemas/NearExpressionV2'
+          queryExtension: '#/components/schemas/QueryExtensionInvocationExpressionV2'
+          objectAccess: '#/components/schemas/ObjectAccessExpressionV2'
+          termsToContain: '#/components/schemas/TermsToContainExpressionV2'
+          exactMatch: '#/components/schemas/ExactMatchExpressionV2'
+          keyword: '#/components/schemas/KeywordExpressionV2'
+          fieldExpression: '#/components/schemas/FieldExpressionV2'
+          fieldExists: '#/components/schemas/FieldExistsExpressionV2'
+          not: '#/components/schemas/NotExpressionV2'
+          or: '#/components/schemas/OrExpressionV2'
+          and: '#/components/schemas/AndExpressionV2'
+    ReplayExecutionStepIntegrationsPostprocessingRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayIntegrationsPostprocessingRule'
+    ReplayExecutionStepTriggers:
       type: object
       required:
       - type
@@ -476,164 +458,41 @@ components:
         type:
           type: string
           enum:
-          - rankingWeights
+          - triggers
         name:
           type: string
           enum:
-          - Ranking Weights
+          - Triggers
         applied:
           type: array
           items:
-            $ref: '#/components/schemas/ReplayExecutionStepRankingWeightsRule'
-    ParseQueryExpressionToStructuredResponse:
-      type: object
-      required:
-      - query
-      properties:
-        structured:
-          $ref: '#/components/schemas/QueryExpressionV2'
-          description: A structured version of the parsed query.
-    ReplayExecutionStepRules:
-      allOf:
-      - $ref: '#/components/schemas/ListOfExecutionSteps'
-      - $ref: '#/components/schemas/ReplayExecutionStepRulesBase'
-    IntegrationQueryFunction:
-      type: object
-      properties:
-        function:
-          type: string
-          maxLength: 2000
-        fieldName:
-          type: string
-          maxLength: 255
-        filterExpression:
-          type: string
-          maxLength: 50000
-        origin:
-          $ref: '#/components/schemas/RankingOrigin'
-        top:
-          type: integer
-          format: int64
-        allowMissingFields:
-          type: boolean
-      required:
-      - function
-      - fieldName
-    ReplayExecutionStepDNE:
+            $ref: '#/components/schemas/ReplayExecutionStepTriggersRule'
+    ReplayExecutionStepFilters:
       type: object
       required:
       - type
       - name
-      - applied
       properties:
         type:
           type: string
           enum:
-          - dne
+          - filters
         name:
           type: string
           enum:
-          - Dynamic Navigation Experience
+          - Filters
         applied:
           type: array
           items:
-            $ref: '#/components/schemas/ReplayExecutionStepDNERule'
-    ReplayIntegrationsPreprocessingChanges:
-      type: object
-      properties:
-        preprocessingStateChanges:
-          $ref: '#/components/schemas/PreprocessingStateResponse'
-    ReplayExecutionStepThesaurusRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayRule'
-      - $ref: '#/components/schemas/ReplayAffectedRequestParameters'
-    IntegrationErrorInfo:
-      type: object
-      required:
-      - type
-      - message
-      properties:
-        type:
-          type: string
-          description: 'The type of the error.
-
-            '
-        details:
-          type: string
-          description: 'The details of the error.
-
-            '
-    FieldValueV2:
+            $ref: '#/components/schemas/ReplayExecutionStepFiltersRule'
+    TextExpressionV2:
       oneOf:
-      - $ref: '#/components/schemas/FieldValueSupportedV2'
+      - $ref: '#/components/schemas/TextExpressionSupportedV2'
       - $ref: '#/components/schemas/NewExpressionV2'
-    UnknownValueV2:
-      type: object
-      required:
-      - type
-      - value
-      properties:
-        type:
-          type: string
-          enum:
-          - unknown
-        value:
-          type: string
-          description: 'The value as it was parsed.
-
-            '
-    ReplayExecutionStep:
-      allOf:
-      - $ref: '#/components/schemas/ReplayExecutionStepBase'
-      - $ref: '#/components/schemas/ReplayExecutionStepSpecific'
-    TermsToContainExpressionV2:
-      type: object
-      required:
-      - type
-      - terms
-      properties:
-        type:
-          type: string
-          enum:
-          - wordsToContain
-        terms:
-          type: array
-          items:
-            type: string
-          description: 'The list of terms that must exist in the item.
-
-            '
-      description: 'An expression where each terms should exist in an item.
-
-        '
-    ReplayExecutionStepContentRecommendationRule:
+    ReplayExecutionStepProductRecommendationRule:
       allOf:
       - $ref: '#/components/schemas/ReplayModelRule'
       - $ref: '#/components/schemas/ReplayAffectedResults'
-    ReplayExecutionStepRankingExpressionsRuleBase:
-      type: object
-      properties:
-        boost:
-          type: number
-          description: 'The boost applied by the rule to the results.
-
-            '
-    ReplayAffectedRequestParameters:
-      type: object
-      required:
-      - affectedRequestParameters
-      properties:
-        affectedRequestParameters:
-          type: array
-          description: 'A list of request parameters that were affected by the rule.
-
-            '
-          items:
-            $ref: '#/components/schemas/ReplayAffectedRequestParameter'
-    ReplayIntegrationPreprocessingOutcome:
-      anyOf:
-      - $ref: '#/components/schemas/ReplayIntegrationsPreprocessingChanges'
-      - $ref: '#/components/schemas/ReplayIntegrationsProcessingFailure'
     TextExpressionSupportedV2:
       oneOf:
       - $ref: '#/components/schemas/KeywordExpressionV2'
@@ -649,10 +508,401 @@ components:
           exactMatch: '#/components/schemas/ExactMatchExpressionV2'
           termsToContain: '#/components/schemas/TermsToContainExpressionV2'
           querySyntax: '#/components/schemas/QuerySyntaxExpressionV2'
-    TextExpressionV2:
+    ReplayRankingInfoWeightComposition:
+      type: object
+      properties:
+        termsWeights:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayRankingInfoTermsWeight'
+        rankingFunctions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayRankingInfoQueryRankingExpression'
+        queryRankingExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayRankingInfoQueryRankingExpression'
+    InspectReplayResponse:
+      type: object
+      required:
+      - requestParameters
+      - execution
+      - results
+      - totalResultsCount
+      properties:
+        requestParameters:
+          type: object
+          additionalProperties: true
+          example:
+            q: adventure books
+            aq: '@author=john'
+        execution:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayExecutionStep'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayResult'
+        totalResultsCount:
+          type: integer
+          description: 'The total number of items matching the query for the current user (security trimming applied).
+
+            '
+    ObjectAccessExpressionV2:
+      type: object
+      required:
+      - type
+      - objectName
+      properties:
+        type:
+          type: string
+          enum:
+          - objectAccess
+          description: An expression that returns a property of an object.
+        objectName:
+          type: string
+          description: The name of the object to access.
+          example: context
+        properties:
+          type: array
+          description: 'An array of path segments to the property of the object to return.
+
+
+            Given the *objectName* **context** and the *properties* `[userProfile, lastPurchase]`, the following property will be returned:
+
+
+            > **context**`.userProfile.lastPurchase`'
+          items:
+            type: string
+          example:
+          - userProfile
+          - lastPurchase
+    PostprocessingStateResponse:
+      type: object
+      properties:
+        extendedResults:
+          type: object
+          maxProperties: 100
+          additionalProperties:
+            type: string
+            maxLength: 100
+    ListOfExecutionSteps:
+      type: object
+      required:
+      - appliedCount
+      properties:
+        totalCount:
+          type: integer
+          description: 'Total number of rules of this feature.
+
+            '
+        appliedCount:
+          type: integer
+          description: 'Total number of rules that were applied.
+
+            '
+    ReplayExecutionStepPipelineSelection:
+      type: object
+      required:
+      - type
+      - name
+      - selectedPipeline
+      - selectionCause
+      properties:
+        type:
+          type: string
+          enum:
+          - pipelineSelection
+        name:
+          type: string
+          enum:
+          - Pipeline selection
+        selectedPipeline:
+          $ref: '#/components/schemas/ReplayExecutionStepPipelineSelectionPipeline'
+        selectionCause:
+          type: object
+          required:
+          - type
+          properties:
+            type:
+              type: string
+              enum:
+              - AUTHENTICATION_PIPELINE
+              - AUTHENTICATION_SEARCH_HUB
+              - PARAMETER_PIPELINE
+              - CONDITION_ROUTING
+              - DEFAULT
+              description: "Defines the reason for the selection of the `selectedPipeline`. The query pipeline selection goes through these steps:\n\n  #### **AUTHENTICATION_PIPELINE**\n  A query pipeline was specified in the authentication token.\n\n  #### **AUTHENTICATION_SEARCH_HUB**\n  A searchHub was specified in the authentication token. Since `selectedPipeline` has a condition based on the value of this searchHub, the request was routed to this query pipeline.\n\n  #### **PARAMETER_PIPELINE**\n  The `pipeline` query parameter was provided with a query pipeline.\n\n  #### **CONDITION_ROUTING**\n  The query pipeline was resolved through a condition routing.\n\n  #### **DEFAULT**\n  As no query pipelines were resolved, the default query pipeline was selected.\n"
+            abTest:
+              type: object
+              required:
+              - originalPipeline
+              - targetPipeline
+              description: 'When an AB test is enabled on the selected query pipeline, information about the original pipeline is displayed here.
+
+                It helps to better understand which query pipeline was initially selected. In some cases, the `originalPipeline` might be
+
+                the same as the `selectedPipeline`. It depends on how the AB test assigned the request to the query pipeline.
+
+                '
+              properties:
+                originalPipeline:
+                  $ref: '#/components/schemas/ReplayExecutionStepPipelineSelectionPipeline'
+                targetPipeline:
+                  $ref: '#/components/schemas/ReplayExecutionStepPipelineSelectionPipeline'
+    ReplayModelRule:
+      type: object
+      required:
+      - id
+      - modelId
+      properties:
+        id:
+          type: string
+          description: 'The identifier of the association
+
+            '
+        modelId:
+          type: string
+          description: 'The identifier of the model
+
+            '
+        condition:
+          $ref: '#/components/schemas/ReplayCondition'
+    ReplayExecutionStepRankingExpressionsRuleBase:
+      type: object
+      properties:
+        boost:
+          type: number
+          description: 'The boost applied by the rule to the results.
+
+            '
+    ReplayExecutionStepStopWords:
+      type: object
+      required:
+      - type
+      - name
+      properties:
+        type:
+          type: string
+          enum:
+          - stopWords
+        name:
+          type: string
+          enum:
+          - Stop Words
+        applied:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayExecutionStepStopWordsRule'
+    ReplayExecutionStepRules:
+      allOf:
+      - $ref: '#/components/schemas/ListOfExecutionSteps'
+      - $ref: '#/components/schemas/ReplayExecutionStepRulesBase'
+    NearExpressionV2:
+      type: object
+      required:
+      - type
+      - startTerm
+      - otherTerms
+      properties:
+        type:
+          type: string
+          enum:
+          - near
+          description: 'An expression that returns all of the items in which the specified `startTerm` appears no more than `maxKeywordsFrom` the `endTerm`, for each element in `nearTerms`.
+
+
+            For example, this expression could return items in which the term `apple` is no more than 5 keywords apart from `grocery`.'
+        startTerm:
+          $ref: '#/components/schemas/TextExpressionV2'
+        otherTerms:
+          type: array
+          items:
+            type: object
+            required:
+            - endTerm
+            properties:
+              maxKeywordsFrom:
+                type: integer
+                format: int32
+                description: 'The `endTerm` can be, at most, this number of keywords from the `startTerm`.
+
+
+                  **Example:**
+
+
+                  - `startTerm` = `foo`
+
+                  - `maxKeywordsFrom` = `5`
+
+                  - `endTerm` = `bar`
+
+
+                  The furthest apart that these two terms could be is:
+
+
+                  `foo termA termB termC termD bar`'
+              endTerm:
+                $ref: '#/components/schemas/TextExpressionV2'
+            minItems: 1
+          description: Defines a term that the `startTerm` must be near and the maximum distance that the `startTerm` can be from the `endTerm`.
+    ReplayIntegrationsPostprocessingRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayIntegrationsBase'
+      - $ref: '#/components/schemas/ReplayIntegrationPostprocessingOutcome'
+    ReplayRankingInfoQueryRankingExpressionRule:
+      type: object
+      required:
+      - type
+      properties:
+        id:
+          type: string
+          description: The id of the rule that was applied.
+        type:
+          type: string
+          description: The type of rule that was applied
+          example: ranking_expression
+    ReplayExecutionStepRankingWeightsRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayRule'
+    ReplayExecutionStepIntegrationsPreprocessingRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayIntegrationsPreprocessingRule'
+    ReplayRankingInfoWeights:
+      type: object
+      description: 'Map of ranking factors and respective scores.
+
+        '
+      additionalProperties:
+        type: number
+        format: float
+      example:
+        title: 1000
+        uri: 500
+        source: 240
+    ReplayExecutionStepDNERule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayModelRule'
+    FieldValueSupportedV2:
       oneOf:
-      - $ref: '#/components/schemas/TextExpressionSupportedV2'
-      - $ref: '#/components/schemas/NewExpressionV2'
+      - $ref: '#/components/schemas/DateRangeValueV2'
+      - $ref: '#/components/schemas/DateValueV2'
+      - $ref: '#/components/schemas/StringValueV2'
+      - $ref: '#/components/schemas/NumericValueV2'
+      - $ref: '#/components/schemas/UnknownValueV2'
+      - $ref: '#/components/schemas/ObjectAccessExpressionV2'
+      - $ref: '#/components/schemas/QueryExtensionInvocationExpressionV2'
+      - $ref: '#/components/schemas/QuerySyntaxExpressionV2'
+      discriminator:
+        propertyName: type
+        mapping:
+          dateRange: '#/components/schemas/DateRangeValueV2'
+          date: '#/components/schemas/DateValueV2'
+          string: '#/components/schemas/StringValueV2'
+          objectAccess: '#/components/schemas/ObjectAccessExpressionV2'
+          numeric: '#/components/schemas/NumericValueV2'
+          queryExtension: '#/components/schemas/QueryExtensionInvocationExpressionV2'
+          unknown: '#/components/schemas/UnknownValueV2'
+          querySyntax: '#/components/schemas/QuerySyntaxExpressionV2'
+    NotKeywordExpressionV2:
+      allOf:
+      - $ref: '#/components/schemas/NotExpressionV2'
+      - type: object
+        required:
+        - expression
+        properties:
+          expression:
+            $ref: '#/components/schemas/KeywordExpressionV2'
+    FieldOperatorV2:
+      type: string
+      enum:
+      - contains
+      - isExactly
+      - lowerThan
+      - lowerThanOrEqual
+      - greaterThan
+      - greaterThanOrEqual
+      - phoneticMatch
+      - fuzzyMatch
+      - regexMatch
+      - wildcardMatch
+      - differentThan
+      description: The comparison to make against the `value`.
+    ReplayExecutionStepThesaurusRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayRule'
+      - $ref: '#/components/schemas/ReplayAffectedRequestParameters'
+    ExactMatchExpressionV2:
+      type: object
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - exactMatch
+          description: An expression that must appear in its entirety at least once in an item for that item to be returned.
+        value:
+          type: string
+    QuerySyntaxExpressionV2:
+      type: object
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - querySyntax
+          description: A search expression that may contain advanced query syntax.
+        value:
+          type: string
+          example: '@author ~= "name"'
+    AndExpressionV2:
+      type: object
+      required:
+      - type
+      - expressions
+      properties:
+        type:
+          type: string
+          enum:
+          - and
+          description: A list of expressions to join with a logical `AND`.
+        expressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueryExpressionV2'
+    ParseQueryExpressionToStructuredRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: A query using the Coveo query syntax.
+          example: '@altpopulation>=90000 AND @altcapital AND NOT (@source=="Youtube" OR @author=="JohnSmith")'
+    ReplayExecutionStepPreprocessingIntegrations:
+      type: object
+      required:
+      - type
+      - name
+      properties:
+        type:
+          type: string
+          enum:
+          - preprocessingIntegrations
+        name:
+          type: string
+          enum:
+          - Preprocessing Integrations
+        applied:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayExecutionStepIntegrationsPreprocessingRule'
     PreprocessingStateResponse:
       type: object
       properties:
@@ -707,7 +957,26 @@ components:
           items:
             type: string
             maxLength: 255
-    ReplayExecutionStepTriggers:
+    ReplayExecutionStepDNE:
+      type: object
+      required:
+      - type
+      - name
+      - applied
+      properties:
+        type:
+          type: string
+          enum:
+          - dne
+        name:
+          type: string
+          enum:
+          - Dynamic Navigation Experience
+        applied:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayExecutionStepDNERule'
+    ReplayExecutionStepThesaurus:
       type: object
       required:
       - type
@@ -716,68 +985,15 @@ components:
         type:
           type: string
           enum:
-          - triggers
+          - thesaurus
         name:
           type: string
           enum:
-          - Triggers
+          - Thesaurus
         applied:
           type: array
           items:
-            $ref: '#/components/schemas/ReplayExecutionStepTriggersRule'
-    FieldOperatorV2:
-      type: string
-      enum:
-      - contains
-      - isExactly
-      - lowerThan
-      - lowerThanOrEqual
-      - greaterThan
-      - greaterThanOrEqual
-      - phoneticMatch
-      - fuzzyMatch
-      - regexMatch
-      - wildcardMatch
-      - differentThan
-      description: The comparison to make against the `value`.
-    DateValueV2:
-      type: object
-      required:
-      - type
-      - dateValue
-      properties:
-        type:
-          type: string
-          enum:
-          - date
-          description: A specific date to compare to the `fieldName`.
-        dateValue:
-          type: string
-          format: date-time
-    AndExpressionV2:
-      type: object
-      required:
-      - type
-      - expressions
-      properties:
-        type:
-          type: string
-          enum:
-          - and
-          description: A list of expressions to join with a logical `AND`.
-        expressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueryExpressionV2'
-    ParseQueryExpressionToStructuredRequest:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: A query using the Coveo query syntax.
-          example: '@altpopulation>=90000 AND @altcapital AND NOT (@source=="Youtube" OR @author=="JohnSmith")'
+            $ref: '#/components/schemas/ReplayExecutionStepThesaurusRule'
     StringValueV2:
       type: object
       required:
@@ -793,80 +1009,6 @@ components:
       description: 'A value containing a string.
 
         '
-    ReplayIntegrationsPostprocessingChanges:
-      type: object
-      properties:
-        postprocessingStateChanges:
-          $ref: '#/components/schemas/PostprocessingStateResponse'
-    ReplayIntegrationsBase:
-      type: object
-      required:
-      - id
-      - integrationType
-      properties:
-        id:
-          type: string
-          description: 'The identifier of the rule
-
-            '
-        condition:
-          $ref: '#/components/schemas/ReplayCondition'
-        integrationType:
-          type: string
-          description: 'The name of the pipeline integration being applied
-
-            '
-    ReplayExecutionStepFeaturedResults:
-      type: object
-      required:
-      - type
-      - name
-      properties:
-        type:
-          type: string
-          enum:
-          - featuredResults
-        name:
-          type: string
-          enum:
-          - Featured Results
-        applied:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayExecutionStepFeaturedResultsRule'
-    ReplayIntegrationPostprocessingOutcome:
-      anyOf:
-      - $ref: '#/components/schemas/ReplayIntegrationsPostprocessingChanges'
-      - $ref: '#/components/schemas/ReplayIntegrationsProcessingFailure'
-    FeatureVector:
-      type: object
-      maxProperties: 5000
-      additionalProperties:
-        type: array
-        maxItems: 10000
-        items:
-          type: number
-    ReplayExecutionStepProductRecommendation:
-      type: object
-      required:
-      - type
-      - name
-      properties:
-        type:
-          type: string
-          enum:
-          - productRecommendation
-        name:
-          type: string
-          enum:
-          - Product Recommendation
-        applied:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayExecutionStepProductRecommendationRule'
-    ReplayExecutionStepDNERule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayModelRule'
     ReplayAffectedResults:
       type: object
       properties:
@@ -877,64 +1019,70 @@ components:
             '
           items:
             type: integer
-    ReplayExecutionStepProductRecommendationRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayModelRule'
-      - $ref: '#/components/schemas/ReplayAffectedResults'
-    ReplayExecutionStepFiltersRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayRule'
-      - $ref: '#/components/schemas/ReplayAffectedRequestParameters'
-    ReplayExecutionStepFilters:
+    FeatureVector:
       type: object
-      required:
-      - type
-      - name
+      maxProperties: 5000
+      additionalProperties:
+        type: array
+        maxItems: 10000
+        items:
+          type: number
+    IntegrationQueryFunction:
+      type: object
       properties:
-        type:
+        function:
           type: string
-          enum:
-          - filters
-        name:
+          maxLength: 2000
+        fieldName:
           type: string
-          enum:
-          - Filters
-        applied:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayExecutionStepFiltersRule'
-    ReplayExecutionStepContentRecommendation:
+          maxLength: 255
+        filterExpression:
+          type: string
+          maxLength: 50000
+        origin:
+          $ref: '#/components/schemas/RankingOrigin'
+        top:
+          type: integer
+          format: int64
+        allowMissingFields:
+          type: boolean
+      required:
+      - function
+      - fieldName
+    FieldExpressionV2:
       type: object
       required:
       - type
-      - name
-      properties:
-        type:
-          type: string
-          enum:
-          - contentRecommendation
-        name:
-          type: string
-          enum:
-          - Content Recommendation
-        applied:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayExecutionStepContentRecommendationRule'
-    QuerySyntaxExpressionV2:
-      type: object
-      required:
-      - type
+      - fieldName
+      - operator
       - value
       properties:
         type:
           type: string
           enum:
-          - querySyntax
-          description: A search expression that may contain advanced query syntax.
-        value:
+          - fieldExpression
+          description: An expression that uses an `operator` to compare a `fieldName` to a `value`. Returns all of the items for which this expression evaluates to `true`.
+        fieldName:
           type: string
-          example: '@author ~= "name"'
+          description: The name of a field to compare to the `value`.
+        operator:
+          $ref: '#/components/schemas/FieldOperatorV2'
+        value:
+          $ref: '#/components/schemas/FieldValueV2'
+    DateValueV2:
+      type: object
+      required:
+      - type
+      - dateValue
+      properties:
+        type:
+          type: string
+          enum:
+          - date
+          description: A specific date to compare to the `fieldName`.
+        dateValue:
+          type: string
+          format: date-time
     ReplayExecutionStepParamOverrides:
       type: object
       required:
@@ -953,20 +1101,94 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ReplayExecutionStepParamOverridesRule'
-    FieldExistsExpressionV2:
+    ReplayExecutionStepRankingWeights:
       type: object
       required:
       - type
-      - fieldName
+      - name
       properties:
         type:
           type: string
           enum:
-          - fieldExists
-          description: An expression that returns all of the items that have a field matching `fieldName`.
-        fieldName:
+          - rankingWeights
+        name:
           type: string
-    ExactMatchExpressionV2:
+          enum:
+          - Ranking Weights
+        applied:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayExecutionStepRankingWeightsRule'
+    ReplayIntegrationsPreprocessingChanges:
+      type: object
+      properties:
+        preprocessingStateChanges:
+          $ref: '#/components/schemas/PreprocessingStateResponse'
+    ReplayExecutionStepStopWordsRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayRule'
+      - $ref: '#/components/schemas/ReplayAffectedRequestParameters'
+    ReplayRankingInfo:
+      type: object
+      required:
+      - documentWeights
+      - totalWeight
+      properties:
+        documentWeights:
+          $ref: '#/components/schemas/ReplayRankingInfoWeights'
+          description: 'Summary of all the weight factors applied to the item. The sum of each factor gives the total weight.
+
+            '
+        totalWeight:
+          type: number
+          format: float
+          description: 'Sum of the document''s weights.
+
+            '
+        weightComposition:
+          $ref: '#/components/schemas/ReplayRankingInfoWeightComposition'
+    ReplayExecutionStepRankingExpressions:
+      type: object
+      required:
+      - type
+      - name
+      properties:
+        type:
+          type: string
+          enum:
+          - rankingExpressions
+        name:
+          type: string
+          enum:
+          - Ranking Expressions
+        applied:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayExecutionStepRankingExpressionsRule'
+    ReplayIntegrationsPostprocessingChanges:
+      type: object
+      properties:
+        postprocessingStateChanges:
+          $ref: '#/components/schemas/PostprocessingStateResponse'
+    NumericValueV2:
+      type: object
+      required:
+      - type
+      - numeric
+      properties:
+        type:
+          type: string
+          enum:
+          - numeric
+          description: A numeric value to compare to.
+        numericValue:
+          type: number
+    ReplayExecutionStepFiltersRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayRule'
+      - $ref: '#/components/schemas/ReplayAffectedRequestParameters'
+    KeywordExpressionV2:
+      description: Test
       type: object
       required:
       - type
@@ -975,10 +1197,334 @@ components:
         type:
           type: string
           enum:
-          - exactMatch
-          description: An expression that must appear in its entirety at least once in an item for that item to be returned.
+          - keyword
+          description: An expression to match a literal in an item. The `value` may also be expanded with stemming.
         value:
           type: string
+        stemming:
+          type: boolean
+          default: true
+          description: 'Whether to enable stemming or not. See [About Stemming](https://docs.coveo.com/en/1576/) to learn more.
+
+            '
+    ReplayExecutionStepRankingExpressionsRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayRule'
+      - $ref: '#/components/schemas/ReplayAffectedResults'
+      - $ref: '#/components/schemas/ReplayExecutionStepRankingExpressionsRuleBase'
+    ReplayResult:
+      type: object
+      required:
+      - title
+      - clickUri
+      - fields
+      properties:
+        title:
+          type: string
+        clickUri:
+          type: string
+          description: 'The hyperlinkable item URI.
+
+
+            **Notes:**
+
+
+            - Use the `clickUri` value when you want to create hyperlinks to the item, rather than the `uri` or `printableUri` value.
+
+            - The `clickUri` value is not necessarily unique for each item.'
+          example: https://example.com/t/1/898/2
+        rankingInfo:
+          $ref: '#/components/schemas/ReplayRankingInfo'
+        fields:
+          type: object
+          additionalProperties: true
+          description: 'The list of fields that were included in the results.
+
+            '
+    ReplayAffectedRequestParameters:
+      type: object
+      required:
+      - affectedRequestParameters
+      properties:
+        affectedRequestParameters:
+          type: array
+          description: 'A list of request parameters that were affected by the rule.
+
+            '
+          items:
+            $ref: '#/components/schemas/ReplayAffectedRequestParameter'
+    ReplayExecutionStepFeaturedResults:
+      type: object
+      required:
+      - type
+      - name
+      properties:
+        type:
+          type: string
+          enum:
+          - featuredResults
+        name:
+          type: string
+          enum:
+          - Featured Results
+        applied:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayExecutionStepFeaturedResultsRule'
+    IntegrationRankingFunction:
+      type: object
+      properties:
+        expression:
+          type: string
+          maxLength: 2000
+        normalizeWeight:
+          type: boolean
+        modifier:
+          type: integer
+        origin:
+          $ref: '#/components/schemas/RankingOrigin'
+        top:
+          type: integer
+          format: int64
+      required:
+      - expression
+      - normalizeWeight
+    ReplayExecutionStepFeaturedResultsRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayRule'
+      - $ref: '#/components/schemas/ReplayAffectedResults'
+    ReplayRule:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: 'The identifier of the rule
+
+            '
+        condition:
+          $ref: '#/components/schemas/ReplayCondition'
+    ReplayIntegrationsProcessingFailure:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/IntegrationErrorInfo'
+    TermsToContainExpressionV2:
+      type: object
+      required:
+      - type
+      - terms
+      properties:
+        type:
+          type: string
+          enum:
+          - wordsToContain
+        terms:
+          type: array
+          items:
+            type: string
+          description: 'The list of terms that must exist in the item.
+
+            '
+      description: 'An expression where each terms should exist in an item.
+
+        '
+    DateRangeValueV2:
+      type: object
+      required:
+      - type
+      - dateRange
+      properties:
+        type:
+          type: string
+          enum:
+          - dateRange
+          description: A range of dates to compare to the `fieldName`.
+        dateRange:
+          type: object
+          required:
+          - from
+          - to
+          properties:
+            from:
+              type: string
+              format: date-time
+            to:
+              type: string
+              format: date-time
+    ReplayIntegrationsPreprocessingRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayIntegrationsBase'
+      - $ref: '#/components/schemas/ReplayIntegrationPreprocessingOutcome'
+    ReplayExecutionStepTriggersRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayRule'
+    DictionaryFieldContext:
+      type: object
+      maxProperties: 255
+      additionalProperties:
+        type: string
+        maxLength: 255
+    ReplayAffectedRequestParameter:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: 'The name of the parameter that was changed.
+
+            '
+        value:
+          description: 'The new value assigned to this parameter.
+
+            '
+    RankingOrigin:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 255
+        type:
+          type: string
+          maxLength: 255
+        origin:
+          type: string
+          maxLength: 255
+      required:
+      - type
+      - origin
+    ReplayExecutionStepARTRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayModelRule'
+      - $ref: '#/components/schemas/ReplayAffectedResults'
+    ReplayExecutionStepContentRecommendationRule:
+      allOf:
+      - $ref: '#/components/schemas/ReplayModelRule'
+      - $ref: '#/components/schemas/ReplayAffectedResults'
+    QueryExpressionV2:
+      oneOf:
+      - $ref: '#/components/schemas/QueryExpressionSupportedV2'
+      - $ref: '#/components/schemas/NewExpressionV2'
+    FieldValueV2:
+      oneOf:
+      - $ref: '#/components/schemas/FieldValueSupportedV2'
+      - $ref: '#/components/schemas/NewExpressionV2'
+    InspectReplayRequest:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The SearchUID of the request to replay.
+        dateRange:
+          type: object
+          description: The date range within which to look for the request.
+          required:
+          - from
+          properties:
+            from:
+              type: string
+              format: date-time
+              description: The inclusive date at which to start looking for the request.
+            to:
+              type: string
+              format: date-time
+              description: The inclusive date at which to stop looking for the SearchUID. When omitted searches up until the most recent requests.
+    ReplayExecutionStepBase:
+      type: object
+      required:
+      - durationInMs
+      properties:
+        durationInMs:
+          type: number
+          description: 'Duration of the replay step in milliseconds.
+
+            '
+    ReplayCondition:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The id of the condition
+    ReplayExecutionStepIndexQuery:
+      type: object
+      required:
+      - type
+      - name
+      - request
+      properties:
+        type:
+          type: string
+          enum:
+          - indexQuery
+        name:
+          type: string
+          enum:
+          - Index query
+        request:
+          description: 'The raw request parameters sent to the index.
+
+            '
+    ReplayIntegrationsBase:
+      type: object
+      required:
+      - id
+      - integrationType
+      properties:
+        id:
+          type: string
+          description: 'The identifier of the rule
+
+            '
+        condition:
+          $ref: '#/components/schemas/ReplayCondition'
+        integrationType:
+          type: string
+          description: 'The name of the pipeline integration being applied
+
+            '
+    UnknownValueV2:
+      type: object
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - unknown
+        value:
+          type: string
+          description: 'The value as it was parsed.
+
+            '
+    ReplayExecutionStepSpecific:
+      oneOf:
+      - $ref: '#/components/schemas/ReplayExecutionStepPipelineSelection'
+      - $ref: '#/components/schemas/ReplayExecutionStepRules'
+      - $ref: '#/components/schemas/ReplayExecutionStepIndexQuery'
+    OrExpressionV2:
+      type: object
+      required:
+      - type
+      - expressions
+      properties:
+        type:
+          type: string
+          enum:
+          - or
+          description: A list of expressions to join with a logical `OR`.
+        expressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueryExpressionV2'
     ReplayExecutionStepRulesBase:
       oneOf:
       - $ref: '#/components/schemas/ReplayExecutionStepParamOverrides'
@@ -1012,203 +1558,10 @@ components:
           paramOverrides: '#/components/schemas/ReplayExecutionStepParamOverrides'
           preprocessingIntegrations: '#/components/schemas/ReplayExecutionStepPreprocessingIntegrations'
           postprocessingIntegrations: '#/components/schemas/ReplayExecutionStepPostprocessingIntegrations'
-    ReplayExecutionStepPostprocessingIntegrations:
-      type: object
-      required:
-      - type
-      - name
-      properties:
-        type:
-          type: string
-          enum:
-          - postprocessingIntegrations
-        name:
-          type: string
-          enum:
-          - Postprocessing Integrations
-        rankedResults:
-          type: array
-          description: 'Compared to the `results` property, `rankedResults` only return a list of document identifiers and their associated score.
-
-            This property allows to get the score of documents beyond the request page without affecting query performance.
-
-            This information impacts how the Generate Answering model will generate citations.'
-          items:
-            type: object
-            required:
-            - identifier
-            properties:
-              identifier:
-                type: string
-                description: Item identifier. Usually corresponds to the [permanentId](https://docs.coveo.com/en/1913/leverage-machine-learning/about-the-permanentid-field) field).
-              score:
-                type: integer
-        applied:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayExecutionStepIntegrationsPostprocessingRule'
-    RankingOrigin:
-      type: object
-      properties:
-        id:
-          type: string
-          maxLength: 255
-        type:
-          type: string
-          maxLength: 255
-        origin:
-          type: string
-          maxLength: 255
-      required:
-      - type
-      - origin
-    InspectReplayResponse:
-      type: object
-      required:
-      - requestParameters
-      - execution
-      - results
-      - totalResultsCount
-      properties:
-        requestParameters:
-          type: object
-          additionalProperties: true
-          example:
-            q: adventure books
-            aq: '@author=john'
-        execution:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayExecutionStep'
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayResult'
-        totalResultsCount:
-          type: integer
-          description: 'The total number of items matching the query for the current user (security trimming applied).
-
-            '
-    QueryExpressionV2:
-      oneOf:
-      - $ref: '#/components/schemas/QueryExpressionSupportedV2'
-      - $ref: '#/components/schemas/NewExpressionV2'
-    ReplayRankingInfo:
-      type: object
-      required:
-      - documentWeights
-      - totalWeight
-      properties:
-        documentWeights:
-          $ref: '#/components/schemas/ReplayRankingInfoWeights'
-          description: 'Summary of all the weight factors applied to the item. The sum of each factor gives the total weight.
-
-            '
-        totalWeight:
-          type: number
-          format: float
-          description: 'Sum of the document''s weights.
-
-            '
-        weightComposition:
-          $ref: '#/components/schemas/ReplayRankingInfoWeightComposition'
-    ReplayRankingInfoWeightComposition:
-      type: object
-      properties:
-        termsWeights:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayRankingInfoTermsWeight'
-        rankingFunctions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayRankingInfoQueryRankingExpression'
-        queryRankingExpressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayRankingInfoQueryRankingExpression'
-    ReplayExecutionStepParamOverridesRule:
+    ReplayExecutionStep:
       allOf:
-      - $ref: '#/components/schemas/ReplayRule'
-      - $ref: '#/components/schemas/ReplayAffectedRequestParameters'
-    ReplayExecutionStepStopWordsRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayRule'
-      - $ref: '#/components/schemas/ReplayAffectedRequestParameters'
-    ReplayModelRule:
-      type: object
-      required:
-      - id
-      - modelId
-      properties:
-        id:
-          type: string
-          description: 'The identifier of the association
-
-            '
-        modelId:
-          type: string
-          description: 'The identifier of the model
-
-            '
-        condition:
-          $ref: '#/components/schemas/ReplayCondition'
-    ReplayIntegrationsPreprocessingRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayIntegrationsBase'
-      - $ref: '#/components/schemas/ReplayIntegrationPreprocessingOutcome'
-    ReplayRankingInfoQueryRankingExpressionRule:
-      type: object
-      required:
-      - type
-      properties:
-        id:
-          type: string
-          description: The id of the rule that was applied.
-        type:
-          type: string
-          description: The type of rule that was applied
-          example: ranking_expression
-    QueryExpressionSupportedV2:
-      oneOf:
-      - $ref: '#/components/schemas/AndExpressionV2'
-      - $ref: '#/components/schemas/OrExpressionV2'
-      - $ref: '#/components/schemas/NotExpressionV2'
-      - $ref: '#/components/schemas/FieldExpressionV2'
-      - $ref: '#/components/schemas/FieldExistsExpressionV2'
-      - $ref: '#/components/schemas/KeywordExpressionV2'
-      - $ref: '#/components/schemas/ExactMatchExpressionV2'
-      - $ref: '#/components/schemas/TermsToContainExpressionV2'
-      - $ref: '#/components/schemas/ObjectAccessExpressionV2'
-      - $ref: '#/components/schemas/QueryExtensionInvocationExpressionV2'
-      - $ref: '#/components/schemas/NearExpressionV2'
-      - $ref: '#/components/schemas/EmptyExpressionV2'
-      - $ref: '#/components/schemas/QuerySyntaxExpressionV2'
-      discriminator:
-        propertyName: type
-        mapping:
-          querySyntax: '#/components/schemas/QuerySyntaxExpressionV2'
-          near: '#/components/schemas/NearExpressionV2'
-          queryExtension: '#/components/schemas/QueryExtensionInvocationExpressionV2'
-          objectAccess: '#/components/schemas/ObjectAccessExpressionV2'
-          termsToContain: '#/components/schemas/TermsToContainExpressionV2'
-          exactMatch: '#/components/schemas/ExactMatchExpressionV2'
-          keyword: '#/components/schemas/KeywordExpressionV2'
-          fieldExpression: '#/components/schemas/FieldExpressionV2'
-          fieldExists: '#/components/schemas/FieldExistsExpressionV2'
-          not: '#/components/schemas/NotExpressionV2'
-          or: '#/components/schemas/OrExpressionV2'
-          and: '#/components/schemas/AndExpressionV2'
-    ReplayExecutionStepARTRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayModelRule'
-      - $ref: '#/components/schemas/ReplayAffectedResults'
-    ReplayExecutionStepTriggersRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayRule'
-    ReplayExecutionStepIntegrationsPreprocessingRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayIntegrationsPreprocessingRule'
+      - $ref: '#/components/schemas/ReplayExecutionStepBase'
+      - $ref: '#/components/schemas/ReplayExecutionStepSpecific'
     ErrorMessage:
       type: object
       additionalProperties: true
@@ -1222,265 +1575,10 @@ components:
         message:
           type: string
           example: The organization does not exist in the search api.
-    IntegrationRankingExpression:
-      type: object
-      properties:
-        expression:
-          type: string
-          maxLength: 2000
-        modifier:
-          type: integer
-        isConstant:
-          type: boolean
-        applyToEveryResults:
-          type: boolean
-          description: known as `isDeterministic` in the Index API
-        tag:
-          type: string
-          description: Value used to populate the `rankingModifier` on documents.
-        origin:
-          $ref: '#/components/schemas/RankingOrigin'
-      required:
-      - expression
-      - modifier
-      - isConstant
-      - applyToEveryResults
-    NearExpressionV2:
-      type: object
-      required:
-      - type
-      - startTerm
-      - otherTerms
-      properties:
-        type:
-          type: string
-          enum:
-          - near
-          description: 'An expression that returns all of the items in which the specified `startTerm` appears no more than `maxKeywordsFrom` the `endTerm`, for each element in `nearTerms`.
-
-
-            For example, this expression could return items in which the term `apple` is no more than 5 keywords apart from `grocery`.'
-        startTerm:
-          $ref: '#/components/schemas/TextExpressionV2'
-        otherTerms:
-          type: array
-          items:
-            type: object
-            required:
-            - endTerm
-            properties:
-              maxKeywordsFrom:
-                type: integer
-                format: int32
-                description: 'The `endTerm` can be, at most, this number of keywords from the `startTerm`.
-
-
-                  **Example:**
-
-
-                  - `startTerm` = `foo`
-
-                  - `maxKeywordsFrom` = `5`
-
-                  - `endTerm` = `bar`
-
-
-                  The furthest apart that these two terms could be is:
-
-
-                  `foo termA termB termC termD bar`'
-              endTerm:
-                $ref: '#/components/schemas/TextExpressionV2'
-            minItems: 1
-          description: Defines a term that the `startTerm` must be near and the maximum distance that the `startTerm` can be from the `endTerm`.
-    ReplayResult:
-      type: object
-      required:
-      - title
-      - clickUri
-      - fields
-      properties:
-        title:
-          type: string
-        clickUri:
-          type: string
-          description: 'The hyperlinkable item URI.
-
-
-            **Notes:**
-
-
-            - Use the `clickUri` value when you want to create hyperlinks to the item, rather than the `uri` or `printableUri` value.
-
-            - The `clickUri` value is not necessarily unique for each item.'
-          example: https://example.com/t/1/898/2
-        rankingInfo:
-          $ref: '#/components/schemas/ReplayRankingInfo'
-        fields:
-          type: object
-          additionalProperties: true
-          description: 'The list of fields that were included in the results.
-
-            '
-    ReplayExecutionStepStopWords:
-      type: object
-      required:
-      - type
-      - name
-      properties:
-        type:
-          type: string
-          enum:
-          - stopWords
-        name:
-          type: string
-          enum:
-          - Stop Words
-        applied:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayExecutionStepStopWordsRule'
-    ReplayExecutionStepPipelineSelection:
-      type: object
-      required:
-      - type
-      - name
-      - selectedPipeline
-      - selectionCause
-      properties:
-        type:
-          type: string
-          enum:
-          - pipelineSelection
-        name:
-          type: string
-          enum:
-          - Pipeline selection
-        selectedPipeline:
-          $ref: '#/components/schemas/ReplayExecutionStepPipelineSelectionPipeline'
-        selectionCause:
-          type: object
-          required:
-          - type
-          properties:
-            type:
-              type: string
-              enum:
-              - AUTHENTICATION_PIPELINE
-              - AUTHENTICATION_SEARCH_HUB
-              - PARAMETER_PIPELINE
-              - CONDITION_ROUTING
-              - DEFAULT
-              description: "Defines the reason for the selection of the `selectedPipeline`. The query pipeline selection goes through these steps:\n\n  #### **AUTHENTICATION_PIPELINE**\n  A query pipeline was specified in the authentication token.\n\n  #### **AUTHENTICATION_SEARCH_HUB**\n  A searchHub was specified in the authentication token. Since `selectedPipeline` has a condition based on the value of this searchHub, the request was routed to this query pipeline.\n\n  #### **PARAMETER_PIPELINE**\n  The `pipeline` query parameter was provided with a query pipeline.\n\n  #### **CONDITION_ROUTING**\n  The query pipeline was resolved through a condition routing.\n\n  #### **DEFAULT**\n  As no query pipelines were resolved, the default query pipeline was selected.\n"
-            abTest:
-              type: object
-              required:
-              - originalPipeline
-              - targetPipeline
-              description: 'When an AB test is enabled on the selected query pipeline, information about the original pipeline is displayed here.
-
-                It helps to better understand which query pipeline was initially selected. In some cases, the `originalPipeline` might be
-
-                the same as the `selectedPipeline`. It depends on how the AB test assigned the request to the query pipeline.
-
-                '
-              properties:
-                originalPipeline:
-                  $ref: '#/components/schemas/ReplayExecutionStepPipelineSelectionPipeline'
-                targetPipeline:
-                  $ref: '#/components/schemas/ReplayExecutionStepPipelineSelectionPipeline'
-    ReplayAffectedRequestParameter:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: 'The name of the parameter that was changed.
-
-            '
-        value:
-          description: 'The new value assigned to this parameter.
-
-            '
-    ReplayExecutionStepThesaurus:
-      type: object
-      required:
-      - type
-      - name
-      properties:
-        type:
-          type: string
-          enum:
-          - thesaurus
-        name:
-          type: string
-          enum:
-          - Thesaurus
-        applied:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReplayExecutionStepThesaurusRule'
-    ReplayIntegrationsPostprocessingRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayIntegrationsBase'
-      - $ref: '#/components/schemas/ReplayIntegrationPostprocessingOutcome'
-    ReplayExecutionStepIndexQuery:
-      type: object
-      required:
-      - type
-      - name
-      - request
-      properties:
-        type:
-          type: string
-          enum:
-          - indexQuery
-        name:
-          type: string
-          enum:
-          - Index query
-        request:
-          description: 'The raw request parameters sent to the index.
-
-            '
-    FieldValueSupportedV2:
-      oneOf:
-      - $ref: '#/components/schemas/DateRangeValueV2'
-      - $ref: '#/components/schemas/DateValueV2'
-      - $ref: '#/components/schemas/StringValueV2'
-      - $ref: '#/components/schemas/NumericValueV2'
-      - $ref: '#/components/schemas/UnknownValueV2'
-      - $ref: '#/components/schemas/ObjectAccessExpressionV2'
-      - $ref: '#/components/schemas/QueryExtensionInvocationExpressionV2'
-      - $ref: '#/components/schemas/QuerySyntaxExpressionV2'
-      discriminator:
-        propertyName: type
-        mapping:
-          dateRange: '#/components/schemas/DateRangeValueV2'
-          date: '#/components/schemas/DateValueV2'
-          string: '#/components/schemas/StringValueV2'
-          objectAccess: '#/components/schemas/ObjectAccessExpressionV2'
-          numeric: '#/components/schemas/NumericValueV2'
-          queryExtension: '#/components/schemas/QueryExtensionInvocationExpressionV2'
-          unknown: '#/components/schemas/UnknownValueV2'
-          querySyntax: '#/components/schemas/QuerySyntaxExpressionV2'
-    ReplayExecutionStepRankingExpressionsRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayRule'
-      - $ref: '#/components/schemas/ReplayAffectedResults'
-      - $ref: '#/components/schemas/ReplayExecutionStepRankingExpressionsRuleBase'
-    ReplayCondition:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          description: The id of the condition
-    ReplayExecutionStepIntegrationsPostprocessingRule:
-      allOf:
-      - $ref: '#/components/schemas/ReplayIntegrationsPostprocessingRule'
+    ReplayIntegrationPreprocessingOutcome:
+      anyOf:
+      - $ref: '#/components/schemas/ReplayIntegrationsPreprocessingChanges'
+      - $ref: '#/components/schemas/ReplayIntegrationsProcessingFailure'
     NotExpressionV2:
       type: object
       required:
@@ -1494,86 +1592,7 @@ components:
           description: An expression that returns all of the items in which the `expression` evaluates to `false`.
         expression:
           $ref: '#/components/schemas/QueryExpressionV2'
-    ListOfExecutionSteps:
-      type: object
-      required:
-      - appliedCount
-      properties:
-        totalCount:
-          type: integer
-          description: 'Total number of rules of this feature.
-
-            '
-        appliedCount:
-          type: integer
-          description: 'Total number of rules that were applied.
-
-            '
-    FieldExpressionV2:
-      type: object
-      required:
-      - type
-      - fieldName
-      - operator
-      - value
-      properties:
-        type:
-          type: string
-          enum:
-          - fieldExpression
-          description: An expression that uses an `operator` to compare a `fieldName` to a `value`. Returns all of the items for which this expression evaluates to `true`.
-        fieldName:
-          type: string
-          description: The name of a field to compare to the `value`.
-        operator:
-          $ref: '#/components/schemas/FieldOperatorV2'
-        value:
-          $ref: '#/components/schemas/FieldValueV2'
-    ObjectAccessExpressionV2:
-      type: object
-      required:
-      - type
-      - objectName
-      properties:
-        type:
-          type: string
-          enum:
-          - objectAccess
-          description: An expression that returns a property of an object.
-        objectName:
-          type: string
-          description: The name of the object to access.
-          example: context
-        properties:
-          type: array
-          description: 'An array of path segments to the property of the object to return.
-
-
-            Given the *objectName* **context** and the *properties* `[userProfile, lastPurchase]`, the following property will be returned:
-
-
-            > **context**`.userProfile.lastPurchase`'
-          items:
-            type: string
-          example:
-          - userProfile
-          - lastPurchase
-    OrExpressionV2:
-      type: object
-      required:
-      - type
-      - expressions
-      properties:
-        type:
-          type: string
-          enum:
-          - or
-          description: A list of expressions to join with a logical `OR`.
-        expressions:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueryExpressionV2'
-    ReplayExecutionStepART:
+    ReplayExecutionStepContentRecommendation:
       type: object
       required:
       - type
@@ -1582,36 +1601,55 @@ components:
         type:
           type: string
           enum:
-          - art
+          - contentRecommendation
         name:
           type: string
           enum:
-          - Automatic Relevance Tuning
+          - Content Recommendation
         applied:
           type: array
           items:
-            $ref: '#/components/schemas/ReplayExecutionStepARTRule'
-    ReplayRankingInfoQueryRankingExpression:
-      type: object
-      required:
-      - expression
-      - origin
-      - score
-      properties:
-        expression:
-          type: string
-          description: The ranking expression.
-        origin:
-          type: string
-          description: The origin of the ranking expression.
-          example: query_pipeline
-        rule:
-          $ref: '#/components/schemas/ReplayRankingInfoQueryRankingExpressionRule'
-        score:
-          type: number
-          format: float
-          description: The score resulting from this ranking expression.
+            $ref: '#/components/schemas/ReplayExecutionStepContentRecommendationRule'
   responses:
+    Forbidden:
+      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 403
+            message: Access denied. API key does not have sufficient privileges.
+            errorCode: FORBIDDEN
+    AuthenticationTimeout:
+      description: Authentication Timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 419
+            message: Authentication timeout.
+    UnsupportedRegion:
+      description: Region is not currently supported by the service.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            status: 422
+            title: UNSUPPORTED_REGION
+            detail: The request you attempted to replay was made in a region that isn't currently supported by the service.
+    ReplaySearchTooBroad:
+      description: Search parameters too broad
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            status: 503
+            title: SEARCH_CRITERIA_TOO_BROAD
+            detail: The `dateRange` provided to find your query to reload was too large. Reduce the time window of your search. If you don't know when the query was executed, split the `dateRange` into multiple calls.
     BadRequest:
       description: Bad Request
       content:
@@ -1665,45 +1703,6 @@ components:
           example:
             statusCode: 429
             message: Too many requests.
-    ReplaySearchTooBroad:
-      description: Search parameters too broad
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            status: 503
-            title: SEARCH_CRITERIA_TOO_BROAD
-            detail: The `dateRange` provided to find your query to reload was too large. Reduce the time window of your search. If you don't know when the query was executed, split the `dateRange` into multiple calls.
-    AuthenticationTimeout:
-      description: Authentication Timeout
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 419
-            message: Authentication timeout.
-    Forbidden:
-      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 403
-            message: Access denied. API key does not have sufficient privileges.
-            errorCode: FORBIDDEN
-    UnsupportedRegion:
-      description: Region is not currently supported by the service.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            status: 422
-            title: UNSUPPORTED_REGION
-            detail: The request you attempted to replay was made in a region that isn't currently supported by the service.
   parameters:
     OrganizationIdQuery:
       name: organizationId
@@ -1718,9 +1717,39 @@ components:
   securitySchemes:
     oauth2:
       type: oauth2
+      description: This API uses OAuth 2 with the implicit grant flow.
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
             full: required
+    platformTokens:
+      type: http
+      description: Platform tokens are used to authenticate requests to the platform as a specific user. See [Use platform token authentication](https://docs.coveo.com/en/n3ge0020).
+      scheme: bearer
+      bearerFormat: JWT
+    searchTokens:
+      type: http
+      description: Search tokens are used to authenticate search-related API requests. See [Use search token authentication](https://docs.coveo.com/en/56).
+      scheme: bearer
+      bearerFormat: JWT
+    apiKey:
+      description: API keys are used to authenticate requests to the platform as a specific user. See [Use API key authentication with the Search API](https://docs.coveo.com/en/105).
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Coveo Search API
+  tags:
+  - Search V3
+  - Passages V3
+  - Analysis V3
+  - Search V2
+  - Statements V2
+  - Result rankings
+  - Machine learning associations
+  - Statement groups
+  - Pipelines
+  - Statements V1
+  - Conditions
+  - Passages Alpha
+  - Organizations

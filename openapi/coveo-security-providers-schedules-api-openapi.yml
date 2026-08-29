@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Security Providers Schedules API
+  title: Coveo Security Cache Security Providers Schedules API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -121,13 +121,38 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/securityproviders/paramId/schedules_get
 components:
   schemas:
-    HourMinutePair:
+    ScheduleFrequency:
       type: object
       properties:
-        hour:
+        type:
+          type: string
+          enum:
+          - MINUTELY
+          - HOURLY
+          - DAILY
+          - WEEKLY
+          - MONTHLY
+        value:
           type: integer
           format: int32
-        minute:
+        hourMinute:
+          $ref: '#/components/schemas/HourMinutePair'
+        monthDay:
+          type: integer
+          format: int32
+        weekDays:
+          type: array
+          items:
+            type: string
+            enum:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+            - SATURDAY
+            - SUNDAY
+        seed:
           type: integer
           format: int32
     ScheduleModel:
@@ -163,38 +188,13 @@ components:
         lastExecution:
           type: string
           format: date-time
-    ScheduleFrequency:
+    HourMinutePair:
       type: object
       properties:
-        type:
-          type: string
-          enum:
-          - MINUTELY
-          - HOURLY
-          - DAILY
-          - WEEKLY
-          - MONTHLY
-        value:
+        hour:
           type: integer
           format: int32
-        hourMinute:
-          $ref: '#/components/schemas/HourMinutePair'
-        monthDay:
-          type: integer
-          format: int32
-        weekDays:
-          type: array
-          items:
-            type: string
-            enum:
-            - MONDAY
-            - TUESDAY
-            - WEDNESDAY
-            - THURSDAY
-            - FRIDAY
-            - SATURDAY
-            - SUNDAY
-        seed:
+        minute:
           type: integer
           format: int32
   securitySchemes:

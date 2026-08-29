@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Model Listing API
+  title: Coveo Machine Learning Configuration Model Listing API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -120,6 +120,30 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/modellisting_post
 components:
   schemas:
+    ModelAssociationModel:
+      type: object
+      properties:
+        parentId:
+          type: string
+          description: The unique identifier of the query pipeline to which the model is associated.
+          example: 38b08160-d7d4-4626-8e03-53587c23415d
+        id:
+          type: string
+          description: The unique identifier of the model association.
+          example: 917af358-13fd-4c8e-94af-7cf649bddc48
+        name:
+          type: string
+          description: The name of the query pipeline or case assist configuration the model is associated with.
+          example: association name
+        associationType:
+          type: string
+          description: The type of the association.
+          example: QUERY_PIPELINE
+          enum:
+          - QUERY_PIPELINE
+          - CASE_ASSIST
+      description: The associations related to this model
+      example: "[\n  {\n      \"parentId\": \"38b08160-d7d4-4626-8e03-53587c23415d\",\n      \"id\": \"917af358-13fd-4c8e-94af-7cf649bddc48,\n      \"name\": \"test pipeline\",\n      \"associationType\": \"QUERY_PIPELINE\"\n  }\n]"
     ModelListingModel:
       type: object
       properties:
@@ -168,30 +192,22 @@ components:
             $ref: '#/components/schemas/ModelAssociationModel'
         readyForAssociation:
           type: boolean
-    ModelAssociationModel:
+    ModelListingModelsRequest:
       type: object
       properties:
-        parentId:
+        engineIds:
+          type: array
+          items:
+            type: string
+        registrationIds:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        displayNameAndRegistrationIdFilter:
           type: string
-          description: The unique identifier of the query pipeline to which the model is associated.
-          example: 38b08160-d7d4-4626-8e03-53587c23415d
-        id:
+        projectId:
           type: string
-          description: The unique identifier of the model association.
-          example: 917af358-13fd-4c8e-94af-7cf649bddc48
-        name:
-          type: string
-          description: The name of the query pipeline or case assist configuration the model is associated with.
-          example: association name
-        associationType:
-          type: string
-          description: The type of the association.
-          example: QUERY_PIPELINE
-          enum:
-          - QUERY_PIPELINE
-          - CASE_ASSIST
-      description: The associations related to this model
-      example: "[\n  {\n      \"parentId\": \"38b08160-d7d4-4626-8e03-53587c23415d\",\n      \"id\": \"917af358-13fd-4c8e-94af-7cf649bddc48,\n      \"name\": \"test pipeline\",\n      \"associationType\": \"QUERY_PIPELINE\"\n  }\n]"
     ModelStatusInfoModel:
       type: object
       properties:
@@ -232,22 +248,6 @@ components:
           - INACTIVE
       description: The current status of the model..
       example: "{\n \"modelStatus\": \"BUILDING\",\n \"daysUntilArchival\" : 3\n }"
-    ModelListingModelsRequest:
-      type: object
-      properties:
-        engineIds:
-          type: array
-          items:
-            type: string
-        registrationIds:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        displayNameAndRegistrationIdFilter:
-          type: string
-        projectId:
-          type: string
   securitySchemes:
     oauth2:
       type: oauth2

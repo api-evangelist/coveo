@@ -1,17 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Exports API - Version 14 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+  title: Usage Analytics Read Exports API - Version 14 API
+  version: '1.0'
 servers:
-- url: https://platform.cloud.coveo.com
+- url: https://analytics.cloud.coveo.com/rest/ua
   description: Coveo public API endpoint
 security:
-- oauth2:
+- v8:
   - full
 tags:
 - name: Exports API - Version 14
@@ -362,6 +357,19 @@ paths:
       deprecated: true
 components:
   schemas:
+    ExportEstimateResponseV14:
+      required:
+      - estimates
+      type: object
+      properties:
+        estimates:
+          type: object
+          additionalProperties:
+            type: integer
+            description: The estimated number of rows by event
+            format: int64
+          description: The estimated number of rows by event
+      description: Export's number of row estimate
     ExportResponseV14:
       required:
       - author
@@ -422,25 +430,11 @@ components:
     StatusResponse:
       type: object
       description: Service's status information
-    ExportEstimateResponseV14:
-      required:
-      - estimates
-      type: object
-      properties:
-        estimates:
-          type: object
-          additionalProperties:
-            type: integer
-            description: The estimated number of rows by event
-            format: int64
-          description: The estimated number of rows by event
-      description: Export's number of row estimate
   securitySchemes:
-    oauth2:
+    v8:
       type: oauth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: ''

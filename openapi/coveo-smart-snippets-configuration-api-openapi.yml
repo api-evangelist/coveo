@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Smart Snippets Configuration API
+  title: Coveo Machine Learning Configuration Smart Snippets Configuration API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -162,16 +162,6 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/smartsnippets/contentfields_post
 components:
   schemas:
-    DocumentTypeResponse:
-      required:
-      - documentType
-      type: object
-      properties:
-        documentType:
-          type: string
-          description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
-          example: SupportArticle
-      description: List of available document types
     FieldCandidateModel:
       required:
       - name
@@ -182,18 +172,6 @@ components:
           description: The name of the field, also referred to as the field identifier.<br />**Example:** `article_description`
           example: article_description
       description: The list of non-empty fields for at least one item.
-    SmartSnippetsDocumentTypesResponse:
-      type: object
-      properties:
-        query:
-          type: string
-          description: The query that was used to fetch document information.<br />**Example:** `@source==("Salesforce Notifier")`
-          example: '@source==("Salesforce Notifier")'
-        documentTypes:
-          type: array
-          description: List of available document types
-          items:
-            $ref: '#/components/schemas/DocumentTypeResponse'
     SmartSnippetsContentFieldsRequest:
       type: object
       properties:
@@ -221,37 +199,16 @@ components:
           description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
           example: SupportArticle
       description: The configuration for the Smart Snippets content fields request.
-    SmartSnippetsPreviewResponse:
+    DocumentTypeResponse:
+      required:
+      - documentType
       type: object
       properties:
-        query:
+        documentType:
           type: string
-          description: The query that was used to fetch document information.<br />**Example:** `@source==("Salesforce Notifier")`
-          example: '@source==("Salesforce Notifier")'
-        numberOfDocumentsInSources:
-          type: integer
-          description: The total number of documents in the selected sources.
-          format: int64
-        numberOfValidDocuments:
-          type: integer
-          description: The number of documents that are candidates for learning.
-          format: int64
-        numberOfDocumentsInSourcesMatchingFilters:
-          type: integer
-          description: The number of documents in the selected sources that match the conditions.
-          format: int64
-        numberOfDocumentsInSourcesMatchingFiltersWithPermanentId:
-          type: integer
-          description: The number of documents in the selected sources that match the conditions and have a `permanentid`.
-          format: int64
-        documentRequirementStatus:
-          type: string
-          description: Status for the number of required documents to build the model.
-          enum:
-          - OK
-          - INSUFFICIENT_DOCUMENTS
-          - NB_OF_DOCUMENTS_OVER_LIMIT
-      description: The Smart Snippets preview response.
+          description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
+          example: SupportArticle
+      description: List of available document types
     ContentFieldsResponse:
       type: object
       properties:
@@ -311,6 +268,49 @@ components:
           description: The value to use for the filter.<br />**Example:** `John Smith`
           example: John Smith
       description: A custom filter condition.
+    SmartSnippetsDocumentTypesResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The query that was used to fetch document information.<br />**Example:** `@source==("Salesforce Notifier")`
+          example: '@source==("Salesforce Notifier")'
+        documentTypes:
+          type: array
+          description: List of available document types
+          items:
+            $ref: '#/components/schemas/DocumentTypeResponse'
+    SmartSnippetsPreviewResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The query that was used to fetch document information.<br />**Example:** `@source==("Salesforce Notifier")`
+          example: '@source==("Salesforce Notifier")'
+        numberOfDocumentsInSources:
+          type: integer
+          description: The total number of documents in the selected sources.
+          format: int64
+        numberOfValidDocuments:
+          type: integer
+          description: The number of documents that are candidates for learning.
+          format: int64
+        numberOfDocumentsInSourcesMatchingFilters:
+          type: integer
+          description: The number of documents in the selected sources that match the conditions.
+          format: int64
+        numberOfDocumentsInSourcesMatchingFiltersWithPermanentId:
+          type: integer
+          description: The number of documents in the selected sources that match the conditions and have a `permanentid`.
+          format: int64
+        documentRequirementStatus:
+          type: string
+          description: Status for the number of required documents to build the model.
+          enum:
+          - OK
+          - INSUFFICIENT_DOCUMENTS
+          - NB_OF_DOCUMENTS_OVER_LIMIT
+      description: The Smart Snippets preview response.
   securitySchemes:
     oauth2:
       type: oauth2

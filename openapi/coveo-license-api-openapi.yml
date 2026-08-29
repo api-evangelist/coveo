@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities License API
+  title: Coveo Platform License API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -258,6 +258,75 @@ components:
         enabled:
           type: boolean
       description: The Machine Learning Models configurations.
+    ConnectorInformationModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of connector.
+          enum:
+          - AMAZONS3
+          - BOX_ENTERPRISE2
+          - CATALOG
+          - CONFLUENCE2
+          - CONFLUENCE2_HOSTED
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - FILE
+          - GENERIC_REST
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GRAPHQL
+          - JIRA2
+          - JIRA2_HOSTED
+          - JIVE
+          - JIVE_HOSTED
+          - LITHIUM
+          - KHOROS
+          - MICROSOFT_DYNAMICS
+          - PUSH
+          - RSS
+          - SALESFORCE
+          - SALESFORCE_SITES
+          - SAP
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE2
+          - SHOPIFY
+          - SITECORE
+          - SITEMAP
+          - SLACK
+          - WEB2
+          - YOUTUBE
+          - ZENDESK
+          - ADOBE_EXPERIENCE_MANAGER
+          - BOX
+          - BOX_ENTERPRISE
+          - CONFLUENCE
+          - DROPBOX
+          - GMAIL
+          - GMAIL_DOMAIN_WIDE
+          - SHAREPOINT_ONLINE
+        allowed:
+          type: boolean
+          description: Whether the connector is allowed to execute.
+        sourceVisibilities:
+          uniqueItems: true
+          type: array
+          description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>- `SECURED`: Allowed users only</br>- `SHARED`: Any user'
+          items:
+            type: string
+            description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>- `SECURED`: Allowed users only</br>- `SHARED`: Any user'
+            enum:
+            - PRIVATE
+            - SECURED
+            - SHARED
+        allowedSchedules:
+          type: array
+          description: A set of schedule models that are allowed to refresh the connector.
+          items:
+            $ref: '#/components/schemas/AllowedScheduleModel'
+      description: Information for a connector.
     LicenseModel:
       type: object
       properties:
@@ -367,75 +436,6 @@ components:
             description: Various properties/configuration settings that apply to the organization.
           description: Various properties/configuration settings that apply to the organization.
       description: The organization license.
-    ConnectorInformationModel:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The type of connector.
-          enum:
-          - AMAZONS3
-          - BOX_ENTERPRISE2
-          - CATALOG
-          - CONFLUENCE2
-          - CONFLUENCE2_HOSTED
-          - CUSTOM
-          - DATABASE
-          - DROPBOX_FOR_BUSINESS
-          - FILE
-          - GENERIC_REST
-          - GOOGLE_DRIVE_DOMAIN_WIDE
-          - GRAPHQL
-          - JIRA2
-          - JIRA2_HOSTED
-          - JIVE
-          - JIVE_HOSTED
-          - LITHIUM
-          - KHOROS
-          - MICROSOFT_DYNAMICS
-          - PUSH
-          - RSS
-          - SALESFORCE
-          - SALESFORCE_SITES
-          - SAP
-          - SERVICENOW
-          - SHAREPOINT
-          - SHAREPOINT_ONLINE2
-          - SHOPIFY
-          - SITECORE
-          - SITEMAP
-          - SLACK
-          - WEB2
-          - YOUTUBE
-          - ZENDESK
-          - ADOBE_EXPERIENCE_MANAGER
-          - BOX
-          - BOX_ENTERPRISE
-          - CONFLUENCE
-          - DROPBOX
-          - GMAIL
-          - GMAIL_DOMAIN_WIDE
-          - SHAREPOINT_ONLINE
-        allowed:
-          type: boolean
-          description: Whether the connector is allowed to execute.
-        sourceVisibilities:
-          uniqueItems: true
-          type: array
-          description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>- `SECURED`: Allowed users only</br>- `SHARED`: Any user'
-          items:
-            type: string
-            description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>- `SECURED`: Allowed users only</br>- `SHARED`: Any user'
-            enum:
-            - PRIVATE
-            - SECURED
-            - SHARED
-        allowedSchedules:
-          type: array
-          description: A set of schedule models that are allowed to refresh the connector.
-          items:
-            $ref: '#/components/schemas/AllowedScheduleModel'
-      description: Information for a connector.
   securitySchemes:
     oauth2:
       type: oauth2

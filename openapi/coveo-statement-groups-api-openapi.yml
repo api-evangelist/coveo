@@ -1,18 +1,17 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Statement groups API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  title: Coveo Search Statement groups API
+  description: Documentation for Coveo Search API
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
   contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+    name: support@coveo.com
+  license:
+    name: ''
   version: 1.0.0
+  x-ApiVersion: V3
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Statement groups
   x-displayName: Statement groups
@@ -608,153 +607,60 @@ paths:
           $ref: '#/components/responses/ServiceUnavailable'
 components:
   schemas:
-    RestSingleOperationValidationRequestCreateStatementGroupRequest:
+    CreateStatementGroupResponse:
       required:
-      - operation
+      - id
+      - name
+      - type
       type: object
       properties:
-        operation:
-          $ref: '#/components/schemas/RestOperationValidationRequestCreateStatementGroupRequest'
-    StatementGroupStatus:
-      type: string
-      description: The status of the campaign.
-      enum:
-      - active
-      - inactive
-      - expired
-      - notStarted
-    ProblemDetailResponse:
-      type: object
-      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
-      minProperties: 1
-      properties:
-        status:
-          type: integer
-          minimum: 400
-          maximum: 599
-          description: The HTTP status code.
-        title:
+        id:
           type: string
-          description: A short, human-readable summary of the problem type. This **shouldn't** change from one occurrence of the problem to another, except for localization purposes.
+          description: The unique identifier of the statement group.
+          example: 679adb80-444e-11ea-b77f-2e728ce88125
+        name:
+          type: string
+          description: The name of the statement group.
+          example: Community
         type:
           type: string
-          format: URI
-          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies and provides human-readable documentation for the problem type. When this isn't present, its value is assumed to be "about:blank".
-        detail:
-          type: string
-          description: A human-readable explanation which is specific to this occurrence of the problem.
-        instance:
-          type: string
-          format: URI
-          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
-    RestBatchOperationValidationResponse:
-      required:
-      - results
-      type: object
-      properties:
-        results:
-          type: array
-          description: The list of operation validation results.
-          items:
-            $ref: '#/components/schemas/RestOperationValidationResponse'
-    CreateOrUpdateCampaignGroupBase:
-      type: object
-      required:
-      - campaignStart
-      - campaignEnd
-      properties:
+          description: The type name of the statement group.
+          enum:
+          - campaign
+          - permanent
+        isActive:
+          type: boolean
+          description: The start date of the campaign.
+          example: false
         campaignStart:
           type: string
           description: The start date of the campaign.
-          example: '2001-07-20T23:01:05-04:00'
+          example: '2001-07-20T23:01:05'
         campaignEnd:
           type: string
           description: The end date of the campaign.
-          example: '2002-09-07T10:07:20-04:00'
-    FeatureActiveState:
-      type: object
-      required:
-      - feature
-      - active
-      properties:
-        feature:
+          example: '2002-09-07T10:07:20'
+        description:
           type: string
-          description: The name of the QueryPipeline feature
-        active:
-          type: boolean
-          description: Whether the feature is active or not.
-    RestBulkGetRequest:
-      type: object
-      properties:
-        ids:
-          type: array
-          description: A list of resource identifiers to get. A maximum of **1000** can be sent.
-          items:
-            type: string
-            maxItems: 1000
-    CreateOrUpdateStatementGroup:
-      oneOf:
-      - $ref: '#/components/schemas/CreateOrUpdateCampaignGroup'
-      - $ref: '#/components/schemas/CreateOrUpdatePermanentGroup'
-      discriminator:
-        propertyName: type
-        mapping:
-          campaign: '#/components/schemas/CreateOrUpdateCampaignGroup'
-          permanent: '#/components/schemas/CreateOrUpdatePermanentGroup'
-      example:
-        name: Community
-        type: campaign
-        description: Provides contextually relevant query recommendations/results to Community site users.
-        campaignStart: '2001-07-20T23:01:05-04:00'
-        campaignEnd: '2002-09-07T10:07:20-04:00'
-    StatementGroupType:
-      type: string
-      description: The type name of the statement group.
-      enum:
-      - campaign
-      - permanent
-    TogglePermanentGroupRequest:
-      type: object
-      properties:
-        isActive:
-          type: boolean
-          description: Whether or not the group is active.
-    GetPermanentGroupBase:
-      type: object
-      required:
-      - isActive
-      properties:
-        isActive:
-          type: boolean
-          description: Whether or not the group is active.
-        status:
+          description: The intended purpose of this statement group.
+          example: Provide contextually relevant query recommendations/results to Community site users.
+        conditionId:
           type: string
-          description: The status of the group.
-          enum:
-          - active
-          - inactive
-    CreateOrUpdatePermanentGroupBase:
-      type: object
-      required:
-      - isActive
-      properties:
-        isActive:
-          type: boolean
-          description: Whether or not the group is active.
-    StatementGroupComposition:
-      required:
-      - otherStatementCount
-      - resultRankingStatementCount
-      type: object
-      properties:
-        resultRankingStatementCount:
-          type: integer
-          description: The number of result ranking statements in this group.
-          format: int32
-        otherStatementCount:
-          type: integer
-          description: The number of other types of statements in this group.
-          format: int32
+          description: 'The condition that must be met by a query in order to route that query through this query pipeline.
+
+
+            Typically, each query pipeline except the default one should have a condition, and you should ensure that the conditions you set on query pipelines are mutually exclusive.
+
+
+            **Note:**
+
+
+            A query cannot be routed through a query pipeline that does not have a condition unless:
+
+
+            - That query pipeline is set as the default query pipeline (see the `isDefault` property), or
+
+            - That query pipeline is enforced through the `pipeline` parameter of the query itself, in which case the query pipeline condition is bypassed.'
     GetStatementGroupBase:
       required:
       - id
@@ -829,6 +735,31 @@ components:
           type: array
           items:
             type: string
+    ListFeatureActiveStateResponse:
+      type: object
+      required:
+      - featureActiveState
+      properties:
+        featureActiveState:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureActiveState'
+    StatementGroupAssociationItem:
+      type: object
+      description: An object representing a rule to associate to a group.
+      required:
+      - featureType
+      - ruleId
+      properties:
+        featureType:
+          type: string
+          enum:
+          - resultRankings
+          description: The query pipeline feature that's enabled by this rule.
+        ruleId:
+          type: string
+          description: The unique identifier of the rule.
+          example: 493e51a8-bc9b-462d-9534-08a0995ecd55
     DissociateStatementGroupAssociationsRequest:
       type: object
       properties:
@@ -844,217 +775,6 @@ components:
             **Note:**: Invalid rule IDs will cause the request to fail.'
           items:
             $ref: '#/components/schemas/StatementGroupAssociationItem'
-    ListStatementGroupsResponse:
-      required:
-      - groupComposition
-      - groups
-      - totalCount
-      type: object
-      properties:
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/GetStatementGroup'
-        totalCount:
-          type: integer
-          description: The total number of matching statements across all pages of results.
-          format: int32
-          example: 1
-        groupComposition:
-          $ref: '#/components/schemas/PipelineGroupsComposition'
-    CreateOrUpdateStatementGroupBase:
-      type: object
-      required:
-      - type
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the statement group.
-          example: Community
-        type:
-          $ref: '#/components/schemas/StatementGroupType'
-        description:
-          type: string
-          description: The intended purpose of this statement group.
-          example: Provide contextually relevant query recommendations/results to Community site users.
-        conditionId:
-          type: string
-          description: 'The condition that must be met by a query in order to route that query through this query pipeline.
-
-
-            Typically, each query pipeline except the default one should have a condition, and you should ensure that the conditions you set on query pipelines are mutually exclusive.
-
-
-            **Note:**
-
-
-            A query cannot be routed through a query pipeline that does not have a condition unless:
-
-
-            - That query pipeline is set as the default query pipeline (see the `isDefault` property), or
-
-            - That query pipeline is enforced through the `pipeline` parameter of the query itself, in which case the query pipeline condition is bypassed.'
-    CreateStatementGroupResponse:
-      required:
-      - id
-      - name
-      - type
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the statement group.
-          example: 679adb80-444e-11ea-b77f-2e728ce88125
-        name:
-          type: string
-          description: The name of the statement group.
-          example: Community
-        type:
-          type: string
-          description: The type name of the statement group.
-          enum:
-          - campaign
-          - permanent
-        isActive:
-          type: boolean
-          description: The start date of the campaign.
-          example: false
-        campaignStart:
-          type: string
-          description: The start date of the campaign.
-          example: '2001-07-20T23:01:05'
-        campaignEnd:
-          type: string
-          description: The end date of the campaign.
-          example: '2002-09-07T10:07:20'
-        description:
-          type: string
-          description: The intended purpose of this statement group.
-          example: Provide contextually relevant query recommendations/results to Community site users.
-        conditionId:
-          type: string
-          description: 'The condition that must be met by a query in order to route that query through this query pipeline.
-
-
-            Typically, each query pipeline except the default one should have a condition, and you should ensure that the conditions you set on query pipelines are mutually exclusive.
-
-
-            **Note:**
-
-
-            A query cannot be routed through a query pipeline that does not have a condition unless:
-
-
-            - That query pipeline is set as the default query pipeline (see the `isDefault` property), or
-
-            - That query pipeline is enforced through the `pipeline` parameter of the query itself, in which case the query pipeline condition is bypassed.'
-    RestSingleOperationValidationResponse:
-      required:
-      - result
-      type: object
-      properties:
-        result:
-          $ref: '#/components/schemas/RestOperationValidationResponse'
-    ErrorMessage:
-      type: object
-      additionalProperties: true
-      properties:
-        statusCode:
-          type: number
-          example: 404
-        errorCode:
-          type: string
-          example: ORGANIZATION_DOES_NOT_EXIST
-        message:
-          type: string
-          example: The organization does not exist in the search api.
-    GetCampaignGroup:
-      allOf:
-      - $ref: '#/components/schemas/GetStatementGroupBase'
-      - $ref: '#/components/schemas/GetCampaignGroupBase'
-    PipelineGroupsComposition:
-      required:
-      - campaignGroupCount
-      - permanentGroupCount
-      - activeGroupCount
-      - inactiveGroupCount
-      - expiredGroupCount
-      - notStartedGroupCount
-      type: object
-      properties:
-        activeGroupCount:
-          type: integer
-          description: The number of active groups in the pipeline.
-          format: int32
-        inactiveGroupCount:
-          type: integer
-          description: The number of inactive groups in the pipeline.
-          format: int32
-        expiredGroupCount:
-          type: integer
-          description: The number of expired groups in the pipeline.
-          format: int32
-        notStartedGroupCount:
-          type: integer
-          description: The number of groups not started in the pipeline.
-          format: int32
-        campaignGroupCount:
-          type: integer
-          description: The number of campaign groups in the pipeline.
-          format: int32
-        permanentGroupCount:
-          type: integer
-          description: The number of permanent groups in the pipeline.
-          format: int32
-    RestOperationValidationResponse:
-      required:
-      - operationType
-      - operationValid
-      type: object
-      properties:
-        operationType:
-          type: string
-          description: The type of operation that has been validated.
-          example: CREATE
-        operationValid:
-          type: boolean
-          description: Whether the operation to validate was successful or not.
-          example: true
-        resourceId:
-          type: string
-          description: 'The identifier of the resource. '
-          example: id
-        validationErrors:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              $ref: '#/components/schemas/RestOperationValidationError'
-          description: If the operation failed, the `validationError` will contains the error message.
-          example: Access Denied. You don't have the required privileges to perform  this operation.
-    GetPermanentGroup:
-      allOf:
-      - $ref: '#/components/schemas/GetStatementGroupBase'
-      - $ref: '#/components/schemas/GetPermanentGroupBase'
-    ListFeatureActiveStateResponse:
-      type: object
-      required:
-      - featureActiveState
-      properties:
-        featureActiveState:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeatureActiveState'
-    GetStatementGroup:
-      oneOf:
-      - $ref: '#/components/schemas/GetCampaignGroup'
-      - $ref: '#/components/schemas/GetPermanentGroup'
-      discriminator:
-        propertyName: type
-        mapping:
-          campaign: '#/components/schemas/GetCampaignGroup'
-          permanent: '#/components/schemas/GetPermanentGroup'
     RestOperationValidationRequestCreateStatementGroupRequest:
       required:
       - operationType
@@ -1113,30 +833,56 @@ components:
       allOf:
       - $ref: '#/components/schemas/CreateOrUpdateStatementGroupBase'
       - $ref: '#/components/schemas/CreateOrUpdateCampaignGroupBase'
-    GetCampaignGroupBase:
+    GetPermanentGroupBase:
       type: object
-      properties:
-        campaignStart:
-          type: string
-          description: The start date of the campaign.
-          example: '2001-07-20T23:01:05-04:00'
-        campaignEnd:
-          type: string
-          description: The end date of the campaign.
-          example: '2002-09-07T10:07:20-04:00'
-        status:
-          $ref: '#/components/schemas/StatementGroupStatus'
-    RestOperationValidationError:
       required:
-      - message
+      - isActive
+      properties:
+        isActive:
+          type: boolean
+          description: Whether or not the group is active.
+        status:
+          type: string
+          description: The status of the group.
+          enum:
+          - active
+          - inactive
+    RestBatchOperationValidationResponse:
+      required:
+      - results
       type: object
       properties:
-        message:
-          type: string
-    CreateOrUpdatePermanentGroup:
-      allOf:
-      - $ref: '#/components/schemas/CreateOrUpdateStatementGroupBase'
-      - $ref: '#/components/schemas/CreateOrUpdatePermanentGroupBase'
+        results:
+          type: array
+          description: The list of operation validation results.
+          items:
+            $ref: '#/components/schemas/RestOperationValidationResponse'
+    ListStatementGroupsResponse:
+      required:
+      - groupComposition
+      - groups
+      - totalCount
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetStatementGroup'
+        totalCount:
+          type: integer
+          description: The total number of matching statements across all pages of results.
+          format: int32
+          example: 1
+        groupComposition:
+          $ref: '#/components/schemas/PipelineGroupsComposition'
+    StatementGroupStatus:
+      type: string
+      description: The status of the campaign.
+      enum:
+      - active
+      - inactive
+      - expired
+      - notStarted
     RestBatchOperationValidationRequestCreateStatementGroupRequest:
       required:
       - operations
@@ -1155,22 +901,220 @@ components:
             resourceId: resource-id
           items:
             $ref: '#/components/schemas/RestOperationValidationRequestCreateStatementGroupRequest'
-    StatementGroupAssociationItem:
-      type: object
-      description: An object representing a rule to associate to a group.
+    RestOperationValidationResponse:
       required:
-      - featureType
-      - ruleId
+      - operationType
+      - operationValid
+      type: object
       properties:
-        featureType:
+        operationType:
           type: string
-          enum:
-          - resultRankings
-          description: The query pipeline feature that's enabled by this rule.
-        ruleId:
+          description: The type of operation that has been validated.
+          example: CREATE
+        operationValid:
+          type: boolean
+          description: Whether the operation to validate was successful or not.
+          example: true
+        resourceId:
           type: string
-          description: The unique identifier of the rule.
-          example: 493e51a8-bc9b-462d-9534-08a0995ecd55
+          description: 'The identifier of the resource. '
+          example: id
+        validationErrors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/RestOperationValidationError'
+          description: If the operation failed, the `validationError` will contains the error message.
+          example: Access Denied. You don't have the required privileges to perform  this operation.
+    PipelineGroupsComposition:
+      required:
+      - campaignGroupCount
+      - permanentGroupCount
+      - activeGroupCount
+      - inactiveGroupCount
+      - expiredGroupCount
+      - notStartedGroupCount
+      type: object
+      properties:
+        activeGroupCount:
+          type: integer
+          description: The number of active groups in the pipeline.
+          format: int32
+        inactiveGroupCount:
+          type: integer
+          description: The number of inactive groups in the pipeline.
+          format: int32
+        expiredGroupCount:
+          type: integer
+          description: The number of expired groups in the pipeline.
+          format: int32
+        notStartedGroupCount:
+          type: integer
+          description: The number of groups not started in the pipeline.
+          format: int32
+        campaignGroupCount:
+          type: integer
+          description: The number of campaign groups in the pipeline.
+          format: int32
+        permanentGroupCount:
+          type: integer
+          description: The number of permanent groups in the pipeline.
+          format: int32
+    GetCampaignGroup:
+      allOf:
+      - $ref: '#/components/schemas/GetStatementGroupBase'
+      - $ref: '#/components/schemas/GetCampaignGroupBase'
+    ProblemDetailResponse:
+      type: object
+      description: The Problem Details JSON Object [[RFC7807](https://tools.ietf.org/html/rfc7807)].
+      minProperties: 1
+      properties:
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+          description: The HTTP status code.
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. This **shouldn't** change from one occurrence of the problem to another, except for localization purposes.
+        type:
+          type: string
+          format: URI
+          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies and provides human-readable documentation for the problem type. When this isn't present, its value is assumed to be "about:blank".
+        detail:
+          type: string
+          description: A human-readable explanation which is specific to this occurrence of the problem.
+        instance:
+          type: string
+          format: URI
+          description: A URI reference [[RFC3986](https://tools.ietf.org/html/rfc3986)] that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+    GetPermanentGroup:
+      allOf:
+      - $ref: '#/components/schemas/GetStatementGroupBase'
+      - $ref: '#/components/schemas/GetPermanentGroupBase'
+    CreateOrUpdatePermanentGroupBase:
+      type: object
+      required:
+      - isActive
+      properties:
+        isActive:
+          type: boolean
+          description: Whether or not the group is active.
+    CreateOrUpdatePermanentGroup:
+      allOf:
+      - $ref: '#/components/schemas/CreateOrUpdateStatementGroupBase'
+      - $ref: '#/components/schemas/CreateOrUpdatePermanentGroupBase'
+    GetStatementGroup:
+      oneOf:
+      - $ref: '#/components/schemas/GetCampaignGroup'
+      - $ref: '#/components/schemas/GetPermanentGroup'
+      discriminator:
+        propertyName: type
+        mapping:
+          campaign: '#/components/schemas/GetCampaignGroup'
+          permanent: '#/components/schemas/GetPermanentGroup'
+    CreateOrUpdateStatementGroupBase:
+      type: object
+      required:
+      - type
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the statement group.
+          example: Community
+        type:
+          $ref: '#/components/schemas/StatementGroupType'
+        description:
+          type: string
+          description: The intended purpose of this statement group.
+          example: Provide contextually relevant query recommendations/results to Community site users.
+        conditionId:
+          type: string
+          description: 'The condition that must be met by a query in order to route that query through this query pipeline.
+
+
+            Typically, each query pipeline except the default one should have a condition, and you should ensure that the conditions you set on query pipelines are mutually exclusive.
+
+
+            **Note:**
+
+
+            A query cannot be routed through a query pipeline that does not have a condition unless:
+
+
+            - That query pipeline is set as the default query pipeline (see the `isDefault` property), or
+
+            - That query pipeline is enforced through the `pipeline` parameter of the query itself, in which case the query pipeline condition is bypassed.'
+    RestSingleOperationValidationResponse:
+      required:
+      - result
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/RestOperationValidationResponse'
+    StatementGroupComposition:
+      required:
+      - otherStatementCount
+      - resultRankingStatementCount
+      type: object
+      properties:
+        resultRankingStatementCount:
+          type: integer
+          description: The number of result ranking statements in this group.
+          format: int32
+        otherStatementCount:
+          type: integer
+          description: The number of other types of statements in this group.
+          format: int32
+    CreateOrUpdateStatementGroup:
+      oneOf:
+      - $ref: '#/components/schemas/CreateOrUpdateCampaignGroup'
+      - $ref: '#/components/schemas/CreateOrUpdatePermanentGroup'
+      discriminator:
+        propertyName: type
+        mapping:
+          campaign: '#/components/schemas/CreateOrUpdateCampaignGroup'
+          permanent: '#/components/schemas/CreateOrUpdatePermanentGroup'
+      example:
+        name: Community
+        type: campaign
+        description: Provides contextually relevant query recommendations/results to Community site users.
+        campaignStart: '2001-07-20T23:01:05-04:00'
+        campaignEnd: '2002-09-07T10:07:20-04:00'
+    FeatureActiveState:
+      type: object
+      required:
+      - feature
+      - active
+      properties:
+        feature:
+          type: string
+          description: The name of the QueryPipeline feature
+        active:
+          type: boolean
+          description: Whether the feature is active or not.
+    CreateOrUpdateCampaignGroupBase:
+      type: object
+      required:
+      - campaignStart
+      - campaignEnd
+      properties:
+        campaignStart:
+          type: string
+          description: The start date of the campaign.
+          example: '2001-07-20T23:01:05-04:00'
+        campaignEnd:
+          type: string
+          description: The end date of the campaign.
+          example: '2002-09-07T10:07:20-04:00'
+    StatementGroupType:
+      type: string
+      description: The type name of the statement group.
+      enum:
+      - campaign
+      - permanent
     UpdateStatementGroupAssociationsResponse:
       type: object
       required:
@@ -1181,7 +1125,128 @@ components:
           description: The rules associated with this group.
           items:
             $ref: '#/components/schemas/StatementGroupAssociationItem'
+    RestSingleOperationValidationRequestCreateStatementGroupRequest:
+      required:
+      - operation
+      type: object
+      properties:
+        operation:
+          $ref: '#/components/schemas/RestOperationValidationRequestCreateStatementGroupRequest'
+    RestBulkGetRequest:
+      type: object
+      properties:
+        ids:
+          type: array
+          description: A list of resource identifiers to get. A maximum of **1000** can be sent.
+          items:
+            type: string
+            maxItems: 1000
+    RestOperationValidationError:
+      required:
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+    ErrorMessage:
+      type: object
+      additionalProperties: true
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        errorCode:
+          type: string
+          example: ORGANIZATION_DOES_NOT_EXIST
+        message:
+          type: string
+          example: The organization does not exist in the search api.
+    GetCampaignGroupBase:
+      type: object
+      properties:
+        campaignStart:
+          type: string
+          description: The start date of the campaign.
+          example: '2001-07-20T23:01:05-04:00'
+        campaignEnd:
+          type: string
+          description: The end date of the campaign.
+          example: '2002-09-07T10:07:20-04:00'
+        status:
+          $ref: '#/components/schemas/StatementGroupStatus'
+    TogglePermanentGroupRequest:
+      type: object
+      properties:
+        isActive:
+          type: boolean
+          description: Whether or not the group is active.
   responses:
+    Forbidden:
+      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 403
+            message: Access denied. API key does not have sufficient privileges.
+            errorCode: FORBIDDEN
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 422
+            message: Unprocessable entity.
+    ServiceUnavailable:
+      description: 'Service Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#5xx)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            ServiceUnavailable:
+              summary: 'Server Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-server_unavailable)'
+              value:
+                statusCode: 503
+                message: The server is currently unavailable due to overload or index unavailability.
+                errorCode: SERVER_UNAVAILABLE
+            OrganizationPaused:
+              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-organization_paused)'
+              value:
+                statusCode: 503
+                message: The organization is paused due to inactivity.
+                errorCode: ORGANIZATION_PAUSED
+    UnprocessableStatementGroupAssociations422:
+      description: The request to update the rules associated with the statement group could not be processed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetailResponse'
+          example:
+            status: 422
+            title: Unprocessable request
+            detail: 'The request could not be completed due to missing rules: []'
+    AuthenticationTimeout:
+      description: Authentication Timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 419
+            message: Authentication timeout.
+    TooManyRequests:
+      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 429
+            message: Too many requests.
     BadRequest:
       description: Bad Request
       content:
@@ -1206,72 +1271,6 @@ components:
                 statusCode: 400
                 message: Failed to evaluate your query as some conditions in your pipeline took too much time.
                 errorCode: QUERY_PIPELINE_INTERRUPTED
-    TooManyRequests:
-      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 429
-            message: Too many requests.
-    ServiceUnavailable:
-      description: 'Service Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#5xx)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          examples:
-            ServiceUnavailable:
-              summary: 'Server Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-server_unavailable)'
-              value:
-                statusCode: 503
-                message: The server is currently unavailable due to overload or index unavailability.
-                errorCode: SERVER_UNAVAILABLE
-            OrganizationPaused:
-              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-organization_paused)'
-              value:
-                statusCode: 503
-                message: The organization is paused due to inactivity.
-                errorCode: ORGANIZATION_PAUSED
-    AuthenticationTimeout:
-      description: Authentication Timeout
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 419
-            message: Authentication timeout.
-    Forbidden:
-      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 403
-            message: Access denied. API key does not have sufficient privileges.
-            errorCode: FORBIDDEN
-    UnprocessableStatementGroupAssociations422:
-      description: The request to update the rules associated with the statement group could not be processed
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetailResponse'
-          example:
-            status: 422
-            title: Unprocessable request
-            detail: 'The request could not be completed due to missing rules: []'
-    UnprocessableEntity:
-      description: Unprocessable Entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 422
-            message: Unprocessable entity.
     Unauthorized:
       description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
       content:
@@ -1283,30 +1282,31 @@ components:
             message: Invalid access token.
             errorCode: UNAUTHORIZED
   parameters:
-    Page:
-      name: page
+    StatementGroupTypeParam:
+      name: types
       in: query
-      description: The 0-based number of the page of results to get.
-      schema:
-        type: integer
-        format: int32
-        default: 0
-        minimum: 0
-    IsOrderAscending:
-      name: isOrderAscending
-      in: query
-      description: Whether to sort the results in ascending order.
-      schema:
-        type: boolean
-        default: true
-    StatementGroupIdPath:
-      name: statementGroupId
+      description: The type name of the statement group.
+      content:
+        application/json:
+          schema:
+            type: array
+            minItems: 1
+            items:
+              $ref: '#/components/schemas/StatementGroupType'
+    PipelineIdPath:
+      name: pipelineId
       in: path
-      description: The unique identifier of the statement group.
+      description: The unique identifier of the target query pipeline.
       required: true
       schema:
         type: string
-        example: 679adb80-444e-11ea-b77f-2e728ce88125
+    OrganizationIdQueryRequired:
+      name: organizationId
+      in: query
+      description: The unique identifier of the target Coveo Cloud organization.
+      required: true
+      schema:
+        type: string
     PerPage:
       name: perPage
       in: query
@@ -1317,6 +1317,51 @@ components:
         minimum: 0
         maximum: 200
         default: 20
+    OrganizationIdQuery:
+      name: organizationId
+      in: query
+      description: 'The unique identifier of the target Coveo Cloud organization.
+
+
+        Specifying a value for this parameter is only necessary when you are authenticating the API call with an OAuth2 token.'
+      example: mycoveocloudv2organization
+      schema:
+        type: string
+    IsOrderAscending:
+      name: isOrderAscending
+      in: query
+      description: Whether to sort the results in ascending order.
+      schema:
+        type: boolean
+        default: true
+    StatementGroupStatusParam:
+      name: status
+      in: query
+      description: The status of the statement group.
+      content:
+        application/json:
+          schema:
+            type: array
+            minItems: 1
+            items:
+              $ref: '#/components/schemas/StatementGroupStatus'
+    Page:
+      name: page
+      in: query
+      description: The 0-based number of the page of results to get.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+    StatementGroupIdPath:
+      name: statementGroupId
+      in: path
+      description: The unique identifier of the statement group.
+      required: true
+      schema:
+        type: string
+        example: 679adb80-444e-11ea-b77f-2e728ce88125
     Filter:
       name: filter
       in: query
@@ -1327,16 +1372,6 @@ components:
 
 
         By default, results are not required to match a specific query filter.'
-      schema:
-        type: string
-    OrganizationIdQuery:
-      name: organizationId
-      in: query
-      description: 'The unique identifier of the target Coveo Cloud organization.
-
-
-        Specifying a value for this parameter is only necessary when you are authenticating the API call with an OAuth2 token.'
-      example: mycoveocloudv2organization
       schema:
         type: string
     StatementGroupSortBy:
@@ -1355,48 +1390,42 @@ components:
         enum:
         - name
         - status
-    StatementGroupTypeParam:
-      name: types
-      in: query
-      description: The type name of the statement group.
-      content:
-        application/json:
-          schema:
-            type: array
-            minItems: 1
-            items:
-              $ref: '#/components/schemas/StatementGroupType'
-    StatementGroupStatusParam:
-      name: status
-      in: query
-      description: The status of the statement group.
-      content:
-        application/json:
-          schema:
-            type: array
-            minItems: 1
-            items:
-              $ref: '#/components/schemas/StatementGroupStatus'
-    OrganizationIdQueryRequired:
-      name: organizationId
-      in: query
-      description: The unique identifier of the target Coveo Cloud organization.
-      required: true
-      schema:
-        type: string
-    PipelineIdPath:
-      name: pipelineId
-      in: path
-      description: The unique identifier of the target query pipeline.
-      required: true
-      schema:
-        type: string
   securitySchemes:
     oauth2:
       type: oauth2
+      description: This API uses OAuth 2 with the implicit grant flow.
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
             full: required
+    platformTokens:
+      type: http
+      description: Platform tokens are used to authenticate requests to the platform as a specific user. See [Use platform token authentication](https://docs.coveo.com/en/n3ge0020).
+      scheme: bearer
+      bearerFormat: JWT
+    searchTokens:
+      type: http
+      description: Search tokens are used to authenticate search-related API requests. See [Use search token authentication](https://docs.coveo.com/en/56).
+      scheme: bearer
+      bearerFormat: JWT
+    apiKey:
+      description: API keys are used to authenticate requests to the platform as a specific user. See [Use API key authentication with the Search API](https://docs.coveo.com/en/105).
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Coveo Search API
+  tags:
+  - Search V3
+  - Passages V3
+  - Analysis V3
+  - Search V2
+  - Statements V2
+  - Result rankings
+  - Machine learning associations
+  - Statement groups
+  - Pipelines
+  - Statements V1
+  - Conditions
+  - Passages Alpha
+  - Organizations

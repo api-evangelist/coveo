@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Recommendations API
+  title: Coveo Commerce Recommendations API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -108,88 +108,69 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/recommendations/preview_post
 components:
   schemas:
-    QueryCorrectionResponse_V2ProductView:
+    ProductForPreview_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Product_V2ProductView'
+      - type: object
+        properties:
+          score:
+            type: integer
+            description: The total ranking score computed for the product.
+            format: int32
+            example: 1292
+          scoreDifference:
+            type: integer
+            description: Score difference between the cached and previewed rules for a product.
+            format: int32
+            example: 1292
+          positionDifference:
+            type: integer
+            description: Position difference between the cached and previewed rules for a product.
+            format: int32
+            example: 9
+          included:
+            type: boolean
+            description: Whether the product has been included or not after applying a rule.
+          pinned:
+            type: boolean
+            description: Whether the product has been pinned or not after applying a rule.
+          reservedPosition:
+            type: boolean
+            description: Whether the product is in a position that is reserved for a query-time pin.
+      - $ref: '#/components/schemas/Result_V2ProductView'
+    WordCorrection_V2ProductView:
       type: object
       properties:
-        originalQuery:
+        correctedWord:
           type: string
-          description: If the query was automatically corrected, this property indicates the original basic query expression (q) that triggered the automatic query correction.
-        correctedQuery:
+          description: The suggested word correction.
+        length:
+          type: integer
+          description: The length (in number of characters) of the corrected word.
+          format: int32
+        offset:
+          type: integer
+          description: The offset (in number of characters) of the corrected word, from the beginning of the resulting query expression correction suggestion.
+          format: int32
+        originalWord:
           type: string
-          description: If the query was automatically corrected, this property indicates the corrected basic query expression (q) that was executed instead of the original one.
-        corrections:
+          description: The original, un-corrected word.
+      description: The word correction suggestions.
+    BadgePlacementViewModel_V2ProductView:
+      type: object
+      properties:
+        placementId:
+          type: string
+          description: The placement unique identifier.
+          format: uuid
+          example: 36164bca-b489-4c42-8574-e1325d56d0be
+        badges:
           type: array
-          description: If the query wasn't automatically corrected, this property contains the basic query expression (q) keyword corrections provided by the Did You Mean index feature.
-          example:
-          - correctedQuery: Coveo Cloud V2 platform
-            wordCorrections:
-            - correctedWord: platform
-              length: 8
-              offset: 15
-              originalWord: plattfomr
+          description: The list of badges associated with this placement
           items:
-            $ref: '#/components/schemas/QueryCorrection_V2ProductView'
-      description: The query correction response, if the query was corrected.
-    PreviewResponseExecutionReportsModel_V2ProductView:
-      type: object
-      description: The execution reports for a preview query.
-      example:
-        current:
-          children:
-          - name: RequestId
-            description: The id correlating logs for this request
-            duration: 0
-            result: null
-            X-Request-ID: 948cf669-43ae-4d8d-b285-9b66350c5433
-          - name: Organization ID
-            description: Organization ID
-            duration: 0
-            result: null
-            coveo_organization: barcasportsmcy01fvu
-          duration: 88
-        modified:
-          children:
-          - name: RequestId
-            description: The id correlating logs for this request
-            duration: 0
-            result: null
-            X-Request-ID: 148cf689-63ae-4d8d-b285-9b63350c5433
-          - name: Organization ID
-            description: Organization ID
-            duration: 0
-            result: null
-            coveo_organization: barcasportsmcy01fvu
-          duration: 86
-    PreviewResult_V2ProductView:
-      required:
-      - resultType
-      type: object
-      properties:
-        resultType:
-          type: string
-      description: Preview result item that can be a product or spotlight content (including placeholders)
-      discriminator:
-        propertyName: resultType
-    BadgeViewModel_V2ProductView:
-      type: object
-      properties:
-        text:
-          type: string
-          description: The localized text displayed on the badge.
-          example: Bestseller!
-        backgroundColor:
-          type: string
-          description: The badge background color in the format `#RRGGBB`.
-          example: '#FFFFFF'
-        textColor:
-          type: string
-          description: The badge text color in the format `#RRGGBB`.
-          example: '#000000'
-        iconUrl:
-          type: string
-          description: The url of an icon to render with the badge text.
-          example: https://example.com/icon.png
-      description: The list of badges associated with this placement
+            $ref: '#/components/schemas/BadgeViewModel_V2ProductView'
+      description: The list of badge placements associated with this product.
     RecommendationsRequestModel_V2ProductView:
       required:
       - context
@@ -249,6 +230,124 @@ components:
         context:
           $ref: '#/components/schemas/RecommendationsContextModel_V2ProductView'
       description: The recommendations query to be executed.
+    PreviewResponseExecutionReportsModel_V2ProductView:
+      type: object
+      description: The execution reports for a preview query.
+      example:
+        current:
+          children:
+          - name: RequestId
+            description: The id correlating logs for this request
+            duration: 0
+            result: null
+            X-Request-ID: 948cf669-43ae-4d8d-b285-9b66350c5433
+          - name: Organization ID
+            description: Organization ID
+            duration: 0
+            result: null
+            coveo_organization: barcasportsmcy01fvu
+          duration: 88
+        modified:
+          children:
+          - name: RequestId
+            description: The id correlating logs for this request
+            duration: 0
+            result: null
+            X-Request-ID: 148cf689-63ae-4d8d-b285-9b63350c5433
+          - name: Organization ID
+            description: Organization ID
+            duration: 0
+            result: null
+            coveo_organization: barcasportsmcy01fvu
+          duration: 86
+    PaginationResponseModel_V2ProductView:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: The page of products to request.
+          format: int32
+          example: 7
+        perPage:
+          type: integer
+          description: The number of products per page. Note that a value greater than 100 may be rejected in the future.
+          format: int32
+          example: 30
+        totalEntries:
+          type: integer
+          description: The total number of results that match the query.
+          format: int32
+          example: 100
+        totalPages:
+          type: integer
+          description: The total number of pages of items available.
+          format: int32
+          example: 10
+        totalProducts:
+          type: integer
+          description: The total number of products that match the query.
+          format: int32
+          example: 90
+        totalSpotlightContent:
+          type: integer
+          description: The total number of spotlight content that match the query.
+          format: int32
+          example: 10
+      description: Contextual pagination information about the query.
+      example:
+        page: 1
+        perPage: 10
+        totalPages: 10
+        totalEntries: 100
+    Result_V2ProductView:
+      required:
+      - resultType
+      type: object
+      properties:
+        resultType:
+          type: string
+      description: List of results including products and spotlight content
+      discriminator:
+        propertyName: resultType
+    QueryCorrection_V2ProductView:
+      type: object
+      properties:
+        correctedQuery:
+          type: string
+          description: The resulting query expression correction suggestion.
+        wordCorrections:
+          type: array
+          description: The word correction suggestions.
+          items:
+            $ref: '#/components/schemas/WordCorrection_V2ProductView'
+      description: If the query wasn't automatically corrected, this property contains the basic query expression (q) keyword corrections provided by the Did You Mean index feature.
+      example:
+      - correctedQuery: Coveo Cloud V2 platform
+        wordCorrections:
+        - correctedWord: platform
+          length: 8
+          offset: 15
+          originalWord: plattfomr
+    BadgeViewModel_V2ProductView:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The localized text displayed on the badge.
+          example: Bestseller!
+        backgroundColor:
+          type: string
+          description: The badge background color in the format `#RRGGBB`.
+          example: '#FFFFFF'
+        textColor:
+          type: string
+          description: The badge text color in the format `#RRGGBB`.
+          example: '#000000'
+        iconUrl:
+          type: string
+          description: The url of an icon to render with the badge text.
+          example: https://example.com/icon.png
+      description: The list of badges associated with this placement
     Product_V2ProductView:
       type: object
       allOf:
@@ -378,6 +477,26 @@ components:
             description: The total number of child results.
             format: int32
             example: 2
+    TriggerModel_V2ProductView:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of trigger.
+          example: redirect
+          enum:
+          - execute
+          - notify
+          - redirect
+          - query
+        content:
+          type: string
+          description: The content of the trigger.
+          example: https://www.example.com
+      description: The actions for the client to perform based on the Trigger statements defined.
+      example:
+      - type: redirect
+        content: https://www.example.com
     RecommendationsContextModel_V2ProductView:
       required:
       - view
@@ -448,6 +567,58 @@ components:
           description: The id of the product.
           example: shoe-a1-red
       description: The product ID used to generate the recommendations.
+    ChildProduct_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Product_V2ProductView'
+      - $ref: '#/components/schemas/Result_V2ProductView'
+    CartItemModel_V2ProductView:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The id of the product.
+          example: shoe-a1-red
+        quantity:
+          type: integer
+          description: The product quantity.
+          format: int32
+          example: 2
+      description: A purchased item.
+    PreviewResponseIdsModel_V2ProductView:
+      type: object
+      properties:
+        current:
+          type: string
+          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        modified:
+          type: string
+          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+      description: The unique identifiers of the API responses for a preview request.
+      example:
+        current: 123e4567-e89b-12d3-a456-426614174000
+        modified: 94c3779c-0e42-40b5-95b8-93a6ed3ea162
+    ViewModel_V2ProductView:
+      required:
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: The URL used to retrieve the products. Used as `documentLocation` for analytics purposes, which indicates the URL of the resource where the request originated.
+          example: https://acme.com/summersale
+        referrer:
+          type:
+          - string
+          - 'null'
+          description: Typically the URL of the page that linked to the interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Used as `documentReferrer` for analytics purposes.
+          example: https://example.com/
+      description: 'A collection of data points describing the view. Note: The term ''view'' is used instead of ''page'' to accommodate usage in contexts such as mobile apps.'
     RecommendationsResponseModel_V2ProductView:
       type: object
       properties:
@@ -478,6 +649,16 @@ components:
             content: https://www.example.com
           items:
             $ref: '#/components/schemas/TriggerModel_V2ProductView'
+    PreviewResult_V2ProductView:
+      required:
+      - resultType
+      type: object
+      properties:
+        resultType:
+          type: string
+      description: Preview result item that can be a product or spotlight content (including placeholders)
+      discriminator:
+        propertyName: resultType
     UserModel_V2ProductView:
       type: object
       properties:
@@ -486,58 +667,6 @@ components:
           description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.\n\n**Note**: This information is required when endpoints are behind a proxy.'
           example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
       description: The user information.
-    PreviewResponseIdsModel_V2ProductView:
-      type: object
-      properties:
-        current:
-          type: string
-          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-426614174000
-        modified:
-          type: string
-          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-426614174000
-      description: The unique identifiers of the API responses for a preview request.
-      example:
-        current: 123e4567-e89b-12d3-a456-426614174000
-        modified: 94c3779c-0e42-40b5-95b8-93a6ed3ea162
-    ViewModel_V2ProductView:
-      required:
-      - url
-      type: object
-      properties:
-        url:
-          minLength: 1
-          type: string
-          description: The URL used to retrieve the products. Used as `documentLocation` for analytics purposes, which indicates the URL of the resource where the request originated.
-          example: https://acme.com/summersale
-        referrer:
-          type: string
-          description: Typically the URL of the page that linked to the interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Used as `documentReferrer` for analytics purposes.
-          nullable: true
-          example: https://example.com/
-      description: 'A collection of data points describing the view. Note: The term ''view'' is used instead of ''page'' to accommodate usage in contexts such as mobile apps.'
-    QueryCorrection_V2ProductView:
-      type: object
-      properties:
-        correctedQuery:
-          type: string
-          description: The resulting query expression correction suggestion.
-        wordCorrections:
-          type: array
-          description: The word correction suggestions.
-          items:
-            $ref: '#/components/schemas/WordCorrection_V2ProductView'
-      description: If the query wasn't automatically corrected, this property contains the basic query expression (q) keyword corrections provided by the Did You Mean index feature.
-      example:
-      - correctedQuery: Coveo Cloud V2 platform
-        wordCorrections:
-        - correctedWord: platform
-          length: 8
-          offset: 15
-          originalWord: plattfomr
     PreviewResponseModel_V2ProductView:
       type: object
       properties:
@@ -559,125 +688,6 @@ components:
           $ref: '#/components/schemas/PreviewResponseExecutionReportsModel_V2ProductView'
         queryCorrection:
           $ref: '#/components/schemas/QueryCorrectionResponse_V2ProductView'
-    Result_V2ProductView:
-      required:
-      - resultType
-      type: object
-      properties:
-        resultType:
-          type: string
-      description: List of results including products and spotlight content
-      discriminator:
-        propertyName: resultType
-    ChildProduct_V2ProductView:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Product_V2ProductView'
-      - $ref: '#/components/schemas/Result_V2ProductView'
-    CartItemModel_V2ProductView:
-      type: object
-      properties:
-        productId:
-          type: string
-          description: The id of the product.
-          example: shoe-a1-red
-        quantity:
-          type: integer
-          description: The product quantity.
-          format: int32
-          example: 2
-      description: A purchased item.
-    TriggerModel_V2ProductView:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The type of trigger.
-          example: redirect
-          enum:
-          - execute
-          - notify
-          - redirect
-          - query
-        content:
-          type: string
-          description: The content of the trigger.
-          example: https://www.example.com
-      description: The actions for the client to perform based on the Trigger statements defined.
-      example:
-      - type: redirect
-        content: https://www.example.com
-    BadgePlacementViewModel_V2ProductView:
-      type: object
-      properties:
-        placementId:
-          type: string
-          description: The placement unique identifier.
-          format: uuid
-          example: 36164bca-b489-4c42-8574-e1325d56d0be
-        badges:
-          type: array
-          description: The list of badges associated with this placement
-          items:
-            $ref: '#/components/schemas/BadgeViewModel_V2ProductView'
-      description: The list of badge placements associated with this product.
-    PaginationResponseModel_V2ProductView:
-      type: object
-      properties:
-        page:
-          type: integer
-          description: The page of products to request.
-          format: int32
-          example: 7
-        perPage:
-          type: integer
-          description: The number of products per page. Note that a value greater than 100 may be rejected in the future.
-          format: int32
-          example: 30
-        totalEntries:
-          type: integer
-          description: The total number of results that match the query.
-          format: int32
-          example: 100
-        totalPages:
-          type: integer
-          description: The total number of pages of items available.
-          format: int32
-          example: 10
-        totalProducts:
-          type: integer
-          description: The total number of products that match the query.
-          format: int32
-          example: 90
-        totalSpotlightContent:
-          type: integer
-          description: The total number of spotlight content that match the query.
-          format: int32
-          example: 10
-      description: Contextual pagination information about the query.
-      example:
-        page: 1
-        perPage: 10
-        totalPages: 10
-        totalEntries: 100
-    WordCorrection_V2ProductView:
-      type: object
-      properties:
-        correctedWord:
-          type: string
-          description: The suggested word correction.
-        length:
-          type: integer
-          description: The length (in number of characters) of the corrected word.
-          format: int32
-        offset:
-          type: integer
-          description: The offset (in number of characters) of the corrected word, from the beginning of the resulting query expression correction suggestion.
-          format: int32
-        originalWord:
-          type: string
-          description: The original, un-corrected word.
-      description: The word correction suggestions.
     RecommendationsPreviewRequestModel_V2ProductView:
       required:
       - country
@@ -751,37 +761,28 @@ components:
           description: Products to be returned.
           format: int32
       description: The recommendations query to be executed.
-    ProductForPreview_V2ProductView:
+    QueryCorrectionResponse_V2ProductView:
       type: object
-      allOf:
-      - $ref: '#/components/schemas/Product_V2ProductView'
-      - type: object
-        properties:
-          score:
-            type: integer
-            description: The total ranking score computed for the product.
-            format: int32
-            example: 1292
-          scoreDifference:
-            type: integer
-            description: Score difference between the cached and previewed rules for a product.
-            format: int32
-            example: 1292
-          positionDifference:
-            type: integer
-            description: Position difference between the cached and previewed rules for a product.
-            format: int32
-            example: 9
-          included:
-            type: boolean
-            description: Whether the product has been included or not after applying a rule.
-          pinned:
-            type: boolean
-            description: Whether the product has been pinned or not after applying a rule.
-          reservedPosition:
-            type: boolean
-            description: Whether the product is in a position that is reserved for a query-time pin.
-      - $ref: '#/components/schemas/Result_V2ProductView'
+      properties:
+        originalQuery:
+          type: string
+          description: If the query was automatically corrected, this property indicates the original basic query expression (q) that triggered the automatic query correction.
+        correctedQuery:
+          type: string
+          description: If the query was automatically corrected, this property indicates the corrected basic query expression (q) that was executed instead of the original one.
+        corrections:
+          type: array
+          description: If the query wasn't automatically corrected, this property contains the basic query expression (q) keyword corrections provided by the Did You Mean index feature.
+          example:
+          - correctedQuery: Coveo Cloud V2 platform
+            wordCorrections:
+            - correctedWord: platform
+              length: 8
+              offset: 15
+              originalWord: plattfomr
+          items:
+            $ref: '#/components/schemas/QueryCorrection_V2ProductView'
+      description: The query correction response, if the query was corrected.
   securitySchemes:
     oauth2:
       type: oauth2

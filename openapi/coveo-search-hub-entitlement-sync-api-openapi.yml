@@ -1,18 +1,19 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Search Hub Entitlement Sync API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+  title: Coveo Search Usage Metrics Service Search Hub Entitlement Sync API
   version: 1.0.0
+  description: Documentation for Coveo Search Usage Metrics Service
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
+  contact:
+    name: ''
+    url: ''
+    email: support@coveo.com
+  license:
+    name: ''
+    url: ''
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Search Hub Entitlement Sync
 paths:
@@ -23,33 +24,34 @@ paths:
       tags:
       - Search Hub Entitlement Sync
       deprecated: false
-      parameters: []
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/SearchHubEntitlementSyncTriggerJobResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchHubEntitlementSyncTriggerJobResponse'
       security:
       - oauth2:
         - full
 components:
+  schemas:
+    SearchHubEntitlementSyncTriggerJobResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        jobKey:
+          type: string
+      required:
+      - message
+      - jobKey
   securitySchemes:
     oauth2:
       type: oauth2
       flows:
-        authorizationCode:
-          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+        implicit:
           scopes:
-            full: required
-definitions:
-  SearchHubEntitlementSyncTriggerJobResponse:
-    type: object
-    properties:
-      message:
-        type: string
-      jobKey:
-        type: string
-    required:
-    - message
-    - jobKey
+            full: full
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
+      description: OAuth2

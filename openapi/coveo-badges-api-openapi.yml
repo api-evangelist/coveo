@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Badges API
+  title: Coveo Commerce Badges API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -69,6 +69,14 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/tracking-ids/paramId/badges_post
 components:
   schemas:
+    ProductItemModel:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The id of the product.
+          example: shoe-a1-red
+      description: The product ID used to generate the recommendations.
     BadgeRequestModel:
       required:
       - context
@@ -137,6 +145,63 @@ components:
           description: The list of products
           items:
             $ref: '#/components/schemas/ProductBadgeViewModel'
+    BadgePlacementViewModel:
+      type: object
+      properties:
+        placementId:
+          type: string
+          description: The placement unique identifier.
+          format: uuid
+          example: 36164bca-b489-4c42-8574-e1325d56d0be
+        badges:
+          type: array
+          description: The list of badges associated with this placement
+          items:
+            $ref: '#/components/schemas/BadgeViewModel'
+      description: The list of badge placements associated with this product.
+    CartItemModel:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The id of the product.
+          example: shoe-a1-red
+        quantity:
+          type: integer
+          description: The product quantity.
+          format: int32
+          example: 2
+      description: A cart item.
+    ViewModel:
+      required:
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: The URL used to retrieve the products. Used as `documentLocation` for analytics purposes, which indicates the URL of the resource where the request originated.
+          example: https://acme.com/summersale
+        referrer:
+          type:
+          - string
+          - 'null'
+          description: Typically the URL of the page that linked to the interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Used as `documentReferrer` for analytics purposes.
+          example: https://example.com/
+      description: 'A collection of data points describing the view. Note: The term ''view'' is used instead of ''page'' to accommodate usage in contexts such as mobile apps.'
+    ProductBadgeViewModel:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The product identifier.
+          example: 0000003035-45
+        badgePlacements:
+          type: array
+          description: The list of badge placements associated with this product.
+          items:
+            $ref: '#/components/schemas/BadgePlacementViewModel'
+      description: The list of products
     BadgingContextModel:
       required:
       - view
@@ -202,70 +267,6 @@ components:
           description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.\n\n**Note**: This information is required when endpoints are behind a proxy.'
           example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
       description: The user information.
-    CartItemModel:
-      type: object
-      properties:
-        productId:
-          type: string
-          description: The id of the product.
-          example: shoe-a1-red
-        quantity:
-          type: integer
-          description: The product quantity.
-          format: int32
-          example: 2
-      description: A cart item.
-    BadgePlacementViewModel:
-      type: object
-      properties:
-        placementId:
-          type: string
-          description: The placement unique identifier.
-          format: uuid
-          example: 36164bca-b489-4c42-8574-e1325d56d0be
-        badges:
-          type: array
-          description: The list of badges associated with this placement
-          items:
-            $ref: '#/components/schemas/BadgeViewModel'
-      description: The list of badge placements associated with this product.
-    ProductBadgeViewModel:
-      type: object
-      properties:
-        productId:
-          type: string
-          description: The product identifier.
-          example: 0000003035-45
-        badgePlacements:
-          type: array
-          description: The list of badge placements associated with this product.
-          items:
-            $ref: '#/components/schemas/BadgePlacementViewModel'
-      description: The list of products
-    ViewModel:
-      required:
-      - url
-      type: object
-      properties:
-        url:
-          minLength: 1
-          type: string
-          description: The URL used to retrieve the products. Used as `documentLocation` for analytics purposes, which indicates the URL of the resource where the request originated.
-          example: https://acme.com/summersale
-        referrer:
-          type: string
-          description: Typically the URL of the page that linked to the interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Used as `documentReferrer` for analytics purposes.
-          nullable: true
-          example: https://example.com/
-      description: 'A collection of data points describing the view. Note: The term ''view'' is used instead of ''page'' to accommodate usage in contexts such as mobile apps.'
-    ProductItemModel:
-      type: object
-      properties:
-        productId:
-          type: string
-          description: The id of the product.
-          example: shoe-a1-red
-      description: The product ID used to generate the recommendations.
   securitySchemes:
     oauth2:
       type: oauth2

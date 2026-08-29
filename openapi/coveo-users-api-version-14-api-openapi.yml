@@ -1,17 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Users API - Version 14 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+  title: Usage Analytics Read Users API - Version 14 API
+  version: '1.0'
 servers:
-- url: https://platform.cloud.coveo.com
+- url: https://analytics.cloud.coveo.com/rest/ua
   description: Coveo public API endpoint
 security:
-- oauth2:
+- v8:
   - full
 tags:
 - name: Users API - Version 14
@@ -199,6 +194,38 @@ paths:
       deprecated: true
 components:
   schemas:
+    FilterValueModelV14:
+      required:
+      - id
+      - value
+      type: object
+      properties:
+        value:
+          type: string
+          description: The actual value of the filter.
+        id:
+          type: boolean
+          description: Whether the value is a persisted filter ID or a filter value
+      description: A filter value.
+    FilterResponseV14:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The filter id.
+        displayName:
+          type: string
+          description: The filter display name.
+        account:
+          type: string
+          description: The filter account.
+        type:
+          type: string
+          description: The filter type. Can be 'permissions' or 'reporting'.
+        value:
+          type: string
+          description: The actual filter.
+      description: A filter.
     FiltersResponseV14:
       type: object
       properties:
@@ -208,6 +235,16 @@ components:
           items:
             $ref: '#/components/schemas/FilterResponseV14'
       description: The filters that are applied to the user
+    ReportsResponseV14:
+      type: object
+      properties:
+        reports:
+          uniqueItems: true
+          type: array
+          description: The reports the user can view.
+          items:
+            $ref: '#/components/schemas/ReportResponseV14'
+      description: The reports the user can view.
     UserResponseV14:
       type: object
       properties:
@@ -232,32 +269,6 @@ components:
             type: string
             description: The reports the user can view.
       description: A user.
-    ReportsResponseV14:
-      type: object
-      properties:
-        reports:
-          uniqueItems: true
-          type: array
-          description: The reports the user can view.
-          items:
-            $ref: '#/components/schemas/ReportResponseV14'
-      description: The reports the user can view.
-    FilterValueModelV14:
-      required:
-      - id
-      - value
-      type: object
-      properties:
-        value:
-          type: string
-          description: The actual value of the filter.
-        id:
-          type: boolean
-          description: Whether the value is a persisted filter ID or a filter value
-      description: A filter value.
-    StatusResponse:
-      type: object
-      description: Service's status information
     ReportResponseV14:
       type: object
       properties:
@@ -290,31 +301,14 @@ components:
             type: string
             description: List of associated filters.
       description: A report configuration.
-    FilterResponseV14:
+    StatusResponse:
       type: object
-      properties:
-        id:
-          type: string
-          description: The filter id.
-        displayName:
-          type: string
-          description: The filter display name.
-        account:
-          type: string
-          description: The filter account.
-        type:
-          type: string
-          description: The filter type. Can be 'permissions' or 'reporting'.
-        value:
-          type: string
-          description: The actual filter.
-      description: A filter.
+      description: Service's status information
   securitySchemes:
-    oauth2:
+    v8:
       type: oauth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: ''

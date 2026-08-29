@@ -1,17 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Filters API - Version 15 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+  title: Usage Analytics Read Filters API - Version 15 API
+  version: '1.0'
 servers:
-- url: https://platform.cloud.coveo.com
+- url: https://analytics.cloud.coveo.com/rest/ua
   description: Coveo public API endpoint
 security:
-- oauth2:
+- v8:
   - full
 tags:
 - name: Filters API - Version 15
@@ -395,30 +390,15 @@ paths:
           description: No content
 components:
   schemas:
-    GroupResponseV15:
+    FiltersResponseV15:
       type: object
       properties:
-        groupId:
-          type: string
-          description: The group id.
-        account:
-          type: string
-          description: The group account.
         filters:
-          uniqueItems: true
           type: array
-          description: The filters that are applied to the users of the group.
+          description: The filters that are applied to the user
           items:
-            type: string
-            description: The filters that are applied to the users of the group.
-        reports:
-          uniqueItems: true
-          type: array
-          description: The reports the users of the group can view.
-          items:
-            type: string
-            description: The reports the users of the group can view.
-      description: A group of users.
+            $ref: '#/components/schemas/FilterResponseV15'
+      description: The filters that are applied to the user
     FilterResponseV15:
       type: object
       properties:
@@ -438,22 +418,6 @@ components:
           type: string
           description: The actual filter.
       description: A filter.
-    FiltersResponseV15:
-      type: object
-      properties:
-        filters:
-          type: array
-          description: The filters that are applied to the user
-          items:
-            $ref: '#/components/schemas/FilterResponseV15'
-      description: The filters that are applied to the user
-    FilterIdResponseV15:
-      type: object
-      properties:
-        id:
-          type: string
-          description: A filter id.
-      description: A filter id.
     FilterModelV15:
       required:
       - displayName
@@ -467,24 +431,6 @@ components:
           type: string
           description: The actual value of the filter.
       description: A filter.
-    FilterTargetsModelV15:
-      type: object
-      properties:
-        targetedUsers:
-          uniqueItems: true
-          type: array
-          description: The ids of the users targeted by the filter.
-          items:
-            type: string
-            description: The ids of the users targeted by the filter.
-        targetedGroups:
-          uniqueItems: true
-          type: array
-          description: The ids of the groups targeted by the filter.
-          items:
-            type: string
-            description: The ids of the groups targeted by the filter.
-      description: The targets of a permission filter.
     FilterTargetsResponseV15:
       type: object
       properties:
@@ -499,9 +445,6 @@ components:
           items:
             $ref: '#/components/schemas/GroupResponseV15'
       description: Collections of users and groups targeted by the filter
-    StatusResponse:
-      type: object
-      description: Service's status information
     UserResponseV15:
       type: object
       properties:
@@ -526,12 +469,63 @@ components:
             type: string
             description: The reports the user can view.
       description: A user.
+    FilterIdResponseV15:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A filter id.
+      description: A filter id.
+    GroupResponseV15:
+      type: object
+      properties:
+        groupId:
+          type: string
+          description: The group id.
+        account:
+          type: string
+          description: The group account.
+        filters:
+          uniqueItems: true
+          type: array
+          description: The filters that are applied to the users of the group.
+          items:
+            type: string
+            description: The filters that are applied to the users of the group.
+        reports:
+          uniqueItems: true
+          type: array
+          description: The reports the users of the group can view.
+          items:
+            type: string
+            description: The reports the users of the group can view.
+      description: A group of users.
+    FilterTargetsModelV15:
+      type: object
+      properties:
+        targetedUsers:
+          uniqueItems: true
+          type: array
+          description: The ids of the users targeted by the filter.
+          items:
+            type: string
+            description: The ids of the users targeted by the filter.
+        targetedGroups:
+          uniqueItems: true
+          type: array
+          description: The ids of the groups targeted by the filter.
+          items:
+            type: string
+            description: The ids of the groups targeted by the filter.
+      description: The targets of a permission filter.
+    StatusResponse:
+      type: object
+      description: Service's status information
   securitySchemes:
-    oauth2:
+    v8:
       type: oauth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: ''

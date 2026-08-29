@@ -1,17 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Filters API - Version 14 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+  title: Usage Analytics Read Filters API - Version 14 API
+  version: '1.0'
 servers:
-- url: https://platform.cloud.coveo.com
+- url: https://analytics.cloud.coveo.com/rest/ua
   description: Coveo public API endpoint
 security:
-- oauth2:
+- v8:
   - full
 tags:
 - name: Filters API - Version 14
@@ -369,6 +364,34 @@ paths:
       deprecated: true
 components:
   schemas:
+    FilterResponseV14:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The filter id.
+        displayName:
+          type: string
+          description: The filter display name.
+        account:
+          type: string
+          description: The filter account.
+        type:
+          type: string
+          description: The filter type. Can be 'permissions' or 'reporting'.
+        value:
+          type: string
+          description: The actual filter.
+      description: A filter.
+    FiltersResponseV14:
+      type: object
+      properties:
+        filters:
+          type: array
+          description: The filters that are applied to the user
+          items:
+            $ref: '#/components/schemas/FilterResponseV14'
+      description: The filters that are applied to the user
     FilterModelV14:
       required:
       - displayName
@@ -382,22 +405,6 @@ components:
           type: string
           description: The actual value of the filter.
       description: A filter.
-    FilterIdResponseV14:
-      type: object
-      properties:
-        id:
-          type: string
-          description: A filter id.
-      description: A filter id.
-    FiltersResponseV14:
-      type: object
-      properties:
-        filters:
-          type: array
-          description: The filters that are applied to the user
-          items:
-            $ref: '#/components/schemas/FilterResponseV14'
-      description: The filters that are applied to the user
     UserResponseV14:
       type: object
       properties:
@@ -422,34 +429,21 @@ components:
             type: string
             description: The reports the user can view.
       description: A user.
-    StatusResponse:
-      type: object
-      description: Service's status information
-    FilterResponseV14:
+    FilterIdResponseV14:
       type: object
       properties:
         id:
           type: string
-          description: The filter id.
-        displayName:
-          type: string
-          description: The filter display name.
-        account:
-          type: string
-          description: The filter account.
-        type:
-          type: string
-          description: The filter type. Can be 'permissions' or 'reporting'.
-        value:
-          type: string
-          description: The actual filter.
-      description: A filter.
+          description: A filter id.
+      description: A filter id.
+    StatusResponse:
+      type: object
+      description: Service's status information
   securitySchemes:
-    oauth2:
+    v8:
       type: oauth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: ''

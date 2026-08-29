@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Groups API
+  title: Coveo Authorization Server Groups API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -316,6 +316,92 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/groups/paramId/privileges/exclusive/me_get
 components:
   schemas:
+    IdAndDisplayNameModel_Request:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+    MemberModel_Request:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the member.
+        email:
+          type: string
+          description: The email address of the member.
+        displayName:
+          type: string
+          description: The display name of the member.
+        providerUsername:
+          type: string
+          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
+        provider:
+          type: string
+          description: The provider of the member.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        id:
+          type: string
+      description: A [member](https://docs.coveo.com/en/2873/).
+    RealmModel_Response:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: A realm.
+    MemberModel_Response:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the member.
+        email:
+          type: string
+          description: The email address of the member.
+        displayName:
+          type: string
+          description: The display name of the member.
+        providerUsername:
+          type: string
+          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
+        provider:
+          type: string
+          description: The provider of the member.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        id:
+          type: string
+      description: A [member](https://docs.coveo.com/en/2873/).
     InviteModel_Response:
       type: object
       properties:
@@ -351,14 +437,149 @@ components:
         displayName:
           type: string
       description: An invite.
-    IdAndDisplayNameModel_Request:
+    PrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
+      readOnly: true
+      externalDocs:
+        description: Privilege reference
+        url: https://docs.coveo.com/en/1707/
+    PrivilegeModel_Request:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
+      externalDocs:
+        description: Privilege reference
+        url: https://docs.coveo.com/en/1707/
+    JsonStringIdWrapper:
+      type: object
+      properties:
+        id:
+          type: string
+    InviteModel_Request:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the invited member</br>**Example:**`jsmith`
+        providerUsername:
+          type: string
+          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
+        email:
+          type: string
+          description: The email address to send the invite to, if applicable.</br>**Example:**`jsmith@email.com`
+        provider:
+          type: string
+          description: The provider that the user who sent the invite is assigned to.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        invitedDate:
+          type: string
+          description: The date at which the invite was sent in milliseconds since UNIX epoch.</br>**Example:**`1556722921779`
+          format: date-time
+        expirationDate:
+          type: string
+          description: The expiration date of the invite in number of milliseconds since UNIX epoch.</br>**Example:**`1556722981779`
+          format: date-time
+        id:
+          type: string
+        displayName:
+          type: string
+      description: An invite.
+    IdAndDisplayNameModel_Response:
       type: object
       properties:
         id:
           type: string
         displayName:
           type: string
-    PrivilegeModel_Request:
+    GroupModel_Request:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel_Request'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel_Request'
+        id:
+          type: string
+          description: The unique identifier of the [group](https://docs.coveo.com/en/2867/).</br>**Example:** `myorg-administrators-feioshf3w3fi4535`
+        displayName:
+          type: string
+          description: The display name of the [group](https://docs.coveo.com/en/2867/).</br>**Example:** `Administrators`
+        deletable:
+          type: boolean
+          description: Whether the group can be deleted.
+        realms:
+          uniqueItems: true
+          type: array
+          description: The realms of the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/RealmModel_Request'
+        members:
+          uniqueItems: true
+          type: array
+          description: The set of [members](https://docs.coveo.com/en/2873/) of the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/MemberModel_Request'
+        invites:
+          type: array
+          description: The invites to the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/InviteModel_Request'
+        privileges:
+          uniqueItems: true
+          type: array
+          description: The [privileges](https://docs.coveo.com/en/228/) of the [group](https://docs.coveo.com/en/2867/).
+          items:
+            $ref: '#/components/schemas/PrivilegeModel_Request'
+        resourceId:
+          type: string
+      description: A [group](https://docs.coveo.com/en/2867/).
+    PrivilegeModel_Response:
       type: object
       properties:
         type:
@@ -438,222 +659,6 @@ components:
         resourceId:
           type: string
       description: A [group](https://docs.coveo.com/en/2867/).
-    MemberModel_Response:
-      type: object
-      properties:
-        username:
-          type: string
-          description: The username of the member.
-        email:
-          type: string
-          description: The email address of the member.
-        displayName:
-          type: string
-          description: The display name of the member.
-        providerUsername:
-          type: string
-          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
-        provider:
-          type: string
-          description: The provider of the member.
-          enum:
-          - SALESFORCE
-          - SALESFORCE_SANDBOX
-          - GOOGLE
-          - OFFICE365
-          - SAML
-          - EMAIL
-        id:
-          type: string
-      description: A [member](https://docs.coveo.com/en/2873/).
-    GroupModel_Request:
-      type: object
-      properties:
-        groupsThatCanEdit:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel_Request'
-        apiKeysThatCanEdit:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel_Request'
-        id:
-          type: string
-          description: The unique identifier of the [group](https://docs.coveo.com/en/2867/).</br>**Example:** `myorg-administrators-feioshf3w3fi4535`
-        displayName:
-          type: string
-          description: The display name of the [group](https://docs.coveo.com/en/2867/).</br>**Example:** `Administrators`
-        deletable:
-          type: boolean
-          description: Whether the group can be deleted.
-        realms:
-          uniqueItems: true
-          type: array
-          description: The realms of the [group](https://docs.coveo.com/en/2867/).
-          items:
-            $ref: '#/components/schemas/RealmModel_Request'
-        members:
-          uniqueItems: true
-          type: array
-          description: The set of [members](https://docs.coveo.com/en/2873/) of the [group](https://docs.coveo.com/en/2867/).
-          items:
-            $ref: '#/components/schemas/MemberModel_Request'
-        invites:
-          type: array
-          description: The invites to the [group](https://docs.coveo.com/en/2867/).
-          items:
-            $ref: '#/components/schemas/InviteModel_Request'
-        privileges:
-          uniqueItems: true
-          type: array
-          description: The [privileges](https://docs.coveo.com/en/228/) of the [group](https://docs.coveo.com/en/2867/).
-          items:
-            $ref: '#/components/schemas/PrivilegeModel_Request'
-        resourceId:
-          type: string
-      description: A [group](https://docs.coveo.com/en/2867/).
-    RealmModel_Response:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
-        provider:
-          type: string
-          description: The provider of the realm.
-          enum:
-          - SALESFORCE
-          - SALESFORCE_SANDBOX
-          - GOOGLE
-          - OFFICE365
-          - SAML
-          - EMAIL
-        displayName:
-          type: string
-          description: The display name of the realm.</br>**Example:** `example.com`
-        samlIdentityProviderId:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `myprovider`
-      description: A realm.
-    IdAndDisplayNameModel_Response:
-      type: object
-      properties:
-        id:
-          type: string
-        displayName:
-          type: string
-    MemberModel_Request:
-      type: object
-      properties:
-        username:
-          type: string
-          description: The username of the member.
-        email:
-          type: string
-          description: The email address of the member.
-        displayName:
-          type: string
-          description: The display name of the member.
-        providerUsername:
-          type: string
-          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
-        provider:
-          type: string
-          description: The provider of the member.
-          enum:
-          - SALESFORCE
-          - SALESFORCE_SANDBOX
-          - GOOGLE
-          - OFFICE365
-          - SAML
-          - EMAIL
-        id:
-          type: string
-      description: A [member](https://docs.coveo.com/en/2873/).
-    PrivilegeModel:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The type of the privilege.
-          example: VIEW
-        targetDomain:
-          type: string
-          description: The target domain of the privilege.
-          example: ORGANIZATION
-        targetId:
-          type: string
-          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
-          example: '*'
-        owner:
-          type: string
-          description: The owner of the privilege.
-          example: PLATFORM
-      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
-      readOnly: true
-      externalDocs:
-        description: Privilege reference
-        url: https://docs.coveo.com/en/1707/
-    InviteModel_Request:
-      type: object
-      properties:
-        username:
-          type: string
-          description: The username of the invited member</br>**Example:**`jsmith`
-        providerUsername:
-          type: string
-          description: The username of the member in the target provider.</br>**Example:** `jsmith@email.com-google`
-        email:
-          type: string
-          description: The email address to send the invite to, if applicable.</br>**Example:**`jsmith@email.com`
-        provider:
-          type: string
-          description: The provider that the user who sent the invite is assigned to.
-          enum:
-          - SALESFORCE
-          - SALESFORCE_SANDBOX
-          - GOOGLE
-          - OFFICE365
-          - SAML
-          - EMAIL
-        invitedDate:
-          type: string
-          description: The date at which the invite was sent in milliseconds since UNIX epoch.</br>**Example:**`1556722921779`
-          format: date-time
-        expirationDate:
-          type: string
-          description: The expiration date of the invite in number of milliseconds since UNIX epoch.</br>**Example:**`1556722981779`
-          format: date-time
-        id:
-          type: string
-        displayName:
-          type: string
-      description: An invite.
-    PrivilegeModel_Response:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The type of the privilege.
-          example: VIEW
-        targetDomain:
-          type: string
-          description: The target domain of the privilege.
-          example: ORGANIZATION
-        targetId:
-          type: string
-          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
-          example: '*'
-        owner:
-          type: string
-          description: The owner of the privilege.
-          example: PLATFORM
-      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
-      externalDocs:
-        description: Privilege reference
-        url: https://docs.coveo.com/en/1707/
     RealmModel_Request:
       type: object
       properties:
@@ -677,11 +682,6 @@ components:
           type: string
           description: The unique identifier of the realm.</br>**Example:** `myprovider`
       description: A realm.
-    JsonStringIdWrapper:
-      type: object
-      properties:
-        id:
-          type: string
   securitySchemes:
     oauth2:
       type: oauth2

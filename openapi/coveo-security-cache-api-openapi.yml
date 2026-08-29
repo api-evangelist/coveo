@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Security Cache API
+  title: Coveo Security Cache API
   description: API for Coveo Platform
   termsOfService: https://www.coveo.com/en/support/terms-agreements
   contact:
@@ -1193,6 +1193,31 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/securitycache/entities/list/is_supported_get
 components:
   schemas:
+    IdentitiesFilterModel:
+      type: object
+      properties:
+        providerIds:
+          type: array
+          items:
+            type: string
+        identityTypes:
+          type: array
+          items:
+            type: string
+            enum:
+            - USER
+            - GROUP
+            - VIRTUAL_GROUP
+            - UNKNOWN
+        filterTerm:
+          type: string
+        filteringMode:
+          type: string
+          enum:
+          - PREFIX
+          - SUBSTRING
+        extractPreciseTotalCount:
+          type: boolean
     SecurityCacheStatisticsModel:
       type: object
       properties:
@@ -1213,53 +1238,13 @@ components:
         numberOfEntitiesInError:
           type: integer
           format: int32
-    PageModelSIDModel:
+    SecurityCacheStatusModel:
       type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/SIDModel'
-        totalEntries:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-    CurrentStatusModel:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - CREATING
-          - DISABLED
-          - REFRESHING
-          - PAUSED
-          - PAUSED_ON_ERROR
-          - IDLE
-          - ERROR
-          - PUSH_READY
-        refreshType:
-          type: string
-          enum:
-          - REBUILD
-          - FULL_REFRESH
-          - INCREMENTAL_REFRESH
-          - SECURITY_PROVIDER_REFRESH
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
-          - SECURITY_CACHE_REFRESH
-          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
-        numberOfEntitiesInError:
-          type: integer
-          format: int32
-        numberOfEntitiesProcessed:
-          type: integer
-          format: int32
-        totalNumberOfEntities:
-          type: integer
-          format: int32
+        statistics:
+          $ref: '#/components/schemas/SecurityCacheStatisticsModel'
+        currentStatus:
+          $ref: '#/components/schemas/CurrentStatusModel'
     DetailedSecurityCacheMemberModel:
       type: object
       properties:
@@ -1300,38 +1285,6 @@ components:
           - UNEXPECTED_ERROR
         lastUpdateErrorDetail:
           type: string
-    IdentitiesFilterModel:
-      type: object
-      properties:
-        providerIds:
-          type: array
-          items:
-            type: string
-        identityTypes:
-          type: array
-          items:
-            type: string
-            enum:
-            - USER
-            - GROUP
-            - VIRTUAL_GROUP
-            - UNKNOWN
-        filterTerm:
-          type: string
-        filteringMode:
-          type: string
-          enum:
-          - PREFIX
-          - SUBSTRING
-        extractPreciseTotalCount:
-          type: boolean
-    SecurityCacheStatusModel:
-      type: object
-      properties:
-        statistics:
-          $ref: '#/components/schemas/SecurityCacheStatisticsModel'
-        currentStatus:
-          $ref: '#/components/schemas/CurrentStatusModel'
     HourMinutePair:
       type: object
       properties:
@@ -1341,59 +1294,19 @@ components:
         minute:
           type: integer
           format: int32
-    PageModelDetailedSecurityCacheMemberModel:
+    PageModelSIDModel:
       type: object
       properties:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/DetailedSecurityCacheMemberModel'
+            $ref: '#/components/schemas/SIDModel'
         totalEntries:
           type: integer
           format: int64
         totalPages:
           type: integer
           format: int32
-    SecurityCacheMemberInfoModel:
-      type: object
-      properties:
-        key:
-          type: string
-        value:
-          type: string
-    ScheduleModel:
-      type: object
-      properties:
-        id:
-          type: string
-        refreshType:
-          type: string
-          enum:
-          - REBUILD
-          - FULL_REFRESH
-          - INCREMENTAL_REFRESH
-          - SECURITY_PROVIDER_REFRESH
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
-          - SECURITY_CACHE_REFRESH
-          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
-        scheduleType:
-          type: string
-          enum:
-          - SECURITY_CACHE
-          - SECURITY_PROVIDER
-          - SOURCE
-        enabled:
-          type: boolean
-        frequency:
-          $ref: '#/components/schemas/ScheduleFrequency'
-        organizationId:
-          type: string
-        resourceId:
-          type: string
-        lastExecution:
-          type: string
-          format: date-time
     ScheduleFrequency:
       type: object
       properties:
@@ -1428,6 +1341,36 @@ components:
         seed:
           type: integer
           format: int32
+    PageModelDetailedSecurityCacheMemberModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedSecurityCacheMemberModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    SIDModel:
+      type: object
+      properties:
+        provider:
+          type: string
+        data:
+          type: string
+        id:
+          type: integer
+          format: int32
+    SecurityCacheMemberInfoModel:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
     SecurityCacheMemberModel:
       type: object
       properties:
@@ -1446,14 +1389,71 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SecurityCacheMemberInfoModel'
-    SIDModel:
+    ScheduleModel:
       type: object
       properties:
-        provider:
-          type: string
-        data:
-          type: string
         id:
+          type: string
+        refreshType:
+          type: string
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        scheduleType:
+          type: string
+          enum:
+          - SECURITY_CACHE
+          - SECURITY_PROVIDER
+          - SOURCE
+        enabled:
+          type: boolean
+        frequency:
+          $ref: '#/components/schemas/ScheduleFrequency'
+        organizationId:
+          type: string
+        resourceId:
+          type: string
+        lastExecution:
+          type: string
+          format: date-time
+    CurrentStatusModel:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - CREATING
+          - DISABLED
+          - REFRESHING
+          - PAUSED
+          - PAUSED_ON_ERROR
+          - IDLE
+          - ERROR
+          - PUSH_READY
+        refreshType:
+          type: string
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        numberOfEntitiesInError:
+          type: integer
+          format: int32
+        numberOfEntitiesProcessed:
+          type: integer
+          format: int32
+        totalNumberOfEntities:
           type: integer
           format: int32
   securitySchemes:

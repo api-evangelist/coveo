@@ -1,17 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Reader Account API - Version 15 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+  title: Usage Analytics Read Reader Account API - Version 15 API
+  version: '1.0'
 servers:
-- url: https://platform.cloud.coveo.com
+- url: https://analytics.cloud.coveo.com/rest/ua
   description: Coveo public API endpoint
 security:
-- oauth2:
+- v8:
   - full
 tags:
 - name: Reader Account API - Version 15
@@ -482,42 +477,6 @@ components:
           enum:
           - AVAILABLE
       description: A snowflake reader account's state
-    SnowflakeNetworkPolicyModelV15:
-      required:
-      - allowedIpAddresses
-      type: object
-      properties:
-        allowedIpAddresses:
-          uniqueItems: true
-          type: array
-          description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
-          items:
-            type: string
-            description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
-        blockedIpAddresses:
-          uniqueItems: true
-          type: array
-          description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
-          items:
-            type: string
-            description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
-      description: Details required when creating a new Snowflake network policy
-    UpdateSnowflakeUserExpirationRequestModelV15:
-      type: object
-      properties:
-        daysToExpiry:
-          type: integer
-          description: The number of days before the user expiration.
-          format: int32
-      description: Details required when changing the expiration of a Snowflake user
-    SnowflakeCreditUsageResponseV15:
-      type: object
-      properties:
-        creditsUsed:
-          type: number
-          description: The total number of warehouse compute credits used.
-          format: double
-      description: The compute credit usage for a Snowflake account over a date range.
     SnowflakeNetworkPolicyResponseV15:
       type: object
       properties:
@@ -553,13 +512,6 @@ components:
           description: The number of days before the user expiration, if not defined, the user will never expire.
           format: int32
       description: Details required when creating a new Snowflake user
-    SnowflakeReaderAccountEndpointResponseV15:
-      type: object
-      properties:
-        endpoint:
-          type: string
-          description: The endpoint of the account
-      description: A snowflake reader account's endpoint
     SnowflakeUserResponseV15:
       type: object
       properties:
@@ -574,12 +526,54 @@ components:
           description: The number of days before the user expires.
           format: double
       description: A user from a Snowflake account
+    SnowflakeCreditUsageResponseV15:
+      type: object
+      properties:
+        creditsUsed:
+          type: number
+          description: The total number of warehouse compute credits used.
+          format: double
+      description: The compute credit usage for a Snowflake account over a date range.
+    SnowflakeNetworkPolicyModelV15:
+      required:
+      - allowedIpAddresses
+      type: object
+      properties:
+        allowedIpAddresses:
+          uniqueItems: true
+          type: array
+          description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
+          items:
+            type: string
+            description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
+        blockedIpAddresses:
+          uniqueItems: true
+          type: array
+          description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
+          items:
+            type: string
+            description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
+      description: Details required when creating a new Snowflake network policy
+    SnowflakeReaderAccountEndpointResponseV15:
+      type: object
+      properties:
+        endpoint:
+          type: string
+          description: The endpoint of the account
+      description: A snowflake reader account's endpoint
+    UpdateSnowflakeUserExpirationRequestModelV15:
+      type: object
+      properties:
+        daysToExpiry:
+          type: integer
+          description: The number of days before the user expiration.
+          format: int32
+      description: Details required when changing the expiration of a Snowflake user
   securitySchemes:
-    oauth2:
+    v8:
       type: oauth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: ''

@@ -1,18 +1,15 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Zendesk API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  description: Service in charge of CRUD operations for Coveo Cloud hosted search pages
+  title: Coveo Search Pages Zendesk API
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
   contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+    name: Coveo Community
+    url: https://answers.coveo.com/
+  version: '1.0'
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Zendesk
 paths:
@@ -26,63 +23,70 @@ paths:
       - Zendesk
       summary: Unlink the Zendesk Installation
       parameters:
-      - type: string
-        description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
+      - description: The unique identifier of the target Coveo Cloud [organization](https://docs.coveo.com/en/185) (e.g., 'mycoveocloudv2organizationg8tp8wu3').
         name: organizationID
         in: path
         required: true
-      - type: string
-        description: The Zendesk Installation Id.
+        schema:
+          type: string
+      - description: The Zendesk Installation Id.
         name: installationId
         in: query
         required: true
+        schema:
+          type: string
       responses:
         '204':
           description: The organization was successfully unlinked
         '400':
           description: Bad Request
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorBadRequest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorBadRequest'
         '401':
           description: Unauthorized
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorUnauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorUnauthorized'
         '500':
           description: Internal Server Error
-          schema:
-            $ref: '#/definitions/swaggermodels.ResponseApplicationErrorInternalServerError'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swaggermodels.ResponseApplicationErrorInternalServerError'
 components:
+  schemas:
+    swaggermodels.ResponseApplicationErrorUnauthorized:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 401
+        message:
+          type: string
+    swaggermodels.ResponseApplicationErrorBadRequest:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 400
+        message:
+          type: string
+    swaggermodels.ResponseApplicationErrorInternalServerError:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 500
+        message:
+          type: string
   securitySchemes:
-    oauth2:
+    OAuth2:
       type: oauth2
       flows:
-        authorizationCode:
-          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
+        implicit:
           scopes:
-            full: required
-definitions:
-  swaggermodels.ResponseApplicationErrorInternalServerError:
-    type: object
-    properties:
-      errorCode:
-        type: integer
-        example: 500
-      message:
-        type: string
-  swaggermodels.ResponseApplicationErrorUnauthorized:
-    type: object
-    properties:
-      errorCode:
-        type: integer
-        example: 401
-      message:
-        type: string
-  swaggermodels.ResponseApplicationErrorBadRequest:
-    type: object
-    properties:
-      errorCode:
-        type: integer
-        example: 400
-      message:
-        type: string
+            full: full
+          authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize

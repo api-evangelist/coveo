@@ -1,17 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Reports API - Version 15 API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
-  contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
-  version: 1.0.0
+  title: Usage Analytics Read Reports API - Version 15 API
+  version: '1.0'
 servers:
-- url: https://platform.cloud.coveo.com
+- url: https://analytics.cloud.coveo.com/rest/ua
   description: Coveo public API endpoint
 security:
-- oauth2:
+- v8:
   - full
 tags:
 - name: Reports API - Version 15
@@ -359,6 +354,93 @@ paths:
           description: No content
 components:
   schemas:
+    ReportAccessModelV15:
+      type: object
+      properties:
+        accessType:
+          type: string
+          description: Whether the report is public or private. Allowed values are 'PUBLIC', 'PRIVATE'.
+          enum:
+          - PUBLIC
+          - PRIVATE
+          - PUBLIC
+          - PRIVATE
+        allowedUsers:
+          uniqueItems: true
+          type: array
+          description: The ids of the users allowed to access the report.
+          items:
+            type: string
+            description: The ids of the users allowed to access the report.
+        allowedGroups:
+          uniqueItems: true
+          type: array
+          description: The ids of the groups allowed to access the report.
+          items:
+            type: string
+            description: The ids of the groups allowed to access the report.
+      description: The access model of a report.
+    TemplateResponseV15:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The template id.
+        configuration:
+          type: object
+          additionalProperties:
+            type: object
+            description: The JSON report configuration of the template.
+          description: The JSON report configuration of the template.
+        title:
+          type: string
+          description: The template title.
+        description:
+          type: string
+          description: The template description.
+        category:
+          type: string
+          description: The template category.
+      description: Information about a template.
+    UserResponseV15:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The user id.
+        account:
+          type: string
+          description: The user account.
+        filters:
+          uniqueItems: true
+          type: array
+          description: The filters that are applied to the user
+          items:
+            type: string
+            description: The filters that are applied to the user
+        reports:
+          uniqueItems: true
+          type: array
+          description: The reports the user can view.
+          items:
+            type: string
+            description: The reports the user can view.
+      description: A user.
+    ReportUsersResponseV15:
+      type: object
+      properties:
+        access:
+          type: string
+          description: The access type of the report. Can be PUBLIC or PRIVATE.
+          enum:
+          - PUBLIC
+          - PRIVATE
+        allowedUsers:
+          type: array
+          description: The users allowed to access the specified report.
+          items:
+            $ref: '#/components/schemas/UserResponseV15'
+      description: The users allowed to access the specified report.
     ReportsResponseV15:
       type: object
       properties:
@@ -393,113 +475,6 @@ components:
             type: string
             description: The reports the users of the group can view.
       description: A group of users.
-    ReportIdResponseV15:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The report id.
-      description: A report id.
-    ReportAccessModelV15:
-      type: object
-      properties:
-        accessType:
-          type: string
-          description: Whether the report is public or private. Allowed values are 'PUBLIC', 'PRIVATE'.
-          enum:
-          - PUBLIC
-          - PRIVATE
-          - PUBLIC
-          - PRIVATE
-        allowedUsers:
-          uniqueItems: true
-          type: array
-          description: The ids of the users allowed to access the report.
-          items:
-            type: string
-            description: The ids of the users allowed to access the report.
-        allowedGroups:
-          uniqueItems: true
-          type: array
-          description: The ids of the groups allowed to access the report.
-          items:
-            type: string
-            description: The ids of the groups allowed to access the report.
-      description: The access model of a report.
-    ReportUsersResponseV15:
-      type: object
-      properties:
-        access:
-          type: string
-          description: The access type of the report. Can be PUBLIC or PRIVATE.
-          enum:
-          - PUBLIC
-          - PRIVATE
-        allowedUsers:
-          type: array
-          description: The users allowed to access the specified report.
-          items:
-            $ref: '#/components/schemas/UserResponseV15'
-      description: The users allowed to access the specified report.
-    TemplateResponseV15:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The template id.
-        configuration:
-          type: object
-          additionalProperties:
-            type: object
-            description: The JSON report configuration of the template.
-          description: The JSON report configuration of the template.
-        title:
-          type: string
-          description: The template title.
-        description:
-          type: string
-          description: The template description.
-        category:
-          type: string
-          description: The template category.
-      description: Information about a template.
-    ReportModelV15:
-      required:
-      - allAnalyticsViewer
-      - configuration
-      - displayName
-      - type
-      type: object
-      properties:
-        displayName:
-          type: string
-          description: The display name of the report.
-        type:
-          type: string
-          description: The type of the report. Must be either 'explorer' or 'dashboard'.
-          enum:
-          - DASHBOARD
-          - EXPLORER
-        allAnalyticsViewer:
-          type: boolean
-          description: Whether the report should be available to all analytics viewer.
-        configuration:
-          type: object
-          additionalProperties:
-            type: object
-            description: The configuration of the report. Must be a json.
-          description: The configuration of the report. Must be a json.
-        filters:
-          uniqueItems: true
-          type: array
-          description: The ids of the persisted filters associated with the report.
-          items:
-            type: string
-            description: The ids of the persisted filters associated with the report.
-      description: The configuration of a report.
-    StatusResponse:
-      type: object
-      description: Service's status information
     TemplateMetadataResponseV15:
       type: object
       properties:
@@ -548,6 +523,40 @@ components:
             type: string
             description: List of associated filters.
       description: A report configuration.
+    ReportModelV15:
+      required:
+      - allAnalyticsViewer
+      - configuration
+      - displayName
+      - type
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: The display name of the report.
+        type:
+          type: string
+          description: The type of the report. Must be either 'explorer' or 'dashboard'.
+          enum:
+          - DASHBOARD
+          - EXPLORER
+        allAnalyticsViewer:
+          type: boolean
+          description: Whether the report should be available to all analytics viewer.
+        configuration:
+          type: object
+          additionalProperties:
+            type: object
+            description: The configuration of the report. Must be a json.
+          description: The configuration of the report. Must be a json.
+        filters:
+          uniqueItems: true
+          type: array
+          description: The ids of the persisted filters associated with the report.
+          items:
+            type: string
+            description: The ids of the persisted filters associated with the report.
+      description: The configuration of a report.
     ReportAccessResponseV15:
       type: object
       properties:
@@ -568,36 +577,21 @@ components:
           items:
             $ref: '#/components/schemas/GroupResponseV15'
       description: The users and groups allowed to access the report
-    UserResponseV15:
+    ReportIdResponseV15:
       type: object
       properties:
-        userId:
+        id:
           type: string
-          description: The user id.
-        account:
-          type: string
-          description: The user account.
-        filters:
-          uniqueItems: true
-          type: array
-          description: The filters that are applied to the user
-          items:
-            type: string
-            description: The filters that are applied to the user
-        reports:
-          uniqueItems: true
-          type: array
-          description: The reports the user can view.
-          items:
-            type: string
-            description: The reports the user can view.
-      description: A user.
+          description: The report id.
+      description: A report id.
+    StatusResponse:
+      type: object
+      description: Service's status information
   securitySchemes:
-    oauth2:
+    v8:
       type: oauth2
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
-            full: required
+            full: ''

@@ -1,18 +1,17 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Coveo Activity Activities Passages Alpha API
-  description: API for Coveo Platform
-  termsOfService: https://www.coveo.com/en/support/terms-agreements
+  title: Coveo Search Passages Alpha API
+  description: Documentation for Coveo Search API
+  termsOfService: http://www.coveo.com/en/support/terms-agreements
   contact:
-    name: Coveo
-    url: https://connect.coveo.com/s/discussions
+    name: support@coveo.com
+  license:
+    name: ''
   version: 1.0.0
+  x-ApiVersion: V3
 servers:
 - url: https://platform.cloud.coveo.com
   description: Coveo public API endpoint
-security:
-- oauth2:
-  - full
 tags:
 - name: Passages Alpha
   x-displayName: Passages Alpha
@@ -79,7 +78,130 @@ paths:
         '503':
           $ref: '#/components/responses/PassageRetrievalServerUnavailable'
 components:
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            BadRequest:
+              summary: 'Bad Request (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-bad_request)'
+              value:
+                statusCode: 400
+                message: Invalid JSON format in request body.
+            NoRegisteredEndpoint:
+              summary: 'No Registered Endpoint (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-no_registered_endpoint)'
+              value:
+                statusCode: 400
+                message: No registered endpoint found for this organization.
+                errorCode: NO_REGISTERED_ENDPOINT
+            QueryPipelineInterrupted:
+              summary: 'Query Pipeline Interrupted (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-query_pipeline_interrupted)'
+              value:
+                statusCode: 400
+                message: Failed to evaluate your query as some conditions in your pipeline took too much time.
+                errorCode: QUERY_PIPELINE_INTERRUPTED
+    TooManyRequests:
+      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 429
+            message: Too many requests.
+    Forbidden:
+      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 403
+            message: Access denied. API key does not have sufficient privileges.
+            errorCode: FORBIDDEN
+    Unauthorized:
+      description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 401
+            message: Invalid access token.
+            errorCode: UNAUTHORIZED
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            InternalError:
+              summary: Internal Server Error
+              value:
+                statusCode: 500
+                message: Internal error.
+            OrganizationPaused:
+              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#500-organization_paused)'
+              value:
+                statusCode: 500
+                message: The organization is paused due to inactivity.
+                errorCode: ORGANIZATION_PAUSED
+            FacetSearchFailure:
+              summary: 'Facet Search Failure (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#500-facet_search_failure)'
+              value:
+                statusCode: 500
+                message: Facet search failed due to internal index issues.
+                errorCode: FACET_SEARCH_FAILURE
+    PassageRetrievalUnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            MissingModel:
+              summary: Error returned when the model is missing.
+              value:
+                errorCode: UNPROCESSABLE_ENTITY
+                message: This API requires an ML Passage Retrieval model associated to the pipeline.
+            ModelUnavailable:
+              summary: Error returned when the model is unavailable.
+              value:
+                errorCode: UNPROCESSABLE_ENTITY
+                message: The Passage Retrieval model is not available. Please review whether the model exists and is ready to be used. If the model was just created, it may take a few minutes before it's available. If the problem persists, reach out to Coveo Support.
+    PassageRetrievalServerUnavailable:
+      description: Server unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            ModelTemporaryUnavailable:
+              summary: Error returned when the model is temporarily unavailable.
+              value:
+                errorCode: SERVER_UNAVAILABLE
+                message: The Passage Retrieval model is temporarily unavailable. Please retry the request. If the problem persists, reach out to Coveo Support.
+            IndexUnavailable:
+              summary: Error returned when the index is not available.
+              value:
+                errorCode: SERVER_UNAVAILABLE
+                message: Due to a temporary issue with Coveo indexes, no available index could process the request.
+            InternalLimitExceeded:
+              summary: Error returned when the size of passages was larger than expected.
+              value:
+                errorCode: INTERNAL_ERROR
+                message: An internal limit on the size of passages was exceeded.
   schemas:
+    RetrievePassageRequestContextValue:
+      oneOf:
+      - type: string
+      - type: array
+        items:
+          type: string
     PassageV3:
       type: object
       required:
@@ -116,12 +238,6 @@ components:
             '
         document:
           $ref: '#/components/schemas/PassageDocumentV3'
-    RetrievePassageRequestContextValue:
-      oneOf:
-      - type: string
-      - type: array
-        items:
-          type: string
     RetrievePassagesRequestV3:
       type: object
       required:
@@ -210,8 +326,9 @@ components:
               description: The [tz database identifier](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) of the user's time zone. Used for interpreting dates in query expressions and retrieving passages.
               example: America/Montreal
         context:
-          type: object
-          nullable: true
+          type:
+          - object
+          - 'null'
           additionalProperties:
             $ref: '#/components/schemas/RetrievePassageRequestContextValue'
           description: 'The custom context information to send along with the request. Must be a dictionary of key-value pairs (JSON) where each key is a string, and each value is either a string or an array of strings.
@@ -225,7 +342,6 @@ components:
             - ProductReviewer
         analytics:
           type: object
-          nullable: false
           additionalProperties: false
           properties:
             capture:
@@ -245,22 +361,44 @@ components:
                 **Note**: This information is required when endpoints are behind a proxy.
 
                 '
-    PassageDocumentV3:
+    ErrorMessage:
       type: object
-      required:
-      - title
-      - primaryid
-      properties:
-        title:
-          type: string
-          example: The Benefits of Solar Energy
-        primaryid:
-          type: string
-          description: 'The primary identifier of the document.
-
-            '
-          example: bDMzdA
       additionalProperties: true
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        errorCode:
+          type: string
+          example: ORGANIZATION_DOES_NOT_EXIST
+        message:
+          type: string
+          example: The organization does not exist in the search api.
+    Pipeline:
+      type:
+      - string
+      - 'null'
+      description: 'The name of the query pipeline to use for this request (bypassing its conditions, if it has any).
+
+
+        You can pass an empty `pipeline` value to use an empty query pipeline (i.e., `?pipeline=` or `"pipeline": ""`).
+
+
+        If a query does not contain the `pipeline` parameter, the first query pipeline whose conditions are met by the request is used (query pipelines without conditions are not evaluated). Should the request fail to meet the conditions of each evaluated query pipeline, the default query pipeline of the target Coveo Cloud organization is used (bypassing its conditions, if it has any).
+
+
+        **Notes:**
+
+
+        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
+
+        - For reporting purposes, when logging a **Search** usage analytics event for a query, the `queryPipeline` field of that event should be set to the final `pipeline` value used in the query execution. This value is determined from the query response. If no pipeline was specified, it uses the `"default"` value.
+
+
+        See also [Managing Query Pipelines](https://docs.coveo.com/en/1450/).
+
+        '
+      example: CustomerQueryPipeline
     RankedResult:
       type: object
       required:
@@ -278,19 +416,6 @@ components:
 
             '
           example: KVUVKMCSIZLEYVLVMNLGQ4JQK4XDMNBQGY4C4ZDFMZQXK3DU
-    ErrorMessage:
-      type: object
-      additionalProperties: true
-      properties:
-        statusCode:
-          type: number
-          example: 404
-        errorCode:
-          type: string
-          example: ORGANIZATION_DOES_NOT_EXIST
-        message:
-          type: string
-          example: The organization does not exist in the search api.
     DebugRetrievePassagesResponse:
       type: object
       required:
@@ -334,154 +459,23 @@ components:
           example:
           - No index items matched your query, therefore no passages could be retrieved. Try rephrasing your query or checking whether the query pipeline filters are too restrictive.
           - No passages were retrieved for the query. Review whether your passage retrieval model is up-to-date and is trained on the documents relevant to your query.
-    Pipeline:
-      type: string
-      nullable: true
-      description: 'The name of the query pipeline to use for this request (bypassing its conditions, if it has any).
+    PassageDocumentV3:
+      type: object
+      required:
+      - title
+      - primaryid
+      properties:
+        title:
+          type: string
+          example: The Benefits of Solar Energy
+        primaryid:
+          type: string
+          description: 'The primary identifier of the document.
 
-
-        You can pass an empty `pipeline` value to use an empty query pipeline (i.e., `?pipeline=` or `"pipeline": ""`).
-
-
-        If a query does not contain the `pipeline` parameter, the first query pipeline whose conditions are met by the request is used (query pipelines without conditions are not evaluated). Should the request fail to meet the conditions of each evaluated query pipeline, the default query pipeline of the target Coveo Cloud organization is used (bypassing its conditions, if it has any).
-
-
-        **Notes:**
-
-
-        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
-
-        - For reporting purposes, when logging a **Search** usage analytics event for a query, the `queryPipeline` field of that event should be set to the final `pipeline` value used in the query execution. This value is determined from the query response. If no pipeline was specified, it uses the `"default"` value.
-
-
-        See also [Managing Query Pipelines](https://docs.coveo.com/en/1450/).
-
-        '
-      example: CustomerQueryPipeline
-  responses:
-    PassageRetrievalServerUnavailable:
-      description: Server unavailable
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          examples:
-            ModelTemporaryUnavailable:
-              summary: Error returned when the model is temporarily unavailable.
-              value:
-                errorCode: SERVER_UNAVAILABLE
-                message: The Passage Retrieval model is temporarily unavailable. Please retry the request. If the problem persists, reach out to Coveo Support.
-            IndexUnavailable:
-              summary: Error returned when the index is not available.
-              value:
-                errorCode: SERVER_UNAVAILABLE
-                message: Due to a temporary issue with Coveo indexes, no available index could process the request.
-            InternalLimitExceeded:
-              summary: Error returned when the size of passages was larger than expected.
-              value:
-                errorCode: INTERNAL_ERROR
-                message: An internal limit on the size of passages was exceeded.
-    Forbidden:
-      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 403
-            message: Access denied. API key does not have sufficient privileges.
-            errorCode: FORBIDDEN
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          examples:
-            InternalError:
-              summary: Internal Server Error
-              value:
-                statusCode: 500
-                message: Internal error.
-            OrganizationPaused:
-              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#500-organization_paused)'
-              value:
-                statusCode: 500
-                message: The organization is paused due to inactivity.
-                errorCode: ORGANIZATION_PAUSED
-            FacetSearchFailure:
-              summary: 'Facet Search Failure (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#500-facet_search_failure)'
-              value:
-                statusCode: 500
-                message: Facet search failed due to internal index issues.
-                errorCode: FACET_SEARCH_FAILURE
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          examples:
-            BadRequest:
-              summary: 'Bad Request (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-bad_request)'
-              value:
-                statusCode: 400
-                message: Invalid JSON format in request body.
-            NoRegisteredEndpoint:
-              summary: 'No Registered Endpoint (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-no_registered_endpoint)'
-              value:
-                statusCode: 400
-                message: No registered endpoint found for this organization.
-                errorCode: NO_REGISTERED_ENDPOINT
-            QueryPipelineInterrupted:
-              summary: 'Query Pipeline Interrupted (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-query_pipeline_interrupted)'
-              value:
-                statusCode: 400
-                message: Failed to evaluate your query as some conditions in your pipeline took too much time.
-                errorCode: QUERY_PIPELINE_INTERRUPTED
-    Unauthorized:
-      description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 401
-            message: Invalid access token.
-            errorCode: UNAUTHORIZED
-    PassageRetrievalUnprocessableEntity:
-      description: Unprocessable Entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          examples:
-            MissingModel:
-              summary: Error returned when the model is missing.
-              value:
-                errorCode: UNPROCESSABLE_ENTITY
-                message: This API requires an ML Passage Retrieval model associated to the pipeline.
-            ModelUnavailable:
-              summary: Error returned when the model is unavailable.
-              value:
-                errorCode: UNPROCESSABLE_ENTITY
-                message: The Passage Retrieval model is not available. Please review whether the model exists and is ready to be used. If the model was just created, it may take a few minutes before it's available. If the problem persists, reach out to Coveo Support.
-    TooManyRequests:
-      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 429
-            message: Too many requests.
+            '
+          example: bDMzdA
+      additionalProperties: true
   parameters:
-    ViewAllContentQuery:
-      name: viewAllContent
-      in: query
-      description: Whether to bypass document permissions. Only effective if the access token grants the **Search - View all content** privilege.
-      schema:
-        type: boolean
     OrganizationIdQueryRequired:
       name: organizationId
       in: query
@@ -489,12 +483,48 @@ components:
       required: true
       schema:
         type: string
+    ViewAllContentQuery:
+      name: viewAllContent
+      in: query
+      description: Whether to bypass document permissions. Only effective if the access token grants the **Search - View all content** privilege.
+      schema:
+        type: boolean
   securitySchemes:
     oauth2:
       type: oauth2
+      description: This API uses OAuth 2 with the implicit grant flow.
       flows:
-        authorizationCode:
+        implicit:
           authorizationUrl: https://platform.cloud.coveo.com/oauth/authorize
-          tokenUrl: https://platform.cloud.coveo.com/oauth/token
           scopes:
             full: required
+    platformTokens:
+      type: http
+      description: Platform tokens are used to authenticate requests to the platform as a specific user. See [Use platform token authentication](https://docs.coveo.com/en/n3ge0020).
+      scheme: bearer
+      bearerFormat: JWT
+    searchTokens:
+      type: http
+      description: Search tokens are used to authenticate search-related API requests. See [Use search token authentication](https://docs.coveo.com/en/56).
+      scheme: bearer
+      bearerFormat: JWT
+    apiKey:
+      description: API keys are used to authenticate requests to the platform as a specific user. See [Use API key authentication with the Search API](https://docs.coveo.com/en/105).
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Coveo Search API
+  tags:
+  - Search V3
+  - Passages V3
+  - Analysis V3
+  - Search V2
+  - Statements V2
+  - Result rankings
+  - Machine learning associations
+  - Statement groups
+  - Pipelines
+  - Statements V1
+  - Conditions
+  - Passages Alpha
+  - Organizations
