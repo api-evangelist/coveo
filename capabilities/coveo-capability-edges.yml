@@ -1,0 +1,207 @@
+slug: coveo
+provider: Coveo
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 19
+edges:
+- tag: Machine Learning Models
+  spec_file: coveo-machine-learning-models-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.9
+  evidence: '''Create a New Model'', ''Update the Configuration of a Model'', ''Delete a Model'', ''Get
+    Detailed Information About All Models'''
+  reason: Full CRUD lifecycle over machine-learning models (register, update, list, delete) with schemas
+    such as ModelVersion and Registration — this is ML model lifecycle / MLOps management.
+- tag: Temporary Access
+  spec_file: coveo-temporary-access-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: '"Revoke Temporary Access for Current User", "List Active Temporary Accesses", schemas GlobalPrivilegeModel,
+    UserRealmModel, TemporaryAccessModel'
+  reason: Operations grant, list (active/expired/revoked) and revoke time-bound access privileges for
+    users within an organisation, with privilege and realm models. This is squarely identity and access
+    management (privileged/temporary access administration).
+- tag: Model Detailed Info
+  spec_file: coveo-model-detailed-info-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.82
+  evidence: '''Fetch Model''; schemas ModelDetailedTrainingDetailsModel, DatasetDetails, ModelDetailedServingInfoModel'
+  reason: Exposes model training, dataset and serving details plus status/error info — clearly ML model
+    lifecycle observability within AI/ML management.
+- tag: Group Members
+  spec_file: coveo-group-members-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.8
+  evidence: '"List Group Members", "Add User", "Delete User" on /groups/{groupId}/members; schema MemberModel'
+  reason: Adding and removing users from security groups that carry platform privileges is user/group
+    access administration, i.e. Identity & Access Management.
+- tag: Groups
+  spec_file: coveo-groups-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.8
+  evidence: '"Create Group", "Update Group", "List Privileges Granted by Group to Current User"; schemas
+    PrivilegeModel, MemberModel_Response'
+  reason: Lifecycle of security groups and the privileges they grant to users in an organization — squarely
+    privilege/entitlement administration for platform identities.
+- tag: Machine learning associations
+  spec_file: coveo-machine-learning-associations-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.78
+  evidence: '''Associate an Existing Machine Learning Model with an Existing Pipeline.''; ''Returns the
+    Version of ML Models Supported by the Organization'''
+  reason: Operations bind ML models to query pipelines and validate those bindings — i.e. deployment/serving
+    configuration within the ML model lifecycle. Slightly lower confidence because it is a configuration
+    surface rather than model training itself.
+- tag: Model Listing
+  spec_file: coveo-model-listing-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.78
+  evidence: GET /machinelearning/configuration/modellisting 'List Models'; ModelListingModel
+  reason: Enumerates registered machine-learning models with status and association info — inventory view
+    of the ML model estate.
+- tag: Advanced Model Configurations
+  spec_file: coveo-advanced-model-configurations-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.75
+  evidence: GET /rest/organizations/{organizationId}/machinelearning/models/{modelId}/configs/{configurationType}
+    'Download the Specified Configuration File for the Model'; 'List Advanced Registration Configuration
+    Files for the Model'
+  reason: Operations manage configuration artefacts for machine-learning models (registration configs,
+    upload/delete), which is ML model lifecycle administration — Artificial Intelligence Management.
+- tag: Group Invites
+  spec_file: coveo-group-invites-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.75
+  evidence: POST .../groups/{groupId}/invites — "Invite User to Group"; "Accept Invite to Group"; schema
+    InviteModel
+  reason: Operations invite, accept, decline and revoke user membership of platform security groups within
+    an organization — the joiner/mover side of identity and access administration for the SaaS tenant.
+- tag: Organization Members
+  spec_file: coveo-organization-members-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.75
+  evidence: updateOrganizationMember  Update Member; getMemberGroups  List Groups for Organization Member;
+    getOrganizationMemberPrivileges_2  List Privileges of Current User
+  reason: CRUD over organization members plus their groups and privileges is user account and access administration,
+    i.e. Identity & Access Management, not HR employee records.
+- tag: Organization Privileges
+  spec_file: coveo-organization-privileges-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.75
+  evidence: getOrganizationPrivileges  List Possible Privileges; getApiKeyPrivileges  List Possible API
+    Key Privileges; schema GlobalPrivilegeModel
+  reason: Enumerating privileges attached to members, access tokens and API keys is authorisation/entitlement
+    administration for platform access — Identity & Access Management.
+- tag: Security Identity
+  spec_file: coveo-security-identity-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.75
+  evidence: PUT /organizations/{organizationId}/providers/{providerId}/permissions    Add or Update a
+    Security Identity
+  reason: Explicit lifecycle of security identities, permissions and identity aliases (add, update, batch,
+    delete old) — identity and access administration.
+- tag: Dynamic Navigation Experience Configuration
+  spec_file: coveo-dynamic-navigation-experience-configuration-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.72
+  evidence: GET /rest/organizations/{organizationId}/machinelearning/configuration/dne/model/{modelId}  'Show
+    DNE Model Resources'; 'Create DNE Model Resources'; schema DneConfigurationModel
+  reason: The operations create, configure, update and delete machine-learning models (Dynamic Navigation
+    Experience) including document-extraction query definitions, which is ML model lifecycle configuration.
+    Not fully certain because the surface is narrow model configuration rather than a full MLOps lifecycle.
+- tag: Organizations
+  spec_file: coveo-organizations-api-openapi.yml
+  capability_id: BC-4230.10
+  capability_id_l1: BC-4230
+  capability_name: Tenant Provisioning & Lifecycle
+  confidence: 0.72
+  evidence: createOrganization  Create Organization; launchProvisioning  Provision Organization; resumeOrganization  Resume
+    Organization; getOrganizationStatus  Show Organization Status
+  reason: An organization is the Coveo tenant; create, provision, resume, delete and status operations
+    are tenant provisioning and lifecycle management in a multi-tenant SaaS. The SAML authentication sub-resources
+    are secondary.
+- tag: Case Assist
+  spec_file: coveo-case-assist-api-openapi.yml
+  capability_id: BC-430.40
+  capability_id_l1: BC-430
+  capability_name: Self-Service Management
+  confidence: 0.7
+  evidence: '"Request Classifications", "Request Document Suggestions", schema "CaseClassificationConfiguration"'
+  reason: Case Assist classifies incoming support cases and suggests knowledge documents to the submitter,
+    i.e. assisted self-service / case deflection in a support portal. Maps to customer service self-service
+    rather than any technical plumbing.
+- tag: Model Associations
+  spec_file: coveo-model-associations-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.7
+  evidence: GET /machinelearning/configuration/querypipelines/{pipelineId}/associations 'Lists Associations';
+    schema QueryPipelineMLAssociationModel
+  reason: Lists which ML models are associated with a query pipeline, part of ML model deployment configuration.
+    Single read-only operation, hence moderate confidence.
+- tag: Security Providers
+  spec_file: coveo-security-providers-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: 'createSecurityProvider  Create a Security Provider for an Organization; schemas: UserIdentityModel,
+    CascadingSecurityProvider'
+  reason: Manages identity/security provider configurations and user identities used to resolve permissions,
+    which is identity and access management configuration rather than search functionality.
+- tag: Semantic Encoder Configuration
+  spec_file: coveo-semantic-encoder-configuration-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.7
+  evidence: POST /rest/organizations/{organizationId}/machinelearning/configuration/semanticencoder/preview  Get
+    Preview for Building an SE Model
+  reason: Configures and previews a machine-learning (semantic encoder) model, i.e. AI/ML model lifecycle
+    management. Thin surface (single preview operation), so moderate confidence.
+- tag: Users
+  spec_file: coveo-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: getUser  Show User; updateUserAdditionalInformation; getAllExistingRealmsForUser  List User
+    Realms
+  reason: Platform-administration surface for user accounts and their security realms — identity and access
+    administration rather than any HR or customer capability.
