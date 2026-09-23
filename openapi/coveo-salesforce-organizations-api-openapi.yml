@@ -65,7 +65,7 @@ paths:
   /rest/salesforce/schema/objects:
     post:
       operationId: loadObjects
-      summary: Loads the Object Data for a List of Salesforce Objects.
+      summary: Loads the Object Data for a List of Salesforce Objects
       tags:
       - Salesforce Organizations
       deprecated: false
@@ -122,7 +122,7 @@ paths:
   /rest/salesforce/schema/organization:
     get:
       operationId: loadOrganization
-      summary: Loads the Organization Data for a Salesforce Organization.
+      summary: Loads the Organization Data for a Salesforce Organization
       tags:
       - Salesforce Organizations
       deprecated: false
@@ -182,28 +182,31 @@ components:
       required:
       - name
       - values
-    OrganizationDescription:
+    MappingDescription:
       type: object
       properties:
-        organizationId:
+        extractionMethod:
           type: string
-        objects:
-          type: array
-          items:
-            $ref: '#/components/schemas/ObjectSummary'
-        knowledgeLanguages:
+        content:
+          type: string
+        fieldTypeHint:
+          type: string
+      required:
+      - extractionMethod
+      - content
+    RelationshipDescription:
+      type: object
+      properties: {}
+    LoadObjectsParams:
+      type: object
+      properties:
+        names:
+          description: The object names to load.
           type: array
           items:
             type: string
-        dataCategoryGroups:
-          type: array
-          items:
-            $ref: '#/components/schemas/DataCategoryGroupDescription'
       required:
-      - organizationId
-      - objects
-      - knowledgeLanguages
-      - dataCategoryGroups
+      - names
     ObjectSummary:
       type: object
       properties:
@@ -237,31 +240,83 @@ components:
       - isKnowledgeObject
       - hasCustomFileType
       - shouldIndexByDefault
-    MappingDescription:
+    DataCategoryValueDescription:
       type: object
       properties:
-        extractionMethod:
+        name:
           type: string
-        content:
-          type: string
-        fieldTypeHint:
+        label:
           type: string
       required:
-      - extractionMethod
-      - content
-    RelationshipDescription:
-      type: object
-      properties: {}
-    LoadObjectsParams:
+      - name
+      - label
+    FieldDescription:
       type: object
       properties:
-        names:
-          description: The object names to load.
+        name:
+          type: string
+        coveoName:
+          type: string
+        salesforceName:
+          type: string
+        label:
+          type: string
+        kind:
+          type: string
+        custom:
+          type: boolean
+        virtual:
+          type: boolean
+        retrievable:
+          type: boolean
+        filterable:
+          type: boolean
+        sortable:
+          type: boolean
+        multiValue:
+          type: boolean
+        mandatory:
+          type: boolean
+        shouldIndexByDefault:
+          type: boolean
+        dataCategoryGroup:
+          type: string
+        mapping:
+          $ref: '#/components/schemas/MappingDescription'
+        legacyFieldInformation:
+          $ref: '#/components/schemas/LegacyFieldInformation'
+      required:
+      - name
+      - coveoName
+      - salesforceName
+      - label
+      - kind
+      - custom
+      - virtual
+      - retrievable
+      - filterable
+      - sortable
+      - multiValue
+      - mandatory
+      - shouldIndexByDefault
+    LegacyFieldInformation:
+      type: object
+      properties:
+        relationshipName:
+          type: string
+        relationshipNameField:
+          type: string
+        polymorphic:
+          type: boolean
+        referenceTypes:
           type: array
           items:
             type: string
       required:
-      - names
+      - relationshipName
+      - relationshipNameField
+      - polymorphic
+      - referenceTypes
     ObjectDescription:
       type: object
       properties:
@@ -334,83 +389,28 @@ components:
       - fieldsByCoveoName
       - fieldsBySalesforceName
       - relationshipsByName
-    FieldDescription:
+    OrganizationDescription:
       type: object
       properties:
-        name:
+        organizationId:
           type: string
-        coveoName:
-          type: string
-        salesforceName:
-          type: string
-        label:
-          type: string
-        kind:
-          type: string
-        custom:
-          type: boolean
-        virtual:
-          type: boolean
-        retrievable:
-          type: boolean
-        filterable:
-          type: boolean
-        sortable:
-          type: boolean
-        multiValue:
-          type: boolean
-        mandatory:
-          type: boolean
-        shouldIndexByDefault:
-          type: boolean
-        dataCategoryGroup:
-          type: string
-        mapping:
-          $ref: '#/components/schemas/MappingDescription'
-        legacyFieldInformation:
-          $ref: '#/components/schemas/LegacyFieldInformation'
-      required:
-      - name
-      - coveoName
-      - salesforceName
-      - label
-      - kind
-      - custom
-      - virtual
-      - retrievable
-      - filterable
-      - sortable
-      - multiValue
-      - mandatory
-      - shouldIndexByDefault
-    LegacyFieldInformation:
-      type: object
-      properties:
-        relationshipName:
-          type: string
-        relationshipNameField:
-          type: string
-        polymorphic:
-          type: boolean
-        referenceTypes:
+        objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObjectSummary'
+        knowledgeLanguages:
           type: array
           items:
             type: string
+        dataCategoryGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataCategoryGroupDescription'
       required:
-      - relationshipName
-      - relationshipNameField
-      - polymorphic
-      - referenceTypes
-    DataCategoryValueDescription:
-      type: object
-      properties:
-        name:
-          type: string
-        label:
-          type: string
-      required:
-      - name
-      - label
+      - organizationId
+      - objects
+      - knowledgeLanguages
+      - dataCategoryGroups
   securitySchemes:
     oauth2:
       type: oauth2

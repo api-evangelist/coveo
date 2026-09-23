@@ -92,7 +92,7 @@ paths:
       x-ui-operation-id: /api/preview/organizations/paramId/agents/paramId/answer_post
 components:
   schemas:
-    HierarchicalFacetValue_Request:
+    SpecificFacetValue_Request:
       type: object
       properties:
         state:
@@ -113,24 +113,87 @@ components:
           type: boolean
           description: Whether to prevent Coveo ML from automatically selecting the facet value.
         value:
-          maxLength: 512
-          minLength: 0
           type: string
-          description: This represents a single path segment.
-          example: electronics
-        children:
-          type: array
-          description: The children of this hierarchical facet value.
-          items:
-            $ref: '#/components/schemas/HierarchicalFacetValue_Request'
-        retrieveChildren:
+          description: The facet value name.
+          example: Alice Smith
+      description: A specific facet value.
+    NumericalRangeFacetRequest_Request:
+      type: object
+      properties:
+        field:
+          maxLength: 254
+          minLength: 1
+          pattern: ^[a-z][a-zA-Z0-9_]*$
+          type: string
+          description: The name of the field on which to base the facet request.
+          example: author
+        facetId:
+          maxLength: 60
+          minLength: 1
+          pattern: ^[A-Za-z0-9_@-]*$
+          type: string
+          description: The unique identifier of the facet in the search interface.
+          example: author-1
+        type:
+          type: string
+          description: The kind of values to request for the facet.
+          default: specific
+          enum:
+          - specific
+          - dateRange
+          - numericalRange
+          - hierarchical
+        filterFacetCount:
           type: boolean
-          description: Whether to retrieve the children of this hierarchical facet value. Can only be used on leaf values.
-        retrieveCount:
+          description: Whether to exclude folded result parents when estimating the result count for each facet value.
+        injectionDepth:
           type: integer
-          description: The maximum number of children to retrieve for this hierarchical facet value.
+          description: The maximum number of items to scan for facet values.
           format: int32
-      description: A hierarchical facet value.
+        isFieldExpanded:
+          type: boolean
+          description: Whether to make this facet request in the context of requesting more facet values.
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting values.
+        resultsMustMatch:
+          type: string
+          description: Specifies how a result must match the selected values.
+          enum:
+          - atLeastOneValue
+          - allValues
+        numberOfValues:
+          type: integer
+          description: The maximum number of facet values to fetch.
+          format: int32
+        freezeCurrentValues:
+          type: boolean
+          description: Whether to include the currentValues array from the facet request in the values array of the corresponding facet response.
+        generateAutomaticRanges:
+          type: boolean
+          description: Whether to automatically generate range values for this facet.
+        sortCriteria:
+          type: string
+          description: The criterion to use for sorting returned facet values.
+          enum:
+          - ascending
+          - descending
+          - occurrences
+          - ascending
+          - descending
+          - occurrences
+        currentValues:
+          type: array
+          description: The values displayed by the facet in the search interface at the moment of the request.
+          items:
+            $ref: '#/components/schemas/NumericalRangeFacetValue_Request'
+        rangeAlgorithm:
+          type: string
+          description: Determines which algorithm is used to generate the ranges if generateAutomaticRanges is enabled.
+          enum:
+          - equiprobable
+          - even
+      description: Request facet values representing ranges of numbers.
     HierarchicalFacetRequest_Request:
       type: object
       properties:
@@ -221,128 +284,6 @@ components:
           - alphanumericNatural
           - occurrences
       description: Request facet values representing hierarchically structured categories.
-    NumericalRangeFacetValue_Request:
-      type: object
-      properties:
-        state:
-          type: string
-          description: The current facet value state in the search interface.
-          enum:
-          - idle
-          - selected
-          - excluded
-        previousState:
-          type: string
-          description: The previous facet value state in the search interface.
-          enum:
-          - idle
-          - selected
-          - excluded
-        preventAutoSelect:
-          type: boolean
-          description: Whether to prevent Coveo ML from automatically selecting the facet value.
-        endInclusive:
-          type: boolean
-          description: Whether to include the end value in the range.
-        start:
-          type: number
-          description: The value to start the range at.
-          example: 0
-        end:
-          type: number
-          description: The value to end the range at. Must be greater than the start value.
-          example: 100
-      description: A numerical range facet value.
-    DateRangeFacetRequest_Request:
-      type: object
-      properties:
-        field:
-          maxLength: 254
-          minLength: 1
-          pattern: ^[a-z][a-zA-Z0-9_]*$
-          type: string
-          description: The name of the field on which to base the facet request.
-          example: author
-        facetId:
-          maxLength: 60
-          minLength: 1
-          pattern: ^[A-Za-z0-9_@-]*$
-          type: string
-          description: The unique identifier of the facet in the search interface.
-          example: author-1
-        type:
-          type: string
-          description: The kind of values to request for the facet.
-          default: specific
-          enum:
-          - specific
-          - dateRange
-          - numericalRange
-          - hierarchical
-        filterFacetCount:
-          type: boolean
-          description: Whether to exclude folded result parents when estimating the result count for each facet value.
-        injectionDepth:
-          type: integer
-          description: The maximum number of items to scan for facet values.
-          format: int32
-        isFieldExpanded:
-          type: boolean
-          description: Whether to make this facet request in the context of requesting more facet values.
-        preventAutoSelect:
-          type: boolean
-          description: Whether to prevent Coveo ML from automatically selecting values.
-        resultsMustMatch:
-          type: string
-          description: Specifies how a result must match the selected values.
-          enum:
-          - atLeastOneValue
-          - allValues
-        numberOfValues:
-          type: integer
-          description: The maximum number of facet values to fetch.
-          format: int32
-        freezeCurrentValues:
-          type: boolean
-          description: Whether to include the currentValues array from the facet request in the values array of the corresponding facet response.
-        generateAutomaticRanges:
-          type: boolean
-          description: Whether to automatically generate range values for this facet.
-        sortCriteria:
-          type: string
-          description: The criterion to use for sorting returned facet values.
-          enum:
-          - ascending
-          - descending
-          - occurrences
-          - ascending
-          - descending
-          - occurrences
-        currentValues:
-          type: array
-          description: The values displayed by the facet in the search interface at the moment of the request.
-          items:
-            $ref: '#/components/schemas/DateRangeFacetValue_Request'
-      description: Request facet values representing ranges of dates.
-    AnalyticsCommerce_Request:
-      required:
-      - country
-      - currency
-      type:
-      - object
-      - 'null'
-      properties:
-        country:
-          pattern: ^[A-Z]{2}$
-          type: string
-          description: ISO 3166 alpha-2 country code.
-          example: US
-        currency:
-          pattern: ^[A-Z]{3}$
-          type: string
-          description: ISO 4217 currency code.
-          example: USD
-      description: Commerce context for the analytics.
     Analytics_Request:
       type:
       - object
@@ -463,6 +404,163 @@ components:
         commerce:
           $ref: '#/components/schemas/AnalyticsCommerce_Request'
       description: Analytics parameters to forward to the search API.
+    SseEmitter_Response:
+      type: object
+      properties:
+        timeout:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    CompositeModelFollowUpPayload_Request:
+      required:
+      - conversationId
+      - conversationToken
+      - q
+      type: object
+      properties:
+        q:
+          minLength: 1
+          type: string
+          description: The query string.
+        conversationId:
+          type: string
+          description: Conversation identifier
+        conversationToken:
+          minLength: 1
+          type: string
+          description: The conversation token received from the /answer response.
+        analytics:
+          $ref: '#/components/schemas/Analytics_Request'
+      description: Payload for sending a follow-up question to the agent.
+    CompositeModelAnswerPayload_Request:
+      required:
+      - q
+      type: object
+      properties:
+        q:
+          maxLength: 50000
+          minLength: 0
+          type: string
+          description: The user question.
+        searchHub:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: The search hub.
+        pipeline:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: The query pipeline name.
+        facets:
+          type: array
+          description: The list of facets.
+          items:
+            $ref: '#/components/schemas/FacetRequest_Request'
+        locale:
+          maxLength: 255
+          minLength: 2
+          type: string
+          description: The user locale preferences.
+        citationsFieldToInclude:
+          maxItems: 255
+          minItems: 0
+          type: array
+          description: The citation fields to include in the response.
+          items:
+            maxLength: 255
+            minLength: 0
+            type: string
+            description: The citation fields to include in the response.
+        recordDebugSession:
+          type: boolean
+          description: Optional. Whether to record debug session data for this conversation. Defaults to false when omitted.
+          default: false
+        context:
+          type: object
+        aq:
+          maxLength: 100000
+          minLength: 0
+          type:
+          - string
+          - 'null'
+          description: The advanced query expression.
+        cq:
+          maxLength: 100000
+          minLength: 0
+          type:
+          - string
+          - 'null'
+          description: The constant query expression.
+        referrer:
+          type:
+          - string
+          - 'null'
+          description: The URL of the referrer page.
+        tab:
+          maxLength: 1024
+          minLength: 0
+          type:
+          - string
+          - 'null'
+          description: The name or identifier of the search tab.
+        analytics:
+          $ref: '#/components/schemas/Analytics_Request'
+      description: Payload for getting an answer from an agent.
+    DateRangeFacetValue_Request:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        previousState:
+          type: string
+          description: The previous facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting the facet value.
+        endInclusive:
+          type: boolean
+          description: Whether to include the end value in the range.
+        start:
+          pattern: ^\d{4}/\d{2}/\d{2}@\d{1,2}:\d{2}:\d{2}$
+          type: string
+          description: The value to start the range at.
+          example: 2019/01/01@00:00:00
+        end:
+          pattern: ^\d{4}/\d{2}/\d{2}@\d{1,2}:\d{2}:\d{2}$
+          type: string
+          description: The value to end the range at. Must be later than the start value.
+          example: 2019/12/31@23:59:59
+      description: A date range facet value.
+    AnalyticsCommerce_Request:
+      required:
+      - country
+      - currency
+      type:
+      - object
+      - 'null'
+      properties:
+        country:
+          pattern: ^[A-Z]{2}$
+          type: string
+          description: ISO 3166 alpha-2 country code.
+          example: US
+        currency:
+          pattern: ^[A-Z]{3}$
+          type: string
+          description: ISO 4217 currency code.
+          example: USD
+      description: Commerce context for the analytics.
     SpecificFacetRequest_Request:
       type: object
       properties:
@@ -539,95 +637,7 @@ components:
             type: string
             description: Facet values that must appear at the top, in this order.
       description: Request facet values representing specific values (e.g., Alice Smith, Bob Jones, etc.).
-    SpecificFacetValue_Request:
-      type: object
-      properties:
-        state:
-          type: string
-          description: The current facet value state in the search interface.
-          enum:
-          - idle
-          - selected
-          - excluded
-        previousState:
-          type: string
-          description: The previous facet value state in the search interface.
-          enum:
-          - idle
-          - selected
-          - excluded
-        preventAutoSelect:
-          type: boolean
-          description: Whether to prevent Coveo ML from automatically selecting the facet value.
-        value:
-          type: string
-          description: The facet value name.
-          example: Alice Smith
-      description: A specific facet value.
-    DateRangeFacetValue_Request:
-      type: object
-      properties:
-        state:
-          type: string
-          description: The current facet value state in the search interface.
-          enum:
-          - idle
-          - selected
-          - excluded
-        previousState:
-          type: string
-          description: The previous facet value state in the search interface.
-          enum:
-          - idle
-          - selected
-          - excluded
-        preventAutoSelect:
-          type: boolean
-          description: Whether to prevent Coveo ML from automatically selecting the facet value.
-        endInclusive:
-          type: boolean
-          description: Whether to include the end value in the range.
-        start:
-          pattern: ^\d{4}/\d{2}/\d{2}@\d{1,2}:\d{2}:\d{2}$
-          type: string
-          description: The value to start the range at.
-          example: 2019/01/01@00:00:00
-        end:
-          pattern: ^\d{4}/\d{2}/\d{2}@\d{1,2}:\d{2}:\d{2}$
-          type: string
-          description: The value to end the range at. Must be later than the start value.
-          example: 2019/12/31@23:59:59
-      description: A date range facet value.
-    SseEmitter_Response:
-      type: object
-      properties:
-        timeout:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    CompositeModelFollowUpPayload_Request:
-      required:
-      - conversationId
-      - conversationToken
-      - q
-      type: object
-      properties:
-        q:
-          minLength: 1
-          type: string
-          description: The query string.
-        conversationId:
-          type: string
-          description: Conversation identifier
-        conversationToken:
-          minLength: 1
-          type: string
-          description: The conversation token received from the /answer response.
-        analytics:
-          $ref: '#/components/schemas/Analytics_Request'
-      description: Payload for sending a follow-up question to the agent.
-    NumericalRangeFacetRequest_Request:
+    DateRangeFacetRequest_Request:
       type: object
       properties:
         field:
@@ -696,14 +706,79 @@ components:
           type: array
           description: The values displayed by the facet in the search interface at the moment of the request.
           items:
-            $ref: '#/components/schemas/NumericalRangeFacetValue_Request'
-        rangeAlgorithm:
+            $ref: '#/components/schemas/DateRangeFacetValue_Request'
+      description: Request facet values representing ranges of dates.
+    HierarchicalFacetValue_Request:
+      type: object
+      properties:
+        state:
           type: string
-          description: Determines which algorithm is used to generate the ranges if generateAutomaticRanges is enabled.
+          description: The current facet value state in the search interface.
           enum:
-          - equiprobable
-          - even
-      description: Request facet values representing ranges of numbers.
+          - idle
+          - selected
+          - excluded
+        previousState:
+          type: string
+          description: The previous facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting the facet value.
+        value:
+          maxLength: 512
+          minLength: 0
+          type: string
+          description: This represents a single path segment.
+          example: electronics
+        children:
+          type: array
+          description: The children of this hierarchical facet value.
+          items:
+            $ref: '#/components/schemas/HierarchicalFacetValue_Request'
+        retrieveChildren:
+          type: boolean
+          description: Whether to retrieve the children of this hierarchical facet value. Can only be used on leaf values.
+        retrieveCount:
+          type: integer
+          description: The maximum number of children to retrieve for this hierarchical facet value.
+          format: int32
+      description: A hierarchical facet value.
+    NumericalRangeFacetValue_Request:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        previousState:
+          type: string
+          description: The previous facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+          - excluded
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting the facet value.
+        endInclusive:
+          type: boolean
+          description: Whether to include the end value in the range.
+        start:
+          type: number
+          description: The value to start the range at.
+          example: 0
+        end:
+          type: number
+          description: The value to end the range at. Must be greater than the start value.
+          example: 100
+      description: A numerical range facet value.
     FacetRequest_Request:
       required:
       - type
@@ -719,81 +794,6 @@ components:
       - $ref: '#/components/schemas/HierarchicalFacetRequest_Request'
       - $ref: '#/components/schemas/DateRangeFacetRequest_Request'
       - $ref: '#/components/schemas/NumericalRangeFacetRequest_Request'
-    CompositeModelAnswerPayload_Request:
-      required:
-      - q
-      type: object
-      properties:
-        q:
-          maxLength: 50000
-          minLength: 0
-          type: string
-          description: The user question.
-        searchHub:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: The search hub.
-        pipeline:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: The query pipeline name.
-        facets:
-          type: array
-          description: The list of facets.
-          items:
-            $ref: '#/components/schemas/FacetRequest_Request'
-        locale:
-          maxLength: 255
-          minLength: 2
-          type: string
-          description: The user locale preferences.
-        citationsFieldToInclude:
-          maxItems: 255
-          minItems: 0
-          type: array
-          description: The citation fields to include in the response.
-          items:
-            maxLength: 255
-            minLength: 0
-            type: string
-            description: The citation fields to include in the response.
-        recordDebugSession:
-          type: boolean
-          description: Optional. Whether to record debug session data for this conversation. Defaults to false when omitted.
-          default: false
-        context:
-          type: object
-        aq:
-          maxLength: 100000
-          minLength: 0
-          type:
-          - string
-          - 'null'
-          description: The advanced query expression.
-        cq:
-          maxLength: 100000
-          minLength: 0
-          type:
-          - string
-          - 'null'
-          description: The constant query expression.
-        referrer:
-          type:
-          - string
-          - 'null'
-          description: The URL of the referrer page.
-        tab:
-          maxLength: 1024
-          minLength: 0
-          type:
-          - string
-          - 'null'
-          description: The name or identifier of the search tab.
-        analytics:
-          $ref: '#/components/schemas/Analytics_Request'
-      description: Payload for getting an answer from an agent.
   securitySchemes:
     oauth2:
       type: oauth2

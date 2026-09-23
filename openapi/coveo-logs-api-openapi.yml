@@ -413,6 +413,8 @@ paths:
       tags:
       - Logs
       x-pretty-name: getDocumentLogsDeprecated
+      operationId: getOrganizationsByOrganizationId
+      x-operation-id-source: derived
     post:
       description: Retrieves a page of indexing pipeline logs for a given time interval in a specific Coveo Cloud organization.
       parameters:
@@ -830,6 +832,8 @@ paths:
               $ref: '#/components/schemas/GetLogsOrFacetsRequestBodyModel'
         description: The filters to apply when retrieving the indexing pipeline log entries.
         required: true
+      operationId: postOrganizationsByOrganizationId
+      x-operation-id-source: derived
 components:
   schemas:
     Error:
@@ -838,91 +842,6 @@ components:
           type: string
         message:
           type: string
-      type: object
-    IndexingPipelineLogTasks:
-      description: The _task_ filter value.
-      enum:
-      - CONSUMING
-      - CONSUMING_BATCH
-      - CRAWLING
-      - STREAMING_EXTENSION
-      - EXTENSION
-      - INDEXING
-      - MAPPING
-      - PROCESSING
-      - STREAMING
-      - STREAMING_BATCH
-      - PREINDEXING
-      - VALIDATION
-      type: string
-    IndexingPipelineLogResults:
-      description: The _result_ filter value.
-      enum:
-      - COMPLETED
-      - ERROR
-      - REJECTED
-      - SKIPPED
-      - WARNING
-      type: string
-    IndexingPipelineLogEntry:
-      properties:
-        datetime:
-          description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime)) at which the action described by the log entry was performed in the indexing pipeline.
-
-            Example: `2018-05-22T23:35:59.825Z`'
-          format: date-time
-          type: string
-        guid:
-          description: A unique log entry identifier.
-          format: uuid
-          type: string
-        id:
-          description: 'The URI of the item the log entry relates to.
-
-            Example: `https://example.com/item.html`'
-          type: string
-        meta:
-          description: 'Additional metadata about the indexing pipeline log entry.
-
-            Example: `{"duration": "0.012"}`'
-          type: object
-        operation:
-          $ref: '#/components/schemas/IndexingPipelineLogOperations'
-        organizationId:
-          description: 'The unique identifier of the Coveo Cloud organization the log entry was retrieved from.
-
-            Example: `mycoveocloudorganizationg8tp8wu3`'
-          type: string
-        requestId:
-          description: 'The unique identifier of the Source Logs API request that retrieved the log entry.
-
-            Example: `f852c8h1-6428-484b-8339-0da88b2cf718`'
-          type: string
-        resourceId:
-          description: 'The unique identifier of the indexing pipeline extension the log entry relates to.
-
-            Example: `mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i`'
-          type: string
-        result:
-          $ref: '#/components/schemas/IndexingPipelineLogResults'
-        sourceId:
-          description: 'The unique identifier of the source the log entry relates to.
-
-            Example: `w1zh6p45vh7s2uxzvg3s7kg85m-mycoveocloudorganizationg8tp8wu3`'
-          type: string
-        task:
-          $ref: '#/components/schemas/IndexingPipelineLogTasks'
-      type: object
-    GetLogsResponseBodyModel:
-      properties:
-        documentLogEntries:
-          description: The retrieved indexing pipeline log entries.
-          items:
-            $ref: '#/components/schemas/IndexingPipelineLogEntry'
-          type: array
-        hasNextPage:
-          description: Whether an additional page of indexing pipeline log entries matching the request is available.
-          type: boolean
       type: object
     GetLogsOrFacetsRequestBodyModel:
       properties:
@@ -976,6 +895,91 @@ components:
           items:
             $ref: '#/components/schemas/IndexingPipelineLogTasks'
           type: array
+      type: object
+    IndexingPipelineLogEntry:
+      properties:
+        datetime:
+          description: 'The date and time (in W3C format, see [Date and Time Formats](https://www.w3.org/TR/NOTE-datetime)) at which the action described by the log entry was performed in the indexing pipeline.
+
+            Example: `2018-05-22T23:35:59.825Z`'
+          format: date-time
+          type: string
+        guid:
+          description: A unique log entry identifier.
+          format: uuid
+          type: string
+        id:
+          description: 'The URI of the item the log entry relates to.
+
+            Example: `https://example.com/item.html`'
+          type: string
+        meta:
+          description: 'Additional metadata about the indexing pipeline log entry.
+
+            Example: `{"duration": "0.012"}`'
+          type: object
+        operation:
+          $ref: '#/components/schemas/IndexingPipelineLogOperations'
+        organizationId:
+          description: 'The unique identifier of the Coveo Cloud organization the log entry was retrieved from.
+
+            Example: `mycoveocloudorganizationg8tp8wu3`'
+          type: string
+        requestId:
+          description: 'The unique identifier of the Source Logs API request that retrieved the log entry.
+
+            Example: `f852c8h1-6428-484b-8339-0da88b2cf718`'
+          type: string
+        resourceId:
+          description: 'The unique identifier of the indexing pipeline extension the log entry relates to.
+
+            Example: `mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i`'
+          type: string
+        result:
+          $ref: '#/components/schemas/IndexingPipelineLogResults'
+        sourceId:
+          description: 'The unique identifier of the source the log entry relates to.
+
+            Example: `w1zh6p45vh7s2uxzvg3s7kg85m-mycoveocloudorganizationg8tp8wu3`'
+          type: string
+        task:
+          $ref: '#/components/schemas/IndexingPipelineLogTasks'
+      type: object
+    IndexingPipelineLogResults:
+      description: The _result_ filter value.
+      enum:
+      - COMPLETED
+      - ERROR
+      - REJECTED
+      - SKIPPED
+      - WARNING
+      type: string
+    IndexingPipelineLogTasks:
+      description: The _task_ filter value.
+      enum:
+      - CONSUMING
+      - CONSUMING_BATCH
+      - CRAWLING
+      - STREAMING_EXTENSION
+      - EXTENSION
+      - INDEXING
+      - MAPPING
+      - PROCESSING
+      - STREAMING
+      - STREAMING_BATCH
+      - PREINDEXING
+      - VALIDATION
+      type: string
+    GetLogsResponseBodyModel:
+      properties:
+        documentLogEntries:
+          description: The retrieved indexing pipeline log entries.
+          items:
+            $ref: '#/components/schemas/IndexingPipelineLogEntry'
+          type: array
+        hasNextPage:
+          description: Whether an additional page of indexing pipeline log entries matching the request is available.
+          type: boolean
       type: object
     IndexingPipelineLogOperations:
       description: The _operation_ filter value.

@@ -19,7 +19,7 @@ paths:
     get:
       operationId: get-all-interface-config
       summary: List Search Interface Configurations
-      description: Lists the search interface configurations in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Lists the search interface configurations in a Coveo organization.
       tags:
       - Configuration
       parameters:
@@ -34,7 +34,7 @@ paths:
     post:
       operationId: create-interface-config
       summary: Create Search Interface Configuration
-      description: Creates a search interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Creates a search interface configuration in a Coveo organization.
       tags:
       - Configuration
       parameters:
@@ -56,7 +56,7 @@ paths:
     get:
       operationId: get-project-interface-config
       summary: List Search Interface Configurations in a Project
-      description: Lists the search interface configurations in a [Coveo organization](https://docs.coveo.com/en/185/) and a [project](https://docs.coveo.com/en/n7ef0517/manage-an-organization/manage-projects).
+      description: Lists the search interface configurations in a Coveo organization and a project.
       tags:
       - Configuration
       parameters:
@@ -73,7 +73,7 @@ paths:
     get:
       operationId: get-interface-config
       summary: Show Search Interface Configuration
-      description: Shows a search interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Shows a search interface configuration in a Coveo organization.
       tags:
       - Configuration
       parameters:
@@ -91,7 +91,7 @@ paths:
     put:
       operationId: update-interface-config
       summary: Update Search Interface Configuration
-      description: Updates a search interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Updates a search interface configuration in a Coveo organization.
       tags:
       - Configuration
       parameters:
@@ -115,7 +115,7 @@ paths:
     delete:
       operationId: delete-interface-config
       summary: Delete Search Interface Configuration
-      description: Deletes a search interface configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Deletes a search interface configuration in a Coveo organization.
       tags:
       - Configuration
       parameters:
@@ -130,7 +130,7 @@ paths:
     get:
       operationId: get-interface-access
       summary: List Search Interface Accesses
-      description: Lists the accesses to a target search interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Lists the accesses to a target search interface in a Coveo organization.
       tags:
       - Configuration
       parameters:
@@ -148,7 +148,7 @@ paths:
     put:
       operationId: update-interface-access
       summary: Update Search Interface Accesses
-      description: Updates the accesses to a target search interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Updates the accesses to a target search interface in a Coveo organization.
       tags:
       - Configuration
       parameters:
@@ -173,7 +173,7 @@ paths:
     get:
       operationId: get-interface-user-access
       summary: List Search Interface User Accesses
-      description: Lists the accesses to a target search interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Lists the accesses to a target search interface in a Coveo organization.
       tags:
       - Configuration
       parameters:
@@ -191,7 +191,7 @@ paths:
     put:
       operationId: update-interface-user-access
       summary: Update Search Interface User Accesses
-      description: Updates the accesses to a target search interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Updates the accesses to a target search interface in a Coveo organization.
       tags:
       - Configuration
       parameters:
@@ -215,7 +215,7 @@ paths:
     post:
       operationId: add-interface-user-access
       summary: Add Search Interface User Accesses
-      description: Adds user accesses to a target search interface in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Adds user accesses to a target search interface in a Coveo organization.
       tags:
       - Configuration
       parameters:
@@ -245,13 +245,13 @@ components:
       in: query
       schema:
         type: string
-    filter:
-      name: filter
-      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
-      example: Store
+    notify:
+      name: notify
+      description: Whether to send an email notification to new search page users.
+      example: false
       in: query
       schema:
-        type: string
+        type: boolean
     order:
       name: order
       description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
@@ -261,6 +261,13 @@ components:
         enum:
         - asc
         - desc
+    filter:
+      name: filter
+      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
+      example: Store
+      in: query
+      schema:
+        type: string
     interface-id:
       name: interfaceId
       description: The unique identifier of the target search interface.
@@ -293,14 +300,33 @@ components:
       required: true
       schema:
         type: string
-    notify:
-      name: notify
-      description: Whether to send an email notification to new search page users.
-      example: false
-      in: query
-      schema:
-        type: boolean
   schemas:
+    interface-pipeline-content:
+      type: object
+      properties:
+        pipeline:
+          type: string
+          description: The unique identifier of the query pipeline enforced in search requests.
+          example: 8652e601-fdc3-4ec9-90f8-510763ec0956
+    interface-access:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/interface-user-list'
+        domains:
+          type: array
+          description: The list of domains that are allowed to access the search interface.
+          example:
+          - example.com
+          - sample.com
+          items:
+            type: string
+        sharingLinkEnabled:
+          type: boolean
+          example: true
+        sharingDomainEnabled:
+          type: boolean
+          example: true
     interface-config:
       type: object
       properties:
@@ -376,16 +402,6 @@ components:
           - GRID
       required:
       - name
-    interface-add-user:
-      type: object
-      properties:
-        users:
-          $ref: '#/components/schemas/interface-user-list'
-        message:
-          type: string
-          description: Message to send as part of email notifications, when `notify` is set to `true`.
-          example: Hey, check out this new search page
-          required: false
     interface-content:
       type: object
       properties:
@@ -401,6 +417,16 @@ components:
           - sourceNameB
           items:
             type: string
+    interface-add-user:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/interface-user-list'
+        message:
+          type: string
+          description: Message to send as part of email notifications, when `notify` is set to `true`.
+          example: Hey, check out this new search page
+          required: false
     interface-user-list:
       type: array
       description: The list of users that are allowed to access the search interface.
@@ -498,32 +524,6 @@ components:
       required:
       - id
       - name
-    interface-pipeline-content:
-      type: object
-      properties:
-        pipeline:
-          type: string
-          description: The unique identifier of the query pipeline enforced in search requests.
-          example: 8652e601-fdc3-4ec9-90f8-510763ec0956
-    interface-access:
-      type: object
-      properties:
-        users:
-          $ref: '#/components/schemas/interface-user-list'
-        domains:
-          type: array
-          description: The list of domains that are allowed to access the search interface.
-          example:
-          - example.com
-          - sample.com
-          items:
-            type: string
-        sharingLinkEnabled:
-          type: boolean
-          example: true
-        sharingDomainEnabled:
-          type: boolean
-          example: true
   securitySchemes:
     oauth2:
       type: oauth2

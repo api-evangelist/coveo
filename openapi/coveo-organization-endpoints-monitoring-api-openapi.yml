@@ -20,16 +20,14 @@ paths:
     get:
       tags:
       - Organization Endpoints Monitoring
-      summary: Get Usage Per Region for an Organization.
-      description: '<details><summary>Privilege required</summary>
+      summary: Get Usage Per Region for an Organization
+      description: 'Privilege required
 
         ```
 
         {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: getRegionUsage
       parameters:
       - name: organizationId
@@ -67,16 +65,14 @@ paths:
     get:
       tags:
       - Organization Endpoints Monitoring
-      summary: Get the Search Hubs Usage for an Organization.
-      description: '<details><summary>Privilege required</summary>
+      summary: Get the Search Hubs Usage for an Organization
+      description: 'Privilege required
 
         ```
 
         {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: getSearchHubUsage
       parameters:
       - name: organizationId
@@ -133,16 +129,14 @@ paths:
     get:
       tags:
       - Organization Endpoints Monitoring
-      summary: Get the Endpoints Usage for an Organization.
-      description: '<details><summary>Privilege required</summary>
+      summary: Get the Endpoints Usage for an Organization
+      description: 'Privilege required
 
         ```
 
         {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: getEndpointUsage
       parameters:
       - name: organizationId
@@ -180,16 +174,14 @@ paths:
     get:
       tags:
       - Organization Endpoints Monitoring
-      summary: Get the Customer Endpoint Usage Status for an Organization.
-      description: '<details><summary>Privilege required</summary>
+      summary: Get the Customer Endpoint Usage Status for an Organization
+      description: 'Privilege required
 
         ```
 
         {"owner":"PLATFORM","targetDomain":"ORGANIZATION","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: getCustomerEndpointUsageStatus
       parameters:
       - name: organizationId
@@ -225,34 +217,6 @@ paths:
       x-ui-operation-id: /rest/monitoring/global/organizations/paramId/endpoints/readiness_get
 components:
   schemas:
-    WrongEndpointUsageDetailsModel:
-      type: object
-      properties:
-        hostname:
-          type: string
-        requestDetails:
-          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
-        reason:
-          type: string
-          enum:
-          - DEPRECATED_ENDPOINT
-          - USING_PLATFORM_ENDPOINT_FOR_ANALYTICS
-          - USING_SEARCH_ENDPOINT_FOR_ANALYTICS
-          - USING_ADMIN_CUSTOM_ENDPOINT_FOR_SEARCH
-          - WRONG_ORGANIZATION
-          - USING_SEARCH_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
-          - USING_ANALYTICS_ENDPOINT_FOR_SEARCH
-          - USING_ANALYTICS_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
-        blockedAfter:
-          type: string
-          format: date-time
-    EndpointUsageDetailsModel:
-      type: object
-      properties:
-        hostname:
-          type: string
-        requestDetails:
-          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
     EndpointUsageRequestDetailsModel:
       type: object
       properties:
@@ -262,40 +226,6 @@ components:
         blockedRequestPercentage:
           type: number
           format: double
-    EndpointUsageDetailsPerServiceModel:
-      type: object
-      properties:
-        recommendedEndpointDetails:
-          $ref: '#/components/schemas/EndpointUsageDetailsModel'
-        wrongEndpointsDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/WrongEndpointUsageDetailsModel'
-        otherEndpointsDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/EndpointUsageDetailsModel'
-    PageModelSearchHubUsageDetailsModel:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/SearchHubUsageDetailsModel'
-        totalEntries:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-    SearchHubUsageDetailsModel:
-      type: object
-      properties:
-        searchHub:
-          type: string
-        lastUsageDate:
-          type: string
-          format: date
     RegionUsageDetailsModel:
       type: object
       properties:
@@ -349,20 +279,61 @@ components:
         totalRequestPercentage:
           type: number
           format: double
-    RegionUsageModel:
+    PageModelSearchHubUsageDetailsModel:
       type: object
       properties:
-        organizationId:
-          type: string
-        regionUsageDetails:
+        items:
           type: array
           items:
-            $ref: '#/components/schemas/RegionUsageDetailsModel'
-    CustomerEndpointUsageStatusModel:
+            $ref: '#/components/schemas/SearchHubUsageDetailsModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    EndpointUsageDetailsPerServiceModel:
       type: object
       properties:
-        readyForSearch:
-          type: boolean
+        recommendedEndpointDetails:
+          $ref: '#/components/schemas/EndpointUsageDetailsModel'
+        wrongEndpointsDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/WrongEndpointUsageDetailsModel'
+        otherEndpointsDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/EndpointUsageDetailsModel'
+    WrongEndpointUsageDetailsModel:
+      type: object
+      properties:
+        hostname:
+          type: string
+        requestDetails:
+          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
+        reason:
+          type: string
+          enum:
+          - DEPRECATED_ENDPOINT
+          - USING_PLATFORM_ENDPOINT_FOR_ANALYTICS
+          - USING_SEARCH_ENDPOINT_FOR_ANALYTICS
+          - USING_ADMIN_CUSTOM_ENDPOINT_FOR_SEARCH
+          - WRONG_ORGANIZATION
+          - USING_SEARCH_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
+          - USING_ANALYTICS_ENDPOINT_FOR_SEARCH
+          - USING_ANALYTICS_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
+        blockedAfter:
+          type: string
+          format: date-time
+    SearchHubUsageDetailsModel:
+      type: object
+      properties:
+        searchHub:
+          type: string
+        lastUsageDate:
+          type: string
+          format: date
     EndpointUsageModel:
       type: object
       properties:
@@ -374,6 +345,27 @@ components:
           $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
         analyticsDetails:
           $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
+    RegionUsageModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        regionUsageDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegionUsageDetailsModel'
+    EndpointUsageDetailsModel:
+      type: object
+      properties:
+        hostname:
+          type: string
+        requestDetails:
+          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
+    CustomerEndpointUsageStatusModel:
+      type: object
+      properties:
+        readyForSearch:
+          type: boolean
   securitySchemes:
     oauth2:
       type: oauth2

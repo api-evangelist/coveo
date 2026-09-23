@@ -62,6 +62,32 @@ paths:
       x-ui-operation-id: /rest/privilege/evaluate/general-access_post
 components:
   schemas:
+    GeneralAccessPrivilegeRequest:
+      type: object
+      properties:
+        organizationId:
+          type: string
+          description: The unique identifier of the organization in which the target privilege applies.
+          example: mycoveocloudv2organizationg8tp8wu3
+      description: A general access privilege evaluation request.
+    PrivilegeRequestEvaluationReportModel:
+      type: object
+      properties:
+        privilegeEvaluationResultCodes:
+          type: array
+          items:
+            type: string
+            enum:
+            - OPERATION_FORBIDDEN_FOR_ANONYMOUS_AUTHENTICATION
+            - OPERATION_FORBIDDEN_FOR_AUTHENTICATION_BOUND_TO_DIFFERENT_ORGANIZATION
+            - OPERATION_FORBIDDEN_FOR_ORGANIZATION
+            - OPERATION_FORBIDDEN_FOR_ORGANIZATION_IN_READ_ONLY
+            - OPERATION_FORBIDDEN_FROM_REQUEST_LOCATION
+            - OPERATION_FORBIDDEN_INVALID_PRIVILEGE_REQUEST
+            - OPERATION_GRANTED
+            - OPERATION_NOT_ALLOWED
+      description: A privilege request evaluation report.
+      readOnly: true
     GlobalPrivilegeModel:
       type: object
       properties:
@@ -86,24 +112,6 @@ components:
           description: The access level of the global privileges.`
           example: GLOBAL
       description: A global privilege.
-    PrivilegeRequestEvaluationReportModel:
-      type: object
-      properties:
-        privilegeEvaluationResultCodes:
-          type: array
-          items:
-            type: string
-            enum:
-            - OPERATION_FORBIDDEN_FOR_ANONYMOUS_AUTHENTICATION
-            - OPERATION_FORBIDDEN_FOR_AUTHENTICATION_BOUND_TO_DIFFERENT_ORGANIZATION
-            - OPERATION_FORBIDDEN_FOR_ORGANIZATION
-            - OPERATION_FORBIDDEN_FOR_ORGANIZATION_IN_READ_ONLY
-            - OPERATION_FORBIDDEN_FROM_REQUEST_LOCATION
-            - OPERATION_FORBIDDEN_INVALID_PRIVILEGE_REQUEST
-            - OPERATION_GRANTED
-            - OPERATION_NOT_ALLOWED
-      description: A privilege request evaluation report.
-      readOnly: true
     PrivilegeRequestModel:
       type: object
       properties:
@@ -120,14 +128,6 @@ components:
         requestedPrivilege:
           $ref: '#/components/schemas/GlobalPrivilegeModel'
       description: A privilege evaluation request.
-    GeneralAccessPrivilegeRequest:
-      type: object
-      properties:
-        organizationId:
-          type: string
-          description: The unique identifier of the organization in which the target privilege applies.
-          example: mycoveocloudv2organizationg8tp8wu3
-      description: A general access privilege evaluation request.
   securitySchemes:
     oauth2:
       type: oauth2

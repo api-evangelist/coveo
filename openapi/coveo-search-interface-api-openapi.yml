@@ -19,7 +19,7 @@ paths:
     get:
       operationId: get-interface-html
       summary: Retrieve Search Interface
-      description: Retrieves a search interface in HTML page format from a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Retrieves a search interface in HTML page format from a Coveo organization.
       tags:
       - Search Interface
       parameters:
@@ -39,7 +39,7 @@ paths:
     post:
       operationId: post-manifest
       summary: Retrieve Search Interface Manifest
-      description: Retrieves a search interface manifest with detailed information from a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Retrieves a search interface manifest with detailed information from a Coveo organization.
       tags:
       - Search Interface
       parameters:
@@ -64,6 +64,36 @@ paths:
       - {}
 components:
   schemas:
+    interface-access:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/interface-user-list'
+        domains:
+          type: array
+          description: The list of domains that are allowed to access the search interface.
+          example:
+          - example.com
+          - sample.com
+          items:
+            type: string
+        sharingLinkEnabled:
+          type: boolean
+          example: true
+        sharingDomainEnabled:
+          type: boolean
+          example: true
+    interface-manifest-request:
+      type: object
+      properties:
+        pagePlaceholders:
+          type: object
+          description: The placeholders for the page.
+          properties:
+            results:
+              type: string
+              description: A placeholder for the result list and result templates.
+              example: --results--
     interface-config:
       type: object
       properties:
@@ -139,6 +169,47 @@ components:
           - GRID
       required:
       - name
+    interface-manifest:
+      type: object
+      properties:
+        markup:
+          type: string
+          description: The HTML markup of the search interface along with configured placeholders.
+          example: <atomic-search-interface> ... </atomic-search-interface>
+        results:
+          $ref: '#/components/schemas/interface-manifest-results'
+        style:
+          $ref: '#/components/schemas/interface-manifest-style'
+        config:
+          $ref: '#/components/schemas/interface-config'
+      required:
+      - markup
+      - results
+      - style
+      - config
+    interface-content:
+      type: object
+      properties:
+        pipeline:
+          type: string
+          description: The unique identifier of the query pipeline enforced in search requests.
+          example: 8652e601-fdc3-4ec9-90f8-510763ec0956
+        sources:
+          type: array
+          description: The list of sources with which to filter items in search requests. Only items from target sources may be returned.
+          example:
+          - sourceNameA
+          - sourceNameB
+          items:
+            type: string
+    interface-user-list:
+      type: array
+      description: The list of users that are allowed to access the search interface.
+      example:
+      - alice@example.com
+      - bob@example.com
+      items:
+        type: string
     interface-manifest-results:
       type: object
       description: The Atomic results configuration information.
@@ -175,77 +246,6 @@ components:
             type: string
           example:
             must-match-source: salesforce
-    interface-content:
-      type: object
-      properties:
-        pipeline:
-          type: string
-          description: The unique identifier of the query pipeline enforced in search requests.
-          example: 8652e601-fdc3-4ec9-90f8-510763ec0956
-        sources:
-          type: array
-          description: The list of sources with which to filter items in search requests. Only items from target sources may be returned.
-          example:
-          - sourceNameA
-          - sourceNameB
-          items:
-            type: string
-    interface-manifest:
-      type: object
-      properties:
-        markup:
-          type: string
-          description: The HTML markup of the search interface along with configured placeholders.
-          example: <atomic-search-interface> ... </atomic-search-interface>
-        results:
-          $ref: '#/components/schemas/interface-manifest-results'
-        style:
-          $ref: '#/components/schemas/interface-manifest-style'
-        config:
-          $ref: '#/components/schemas/interface-config'
-      required:
-      - markup
-      - results
-      - style
-      - config
-    interface-user-list:
-      type: array
-      description: The list of users that are allowed to access the search interface.
-      example:
-      - alice@example.com
-      - bob@example.com
-      items:
-        type: string
-    interface-manifest-request:
-      type: object
-      properties:
-        pagePlaceholders:
-          type: object
-          description: The placeholders for the page.
-          properties:
-            results:
-              type: string
-              description: A placeholder for the result list and result templates.
-              example: --results--
-    interface-access:
-      type: object
-      properties:
-        users:
-          $ref: '#/components/schemas/interface-user-list'
-        domains:
-          type: array
-          description: The list of domains that are allowed to access the search interface.
-          example:
-          - example.com
-          - sample.com
-          items:
-            type: string
-        sharingLinkEnabled:
-          type: boolean
-          example: true
-        sharingDomainEnabled:
-          type: boolean
-          example: true
     interface-manifest-style:
       type: object
       description: The Atomic related styling in CSS format.

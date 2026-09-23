@@ -21,15 +21,13 @@ paths:
       tags:
       - Advanced Model Configurations
       summary: Download the Specified Configuration File for the Model
-      description: '<details><summary>Privilege required</summary>
+      description: 'Privilege required
 
         ```
 
         {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: download
       parameters:
       - name: organizationId
@@ -90,15 +88,16 @@ paths:
     put:
       tags:
       - Advanced Model Configurations
-      description: 'Upload configuration file for the model. Maximum file size allowed: 10 MB.<br /><br /><details><summary>Privilege required</summary>
+      description: 'Upload configuration file for the model. Maximum file size allowed: 10 MB.
+
+
+        Privilege required
 
         ```
 
         {"owner":"COVEO_ML","targetDomain":"MODELS","type":"EDIT","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: upload
       parameters:
       - name: organizationId
@@ -167,19 +166,19 @@ paths:
         type: EDIT
         targetId: '*'
       x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/configs/paramId_put
+      summary: Upload
+      x-summary-source: derived
     delete:
       tags:
       - Advanced Model Configurations
-      summary: Delete Configuration File for the Model.
-      description: '<details><summary>Privilege required</summary>
+      summary: Delete Configuration File for the Model
+      description: 'Privilege required
 
         ```
 
         {"owner":"COVEO_ML","targetDomain":"MODELS","type":"EDIT","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: deleteFile
       parameters:
       - name: organizationId
@@ -237,15 +236,13 @@ paths:
       tags:
       - Advanced Model Configurations
       summary: List Advanced Registration Configuration Files for the Model
-      description: '<details><summary>Privilege required</summary>
+      description: 'Privilege required
 
         ```
 
         {"owner":"COVEO_ML","targetDomain":"MODELS","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: getAllConfigFilesStatus
       parameters:
       - name: organizationId
@@ -284,6 +281,30 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/machinelearning/models/paramId/configs/status_get
 components:
   schemas:
+    RegistrationId:
+      type: object
+      properties:
+        modelId:
+          type: string
+    AdvancedRegistrationConfigContentsResponse:
+      required:
+      - advancedRegistrationConfigFiles
+      - modelId
+      - orgId
+      type: object
+      properties:
+        modelId:
+          $ref: '#/components/schemas/RegistrationId'
+        advancedRegistrationConfigFiles:
+          type: object
+          additionalProperties:
+            type: array
+            description: Advanced Registration Config Files
+            items:
+              $ref: '#/components/schemas/FileInfo'
+          description: Advanced Registration Config Files
+        orgId:
+          $ref: '#/components/schemas/OrgId'
     FileInfo:
       type: object
       properties:
@@ -305,11 +326,6 @@ components:
           type: string
           description: md5Hash
       description: Advanced Registration Config Files
-    RegistrationId:
-      type: object
-      properties:
-        modelId:
-          type: string
     Key:
       type: object
     AdvancedRegistrationConfigFileCreationResponse:
@@ -321,25 +337,6 @@ components:
           $ref: '#/components/schemas/Key'
     OrgId:
       type: object
-    AdvancedRegistrationConfigContentsResponse:
-      required:
-      - advancedRegistrationConfigFiles
-      - modelId
-      - orgId
-      type: object
-      properties:
-        modelId:
-          $ref: '#/components/schemas/RegistrationId'
-        advancedRegistrationConfigFiles:
-          type: object
-          additionalProperties:
-            type: array
-            description: Advanced Registration Config Files
-            items:
-              $ref: '#/components/schemas/FileInfo'
-          description: Advanced Registration Config Files
-        orgId:
-          $ref: '#/components/schemas/OrgId'
   securitySchemes:
     oauth2:
       type: oauth2

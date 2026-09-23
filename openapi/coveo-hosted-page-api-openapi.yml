@@ -19,7 +19,7 @@ paths:
     get:
       operationId: get-all-hostedpages
       summary: List Hosted Pages
-      description: Lists the hosted pages in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Lists the hosted pages in a Coveo organization.
       tags:
       - Hosted Page
       parameters:
@@ -34,7 +34,7 @@ paths:
     post:
       operationId: create-hostedpage
       summary: Create Hosted Page
-      description: Creates a hosted page in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Creates a hosted page in a Coveo organization.
       tags:
       - Hosted Page
       parameters:
@@ -56,7 +56,7 @@ paths:
     get:
       operationId: get-project-hostedpages
       summary: List Hosted Pages in a Project
-      description: Lists the hosted pages in a [Coveo organization](https://docs.coveo.com/en/185/) and a [project](https://docs.coveo.com/en/n7ef0517/manage-an-organization/manage-projects).
+      description: Lists the hosted pages in a Coveo organization and a project.
       tags:
       - Hosted Page
       parameters:
@@ -73,7 +73,7 @@ paths:
     get:
       operationId: get-hostedpage
       summary: Retrieve Hosted Page Configuration
-      description: Retrieves a hosted page configuration in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Retrieves a hosted page configuration in a Coveo organization.
       tags:
       - Hosted Page
       parameters:
@@ -91,7 +91,7 @@ paths:
     put:
       operationId: update-hostedpage
       summary: Update Hosted Page
-      description: Updates an hosted page in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Updates an hosted page in a Coveo organization.
       tags:
       - Hosted Page
       parameters:
@@ -115,7 +115,7 @@ paths:
     delete:
       operationId: delete-hostedpage
       summary: Delete Hosted Page
-      description: Deletes an hosted page in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Deletes an hosted page in a Coveo organization.
       tags:
       - Hosted Page
       parameters:
@@ -130,7 +130,7 @@ paths:
     get:
       operationId: get-hostedpage-html
       summary: Show Hosted Page
-      description: Shows a hosted page in a [Coveo organization](https://docs.coveo.com/en/185/).
+      description: Shows a hosted page in a Coveo organization.
       tags:
       - Hosted Page
       parameters:
@@ -152,13 +152,6 @@ components:
       in: query
       schema:
         type: string
-    filter:
-      name: filter
-      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
-      example: Store
-      in: query
-      schema:
-        type: string
     order:
       name: order
       description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
@@ -168,6 +161,13 @@ components:
         enum:
         - asc
         - desc
+    filter:
+      name: filter
+      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
+      example: Store
+      in: query
+      schema:
+        type: string
     page:
       name: page
       description: The 0-based number of the page of configurations to list.
@@ -193,6 +193,22 @@ components:
       schema:
         type: string
   schemas:
+    hostedpage-file-javascript:
+      type: object
+      description: JavaScript resource appended to the header of a specific hosted page in the target Coveo organization.
+      properties:
+        isModule:
+          type: boolean
+          description: Whether the inline code should be treated as a JavaScript module. If this property is `true`, the `type` property will be set to `module` on the `script` tag.
+          required: true
+        inlineContent:
+          type: string
+          description: The content of the header `script` tag. If this property is defined, the `url` property should not be specified.
+          example: window.location = 'about:blank';
+        url:
+          type: string
+          description: The URL of the JavaScript source file. If this property is defined, the `inlineContent` property should not be specified.
+          example: https://static.cloud.coveo.com/atomic/v2/index.esm.js
     hostedpage-id:
       type: object
       properties:
@@ -240,18 +256,6 @@ components:
       - id
       - name
       - html
-    hostedpage-file-css:
-      type: object
-      description: CSS resource appended in the header, pertaining to a specific hosted page in the target Coveo organization.
-      properties:
-        inlineContent:
-          type: string
-          description: The content of the header `style` tag. If this property is defined, the `url` property should not be specified.
-          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
-        url:
-          type: string
-          description: The URL of CSS stylesheet. If this property is defined, the `inlineContent` property should not be specified.
-          example: https://static.cloud.coveo.com/atomic/v2/themes/coveo.css
     hostedpage:
       type: object
       properties:
@@ -274,22 +278,18 @@ components:
       required:
       - name
       - html
-    hostedpage-file-javascript:
+    hostedpage-file-css:
       type: object
-      description: JavaScript resource appended to the header of a specific hosted page in the target Coveo organization.
+      description: CSS resource appended in the header, pertaining to a specific hosted page in the target Coveo organization.
       properties:
-        isModule:
-          type: boolean
-          description: Whether the inline code should be treated as a JavaScript module. If this property is `true`, the `type` property will be set to `module` on the `script` tag.
-          required: true
         inlineContent:
           type: string
-          description: The content of the header `script` tag. If this property is defined, the `url` property should not be specified.
-          example: window.location = 'about:blank';
+          description: The content of the header `style` tag. If this property is defined, the `url` property should not be specified.
+          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
         url:
           type: string
-          description: The URL of the JavaScript source file. If this property is defined, the `inlineContent` property should not be specified.
-          example: https://static.cloud.coveo.com/atomic/v2/index.esm.js
+          description: The URL of CSS stylesheet. If this property is defined, the `inlineContent` property should not be specified.
+          example: https://static.cloud.coveo.com/atomic/v2/themes/coveo.css
   securitySchemes:
     oauth2:
       type: oauth2

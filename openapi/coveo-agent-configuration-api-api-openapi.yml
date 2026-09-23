@@ -21,15 +21,13 @@ paths:
       tags:
       - Agent Configuration API
       summary: List Agents
-      description: '<details><summary>Privilege required</summary>
+      description: 'Privilege required
 
         ```
 
         {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: getByPage
       parameters:
       - name: organizationId
@@ -77,15 +75,13 @@ paths:
       tags:
       - Agent Configuration API
       summary: Create an Agent
-      description: '<details><summary>Privilege required</summary>
+      description: 'Privilege required
 
         ```
 
         {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"CREATE","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: create
       parameters:
       - name: organizationId
@@ -130,15 +126,13 @@ paths:
       tags:
       - Agent Configuration API
       summary: Get an Agent by agentId
-      description: '<details><summary>Privilege required</summary>
+      description: 'Privilege required
 
         ```
 
         {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: get
       parameters:
       - name: organizationId
@@ -176,15 +170,13 @@ paths:
       tags:
       - Agent Configuration API
       summary: Delete an Agent
-      description: '<details><summary>Privilege required</summary>
+      description: 'Privilege required
 
         ```
 
         {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"EDIT","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: delete
       parameters:
       - name: organizationId
@@ -218,15 +210,13 @@ paths:
       tags:
       - Agent Configuration API
       summary: Update an Agent
-      description: '<details><summary>Privilege required</summary>
+      description: 'Privilege required
 
         ```
 
         {"owner":"COVEO_ML","targetDomain":"AGENT_CONFIGURATION","type":"EDIT","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: update
       parameters:
       - name: organizationId
@@ -274,6 +264,106 @@ paths:
       x-ui-operation-id: /api/preview/organizations/paramId/agents/paramId_patch
 components:
   schemas:
+    Pagination_Response:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+        perPage:
+          type: integer
+          format: int32
+        totalItems:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+    Agent_Request:
+      required:
+      - agentType
+      - followUpEnabled
+      - name
+      - passageRetrievalModelId
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+          description: The name of the Agent
+        description:
+          type: string
+          description: The description of the Agent
+        agentType:
+          type: string
+          description: Agent type
+        passageRetrievalModelId:
+          type: string
+          description: Passage retrieval model identifier
+        answerModelId:
+          type: string
+          description: Answer model identifier
+          deprecated: true
+        followUpModelId:
+          type: string
+          description: Follow-up model identifier
+          deprecated: true
+        numberOfItemsToConsider:
+          maximum: 100
+          minimum: 1
+          type: integer
+          description: The maximum number of items/documents to consider for the Passage Retrieval model
+          format: int32
+        followUpEnabled:
+          type: boolean
+          description: Does the model support follow-up questions. When true, followUpModelId must be provided.
+        behaviors:
+          type: array
+          description: Optional behaviors to persist with the created agent.
+          items:
+            $ref: '#/components/schemas/Behavior_Request'
+      description: An agent configuration
+    Behavior_Request:
+      required:
+      - conditions
+      - obligation
+      type: object
+      properties:
+        obligation:
+          maxLength: 300
+          minLength: 0
+          type: string
+          description: The obligation/instruction that applies when conditions are met.
+        conditions:
+          maxItems: 15
+          minItems: 0
+          type: array
+          description: The list of conditions that must be met for this behavior to apply.
+          items:
+            maxLength: 300
+            minLength: 0
+            type: string
+            description: The list of conditions that must be met for this behavior to apply.
+      description: A behavior that the agent should follow.
+    PaginatedResponseAgent_Response:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination_Response'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agent_Response'
+    AgentUpdate_Response:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the Agent
+        description:
+          type: string
+          description: The description of the Agent
+      description: A partial agent update containing only the mutable metadata fields
     Agent_Response:
       required:
       - agentType
@@ -354,82 +444,6 @@ components:
           description: Last modification timestamp in ISO-8601 format
           format: date-time
       description: An agent configuration
-    Agent_Request:
-      required:
-      - agentType
-      - followUpEnabled
-      - name
-      - passageRetrievalModelId
-      type: object
-      properties:
-        name:
-          minLength: 1
-          type: string
-          description: The name of the Agent
-        description:
-          type: string
-          description: The description of the Agent
-        agentType:
-          type: string
-          description: Agent type
-        passageRetrievalModelId:
-          type: string
-          description: Passage retrieval model identifier
-        answerModelId:
-          type: string
-          description: Answer model identifier
-          deprecated: true
-        followUpModelId:
-          type: string
-          description: Follow-up model identifier
-          deprecated: true
-        numberOfItemsToConsider:
-          maximum: 100
-          minimum: 1
-          type: integer
-          description: The maximum number of items/documents to consider for the Passage Retrieval model
-          format: int32
-        followUpEnabled:
-          type: boolean
-          description: Does the model support follow-up questions. When true, followUpModelId must be provided.
-        behaviors:
-          type: array
-          description: Optional behaviors to persist with the created agent.
-          items:
-            $ref: '#/components/schemas/Behavior_Request'
-      description: An agent configuration
-    Behavior_Request:
-      required:
-      - conditions
-      - obligation
-      type: object
-      properties:
-        obligation:
-          maxLength: 300
-          minLength: 0
-          type: string
-          description: The obligation/instruction that applies when conditions are met.
-        conditions:
-          maxItems: 15
-          minItems: 0
-          type: array
-          description: The list of conditions that must be met for this behavior to apply.
-          items:
-            maxLength: 300
-            minLength: 0
-            type: string
-            description: The list of conditions that must be met for this behavior to apply.
-      description: A behavior that the agent should follow.
-    AgentUpdate_Response:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the Agent
-        description:
-          type: string
-          description: The description of the Agent
-      description: A partial agent update containing only the mutable metadata fields
     Behavior_Response:
       required:
       - conditions
@@ -452,30 +466,6 @@ components:
             type: string
             description: The list of conditions that must be met for this behavior to apply.
       description: A behavior that the agent should follow.
-    PaginatedResponseAgent_Response:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination_Response'
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Agent_Response'
-    Pagination_Response:
-      type: object
-      properties:
-        page:
-          type: integer
-          format: int32
-        perPage:
-          type: integer
-          format: int32
-        totalItems:
-          type: integer
-          format: int32
-        totalPages:
-          type: integer
-          format: int32
   securitySchemes:
     oauth2:
       type: oauth2

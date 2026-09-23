@@ -331,7 +331,7 @@ paths:
     get:
       tags:
       - Reader Account API - Version 15
-      summary: Get the Amount of Compute Credits Used by a Snowflake Reader Account Within a Date Range
+      summary: Get the Amount of Compute Credits Used by a Snowflake Reader Account Within a…
       operationId: get__v15_admin_snowflake_creditusage
       parameters:
       - name: org
@@ -477,6 +477,34 @@ components:
           enum:
           - AVAILABLE
       description: A snowflake reader account's state
+    UpdateSnowflakeUserExpirationRequestModelV15:
+      type: object
+      properties:
+        daysToExpiry:
+          type: integer
+          description: The number of days before the user expiration.
+          format: int32
+      description: Details required when changing the expiration of a Snowflake user
+    SnowflakeNetworkPolicyModelV15:
+      required:
+      - allowedIpAddresses
+      type: object
+      properties:
+        allowedIpAddresses:
+          uniqueItems: true
+          type: array
+          description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
+          items:
+            type: string
+            description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
+        blockedIpAddresses:
+          uniqueItems: true
+          type: array
+          description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
+          items:
+            type: string
+            description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
+      description: Details required when creating a new Snowflake network policy
     SnowflakeNetworkPolicyResponseV15:
       type: object
       properties:
@@ -526,6 +554,13 @@ components:
           description: The number of days before the user expires.
           format: double
       description: A user from a Snowflake account
+    SnowflakeReaderAccountEndpointResponseV15:
+      type: object
+      properties:
+        endpoint:
+          type: string
+          description: The endpoint of the account
+      description: A snowflake reader account's endpoint
     SnowflakeCreditUsageResponseV15:
       type: object
       properties:
@@ -534,41 +569,6 @@ components:
           description: The total number of warehouse compute credits used.
           format: double
       description: The compute credit usage for a Snowflake account over a date range.
-    SnowflakeNetworkPolicyModelV15:
-      required:
-      - allowedIpAddresses
-      type: object
-      properties:
-        allowedIpAddresses:
-          uniqueItems: true
-          type: array
-          description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
-          items:
-            type: string
-            description: The set of IPv4 addresses (with optional subnets) that are allowed access to the Snowflake account.
-        blockedIpAddresses:
-          uniqueItems: true
-          type: array
-          description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
-          items:
-            type: string
-            description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
-      description: Details required when creating a new Snowflake network policy
-    SnowflakeReaderAccountEndpointResponseV15:
-      type: object
-      properties:
-        endpoint:
-          type: string
-          description: The endpoint of the account
-      description: A snowflake reader account's endpoint
-    UpdateSnowflakeUserExpirationRequestModelV15:
-      type: object
-      properties:
-        daysToExpiry:
-          type: integer
-          description: The number of days before the user expiration.
-          format: int32
-      description: Details required when changing the expiration of a Snowflake user
   securitySchemes:
     v8:
       type: oauth2

@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Usage Analytics Write Analytics API - Version 14 API
-  description: The [Coveo Cloud](https://docs.coveo.com/en/186/) [Usage Analytics](https://docs.coveo.com/en/182/) Write API service allows you to log all end-user interactions with search interfaces and optionally other interfaces such as support case creation interfaces or your [indexed](https://docs.coveo.com/en/204/) web sites.
+  description: The Coveo Cloud Usage Analytics Write API service allows you to log all end-user interactions with search interfaces and optionally other interfaces such as support case creation interfaces or your indexed web sites.
   version: '1.0'
 servers:
 - url: https://analytics.cloud.coveo.com/rest/ua
@@ -203,82 +203,6 @@ paths:
       deprecated: true
 components:
   schemas:
-    ResultModelV14:
-      required:
-      - documentUri
-      - documentUriHash
-      type: object
-      properties:
-        documentUri:
-          type: string
-          description: The @sysuri of this document
-        documentUriHash:
-          type: string
-          description: The @sysurihash of this document
-      description: A search result
-    CustomEventModelV14:
-      required:
-      - eventType
-      - eventValue
-      - language
-      - originLevel1
-      - originLevel2
-      type: object
-      properties:
-        language:
-          type: string
-          description: The language that end user is using. Use ISO 639-1 codes. See <a href=http://en.wikipedia.org/wiki/ISO_639-1>ISO 639-1</a> for more information
-        userAgent:
-          type: string
-          description: The user agent string of the end user's browser. See <a href=http://en.wikipedia.org/wiki/User_agent>User Agent</a> for more information.
-        customData:
-          type: object
-          additionalProperties:
-            type: object
-            description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension before adding customData
-          description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension before adding customData
-        anonymous:
-          type: boolean
-          description: Indicates if the user is anonymous.
-        username:
-          type: string
-          description: The unique identifier of the user performing the search event. If not provided, the username will be extracted from the token.
-        userDisplayName:
-          type: string
-          description: The display name of the user performing the search event.
-        splitTestRunName:
-          type: string
-          description: The name of the A/B test run, if one is active.
-        splitTestRunVersion:
-          type: string
-          description: The version of the A/B test run, if one is active.
-        originLevel1:
-          type: string
-          description: The origin this event took place
-        originLevel2:
-          type: string
-          description: The origin this event took place
-        originLevel3:
-          type: string
-          description: The origin this event took place
-        device:
-          type: string
-          description: The name of the device that the end user is using
-          deprecated: true
-        mobile:
-          type: boolean
-          description: Whether the end user's device is a mobile device or not
-          deprecated: true
-        eventType:
-          type: string
-          description: The type of this event
-        eventValue:
-          type: string
-          description: The type of operation that triggered this event
-        lastSearchQueryUid:
-          type: string
-          description: The searchQueryUid of the last search event that occurred before this event
-      description: An event that represents a custom action.
     AddSearchEventResponseV14:
       required:
       - searchEventUid
@@ -299,6 +223,22 @@ components:
           description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
           example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
       description: The response to add search event operations
+    ResultModelV14:
+      required:
+      - documentUri
+      - documentUriHash
+      type: object
+      properties:
+        documentUri:
+          type: string
+          description: The @sysuri of this document
+        documentUriHash:
+          type: string
+          description: The @sysurihash of this document
+      description: A search result
+    StatusResponse:
+      type: object
+      description: Service's status information
     AddCustomEventResponseV14:
       type: object
       properties:
@@ -417,21 +357,6 @@ components:
           type: string
           description: The ranking modifier that affected the clicked document.
       description: An event that represents a result that was clicked
-    AddClickEventResponseV14:
-      type: object
-      properties:
-        visitId:
-          type: string
-          description: The ID of the visit associated with the provided click event
-        visitorId:
-          type: string
-          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
-          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-        clientId:
-          type: string
-          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
-          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-      description: The response to add click event operation
     SearchEventModelV14:
       required:
       - actionCause
@@ -526,9 +451,84 @@ components:
           items:
             type: string
       description: An event that represents a search that was done to the index
-    StatusResponse:
+    AddClickEventResponseV14:
       type: object
-      description: Service's status information
+      properties:
+        visitId:
+          type: string
+          description: The ID of the visit associated with the provided click event
+        visitorId:
+          type: string
+          description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+        clientId:
+          type: string
+          description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
+          example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      description: The response to add click event operation
+    CustomEventModelV14:
+      required:
+      - eventType
+      - eventValue
+      - language
+      - originLevel1
+      - originLevel2
+      type: object
+      properties:
+        language:
+          type: string
+          description: The language that end user is using. Use ISO 639-1 codes. See <a href=http://en.wikipedia.org/wiki/ISO_639-1>ISO 639-1</a> for more information
+        userAgent:
+          type: string
+          description: The user agent string of the end user's browser. See <a href=http://en.wikipedia.org/wiki/User_agent>User Agent</a> for more information.
+        customData:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension before adding customData
+          description: Custom data that can contain all the user defined dimensions and their values. Keys can only contain alphanumeric or underscore characters. Spaces in the key are converted to underscores. Uppercase characters in the key are converted to lowercase characters. It is highly recommended that you create your custom dimension before adding customData
+        anonymous:
+          type: boolean
+          description: Indicates if the user is anonymous.
+        username:
+          type: string
+          description: The unique identifier of the user performing the search event. If not provided, the username will be extracted from the token.
+        userDisplayName:
+          type: string
+          description: The display name of the user performing the search event.
+        splitTestRunName:
+          type: string
+          description: The name of the A/B test run, if one is active.
+        splitTestRunVersion:
+          type: string
+          description: The version of the A/B test run, if one is active.
+        originLevel1:
+          type: string
+          description: The origin this event took place
+        originLevel2:
+          type: string
+          description: The origin this event took place
+        originLevel3:
+          type: string
+          description: The origin this event took place
+        device:
+          type: string
+          description: The name of the device that the end user is using
+          deprecated: true
+        mobile:
+          type: boolean
+          description: Whether the end user's device is a mobile device or not
+          deprecated: true
+        eventType:
+          type: string
+          description: The type of this event
+        eventValue:
+          type: string
+          description: The type of operation that triggered this event
+        lastSearchQueryUid:
+          type: string
+          description: The searchQueryUid of the last search event that occurred before this event
+      description: An event that represents a custom action.
   securitySchemes:
     v8:
       type: oauth2

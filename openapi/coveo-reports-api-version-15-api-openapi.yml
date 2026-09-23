@@ -354,32 +354,6 @@ paths:
           description: No content
 components:
   schemas:
-    ReportAccessModelV15:
-      type: object
-      properties:
-        accessType:
-          type: string
-          description: Whether the report is public or private. Allowed values are 'PUBLIC', 'PRIVATE'.
-          enum:
-          - PUBLIC
-          - PRIVATE
-          - PUBLIC
-          - PRIVATE
-        allowedUsers:
-          uniqueItems: true
-          type: array
-          description: The ids of the users allowed to access the report.
-          items:
-            type: string
-            description: The ids of the users allowed to access the report.
-        allowedGroups:
-          uniqueItems: true
-          type: array
-          description: The ids of the groups allowed to access the report.
-          items:
-            type: string
-            description: The ids of the groups allowed to access the report.
-      description: The access model of a report.
     TemplateResponseV15:
       type: object
       properties:
@@ -392,95 +366,6 @@ components:
             type: object
             description: The JSON report configuration of the template.
           description: The JSON report configuration of the template.
-        title:
-          type: string
-          description: The template title.
-        description:
-          type: string
-          description: The template description.
-        category:
-          type: string
-          description: The template category.
-      description: Information about a template.
-    UserResponseV15:
-      type: object
-      properties:
-        userId:
-          type: string
-          description: The user id.
-        account:
-          type: string
-          description: The user account.
-        filters:
-          uniqueItems: true
-          type: array
-          description: The filters that are applied to the user
-          items:
-            type: string
-            description: The filters that are applied to the user
-        reports:
-          uniqueItems: true
-          type: array
-          description: The reports the user can view.
-          items:
-            type: string
-            description: The reports the user can view.
-      description: A user.
-    ReportUsersResponseV15:
-      type: object
-      properties:
-        access:
-          type: string
-          description: The access type of the report. Can be PUBLIC or PRIVATE.
-          enum:
-          - PUBLIC
-          - PRIVATE
-        allowedUsers:
-          type: array
-          description: The users allowed to access the specified report.
-          items:
-            $ref: '#/components/schemas/UserResponseV15'
-      description: The users allowed to access the specified report.
-    ReportsResponseV15:
-      type: object
-      properties:
-        reports:
-          uniqueItems: true
-          type: array
-          description: The reports the user can view.
-          items:
-            $ref: '#/components/schemas/ReportResponseV15'
-      description: The reports the user can view.
-    GroupResponseV15:
-      type: object
-      properties:
-        groupId:
-          type: string
-          description: The group id.
-        account:
-          type: string
-          description: The group account.
-        filters:
-          uniqueItems: true
-          type: array
-          description: The filters that are applied to the users of the group.
-          items:
-            type: string
-            description: The filters that are applied to the users of the group.
-        reports:
-          uniqueItems: true
-          type: array
-          description: The reports the users of the group can view.
-          items:
-            type: string
-            description: The reports the users of the group can view.
-      description: A group of users.
-    TemplateMetadataResponseV15:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The template id.
         title:
           type: string
           description: The template title.
@@ -523,6 +408,60 @@ components:
             type: string
             description: List of associated filters.
       description: A report configuration.
+    UserResponseV15:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The user id.
+        account:
+          type: string
+          description: The user account.
+        filters:
+          uniqueItems: true
+          type: array
+          description: The filters that are applied to the user
+          items:
+            type: string
+            description: The filters that are applied to the user
+        reports:
+          uniqueItems: true
+          type: array
+          description: The reports the user can view.
+          items:
+            type: string
+            description: The reports the user can view.
+      description: A user.
+    ReportAccessResponseV15:
+      type: object
+      properties:
+        accessType:
+          type: string
+          description: The access type of the report. Can be PUBLIC or PRIVATE.
+          enum:
+          - PUBLIC
+          - PRIVATE
+        allowedUsers:
+          type: array
+          description: The users allowed to access the specified report.
+          items:
+            $ref: '#/components/schemas/UserResponseV15'
+        allowedGroups:
+          type: array
+          description: The groups allowed to access the specified report.
+          items:
+            $ref: '#/components/schemas/GroupResponseV15'
+      description: The users and groups allowed to access the report
+    ReportIdResponseV15:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The report id.
+      description: A report id.
+    StatusResponse:
+      type: object
+      description: Service's status information
     ReportModelV15:
       required:
       - allAnalyticsViewer
@@ -557,10 +496,20 @@ components:
             type: string
             description: The ids of the persisted filters associated with the report.
       description: The configuration of a report.
-    ReportAccessResponseV15:
+    ReportsResponseV15:
       type: object
       properties:
-        accessType:
+        reports:
+          uniqueItems: true
+          type: array
+          description: The reports the user can view.
+          items:
+            $ref: '#/components/schemas/ReportResponseV15'
+      description: The reports the user can view.
+    ReportUsersResponseV15:
+      type: object
+      properties:
+        access:
           type: string
           description: The access type of the report. Can be PUBLIC or PRIVATE.
           enum:
@@ -571,22 +520,73 @@ components:
           description: The users allowed to access the specified report.
           items:
             $ref: '#/components/schemas/UserResponseV15'
-        allowedGroups:
-          type: array
-          description: The groups allowed to access the specified report.
-          items:
-            $ref: '#/components/schemas/GroupResponseV15'
-      description: The users and groups allowed to access the report
-    ReportIdResponseV15:
+      description: The users allowed to access the specified report.
+    TemplateMetadataResponseV15:
       type: object
       properties:
         id:
           type: string
-          description: The report id.
-      description: A report id.
-    StatusResponse:
+          description: The template id.
+        title:
+          type: string
+          description: The template title.
+        description:
+          type: string
+          description: The template description.
+        category:
+          type: string
+          description: The template category.
+      description: Information about a template.
+    GroupResponseV15:
       type: object
-      description: Service's status information
+      properties:
+        groupId:
+          type: string
+          description: The group id.
+        account:
+          type: string
+          description: The group account.
+        filters:
+          uniqueItems: true
+          type: array
+          description: The filters that are applied to the users of the group.
+          items:
+            type: string
+            description: The filters that are applied to the users of the group.
+        reports:
+          uniqueItems: true
+          type: array
+          description: The reports the users of the group can view.
+          items:
+            type: string
+            description: The reports the users of the group can view.
+      description: A group of users.
+    ReportAccessModelV15:
+      type: object
+      properties:
+        accessType:
+          type: string
+          description: Whether the report is public or private. Allowed values are 'PUBLIC', 'PRIVATE'.
+          enum:
+          - PUBLIC
+          - PRIVATE
+          - PUBLIC
+          - PRIVATE
+        allowedUsers:
+          uniqueItems: true
+          type: array
+          description: The ids of the users allowed to access the report.
+          items:
+            type: string
+            description: The ids of the users allowed to access the report.
+        allowedGroups:
+          uniqueItems: true
+          type: array
+          description: The ids of the groups allowed to access the report.
+          items:
+            type: string
+            description: The ids of the groups allowed to access the report.
+      description: The access model of a report.
   securitySchemes:
     v8:
       type: oauth2

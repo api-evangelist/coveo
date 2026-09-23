@@ -48,6 +48,8 @@ paths:
                 $ref: '#/components/schemas/PlatformTokenResponseModel'
       x-pretty-name: generatePlatformToken
       x-ui-operation-id: /rest/organizations/paramId/tokens_post
+      summary: Generate platform token
+      x-summary-source: derived
 components:
   schemas:
     PlatformTokenSearchConfigurationModel:
@@ -63,67 +65,6 @@ components:
       properties:
         token:
           type: string
-    AnalyticsConfigurationModel:
-      type: object
-      properties:
-        event:
-          $ref: '#/components/schemas/EventModel'
-      description: The user information to send to Coveo Usage Analytics
-    GlobalPrivilegeModel:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The type of the privilege.
-          example: VIEW
-        targetDomain:
-          type: string
-          description: The target domain of the privilege.
-          example: ORGANIZATION
-        targetId:
-          type: string
-          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
-          example: '*'
-        owner:
-          type: string
-          description: The owner of the privilege.
-          example: PLATFORM
-        level:
-          type: string
-          description: The access level of the global privileges.`
-          example: GLOBAL
-      description: A global privilege.
-    ImpersonatedUserModel:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the security identity to impersonate.</br>**Example:** `asmith@example.com`
-        provider:
-          type: string
-          description: The security identity provider containing the security identity to impersonate.</br>**Example:** `Email Security Provider`
-        type:
-          type: string
-          description: The type of the security identity to impersonate.</br>**Default:** `User`</br> **Allowed values:** </br>- `User` </br>- `Group` </br>- `VirtualGroup` </br>- `Unknown`
-      description: The security identities to impersonate when authenticating queries with the API key. </br>**Note:** If specified, the API key must have the `IMPERSONATE` privilege.
-    PlatformTokenPayloadBodyModel:
-      type: object
-      properties:
-        organizationId:
-          type: string
-        privileges:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/GlobalPrivilegeModel'
-        additionalConfiguration:
-          $ref: '#/components/schemas/PlatformTokenAdditionalConfigurationModel'
-        creatorAuthentication:
-          type: string
-          readOnly: true
-        creatorEmail:
-          type: string
-          readOnly: true
     PlatformTokenPayloadModel:
       type: object
       properties:
@@ -152,6 +93,30 @@ components:
         jti:
           type: string
           readOnly: true
+    GlobalPrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+        level:
+          type: string
+          description: The access level of the global privileges.`
+          example: GLOBAL
+      description: A global privilege.
     PlatformTokenAdditionalConfigurationModel:
       type: object
       properties:
@@ -159,6 +124,30 @@ components:
           $ref: '#/components/schemas/PlatformTokenSearchConfigurationModel'
         analytics:
           $ref: '#/components/schemas/AnalyticsConfigurationModel'
+    PlatformTokenPayloadBodyModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        privileges:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/GlobalPrivilegeModel'
+        additionalConfiguration:
+          $ref: '#/components/schemas/PlatformTokenAdditionalConfigurationModel'
+        creatorAuthentication:
+          type: string
+          readOnly: true
+        creatorEmail:
+          type: string
+          readOnly: true
+    AnalyticsConfigurationModel:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/EventModel'
+      description: The user information to send to Coveo Usage Analytics
     EventModel:
       type: object
       properties:
@@ -169,6 +158,19 @@ components:
           type: string
           description: The display name of the user. **Example:** `Alice`
       description: The user information to send along with usage analytics events.
+    ImpersonatedUserModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the security identity to impersonate.</br>**Example:** `asmith@example.com`
+        provider:
+          type: string
+          description: The security identity provider containing the security identity to impersonate.</br>**Example:** `Email Security Provider`
+        type:
+          type: string
+          description: The type of the security identity to impersonate.</br>**Default:** `User`</br> **Allowed values:** </br>- `User` </br>- `Group` </br>- `VirtualGroup` </br>- `Unknown`
+      description: The security identities to impersonate when authenticating queries with the API key. </br>**Note:** If specified, the API key must have the `IMPERSONATE` privilege.
   securitySchemes:
     oauth2:
       type: oauth2

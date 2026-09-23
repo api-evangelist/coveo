@@ -480,17 +480,79 @@ paths:
       deprecated: true
 components:
   schemas:
-    CustomDimensionSuggestionsResponseV14:
-      required:
-      - suggestions
+    DimensionValuesResponseV14:
       type: object
       properties:
-        suggestions:
+        values:
           type: array
-          description: Information regarding the custom dimension
+          description: The values for this dimension
           items:
-            $ref: '#/components/schemas/CustomDimensionSuggestionResponseV14'
-      description: Suggestions of custom dimensions that could be created
+            type: object
+            additionalProperties:
+              type: object
+              description: The values for this dimension
+            description: The values for this dimension
+      description: The values for this dimension
+    CustomDimensionModelV14:
+      required:
+      - displayName
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the dimension
+          enum:
+          - TEXT
+          - NUMBER
+          - SHORT
+          - BOOLEAN
+          - DATE
+          - DATETIME
+          - TEXT
+          - NUMBER
+          - SHORT
+          - BOOLEAN
+          - DATE
+          - DATETIME
+        displayName:
+          type: string
+          description: The display name of the dimension Should be human readable
+      description: Additional required information to create a custom dimension
+    CustomDimensionModelV15:
+      required:
+      - displayName
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the dimension
+          enum:
+          - TEXT
+          - NUMBER
+          - SHORT
+          - BOOLEAN
+          - DATE
+          - DATETIME
+          - TEXT
+          - NUMBER
+          - SHORT
+          - BOOLEAN
+          - DATE
+          - DATETIME
+        displayName:
+          type: string
+          description: The display name of the dimension. Should be human readable
+        path:
+          type: array
+          description: 'Strings that correspond to the path that must be followed to fetch the desired value of the dimension in the custom_datas map. For example, let''s consider the following custom_datas map: ''{"a":{"b":"c"}}''. To select the value "c", the path would need to contain the elements "a" and "b".'
+          items:
+            type: string
+      description: Additional required information to create a custom dimension
+    StatusResponse:
+      type: object
+      description: Service's status information
     CustomDimensionSuggestionResponseV14:
       type: object
       properties:
@@ -562,79 +624,17 @@ components:
           - AVAILABLE
           - UPDATING
       description: The details of a dimension
-    DimensionValuesResponseV14:
-      type: object
-      properties:
-        values:
-          type: array
-          description: The values for this dimension
-          items:
-            type: object
-            additionalProperties:
-              type: object
-              description: The values for this dimension
-            description: The values for this dimension
-      description: The values for this dimension
-    CustomDimensionModelV15:
+    CustomDimensionSuggestionsResponseV14:
       required:
-      - displayName
-      - type
+      - suggestions
       type: object
       properties:
-        type:
-          type: string
-          description: The type of the dimension
-          enum:
-          - TEXT
-          - NUMBER
-          - SHORT
-          - BOOLEAN
-          - DATE
-          - DATETIME
-          - TEXT
-          - NUMBER
-          - SHORT
-          - BOOLEAN
-          - DATE
-          - DATETIME
-        displayName:
-          type: string
-          description: The display name of the dimension. Should be human readable
-        path:
+        suggestions:
           type: array
-          description: 'Strings that correspond to the path that must be followed to fetch the desired value of the dimension in the custom_datas map. For example, let''s consider the following custom_datas map: ''{"a":{"b":"c"}}''. To select the value "c", the path would need to contain the elements "a" and "b".'
+          description: Information regarding the custom dimension
           items:
-            type: string
-      description: Additional required information to create a custom dimension
-    CustomDimensionModelV14:
-      required:
-      - displayName
-      - type
-      type: object
-      properties:
-        type:
-          type: string
-          description: The type of the dimension
-          enum:
-          - TEXT
-          - NUMBER
-          - SHORT
-          - BOOLEAN
-          - DATE
-          - DATETIME
-          - TEXT
-          - NUMBER
-          - SHORT
-          - BOOLEAN
-          - DATE
-          - DATETIME
-        displayName:
-          type: string
-          description: The display name of the dimension Should be human readable
-      description: Additional required information to create a custom dimension
-    StatusResponse:
-      type: object
-      description: Service's status information
+            $ref: '#/components/schemas/CustomDimensionSuggestionResponseV14'
+      description: Suggestions of custom dimensions that could be created
   securitySchemes:
     v8:
       type: oauth2

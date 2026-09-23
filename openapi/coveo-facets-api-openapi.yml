@@ -412,6 +412,8 @@ paths:
               $ref: '#/components/schemas/GetLogsOrFacetsRequestBodyModel'
         description: The filters to apply when retrieving the facets.
         required: true
+      operationId: postOrganizationsByOrganizationIdFacets
+      x-operation-id-source: derived
   /organizations/{organizationId}/facetsStats:
     post:
       description: Retrieves the facets, including facet counts, for a specific unpaginated set of indexing pipeline log entries.
@@ -814,6 +816,8 @@ paths:
               $ref: '#/components/schemas/GetLogsOrFacetsRequestBodyModel'
         description: The filters to apply when retrieving the facets.
         required: true
+      operationId: postOrganizationsByOrganizationIdFacetsStats
+      x-operation-id-source: derived
 components:
   schemas:
     Error:
@@ -822,35 +826,6 @@ components:
           type: string
         message:
           type: string
-      type: object
-    GetFacetsWithCountsResponseBodyModel:
-      description: The retrieved values/counts for each type of indexing pipeline log entry facet.
-      properties:
-        operations:
-          description: 'The retrieved _operation_ facet values/counts  (each key will be a valid _operation_ enum value).
-
-            Example: `{"ADD": 50}`'
-          type: object
-        resourceIds:
-          description: 'The retrieved _resourceId_ facet values/counts.
-
-            Example: `{"mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i": 10, "mycoveocloudorganizationg8tp8wu3-rnj3eisk4as63kx7zc4ch4keja": 3, "MAPPING_EXTENSION": 37}`'
-          type: object
-        results:
-          description: 'The retrieved _result_ facet values/counts  (each key will be a valid _result_ enum value).
-
-            Example: `{"SKIPPED": 3, "COMPLETED": 47}`'
-          type: object
-        sourceIds:
-          description: 'The retrieved _sourceId_ facet values/counts.
-
-            Example: `{"w1zh6p45vh7s2uxzvg3s7kg85m-mycoveocloudorganizationg8tp8wu3": 8,"xqgojoppe6qkojkotz7xsi2o3e-mycoveocloudorganizationg8tp8wu3": 42}`'
-          type: object
-        tasks:
-          description: 'The retrieved _task_ facet values/counts (each key will be a valid _task_ enum value).
-
-            Example: `{"MAPPING": 37, "EXTENSION": 13}`'
-          type: object
       type: object
     GetFacetsResponseBodyModel:
       description: The retrieved values for each type of indexing pipeline log entry facet.
@@ -891,31 +866,6 @@ components:
             $ref: '#/components/schemas/IndexingPipelineLogTasks'
           type: array
       type: object
-    IndexingPipelineLogTasks:
-      description: The _task_ filter value.
-      enum:
-      - CONSUMING
-      - CONSUMING_BATCH
-      - CRAWLING
-      - STREAMING_EXTENSION
-      - EXTENSION
-      - INDEXING
-      - MAPPING
-      - PROCESSING
-      - STREAMING
-      - STREAMING_BATCH
-      - PREINDEXING
-      - VALIDATION
-      type: string
-    IndexingPipelineLogResults:
-      description: The _result_ filter value.
-      enum:
-      - COMPLETED
-      - ERROR
-      - REJECTED
-      - SKIPPED
-      - WARNING
-      type: string
     GetLogsOrFacetsRequestBodyModel:
       properties:
         excludeOperations:
@@ -969,6 +919,60 @@ components:
             $ref: '#/components/schemas/IndexingPipelineLogTasks'
           type: array
       type: object
+    IndexingPipelineLogResults:
+      description: The _result_ filter value.
+      enum:
+      - COMPLETED
+      - ERROR
+      - REJECTED
+      - SKIPPED
+      - WARNING
+      type: string
+    GetFacetsWithCountsResponseBodyModel:
+      description: The retrieved values/counts for each type of indexing pipeline log entry facet.
+      properties:
+        operations:
+          description: 'The retrieved _operation_ facet values/counts  (each key will be a valid _operation_ enum value).
+
+            Example: `{"ADD": 50}`'
+          type: object
+        resourceIds:
+          description: 'The retrieved _resourceId_ facet values/counts.
+
+            Example: `{"mycoveocloudorganizationg8tp8wu3-qp2fnxukqw7voteaiahlxfkf7i": 10, "mycoveocloudorganizationg8tp8wu3-rnj3eisk4as63kx7zc4ch4keja": 3, "MAPPING_EXTENSION": 37}`'
+          type: object
+        results:
+          description: 'The retrieved _result_ facet values/counts  (each key will be a valid _result_ enum value).
+
+            Example: `{"SKIPPED": 3, "COMPLETED": 47}`'
+          type: object
+        sourceIds:
+          description: 'The retrieved _sourceId_ facet values/counts.
+
+            Example: `{"w1zh6p45vh7s2uxzvg3s7kg85m-mycoveocloudorganizationg8tp8wu3": 8,"xqgojoppe6qkojkotz7xsi2o3e-mycoveocloudorganizationg8tp8wu3": 42}`'
+          type: object
+        tasks:
+          description: 'The retrieved _task_ facet values/counts (each key will be a valid _task_ enum value).
+
+            Example: `{"MAPPING": 37, "EXTENSION": 13}`'
+          type: object
+      type: object
+    IndexingPipelineLogTasks:
+      description: The _task_ filter value.
+      enum:
+      - CONSUMING
+      - CONSUMING_BATCH
+      - CRAWLING
+      - STREAMING_EXTENSION
+      - EXTENSION
+      - INDEXING
+      - MAPPING
+      - PROCESSING
+      - STREAMING
+      - STREAMING_BATCH
+      - PREINDEXING
+      - VALIDATION
+      type: string
     IndexingPipelineLogOperations:
       description: The _operation_ filter value.
       enum:

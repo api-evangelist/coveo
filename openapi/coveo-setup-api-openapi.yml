@@ -21,15 +21,19 @@ paths:
       tags:
       - Setup
       summary: Create CMH Scaffolding
-      description: 'Creates the resources recommended to [setup](https://docs.coveo.com/en/o25a0034) Coveo for Commerce in a [organization](https://docs.coveo.com/en/185/).</br></br>**Required privilege:** Merchandising Hub - Edit<br /><br /><details><summary>Privilege required</summary>
+      description: 'Creates the resources recommended to setup Coveo for Commerce in a organization.
+
+
+        **Required privilege:** Merchandising Hub - Edit
+
+
+        Privilege required
 
         ```
 
         {"owner":"COMMERCE","targetDomain":"MERCHANDISING_HUB","type":"EDIT","targetId":"{body.trackingId}"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: setup
       parameters:
       - name: organizationId
@@ -65,53 +69,47 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/setup_post
 components:
   schemas:
-    SetupRequestModel:
-      required:
-      - trackingIdToCatalogMapping
+    TrackingIdToCatalogMappingCatalogModelCatalogConfigurationAvailability:
       type: object
       properties:
-        trackingId:
-          maxLength: 255
-          minLength: 1
+        idField:
           type: string
-          description: The unique identifier of the tracking target.
-          example: acmecorporation_ca
-        trackingIdToCatalogMapping:
-          type: array
-          description: The mappings related to the supplied tracking IDs
-          items:
-            $ref: '#/components/schemas/TrackingIdToCatalogMappingSetupModel'
-        pipelineSetups:
-          type: array
-          description: List of pipeline setups to configure
-          items:
-            $ref: '#/components/schemas/PipelineSetup'
-      description: The scaffolding to setup.
-    SetupResponseModel:
+          description: The unique identifier of this availability in the catalog
+          example: availabilityid
+    TrackingIdToCatalogMappingModel:
+      required:
+      - catalogName
+      - country
+      - currency
+      - language
+      - primary
       type: object
       properties:
-        queryPipelines:
-          type: array
-          description: The list of query pipeline configurations created or modified.
-          items:
-            $ref: '#/components/schemas/QueryPipelineConfigurationModel'
-        globalConfigurationUpdated:
-          type: array
-          description: The list of updated global configurations.
-          items:
-            $ref: '#/components/schemas/GlobalConfigurationUpdatedModel'
-        trackingIdToCatalogMapping:
-          type: array
-          items:
-            $ref: '#/components/schemas/TrackingIdToCatalogMappingModel'
-    TrackingIdToCatalogMappingCatalogModelCatalogConfiguration:
-      type: object
-      properties:
-        product:
-          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfigurationProduct'
-        available:
-          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfigurationAvailability'
-      description: The configuration of the catalog
+        catalogName:
+          type: string
+          description: The name of the catalog for this mapping
+          example: MyCatalog
+        language:
+          pattern: ^[a-z]{2}$
+          type: string
+          description: Language code that must conform to the ISO 639-1 language code specification
+          example: en
+        country:
+          pattern: ^[A-Z]{2}$
+          type: string
+          description: Country code that must conform to the ISO 3166-1 country code specification
+          example: GB
+        currency:
+          pattern: ^[A-Z]{3}$
+          type: string
+          description: Currency code that must conform to the ISO 4217 currency code specification
+          example: USD
+        primary:
+          type: boolean
+          description: Determines if this mapping is the primary one for a specific tracking id
+          example: true
+        catalog:
+          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModel'
     GlobalConfigurationUpdatedModel:
       type: object
       properties:
@@ -177,13 +175,82 @@ components:
           description: Currency code that must conform to the ISO 4217 currency code specification
           example: USD
       description: The mappings related to the supplied tracking IDs
-    TrackingIdToCatalogMappingCatalogModelCatalogConfigurationProduct:
+    ProductGrouping:
+      required:
+      - trackingId
       type: object
       properties:
-        idField:
+        trackingId:
           type: string
-          description: The unique identifier of this product in the catalog
-          example: productid
+          description: The tracking id which we wish to applied global grouping to.
+          example: MyTrackingID
+        globalProductGroupingEnabled:
+          type: boolean
+      description: Indicates whether the pipeline should be grouped. Use this option to control the aggregation behavior of the pipeline. If null, the grouping will not be changed.
+    SetupRequestModel:
+      required:
+      - trackingIdToCatalogMapping
+      type: object
+      properties:
+        trackingId:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The unique identifier of the tracking target.
+          example: acmecorporation_ca
+        trackingIdToCatalogMapping:
+          type: array
+          description: The mappings related to the supplied tracking IDs
+          items:
+            $ref: '#/components/schemas/TrackingIdToCatalogMappingSetupModel'
+        pipelineSetups:
+          type: array
+          description: List of pipeline setups to configure
+          items:
+            $ref: '#/components/schemas/PipelineSetup'
+      description: The scaffolding to setup.
+    TrackingIdToCatalogMappingCatalogModelCatalogConfiguration:
+      type: object
+      properties:
+        product:
+          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfigurationProduct'
+        available:
+          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModelCatalogConfigurationAvailability'
+      description: The configuration of the catalog
+    PipelineSetup:
+      required:
+      - pipelineId
+      type: object
+      properties:
+        pipelineId:
+          minLength: 1
+          type: string
+          description: The identifier of the pipeline used to process the query.
+          example: 9716d88a-f02b-480e-bf44-ab1b1af165a8
+        pipelineProductGrouping:
+          $ref: '#/components/schemas/ProductGrouping'
+        deactivateRankingFactor:
+          type: boolean
+          description: Indicates whether the ranking factors should be deactivated for the pipeline. If null, the ranking factors will not be changed.
+          example: false
+      description: List of pipeline setups to configure
+    SetupResponseModel:
+      type: object
+      properties:
+        queryPipelines:
+          type: array
+          description: The list of query pipeline configurations created or modified.
+          items:
+            $ref: '#/components/schemas/QueryPipelineConfigurationModel'
+        globalConfigurationUpdated:
+          type: array
+          description: The list of updated global configurations.
+          items:
+            $ref: '#/components/schemas/GlobalConfigurationUpdatedModel'
+        trackingIdToCatalogMapping:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingIdToCatalogMappingModel'
     QueryPipelineConfigurationModel:
       type: object
       properties:
@@ -202,76 +269,13 @@ components:
         pipelineProductGroupingEnabled:
           type: boolean
       description: The list of query pipeline configurations created or modified.
-    ProductGrouping:
-      required:
-      - trackingId
-      type: object
-      properties:
-        trackingId:
-          type: string
-          description: The tracking id which we wish to applied global grouping to.
-          example: MyTrackingID
-        globalProductGroupingEnabled:
-          type: boolean
-      description: Indicates whether the pipeline should be grouped. Use this option to control the aggregation behavior of the pipeline. If null, the grouping will not be changed.
-    TrackingIdToCatalogMappingCatalogModelCatalogConfigurationAvailability:
+    TrackingIdToCatalogMappingCatalogModelCatalogConfigurationProduct:
       type: object
       properties:
         idField:
           type: string
-          description: The unique identifier of this availability in the catalog
-          example: availabilityid
-    PipelineSetup:
-      required:
-      - pipelineId
-      type: object
-      properties:
-        pipelineId:
-          minLength: 1
-          type: string
-          description: The identifier of the pipeline used to process the query.
-          example: 9716d88a-f02b-480e-bf44-ab1b1af165a8
-        pipelineProductGrouping:
-          $ref: '#/components/schemas/ProductGrouping'
-        deactivateRankingFactor:
-          type: boolean
-          description: Indicates whether the ranking factors should be deactivated for the pipeline. If null, the ranking factors will not be changed.
-          example: false
-      description: List of pipeline setups to configure
-    TrackingIdToCatalogMappingModel:
-      required:
-      - catalogName
-      - country
-      - currency
-      - language
-      - primary
-      type: object
-      properties:
-        catalogName:
-          type: string
-          description: The name of the catalog for this mapping
-          example: MyCatalog
-        language:
-          pattern: ^[a-z]{2}$
-          type: string
-          description: Language code that must conform to the ISO 639-1 language code specification
-          example: en
-        country:
-          pattern: ^[A-Z]{2}$
-          type: string
-          description: Country code that must conform to the ISO 3166-1 country code specification
-          example: GB
-        currency:
-          pattern: ^[A-Z]{3}$
-          type: string
-          description: Currency code that must conform to the ISO 4217 currency code specification
-          example: USD
-        primary:
-          type: boolean
-          description: Determines if this mapping is the primary one for a specific tracking id
-          example: true
-        catalog:
-          $ref: '#/components/schemas/TrackingIdToCatalogMappingCatalogModel'
+          description: The unique identifier of this product in the catalog
+          example: productid
   securitySchemes:
     oauth2:
       type: oauth2

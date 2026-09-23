@@ -21,7 +21,7 @@ paths:
       tags:
       - Metadata
       summary: Retrieve Metadata Report for a Source
-      description: '<details><summary>Privilege required</summary>
+      description: 'Privilege required
 
         ```
 
@@ -31,9 +31,7 @@ paths:
 
         {"owner":"PLATFORM","targetDomain":"SOURCE_METADATA","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: getSourceMetadataReport
       parameters:
       - name: organizationId
@@ -106,7 +104,7 @@ paths:
       tags:
       - Metadata
       summary: Create Metadata Report for a Source
-      description: '<details><summary>Privilege required</summary>
+      description: 'Privilege required
 
         ```
 
@@ -116,9 +114,7 @@ paths:
 
         {"owner":"PLATFORM","targetDomain":"SOURCE_METADATA","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: createMetadataReport
       parameters:
       - name: organizationId
@@ -157,7 +153,7 @@ paths:
       tags:
       - Metadata
       summary: Get the Status of Metadata Reports for a Source
-      description: '<details><summary>Privilege required</summary>
+      description: 'Privilege required
 
         ```
 
@@ -167,9 +163,7 @@ paths:
 
         {"owner":"PLATFORM","targetDomain":"SOURCE_METADATA","type":"VIEW","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: getSourceMetadataStatus
       parameters:
       - name: organizationId
@@ -209,15 +203,31 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/sources/paramId/metadata/status_get
 components:
   schemas:
-    SourceMetadataStatusModel:
+    MetadataReportPageModel:
       type: object
       properties:
-        sampleAvailable:
-          type: boolean
-        reportGenerationInProgress:
-          type: boolean
-        reportAvailable:
-          type: boolean
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceMetadataModel'
+        creationDate:
+          type: string
+          format: date-time
+        expirationDate:
+          type: string
+          format: date-time
+        sampledDocumentCount:
+          type: integer
+          format: int32
+        documentErrorCount:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        totalEntries:
+          type: integer
+          format: int64
     SourceMetadataModel:
       type: object
       properties:
@@ -249,31 +259,15 @@ components:
         count:
           type: integer
           format: int32
-    MetadataReportPageModel:
+    SourceMetadataStatusModel:
       type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/SourceMetadataModel'
-        creationDate:
-          type: string
-          format: date-time
-        expirationDate:
-          type: string
-          format: date-time
-        sampledDocumentCount:
-          type: integer
-          format: int32
-        documentErrorCount:
-          type: integer
-          format: int32
-        totalPages:
-          type: integer
-          format: int32
-        totalEntries:
-          type: integer
-          format: int64
+        sampleAvailable:
+          type: boolean
+        reportGenerationInProgress:
+          type: boolean
+        reportAvailable:
+          type: boolean
   securitySchemes:
     oauth2:
       type: oauth2

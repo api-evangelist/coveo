@@ -565,23 +565,6 @@ paths:
       deprecated: true
 components:
   schemas:
-    DataPoint:
-      required:
-      - datas
-      - dateTime
-      type: object
-      properties:
-        dateTime:
-          type: string
-          description: The moment in time that this point represents
-          format: date-time
-        datas:
-          type: object
-          additionalProperties:
-            type: number
-            description: The metric values
-          description: The metric values
-      description: A collection of data points
     VisitStatisticsResponseV15:
       required:
       - visitId
@@ -600,6 +583,23 @@ components:
           description: The number of events
           format: int32
       description: The visit matching the specified criteria
+    DataPoint:
+      required:
+      - datas
+      - dateTime
+      type: object
+      properties:
+        dateTime:
+          type: string
+          description: The moment in time that this point represents
+          format: date-time
+        datas:
+          type: object
+          additionalProperties:
+            type: number
+            description: The metric values
+          description: The metric values
+      description: A collection of data points
     GlobalAggregatedDataResponseV14:
       required:
       - globalDatas
@@ -615,6 +615,38 @@ components:
             description: The global values by metrics. Usually a unique count, a daily count or daily average
           description: The global values by metrics. Usually a unique count, a daily count or daily average
       description: The global aggregated values by metrics
+    CombinedDataResponseV14:
+      required:
+      - combinations
+      type: object
+      properties:
+        combinations:
+          type: array
+          description: The metrics/dimensions combinations
+          items:
+            type: object
+            additionalProperties:
+              type: object
+              description: The metrics/dimensions combinations
+            description: The metrics/dimensions combinations
+        uniqueCounts:
+          type: object
+          additionalProperties:
+            type: object
+            description: The unique counts for the different values of all specified dimensions
+          description: The unique counts for the different values of all specified dimensions
+        totalNumberOfResults:
+          type: integer
+          description: The total number of combinations available
+          format: int32
+      description: The values of the metrics combined by dimensions
+    StatusResponse:
+      type: object
+      description: Service's status information
+    EventPojo:
+      type: object
+      properties: {}
+      description: The visit's events
     GraphAggregatedDataResponseV14:
       required:
       - dataPoints
@@ -642,35 +674,6 @@ components:
       type: object
       properties: {}
       description: The sum, average, max and min for the requested metrics.
-    EventPojo:
-      type: object
-      properties: {}
-      description: The visit's events
-    CombinedDataResponseV14:
-      required:
-      - combinations
-      type: object
-      properties:
-        combinations:
-          type: array
-          description: The metrics/dimensions combinations
-          items:
-            type: object
-            additionalProperties:
-              type: object
-              description: The metrics/dimensions combinations
-            description: The metrics/dimensions combinations
-        uniqueCounts:
-          type: object
-          additionalProperties:
-            type: object
-            description: The unique counts for the different values of all specified dimensions
-          description: The unique counts for the different values of all specified dimensions
-        totalNumberOfResults:
-          type: integer
-          description: The total number of combinations available
-          format: int32
-      description: The values of the metrics combined by dimensions
     VisitsStatisticsResponseV14:
       required:
       - visits
@@ -686,9 +689,6 @@ components:
           description: The total number of visits matching
           format: int32
       description: The visits matching the specified criteria
-    StatusResponse:
-      type: object
-      description: Service's status information
   securitySchemes:
     v8:
       type: oauth2

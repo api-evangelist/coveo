@@ -355,6 +355,8 @@ paths:
               $ref: '#/components/schemas/MappedIdentityBody'
         description: The security identity alias definition.
         required: true
+      operationId: putOrganizationsByOrganizationIdProvidersByProviderIdMappings
+      x-operation-id-source: derived
   /organizations/{organizationId}/providers/{providerId}/permissions:
     delete:
       description: Disables a single security identity in the security identity provider of a secured Push source.
@@ -701,6 +703,8 @@ paths:
               $ref: '#/components/schemas/BaseIdentityBody'
         description: The security identity to delete.
         required: true
+      operationId: deleteOrganizationsByOrganizationIdProvidersByProviderIdPermissions
+      x-operation-id-source: derived
     put:
       description: Adds or updates a single security identity in the security identity provider of a secured Push source.
       externalDocs:
@@ -1046,6 +1050,8 @@ paths:
               $ref: '#/components/schemas/IdentityBody'
         description: The security identity to add or update.
         required: true
+      operationId: putOrganizationsByOrganizationIdProvidersByProviderIdPermissions
+      x-operation-id-source: derived
   /organizations/{organizationId}/providers/{providerId}/permissions/batch:
     put:
       description: Manages a batch of security identities in the security identity provider of a secured Push source.
@@ -1391,6 +1397,8 @@ paths:
       tags:
       - Security Identity
       x-pretty-name: addUpdateDeleteBatchedIdentity
+      operationId: putOrganizationsByOrganizationIdProvidersByProviderIdPermissionsBatch
+      x-operation-id-source: derived
   /organizations/{organizationId}/providers/{providerId}/permissions/olderthan:
     delete:
       description: In a specific security identity provider, disables all security identities whose last update was made by a Push API operation whose `orderingId` is strictly lower than a specified value.
@@ -1738,6 +1746,8 @@ paths:
       tags:
       - Security Identity
       x-pretty-name: deleteIdentityOlderThan
+      operationId: deleteOrganizationsByOrganizationIdProvidersByProviderIdPermissionsOlderthan
+      x-operation-id-source: derived
 components:
   schemas:
     Error:
@@ -1746,11 +1756,6 @@ components:
           type: string
         message:
           type: string
-      type: object
-    BaseIdentityBody:
-      properties:
-        identity:
-          $ref: '#/components/schemas/Identity'
       type: object
     Identity:
       properties:
@@ -1769,6 +1774,46 @@ components:
           - VIRTUAL_GROUP
           - UNKNOWN
           type: string
+      type: object
+    EntityUpdateResult:
+      properties:
+        errorDetails:
+          type: string
+        result:
+          enum:
+          - Success
+          - AccessDenied
+          - TimedOut
+          - EntityIsInvalid
+          - EntityIsUnavailable
+          - SecurityProviderIsUnavailable
+          - SecurityProviderIsUnreachable
+          - SecurityProviderIsNotReady
+          - UnexpectedError
+          type: string
+      type: object
+    IdentityBody:
+      properties:
+        Result:
+          $ref: '#/components/schemas/EntityUpdateResult'
+          description: The security identity entity update result.
+        identity:
+          $ref: '#/components/schemas/Identity'
+        members:
+          items:
+            $ref: '#/components/schemas/Identity'
+            description: "The security identities to include as children of this security identity.  \n**Notes:**  \n>- Only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` typically have an array of `members`.  \n>- A security identity in the `members` array can be of any valid `type` (i.e., `UNKNOWN`, `USER`, `GROUP`, or `VIRTUAL_GROUP`)."
+          type: array
+        wellKnowns:
+          items:
+            $ref: '#/components/schemas/Identity'
+            description: "The granted identities to give to this security identity.  \n**Notes:**  \n>- While all security identity types (i.e., `UNKNOWN`, `USER`, `GROUP`, and `VIRTUAL_GROUP`) are theoretically available, only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` should be given as granted identities.  \n>- For legacy reasons, the Push API requires you to specify *granted identities* in an array property whose name is `wellKnowns`."
+          type: array
+      type: object
+    BaseIdentityBody:
+      properties:
+        identity:
+          $ref: '#/components/schemas/Identity'
       type: object
     MappedIdentity:
       properties:
@@ -1807,41 +1852,6 @@ components:
           items:
             $ref: '#/components/schemas/Identity'
             description: "The granted identities to give to this security identity alias.  \n**Notes:**  \n>- While all security identity types (i.e., `UNKNOWN`, `USER`, `GROUP`, and `VIRTUAL_GROUP`) are theoretically available, only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` should be given as granted identities.  \n>- For legacy reasons, the Push API requires you to specify *granted identities* in an array property whose name is `wellKnowns`."
-          type: array
-      type: object
-    EntityUpdateResult:
-      properties:
-        errorDetails:
-          type: string
-        result:
-          enum:
-          - Success
-          - AccessDenied
-          - TimedOut
-          - EntityIsInvalid
-          - EntityIsUnavailable
-          - SecurityProviderIsUnavailable
-          - SecurityProviderIsUnreachable
-          - SecurityProviderIsNotReady
-          - UnexpectedError
-          type: string
-      type: object
-    IdentityBody:
-      properties:
-        Result:
-          $ref: '#/components/schemas/EntityUpdateResult'
-          description: The security identity entity update result.
-        identity:
-          $ref: '#/components/schemas/Identity'
-        members:
-          items:
-            $ref: '#/components/schemas/Identity'
-            description: "The security identities to include as children of this security identity.  \n**Notes:**  \n>- Only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` typically have an array of `members`.  \n>- A security identity in the `members` array can be of any valid `type` (i.e., `UNKNOWN`, `USER`, `GROUP`, or `VIRTUAL_GROUP`)."
-          type: array
-        wellKnowns:
-          items:
-            $ref: '#/components/schemas/Identity'
-            description: "The granted identities to give to this security identity.  \n**Notes:**  \n>- While all security identity types (i.e., `UNKNOWN`, `USER`, `GROUP`, and `VIRTUAL_GROUP`) are theoretically available, only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` should be given as granted identities.  \n>- For legacy reasons, the Push API requires you to specify *granted identities* in an array property whose name is `wellKnowns`."
           type: array
       type: object
   securitySchemes:

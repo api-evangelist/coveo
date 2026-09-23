@@ -49,6 +49,85 @@ paths:
         - full
 components:
   schemas:
+    GenericMapping:
+      type: object
+      properties:
+        kind:
+          description: The kind of the relationship.
+          type: string
+        fieldName:
+          description: The new field name.
+          type: string
+        extractionMethod:
+          description: The way to extract the information.
+          type: string
+        content:
+          description: The content of the new field.
+          type: string
+        type:
+          description: The specific type that this mapping apply to.
+          type: string
+      required:
+      - kind
+      - fieldName
+      - extractionMethod
+      - content
+    GenericField:
+      type: object
+      properties:
+        facet:
+          description: Whether Group By operations and Facet requests can be performed on the field.
+          type: boolean
+        multiValueFacet:
+          description: Whether the field contains multiple values (see also the multiValueFacetTokenizers property).
+          type: boolean
+        name:
+          description: The name of the field, also referred to as the field identifier, or fieldId.
+          type: string
+        sort:
+          description: Whether query results can be sorted based on the value of the field.
+          type: boolean
+        type:
+          description: WThe data type of the field. ("LONG", "LONG_64", "DOUBLE", "DATE" or "STRING")
+          type: string
+      required:
+      - name
+      - type
+    SalesforcePolymorphicRelationships:
+      type: object
+      properties:
+        name:
+          description: The child relationship name
+          type: string
+        objectName:
+          description: The object name to match
+          type: string
+        fields:
+          description: The object fields to be indexed
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - objectName
+      - fields
+    SalesforceObjectToGet:
+      type: object
+      properties:
+        objects:
+          description: The collection of objects to get
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericObject'
+        mappings:
+          description: The collection of objects to get
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericMapping'
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericField'
     SalesforceParentRelationships:
       type: object
       properties:
@@ -81,85 +160,6 @@ components:
             $ref: '#/components/schemas/SalesforceParentRelationships'
       required:
       - name
-      - fields
-    GenericField:
-      type: object
-      properties:
-        facet:
-          description: Whether Group By operations and Facet requests can be performed on the field.
-          type: boolean
-        multiValueFacet:
-          description: Whether the field contains multiple values (see also the multiValueFacetTokenizers property).
-          type: boolean
-        name:
-          description: The name of the field, also referred to as the field identifier, or fieldId.
-          type: string
-        sort:
-          description: Whether query results can be sorted based on the value of the field.
-          type: boolean
-        type:
-          description: WThe data type of the field. ("LONG", "LONG_64", "DOUBLE", "DATE" or "STRING")
-          type: string
-      required:
-      - name
-      - type
-    GenericMapping:
-      type: object
-      properties:
-        kind:
-          description: The kind of the relationship.
-          type: string
-        fieldName:
-          description: The new field name.
-          type: string
-        extractionMethod:
-          description: The way to extract the information.
-          type: string
-        content:
-          description: The content of the new field.
-          type: string
-        type:
-          description: The specific type that this mapping apply to.
-          type: string
-      required:
-      - kind
-      - fieldName
-      - extractionMethod
-      - content
-    SalesforceObjectToGet:
-      type: object
-      properties:
-        objects:
-          description: The collection of objects to get
-          type: array
-          items:
-            $ref: '#/components/schemas/GenericObject'
-        mappings:
-          description: The collection of objects to get
-          type: array
-          items:
-            $ref: '#/components/schemas/GenericMapping'
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/GenericField'
-    SalesforcePolymorphicRelationships:
-      type: object
-      properties:
-        name:
-          description: The child relationship name
-          type: string
-        objectName:
-          description: The object name to match
-          type: string
-        fields:
-          description: The object fields to be indexed
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - objectName
       - fields
     GenericObject:
       type: object

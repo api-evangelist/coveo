@@ -20,16 +20,20 @@ paths:
     get:
       tags:
       - Listing Rule Preview
-      summary: Preview the Impact of a Listing Rule.
-      description: 'Returns a preview of products.</br></br>**Required privilege:** Execute Query<br /><br /><details><summary>Privilege required</summary>
+      summary: Preview the Impact of a Listing Rule
+      description: 'Returns a preview of products.
+
+
+        **Required privilege:** Execute Query
+
+
+        Privilege required
 
         ```
 
         {"owner":"SEARCH_API","targetDomain":"EXECUTE_QUERY","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: previewImpactOfRule
       parameters:
       - name: organizationId
@@ -144,16 +148,20 @@ paths:
     put:
       tags:
       - Listing Rule Preview
-      summary: Preview the Impact of an Updated Listing Rule Vs Not Having the Rule, or If compareWithPreviousState Is True, the Impact of a Rule Update Vs the Previous State of the Rule.
-      description: 'Returns a preview of products.</br></br>**Required privilege:** Execute Query<br /><br /><details><summary>Privilege required</summary>
+      summary: Preview the Impact of an Updated Listing Rule Vs Not Having the Rule, or If…
+      description: 'Returns a preview of products.
+
+
+        **Required privilege:** Execute Query
+
+
+        Privilege required
 
         ```
 
         {"owner":"SEARCH_API","targetDomain":"EXECUTE_QUERY","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: previewImpactOfUpdatingRule
       parameters:
       - name: organizationId
@@ -210,16 +218,20 @@ paths:
     post:
       tags:
       - Listing Rule Preview
-      summary: Preview the Impact of Creating a Listing Rule on a Config.
-      description: 'Returns a preview of products.</br></br>**Required privilege:** Execute Query<br /><br /><details><summary>Privilege required</summary>
+      summary: Preview the Impact of Creating a Listing Rule on a Config
+      description: 'Returns a preview of products.
+
+
+        **Required privilege:** Execute Query
+
+
+        Privilege required
 
         ```
 
         {"owner":"SEARCH_API","targetDomain":"EXECUTE_QUERY","targetId":"*"}
 
-        ```
-
-        </details>'
+        ```'
       operationId: previewImpactOfCreatingRule
       parameters:
       - name: organizationId
@@ -260,229 +272,97 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/listing/preview/rules_post
 components:
   schemas:
-    RangeModel_V2ProductView:
-      type: object
-      properties:
-        from:
-          type: number
-          format: double
-        to:
-          type: number
-          format: double
-    StringValueModel_V2ProductView:
+    RankingRuleModel_V2ProductView:
       required:
-      - value
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel_V2ProductView'
-      - type: object
-        properties:
-          value:
-            maxLength: 255
-            minLength: 0
-            type: string
-    DecimalValueModel_V2ProductView:
-      required:
-      - value
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel_V2ProductView'
-      - type: object
-        properties:
-          value:
-            type: number
-            format: double
-    ProductForPreview_V2ProductView:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Product_V2ProductView'
-      - type: object
-        properties:
-          score:
-            type: integer
-            description: The total ranking score computed for the product.
-            format: int32
-            example: 1292
-          scoreDifference:
-            type: integer
-            description: Score difference between the cached and previewed rules for a product.
-            format: int32
-            example: 1292
-          positionDifference:
-            type: integer
-            description: Position difference between the cached and previewed rules for a product.
-            format: int32
-            example: 9
-          included:
-            type: boolean
-            description: Whether the product has been included or not after applying a rule.
-          pinned:
-            type: boolean
-            description: Whether the product has been pinned or not after applying a rule.
-          reservedPosition:
-            type: boolean
-            description: Whether the product is in a position that is reserved for a query-time pin.
-      - $ref: '#/components/schemas/Result_V2ProductView'
-    WordCorrection_V2ProductView:
+      - action
       type: object
       properties:
-        correctedWord:
-          type: string
-          description: The suggested word correction.
-        length:
-          type: integer
-          description: The length (in number of characters) of the corrected word.
-          format: int32
-        offset:
-          type: integer
-          description: The offset (in number of characters) of the corrected word, from the beginning of the resulting query expression correction suggestion.
-          format: int32
-        originalWord:
-          type: string
-          description: The original, un-corrected word.
-      description: The word correction suggestions.
-    BadgePlacementViewModel_V2ProductView:
-      type: object
-      properties:
-        placementId:
-          type: string
-          description: The placement unique identifier.
-          format: uuid
-          example: 36164bca-b489-4c42-8574-e1325d56d0be
-        badges:
+        filters:
           type: array
-          description: The list of badges associated with this placement
+          description: A list of filters.
+          example:
+          - fieldName: price
+            operator: isExactly
+            value:
+              type: decimal
+              value: 99.99
+          - fieldName: item_count
+            operator: isBetween
+            value:
+              type: range
+              range:
+                from: 1000
+                to: 3000
           items:
-            $ref: '#/components/schemas/BadgeViewModel_V2ProductView'
-      description: The list of badge placements associated with this product.
-    InclusiveRangeModel_V2ProductView:
-      required:
-      - range
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel_V2ProductView'
-      - type: object
-        properties:
-          range:
-            $ref: '#/components/schemas/RangeModel_V2ProductView'
-    PreviewResponseExecutionReportsModel_V2ProductView:
-      type: object
-      description: The execution reports for a preview query.
-      example:
-        current:
-          children:
-          - name: RequestId
-            description: The id correlating logs for this request
-            duration: 0
-            result: null
-            X-Request-ID: 948cf669-43ae-4d8d-b285-9b66350c5433
-          - name: Organization ID
-            description: Organization ID
-            duration: 0
-            result: null
-            coveo_organization: barcasportsmcy01fvu
-          duration: 88
-        modified:
-          children:
-          - name: RequestId
-            description: The id correlating logs for this request
-            duration: 0
-            result: null
-            X-Request-ID: 148cf689-63ae-4d8d-b285-9b63350c5433
-          - name: Organization ID
-            description: Organization ID
-            duration: 0
-            result: null
-            coveo_organization: barcasportsmcy01fvu
-          duration: 86
-    PaginationResponseModel_V2ProductView:
-      type: object
-      properties:
-        page:
+            $ref: '#/components/schemas/QueryFilterModel_V2ProductView'
+        value:
+          maximum: 1000
+          minimum: 0
           type: integer
-          description: The page of products to request.
+          description: The scale at which the rule should be applied.
           format: int32
-          example: 7
-        perPage:
-          type: integer
-          description: The number of products per page. Note that a value greater than 100 may be rejected in the future.
-          format: int32
-          example: 30
-        totalEntries:
-          type: integer
-          description: The total number of results that match the query.
-          format: int32
-          example: 100
-        totalPages:
-          type: integer
-          description: The total number of pages of items available.
-          format: int32
-          example: 10
-        totalProducts:
-          type: integer
-          description: The total number of products that match the query.
-          format: int32
-          example: 90
-        totalSpotlightContent:
-          type: integer
-          description: The total number of spotlight content that match the query.
-          format: int32
-          example: 10
-      description: Contextual pagination information about the query.
-      example:
-        page: 1
-        perPage: 10
-        totalPages: 10
-        totalEntries: 100
-    Result_V2ProductView:
+          example: 250
+        action:
+          type: string
+          description: Whether the rule is a boost or a bury.
+          example: boost
+          enum:
+          - boost
+          - bury
+        name:
+          type: string
+          description: The name of the rule.
+          example: 'Pin #1 Short Open-Front Sweater for Women/Boost blue surfboards/Hide green t-shirts'
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        essential:
+          type: boolean
+          description: Indicates if the rule is essential to the listing page; the essential rule is added during page creation.
+        updatedBy:
+          type: string
+          description: The user who last updated the rule.
+          readOnly: true
+          example: user@coveo.com
+        updatedAt:
+          type: string
+          description: The date and time at which the rule was last updated.
+          format: date-time
+          readOnly: true
+        locales:
+          type: array
+          description: The list of locales the rule applies to. When empty, the rule applies to all locales.
+          example:
+          - language: en
+            country: US
+            currency: USD
+          items:
+            $ref: '#/components/schemas/RuleLocaleModel_V2ProductView'
+      description: A ranking rule.
+    PreviewResult_V2ProductView:
       required:
       - resultType
       type: object
       properties:
         resultType:
           type: string
-      description: List of results including products and spotlight content
+      description: Preview result item that can be a product or spotlight content (including placeholders)
       discriminator:
         propertyName: resultType
-    QueryCorrection_V2ProductView:
+    FieldValueModel_V2ProductView:
+      required:
+      - type
       type: object
       properties:
-        correctedQuery:
+        type:
           type: string
-          description: The resulting query expression correction suggestion.
-        wordCorrections:
-          type: array
-          description: The word correction suggestions.
-          items:
-            $ref: '#/components/schemas/WordCorrection_V2ProductView'
-      description: If the query wasn't automatically corrected, this property contains the basic query expression (q) keyword corrections provided by the Did You Mean index feature.
+      description: The value to apply the operator on.
       example:
-      - correctedQuery: Coveo Cloud V2 platform
-        wordCorrections:
-        - correctedWord: platform
-          length: 8
-          offset: 15
-          originalWord: plattfomr
-    RuleLocaleModel_V2ProductView:
-      type: object
-      properties:
-        language:
-          type: string
-          description: An ISO 639-1 language code.
-          example: en
-        country:
-          type: string
-          description: An ISO 3166-1 alpha-2 country code.
-          example: US
-        currency:
-          type: string
-          description: An ISO 4217 currency code.
-          example: USD
-      description: The list of locales the rule applies to. When empty, the rule applies to all locales.
-      example:
-      - language: en
-        country: US
-        currency: USD
+        type: string
+        value: Blue
+      discriminator:
+        propertyName: type
     BadgeViewModel_V2ProductView:
       type: object
       properties:
@@ -503,18 +383,66 @@ components:
           description: The url of an icon to render with the badge text.
           example: https://example.com/icon.png
       description: The list of badges associated with this placement
-    HierarchicMultiValueModel_V2ProductView:
+    InclusiveRangeModel_V2ProductView:
       required:
-      - value
+      - range
       type: object
       allOf:
       - $ref: '#/components/schemas/FieldValueModel_V2ProductView'
       - type: object
         properties:
-          value:
-            maxLength: 255
-            minLength: 0
-            type: string
+          range:
+            $ref: '#/components/schemas/RangeModel_V2ProductView'
+    QueryFilterModel_V2ProductView:
+      required:
+      - fieldName
+      - operator
+      type: object
+      properties:
+        fieldName:
+          pattern: '[a-z][a-z0-9_]*'
+          type: string
+          description: The name of the field to apply the filter on.
+          example: name
+        operator:
+          type: string
+          description: The operator to apply on the field.
+          example: isExactly
+          enum:
+          - isExactly
+          - isExactlyNot
+          - contains
+          - doesNotContain
+          - isAnyOf
+          - isDefined
+          - isNotDefined
+          - isBetween
+          - isGreaterThan
+          - isGreaterThanOrEqualTo
+          - isLessThan
+          - isLessThanOrEqualTo
+        value:
+          oneOf:
+          - $ref: '#/components/schemas/DecimalValueModel_V2ProductView'
+          - $ref: '#/components/schemas/HierarchicMultiValueModel_V2ProductView'
+          - $ref: '#/components/schemas/InclusiveRangeModel_V2ProductView'
+          - $ref: '#/components/schemas/MultipleStringValuesModel_V2ProductView'
+          - $ref: '#/components/schemas/SeedRelativeValueModel_V2ProductView'
+          - $ref: '#/components/schemas/StringValueModel_V2ProductView'
+      description: A list of filters.
+      example:
+      - fieldName: price
+        operator: isExactly
+        value:
+          type: decimal
+          value: 99.99
+      - fieldName: item_count
+        operator: isBetween
+        value:
+          type: range
+          range:
+            from: 1000
+            to: 3000
     Product_V2ProductView:
       type: object
       allOf:
@@ -644,62 +572,27 @@ components:
             description: The total number of child results.
             format: int32
             example: 2
-    QueryFilterModel_V2ProductView:
-      required:
-      - fieldName
-      - operator
+    RuleLocaleModel_V2ProductView:
       type: object
       properties:
-        fieldName:
-          pattern: '[a-z][a-z0-9_]*'
+        language:
           type: string
-          description: The name of the field to apply the filter on.
-          example: name
-        operator:
+          description: An ISO 639-1 language code.
+          example: en
+        country:
           type: string
-          description: The operator to apply on the field.
-          example: isExactly
-          enum:
-          - isExactly
-          - isExactlyNot
-          - contains
-          - doesNotContain
-          - isAnyOf
-          - isDefined
-          - isNotDefined
-          - isBetween
-          - isGreaterThan
-          - isGreaterThanOrEqualTo
-          - isLessThan
-          - isLessThanOrEqualTo
-        value:
-          oneOf:
-          - $ref: '#/components/schemas/DecimalValueModel_V2ProductView'
-          - $ref: '#/components/schemas/HierarchicMultiValueModel_V2ProductView'
-          - $ref: '#/components/schemas/InclusiveRangeModel_V2ProductView'
-          - $ref: '#/components/schemas/MultipleStringValuesModel_V2ProductView'
-          - $ref: '#/components/schemas/SeedRelativeValueModel_V2ProductView'
-          - $ref: '#/components/schemas/StringValueModel_V2ProductView'
-      description: A list of filters.
+          description: An ISO 3166-1 alpha-2 country code.
+          example: US
+        currency:
+          type: string
+          description: An ISO 4217 currency code.
+          example: USD
+      description: The list of locales the rule applies to. When empty, the rule applies to all locales.
       example:
-      - fieldName: price
-        operator: isExactly
-        value:
-          type: decimal
-          value: 99.99
-      - fieldName: item_count
-        operator: isBetween
-        value:
-          type: range
-          range:
-            from: 1000
-            to: 3000
-    ChildProduct_V2ProductView:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Product_V2ProductView'
-      - $ref: '#/components/schemas/Result_V2ProductView'
-    RankingRuleModel_V2ProductView:
+      - language: en
+        country: US
+        currency: USD
+    FilterRuleModel_V2ProductView:
       required:
       - action
       type: object
@@ -722,20 +615,13 @@ components:
                 to: 3000
           items:
             $ref: '#/components/schemas/QueryFilterModel_V2ProductView'
-        value:
-          maximum: 1000
-          minimum: 0
-          type: integer
-          description: The scale at which the rule should be applied.
-          format: int32
-          example: 250
         action:
           type: string
-          description: Whether the rule is a boost or a bury.
-          example: boost
+          description: Whether the rule is an include or an exclude.
+          example: include
           enum:
-          - boost
-          - bury
+          - include
+          - exclude
         name:
           type: string
           description: The name of the rule.
@@ -766,37 +652,7 @@ components:
             currency: USD
           items:
             $ref: '#/components/schemas/RuleLocaleModel_V2ProductView'
-      description: A ranking rule.
-    FieldValueModel_V2ProductView:
-      required:
-      - type
-      type: object
-      properties:
-        type:
-          type: string
-      description: The value to apply the operator on.
-      example:
-        type: string
-        value: Blue
-      discriminator:
-        propertyName: type
-    PreviewResponseIdsModel_V2ProductView:
-      type: object
-      properties:
-        current:
-          type: string
-          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-426614174000
-        modified:
-          type: string
-          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
-          format: uuid
-          example: 123e4567-e89b-12d3-a456-426614174000
-      description: The unique identifiers of the API responses for a preview request.
-      example:
-        current: 123e4567-e89b-12d3-a456-426614174000
-        modified: 94c3779c-0e42-40b5-95b8-93a6ed3ea162
+      description: A filter rule.
     ListingRulePreviewRequestModel_V2ProductView:
       required:
       - country
@@ -886,77 +742,25 @@ components:
           - include
           - exclude
       description: The rule impact preview request to be executed.
-    PreviewResult_V2ProductView:
-      required:
-      - resultType
+    SeedRelativeValueModel_V2ProductView:
       type: object
-      properties:
-        resultType:
-          type: string
-      description: Preview result item that can be a product or spotlight content (including placeholders)
-      discriminator:
-        propertyName: resultType
-    FilterRuleModel_V2ProductView:
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel_V2ProductView'
+    MultipleStringValuesModel_V2ProductView:
       required:
-      - action
+      - values
       type: object
-      properties:
-        filters:
-          type: array
-          description: A list of filters.
-          example:
-          - fieldName: price
-            operator: isExactly
-            value:
-              type: decimal
-              value: 99.99
-          - fieldName: item_count
-            operator: isBetween
-            value:
-              type: range
-              range:
-                from: 1000
-                to: 3000
-          items:
-            $ref: '#/components/schemas/QueryFilterModel_V2ProductView'
-        action:
-          type: string
-          description: Whether the rule is an include or an exclude.
-          example: include
-          enum:
-          - include
-          - exclude
-        name:
-          type: string
-          description: The name of the rule.
-          example: 'Pin #1 Short Open-Front Sweater for Women/Boost blue surfboards/Hide green t-shirts'
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-        essential:
-          type: boolean
-          description: Indicates if the rule is essential to the listing page; the essential rule is added during page creation.
-        updatedBy:
-          type: string
-          description: The user who last updated the rule.
-          readOnly: true
-          example: user@coveo.com
-        updatedAt:
-          type: string
-          description: The date and time at which the rule was last updated.
-          format: date-time
-          readOnly: true
-        locales:
-          type: array
-          description: The list of locales the rule applies to. When empty, the rule applies to all locales.
-          example:
-          - language: en
-            country: US
-            currency: USD
-          items:
-            $ref: '#/components/schemas/RuleLocaleModel_V2ProductView'
-      description: A filter rule.
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel_V2ProductView'
+      - type: object
+        properties:
+          values:
+            minItems: 1
+            type: array
+            items:
+              maxLength: 255
+              minLength: 0
+              type: string
     PreviewResponseModel_V2ProductView:
       type: object
       properties:
@@ -978,25 +782,50 @@ components:
           $ref: '#/components/schemas/PreviewResponseExecutionReportsModel_V2ProductView'
         queryCorrection:
           $ref: '#/components/schemas/QueryCorrectionResponse_V2ProductView'
-    MultipleStringValuesModel_V2ProductView:
+    HierarchicMultiValueModel_V2ProductView:
       required:
-      - values
+      - value
       type: object
       allOf:
       - $ref: '#/components/schemas/FieldValueModel_V2ProductView'
       - type: object
         properties:
-          values:
-            minItems: 1
-            type: array
-            items:
-              maxLength: 255
-              minLength: 0
-              type: string
-    SeedRelativeValueModel_V2ProductView:
+          value:
+            maxLength: 255
+            minLength: 0
+            type: string
+    WordCorrection_V2ProductView:
       type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel_V2ProductView'
+      properties:
+        correctedWord:
+          type: string
+          description: The suggested word correction.
+        length:
+          type: integer
+          description: The length (in number of characters) of the corrected word.
+          format: int32
+        offset:
+          type: integer
+          description: The offset (in number of characters) of the corrected word, from the beginning of the resulting query expression correction suggestion.
+          format: int32
+        originalWord:
+          type: string
+          description: The original, un-corrected word.
+      description: The word correction suggestions.
+    BadgePlacementViewModel_V2ProductView:
+      type: object
+      properties:
+        placementId:
+          type: string
+          description: The placement unique identifier.
+          format: uuid
+          example: 36164bca-b489-4c42-8574-e1325d56d0be
+        badges:
+          type: array
+          description: The list of badges associated with this placement
+          items:
+            $ref: '#/components/schemas/BadgeViewModel_V2ProductView'
+      description: The list of badge placements associated with this product.
     PinRuleModel_V2ProductView:
       type: object
       properties:
@@ -1048,6 +877,86 @@ components:
           items:
             $ref: '#/components/schemas/RuleLocaleModel_V2ProductView'
       description: A pin rule.
+    PaginationResponseModel_V2ProductView:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: The page of products to request.
+          format: int32
+          example: 7
+        perPage:
+          type: integer
+          description: The number of products per page. Note that a value greater than 100 may be rejected in the future.
+          format: int32
+          example: 30
+        totalEntries:
+          type: integer
+          description: The total number of results that match the query.
+          format: int32
+          example: 100
+        totalPages:
+          type: integer
+          description: The total number of pages of items available.
+          format: int32
+          example: 10
+        totalProducts:
+          type: integer
+          description: The total number of products that match the query.
+          format: int32
+          example: 90
+        totalSpotlightContent:
+          type: integer
+          description: The total number of spotlight content that match the query.
+          format: int32
+          example: 10
+      description: Contextual pagination information about the query.
+      example:
+        page: 1
+        perPage: 10
+        totalPages: 10
+        totalEntries: 100
+    PreviewResponseExecutionReportsModel_V2ProductView:
+      type: object
+      description: The execution reports for a preview query.
+      example:
+        current:
+          children:
+          - name: RequestId
+            description: The id correlating logs for this request
+            duration: 0
+            result: null
+            X-Request-ID: 948cf669-43ae-4d8d-b285-9b66350c5433
+          - name: Organization ID
+            description: Organization ID
+            duration: 0
+            result: null
+            coveo_organization: barcasportsmcy01fvu
+          duration: 88
+        modified:
+          children:
+          - name: RequestId
+            description: The id correlating logs for this request
+            duration: 0
+            result: null
+            X-Request-ID: 148cf689-63ae-4d8d-b285-9b63350c5433
+          - name: Organization ID
+            description: Organization ID
+            duration: 0
+            result: null
+            coveo_organization: barcasportsmcy01fvu
+          duration: 86
+    DecimalValueModel_V2ProductView:
+      required:
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel_V2ProductView'
+      - type: object
+        properties:
+          value:
+            type: number
+            format: double
     QueryCorrectionResponse_V2ProductView:
       type: object
       properties:
@@ -1070,6 +979,109 @@ components:
           items:
             $ref: '#/components/schemas/QueryCorrection_V2ProductView'
       description: The query correction response, if the query was corrected.
+    ProductForPreview_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Product_V2ProductView'
+      - type: object
+        properties:
+          score:
+            type: integer
+            description: The total ranking score computed for the product.
+            format: int32
+            example: 1292
+          scoreDifference:
+            type: integer
+            description: Score difference between the cached and previewed rules for a product.
+            format: int32
+            example: 1292
+          positionDifference:
+            type: integer
+            description: Position difference between the cached and previewed rules for a product.
+            format: int32
+            example: 9
+          included:
+            type: boolean
+            description: Whether the product has been included or not after applying a rule.
+          pinned:
+            type: boolean
+            description: Whether the product has been pinned or not after applying a rule.
+          reservedPosition:
+            type: boolean
+            description: Whether the product is in a position that is reserved for a query-time pin.
+      - $ref: '#/components/schemas/Result_V2ProductView'
+    PreviewResponseIdsModel_V2ProductView:
+      type: object
+      properties:
+        current:
+          type: string
+          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        modified:
+          type: string
+          description: The unique identifier of the API response. It can be attached to any subsequent impression or click event to attribute them to the request.
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+      description: The unique identifiers of the API responses for a preview request.
+      example:
+        current: 123e4567-e89b-12d3-a456-426614174000
+        modified: 94c3779c-0e42-40b5-95b8-93a6ed3ea162
+    StringValueModel_V2ProductView:
+      required:
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel_V2ProductView'
+      - type: object
+        properties:
+          value:
+            maxLength: 255
+            minLength: 0
+            type: string
+    RangeModel_V2ProductView:
+      type: object
+      properties:
+        from:
+          type: number
+          format: double
+        to:
+          type: number
+          format: double
+    QueryCorrection_V2ProductView:
+      type: object
+      properties:
+        correctedQuery:
+          type: string
+          description: The resulting query expression correction suggestion.
+        wordCorrections:
+          type: array
+          description: The word correction suggestions.
+          items:
+            $ref: '#/components/schemas/WordCorrection_V2ProductView'
+      description: If the query wasn't automatically corrected, this property contains the basic query expression (q) keyword corrections provided by the Did You Mean index feature.
+      example:
+      - correctedQuery: Coveo Cloud V2 platform
+        wordCorrections:
+        - correctedWord: platform
+          length: 8
+          offset: 15
+          originalWord: plattfomr
+    Result_V2ProductView:
+      required:
+      - resultType
+      type: object
+      properties:
+        resultType:
+          type: string
+      description: List of results including products and spotlight content
+      discriminator:
+        propertyName: resultType
+    ChildProduct_V2ProductView:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Product_V2ProductView'
+      - $ref: '#/components/schemas/Result_V2ProductView'
   securitySchemes:
     oauth2:
       type: oauth2

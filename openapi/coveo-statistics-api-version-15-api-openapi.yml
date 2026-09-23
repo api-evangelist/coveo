@@ -712,38 +712,6 @@ paths:
           description: No content
 components:
   schemas:
-    DataPoint:
-      required:
-      - datas
-      - dateTime
-      type: object
-      properties:
-        dateTime:
-          type: string
-          description: The moment in time that this point represents
-          format: date-time
-        datas:
-          type: object
-          additionalProperties:
-            type: number
-            description: The metric values
-          description: The metric values
-      description: A collection of data points
-    GlobalAggregatedDataResponseV15:
-      required:
-      - globalDatas
-      type: object
-      properties:
-        globalDatas:
-          type: object
-          additionalProperties:
-            type: object
-            additionalProperties:
-              type: number
-              description: The global values by metrics. Usually a unique count, a daily count or daily average
-            description: The global values by metrics. Usually a unique count, a daily count or daily average
-          description: The global values by metrics. Usually a unique count, a daily count or daily average
-      description: The global aggregated values by metrics
     VisitStatisticsResponseV15:
       required:
       - visitId
@@ -762,37 +730,23 @@ components:
           description: The number of events
           format: int32
       description: The visit matching the specified criteria
-    GraphAggregatedDataResponseV15:
+    DataPoint:
       required:
-      - dataPoints
-      - totals
+      - datas
+      - dateTime
       type: object
       properties:
-        dataPoints:
-          type: array
-          description: A collection of data points
-          items:
-            $ref: '#/components/schemas/DataPoint'
-        totals:
+        dateTime:
+          type: string
+          description: The moment in time that this point represents
+          format: date-time
+        datas:
           type: object
           additionalProperties:
             type: number
-            description: The totals for the requested metrics.
-          description: The totals for the requested metrics.
-        stats:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/SummaryStatisticsPojo'
-          description: The sum, average, max and min for the requested metrics.
-      description: The data points to be used in a graph, aggregated by the specified time interval.
-    SummaryStatisticsPojo:
-      type: object
-      properties: {}
-      description: The sum, average, max and min for the requested metrics.
-    EventPojo:
-      type: object
-      properties: {}
-      description: The visit's events
+            description: The metric values
+          description: The metric values
+      description: A collection of data points
     CombinedDataResponseV15:
       required:
       - combinations
@@ -818,6 +772,28 @@ components:
           description: The total number of combinations available
           format: int32
       description: The values of the metrics combined by dimensions
+    GlobalAggregatedDataResponseV15:
+      required:
+      - globalDatas
+      type: object
+      properties:
+        globalDatas:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: number
+              description: The global values by metrics. Usually a unique count, a daily count or daily average
+            description: The global values by metrics. Usually a unique count, a daily count or daily average
+          description: The global values by metrics. Usually a unique count, a daily count or daily average
+      description: The global aggregated values by metrics
+    StatusResponse:
+      type: object
+      description: Service's status information
+    EventPojo:
+      type: object
+      properties: {}
+      description: The visit's events
     VisitsStatisticsResponseV15:
       required:
       - visits
@@ -833,9 +809,33 @@ components:
           description: The total number of visits matching
           format: int32
       description: The visits matching the specified criteria
-    StatusResponse:
+    SummaryStatisticsPojo:
       type: object
-      description: Service's status information
+      properties: {}
+      description: The sum, average, max and min for the requested metrics.
+    GraphAggregatedDataResponseV15:
+      required:
+      - dataPoints
+      - totals
+      type: object
+      properties:
+        dataPoints:
+          type: array
+          description: A collection of data points
+          items:
+            $ref: '#/components/schemas/DataPoint'
+        totals:
+          type: object
+          additionalProperties:
+            type: number
+            description: The totals for the requested metrics.
+          description: The totals for the requested metrics.
+        stats:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SummaryStatisticsPojo'
+          description: The sum, average, max and min for the requested metrics.
+      description: The data points to be used in a graph, aggregated by the specified time interval.
   securitySchemes:
     v8:
       type: oauth2

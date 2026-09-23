@@ -48,70 +48,32 @@ paths:
       - oauth2:
         - full
 components:
-  parameters:
-    OrganizationIdPath:
-      name: organizationId
-      in: path
-      description: The unique identifier of the target Coveo Cloud organization.
-      required: true
-      schema:
-        type: string
-    ConfigIdPath:
-      name: configId
-      in: path
-      description: The unique identifier of the answer configuration.
-      required: true
-      schema:
-        type: string
   schemas:
-    Tab:
+    Pipeline:
       type:
       - string
       - 'null'
-      description: 'The second level of origin of the request, typically the identifier of the selected tab in the graphical search interface from which the request originates.
+      description: 'The name of the query pipeline to use for this request (bypassing its conditions, if it has any).
 
 
-        Coveo Machine Learning models use this information to provide contextually relevant output.
+        You can pass an empty `pipeline` value to use an empty query pipeline (i.e., `?pipeline=` or `"pipeline": ""`).
 
 
-        **Note:** When logging a **Search** usage analytics event for a query, the `originLevel2` field of that event should be set to the `tab` value of the query (or to the `"default"` string, if no `tab` value was specified in the query).
+        If a query does not contain the `pipeline` parameter, the first query pipeline whose conditions are met by the request is used (query pipelines without conditions are not evaluated). Should the request fail to meet the conditions of each evaluated query pipeline, the default query pipeline of the target Coveo Cloud organization is used (bypassing its conditions, if it has any).
 
 
-        See also the `searchHub` parameter.
+        **Notes:**
+
+
+        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
+
+        - For reporting purposes, when logging a **Search** usage analytics event for a query, the `queryPipeline` field of that event should be set to the `pipeline` value of the query (or to the `"default"` string, if no `pipeline` value was specified in the query).
+
+
+        See also [Managing Query Pipelines](https://docs.coveo.com/en/1450/).
 
         '
-      example: ForumTab
-    GenQAResponse:
-      type: object
-      required:
-      - payloadType
-      - payload
-      properties:
-        payloadType:
-          type: string
-          description: Type of the contained GenQA payload (e.g., genqa.headerMessageType).
-        payload:
-          type: string
-          format: json
-          description: JSON-encoded string containing the actual message payload.
-        finishReason:
-          type:
-          - string
-          - 'null'
-          enum:
-          - COMPLETED
-          - ERROR
-          description: Reason for stream termination, if applicable.
-        errorMessage:
-          type:
-          - string
-          - 'null'
-          description: Error message if the stream failed.
-        statusCode:
-          type:
-          - integer
-          - 'null'
-          description: HTTP status code associated with the message, if applicable.
+      example: CustomerQueryPipeline
     Timezone:
       type:
       - string
@@ -126,48 +88,6 @@ components:
 
         '
       example: America/New_York
-    MlParameters:
-      type:
-      - object
-      - 'null'
-      description: 'A map of options to pass to the Coveo ML models associated with the request''s target query pipeline.
-
-
-        **Available parameters:**
-
-        - `considerUserContext` (boolean): Whether the models should attempt to leverage the `context` object of the request to personalize their output. Applies to ER models only. Default is `true`.
-
-        - `maxActionsHistoryItemsToConsider` (unsigned integer): The maximum number of items in the `actionsHistory` array of the request that should be taken into account by the models. Applies to ER models only. By default, all `actionsHistory` items are considered.
-
-        - `num` (unsigned integer): The maximum number of recommendations/suggestions to request from the models. Must be in range [1, 50], if specified. Applies to ART, ER, and QS models. Default depends on model configuration.
-
-        - `padding` (string enum): The kind of padding the models should complete their output with, if their maximum number of recommendations/suggestions (i.e., `num`) has not been reached. Applies to ER models only. Allowed values are `popular` (i.e., pad recommendations with all time most popular items) and `trending` (i.e., pad recommendations with items that have recently been increasingly popular). By default, no padding applies.
-
-        - `wordSelection` (string): The ITD keyword selection options the models should use. Applies only to ART models with ITD enabled. If specified, must be a string in the format `option:value`. The only available option is `wordsKept` (i.e., the maximum number of `lq` keywords to inject in `q`); its default value is `5`.
-
-        - `minNumberOfWords` (unsigned integer): The minimum number of words a query suggestion may contain to be returned by the model. Applies to QS models only. Must be in range [1, 10] Default is `1`, which implies that the model will return all candidates.
-
-        - `itemId` (string): The unique identifier (e.g., SKU) of a product to get recommendations for. Only applies when querying a Product Recommendations model with an association strategy considering a single item as an input.
-
-        - `itemIds` (array of strings): The unique identifiers (e.g., SKUs) of the products to get recommendations for. Only applies when querying a Product Recommendations model with an association strategy considering multiple items as an input.
-
-        - `categoryFilter` (string): The name of a category of products to get recommendations for.
-
-        - `brandFilter` (string): The name of a brand of products to get recommendations for.
-
-        - `filters` (map of strings): The dimensions along with the values to be used at query time by the model as filters for potential suggestions. Only applies to ART, QS, and DNE models that don''t use the default `filterFields` advanced parameter values. **Example:** `"filters": { "originContext": "<MY-VALUE>", "originLevel2": "<MY-VALUE>" }`.
-
-
-        **Examples:**
-
-        - `{"num": 3, "padding": "trending", "maxActionsHistoryItemsToConsider": 10, "considerUserContext": false}`
-
-        - `{"wordSelection": "wordsKept:4"}`
-
-        '
-      example:
-        num: 3
-        padding: trending
     ActionHistory:
       required:
       - name
@@ -210,6 +130,23 @@ components:
 
 
         **Example** `{"userAgeRange":"25-35","userRoles":["PremiumCustomer","ProductReviewer"]}`'
+    Referrer:
+      type:
+      - string
+      - 'null'
+      description: 'The third level of origin of the request, typically the URL of the page that linked to the search interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).
+
+
+        Coveo Machine Learning models may use this information to provide contextually relevant output.
+
+
+        **Note:** When logging a **Search** usage analytics event for a query, the `originLevel3` field of that event should be set to the `referrer` value of the query, if specified.
+
+
+        See also the `context` parameter.
+
+        '
+      example: http://www.example.com/
     Locale:
       type:
       - string
@@ -224,6 +161,81 @@ components:
 
         '
       example: en-US
+    PipelineRuleParameters:
+      type:
+      - object
+      - 'null'
+      additionalProperties: true
+      maxProperties: 255
+      description: "This defines generic parameters to be used by rules.\nIt defines the \"scopes\", or in other words, the rules in which the parameters should be used.\nThe generic parameters are defined within a particular scope and are only be accessible inside of it.\nThis is a read-only parameter, so its value will not be overridden.\n\n`{\n  \"scope\": {\n    \"parameterName\" : \"parameterValue\"\n  }\n}`\n\nWhile using Gen AI, if additional document fields are required for the resulting\ncitations, these fields can be specified through the 'citationsFieldToInclude'\nproperty of the 'mlGenerativeQuestionAnswering' scope.\n\n> **Note:**\n> Getting dictionary fields for citations is not supported.\n\n**Examples:**\n- `{\"mlGenerativeQuestionAnswering\": { \"responseFormat\": { \"answerStyle\": \"bullet\" } } }`\n- `{\"mlGenerativeQuestionAnswering\": { \"citationsFieldToInclude\": [\"field1\", \"field2\"] } }`\n\nMax Size: 1KB\n"
+      example:
+        genqa:
+          responseFormat:
+            answerStyle: bullet
+    MlParameters:
+      type:
+      - object
+      - 'null'
+      description: 'A map of options to pass to the Coveo ML models associated with the request''s target query pipeline.
+
+
+        **Available parameters:**
+
+        - `considerUserContext` (boolean): Whether the models should attempt to leverage the `context` object of the request to personalize their output. Applies to ER models only. Default is `true`.
+
+        - `maxActionsHistoryItemsToConsider` (unsigned integer): The maximum number of items in the `actionsHistory` array of the request that should be taken into account by the models. Applies to ER models only. By default, all `actionsHistory` items are considered.
+
+        - `num` (unsigned integer): The maximum number of recommendations/suggestions to request from the models. Must be in range [1, 50], if specified. Applies to ART, ER, and QS models. Default depends on model configuration.
+
+        - `padding` (string enum): The kind of padding the models should complete their output with, if their maximum number of recommendations/suggestions (i.e., `num`) has not been reached. Applies to ER models only. Allowed values are `popular` (i.e., pad recommendations with all time most popular items) and `trending` (i.e., pad recommendations with items that have recently been increasingly popular). By default, no padding applies.
+
+        - `wordSelection` (string): The ITD keyword selection options the models should use. Applies only to ART models with ITD enabled. If specified, must be a string in the format `option:value`. The only available option is `wordsKept` (i.e., the maximum number of `lq` keywords to inject in `q`); its default value is `5`.
+
+        - `minNumberOfWords` (unsigned integer): The minimum number of words a query suggestion may contain to be returned by the model. Applies to QS models only. Must be in range [1, 10] Default is `1`, which implies that the model will return all candidates.
+
+        - `itemId` (string): The unique identifier (e.g., SKU) of a product to get recommendations for. Only applies when querying a Product Recommendations model with an association strategy considering a single item as an input.
+
+        - `itemIds` (array of strings): The unique identifiers (e.g., SKUs) of the products to get recommendations for. Only applies when querying a Product Recommendations model with an association strategy considering multiple items as an input.
+
+        - `categoryFilter` (string): The name of a category of products to get recommendations for.
+
+        - `brandFilter` (string): The name of a brand of products to get recommendations for.
+
+        - `filters` (map of strings): The dimensions along with the values to be used at query time by the model as filters for potential suggestions. Only applies to ART, QS, and DNE models that don''t use the default `filterFields` advanced parameter values. **Example:** `"filters": { "originContext": "<MY-VALUE>", "originLevel2": "<MY-VALUE>" }`.
+
+
+        **Examples:**
+
+        - `{"num": 3, "padding": "trending", "maxActionsHistoryItemsToConsider": 10, "considerUserContext": false}`
+
+        - `{"wordSelection": "wordsKept:4"}`
+
+        '
+      example:
+        num: 3
+        padding: trending
+    SearchHub:
+      type:
+      - string
+      - 'null'
+      description: 'The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates.
+
+
+        Coveo Machine Learning models use this information to provide contextually relevant output.
+
+
+        **Notes:**
+
+
+        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
+
+        - When logging a **Search** usage analytics event for a query, the `originLevel1` field of that event should be set to the value of the `searchHub` search request parameter.
+
+
+        See also the `tab` parameter.
+
+        '
+      example: CustomerPortal
     AnalyticsRequestParameters:
       type:
       - object
@@ -363,39 +375,6 @@ components:
               - 'null'
               example: USD
               description: The selected currency of the cart and transactions.
-    SearchHub:
-      type:
-      - string
-      - 'null'
-      description: 'The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates.
-
-
-        Coveo Machine Learning models use this information to provide contextually relevant output.
-
-
-        **Notes:**
-
-
-        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
-
-        - When logging a **Search** usage analytics event for a query, the `originLevel1` field of that event should be set to the value of the `searchHub` search request parameter.
-
-
-        See also the `tab` parameter.
-
-        '
-      example: CustomerPortal
-    PipelineRuleParameters:
-      type:
-      - object
-      - 'null'
-      additionalProperties: true
-      maxProperties: 255
-      description: "This defines generic parameters to be used by rules.\nIt defines the \"scopes\", or in other words, the rules in which the parameters should be used.\nThe generic parameters are defined within a particular scope and are only be accessible inside of it.\nThis is a read-only parameter, so its value will not be overridden.\n\n`{\n  \"scope\": {\n    \"parameterName\" : \"parameterValue\"\n  }\n}`\n\nWhile using Gen AI, if additional document fields are required for the resulting\ncitations, these fields can be specified through the 'citationsFieldToInclude'\nproperty of the 'mlGenerativeQuestionAnswering' scope.\n\n> **Note:**\n> Getting dictionary fields for citations is not supported.\n\n**Examples:**\n- `{\"mlGenerativeQuestionAnswering\": { \"responseFormat\": { \"answerStyle\": \"bullet\" } } }`\n- `{\"mlGenerativeQuestionAnswering\": { \"citationsFieldToInclude\": [\"field1\", \"field2\"] } }`\n\nMax Size: 1KB\n"
-      example:
-        genqa:
-          responseFormat:
-            answerStyle: bullet
     AnswerSearchRequest:
       type: object
       properties:
@@ -638,23 +617,6 @@ components:
           $ref: '#/components/schemas/MlParameters'
         pipelineRuleParameters:
           $ref: '#/components/schemas/PipelineRuleParameters'
-    Referrer:
-      type:
-      - string
-      - 'null'
-      description: 'The third level of origin of the request, typically the URL of the page that linked to the search interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).
-
-
-        Coveo Machine Learning models may use this information to provide contextually relevant output.
-
-
-        **Note:** When logging a **Search** usage analytics event for a query, the `originLevel3` field of that event should be set to the `referrer` value of the query, if specified.
-
-
-        See also the `context` parameter.
-
-        '
-      example: http://www.example.com/
     MaximumAge:
       type:
       - integer
@@ -675,31 +637,54 @@ components:
       format: int32
       example: 1800000
       default: -1
-    Pipeline:
+    Tab:
       type:
       - string
       - 'null'
-      description: 'The name of the query pipeline to use for this request (bypassing its conditions, if it has any).
+      description: 'The second level of origin of the request, typically the identifier of the selected tab in the graphical search interface from which the request originates.
 
 
-        You can pass an empty `pipeline` value to use an empty query pipeline (i.e., `?pipeline=` or `"pipeline": ""`).
+        Coveo Machine Learning models use this information to provide contextually relevant output.
 
 
-        If a query does not contain the `pipeline` parameter, the first query pipeline whose conditions are met by the request is used (query pipelines without conditions are not evaluated). Should the request fail to meet the conditions of each evaluated query pipeline, the default query pipeline of the target Coveo Cloud organization is used (bypassing its conditions, if it has any).
+        **Note:** When logging a **Search** usage analytics event for a query, the `originLevel2` field of that event should be set to the `tab` value of the query (or to the `"default"` string, if no `tab` value was specified in the query).
 
 
-        **Notes:**
-
-
-        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
-
-        - For reporting purposes, when logging a **Search** usage analytics event for a query, the `queryPipeline` field of that event should be set to the `pipeline` value of the query (or to the `"default"` string, if no `pipeline` value was specified in the query).
-
-
-        See also [Managing Query Pipelines](https://docs.coveo.com/en/1450/).
+        See also the `searchHub` parameter.
 
         '
-      example: CustomerQueryPipeline
+      example: ForumTab
+    GenQAResponse:
+      type: object
+      required:
+      - payloadType
+      - payload
+      properties:
+        payloadType:
+          type: string
+          description: Type of the contained GenQA payload (e.g., genqa.headerMessageType).
+        payload:
+          type: string
+          format: json
+          description: JSON-encoded string containing the actual message payload.
+        finishReason:
+          type:
+          - string
+          - 'null'
+          enum:
+          - COMPLETED
+          - ERROR
+          description: Reason for stream termination, if applicable.
+        errorMessage:
+          type:
+          - string
+          - 'null'
+          description: Error message if the stream failed.
+        statusCode:
+          type:
+          - integer
+          - 'null'
+          description: HTTP status code associated with the message, if applicable.
   examples:
     AnswerMessage:
       summary: Answer Content
@@ -737,6 +722,21 @@ components:
         finishReason: null
         errorMessage: null
         statusCode: null
+  parameters:
+    OrganizationIdPath:
+      name: organizationId
+      in: path
+      description: The unique identifier of the target Coveo Cloud organization.
+      required: true
+      schema:
+        type: string
+    ConfigIdPath:
+      name: configId
+      in: path
+      description: The unique identifier of the answer configuration.
+      required: true
+      schema:
+        type: string
   securitySchemes:
     oauth2:
       type: oauth2
