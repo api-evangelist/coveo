@@ -146,26 +146,19 @@ paths:
                   contentType: text/html
 components:
   parameters:
-    projectId:
-      name: projectId
-      description: The id of the project to which the resource belongs.
-      in: query
-      schema:
-        type: string
-    order:
-      name: order
-      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
-      in: query
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
     filter:
       name: filter
       description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
       example: Store
       in: query
+      schema:
+        type: string
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
       schema:
         type: string
     page:
@@ -176,6 +169,15 @@ components:
         type: integer
         minimum: 0
         maximum: 100
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
     perPage:
       name: perPage
       description: The maximum number of configurations to include per page.
@@ -184,31 +186,13 @@ components:
         type: integer
         minimum: 0
         maximum: 20
-    organization-id:
-      name: organizationId
-      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
-      example: mycoveocloudv2organizationg8tp8wu3
-      in: path
-      required: true
+    projectId:
+      name: projectId
+      description: The id of the project to which the resource belongs.
+      in: query
       schema:
         type: string
   schemas:
-    hostedpage-file-javascript:
-      type: object
-      description: JavaScript resource appended to the header of a specific hosted page in the target Coveo organization.
-      properties:
-        isModule:
-          type: boolean
-          description: Whether the inline code should be treated as a JavaScript module. If this property is `true`, the `type` property will be set to `module` on the `script` tag.
-          required: true
-        inlineContent:
-          type: string
-          description: The content of the header `script` tag. If this property is defined, the `url` property should not be specified.
-          example: window.location = 'about:blank';
-        url:
-          type: string
-          description: The URL of the JavaScript source file. If this property is defined, the `inlineContent` property should not be specified.
-          example: https://static.cloud.coveo.com/atomic/v2/index.esm.js
     hostedpage-id:
       type: object
       properties:
@@ -256,6 +240,34 @@ components:
       - id
       - name
       - html
+    hostedpage-file-css:
+      type: object
+      description: CSS resource appended in the header, pertaining to a specific hosted page in the target Coveo organization.
+      properties:
+        inlineContent:
+          type: string
+          description: The content of the header `style` tag. If this property is defined, the `url` property should not be specified.
+          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
+        url:
+          type: string
+          description: The URL of CSS stylesheet. If this property is defined, the `inlineContent` property should not be specified.
+          example: https://static.cloud.coveo.com/atomic/v2/themes/coveo.css
+    hostedpage-file-javascript:
+      type: object
+      description: JavaScript resource appended to the header of a specific hosted page in the target Coveo organization.
+      properties:
+        isModule:
+          type: boolean
+          description: Whether the inline code should be treated as a JavaScript module. If this property is `true`, the `type` property will be set to `module` on the `script` tag.
+          required: true
+        inlineContent:
+          type: string
+          description: The content of the header `script` tag. If this property is defined, the `url` property should not be specified.
+          example: window.location = 'about:blank';
+        url:
+          type: string
+          description: The URL of the JavaScript source file. If this property is defined, the `inlineContent` property should not be specified.
+          example: https://static.cloud.coveo.com/atomic/v2/index.esm.js
     hostedpage:
       type: object
       properties:
@@ -278,18 +290,6 @@ components:
       required:
       - name
       - html
-    hostedpage-file-css:
-      type: object
-      description: CSS resource appended in the header, pertaining to a specific hosted page in the target Coveo organization.
-      properties:
-        inlineContent:
-          type: string
-          description: The content of the header `style` tag. If this property is defined, the `url` property should not be specified.
-          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
-        url:
-          type: string
-          description: The URL of CSS stylesheet. If this property is defined, the `inlineContent` property should not be specified.
-          example: https://static.cloud.coveo.com/atomic/v2/themes/coveo.css
   securitySchemes:
     oauth2:
       type: oauth2

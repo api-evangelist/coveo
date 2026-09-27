@@ -165,78 +165,18 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/smartsnippets/contentfields_post
 components:
   schemas:
-    SmartSnippetsContentFieldsRequest:
-      type: object
-      properties:
-        sources:
-          type: array
-          description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
-          example:
-          - CommunityArticles
-          - SalesforceCatalog
-          items:
-            type: string
-            description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
-            example: '["CommunityArticles","SalesforceCatalog"]'
-        filterConditions:
-          type: array
-          description: The custom filter conditions to target specific documents.
-          items:
-            $ref: '#/components/schemas/FilterConditionModel'
-        advancedQuery:
-          type: string
-          description: The query that determines the documents to extract. Cannot be used with other document extraction parameters, e.g. sources, filter conditions, etc.<br />**Example:** `@source==("My source") AND @permanentid AND @language="English"`
-          example: '@source==("My source") AND @permanentid AND @language="English"'
-        documentType:
-          type: string
-          description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
-          example: SupportArticle
-      description: The configuration for the Smart Snippets content fields request.
-    ContentFieldsResponse:
+    SmartSnippetsDocumentTypesResponse:
       type: object
       properties:
         query:
           type: string
-          description: The query used to retrieve item information.
-          example: '@language="English" AND @documenttype=="SupportArticle"'
-        fields:
+          description: The query that was used to fetch document information.<br />**Example:** `@source==("Salesforce Notifier")`
+          example: '@source==("Salesforce Notifier")'
+        documentTypes:
           type: array
-          description: The list of non-empty fields for at least one item.
+          description: List of available document types
           items:
-            $ref: '#/components/schemas/FieldCandidateModel'
-    FieldCandidateModel:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the field, also referred to as the field identifier.<br />**Example:** `article_description`
-          example: article_description
-      description: The list of non-empty fields for at least one item.
-    SmartSnippetsPreviewRequest:
-      type: object
-      properties:
-        sources:
-          type: array
-          description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
-          example:
-          - CommunityArticles
-          - SalesforceCatalog
-          items:
-            type: string
-            description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
-            example: '["CommunityArticles","SalesforceCatalog"]'
-        filterConditions:
-          type: array
-          description: The custom filter conditions to target specific documents.
-          items:
-            $ref: '#/components/schemas/FilterConditionModel'
-        advancedQuery:
-          type: string
-          description: The query that determines the documents to extract. Cannot be used with other document extraction parameters, e.g. sources, filter conditions, etc.<br />**Example:** `@source==("My source") AND @permanentid AND @language="English"`
-          example: '@source==("My source") AND @permanentid AND @language="English"'
-      description: The configuration for the Smart Snippets preview.
+            $ref: '#/components/schemas/DocumentTypeResponse'
     SmartSnippetsPreviewResponse:
       type: object
       properties:
@@ -268,18 +208,88 @@ components:
           - INSUFFICIENT_DOCUMENTS
           - NB_OF_DOCUMENTS_OVER_LIMIT
       description: The Smart Snippets preview response.
-    SmartSnippetsDocumentTypesResponse:
+    DocumentTypeResponse:
+      required:
+      - documentType
+      type: object
+      properties:
+        documentType:
+          type: string
+          description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
+          example: SupportArticle
+      description: List of available document types
+    SmartSnippetsPreviewRequest:
+      type: object
+      properties:
+        sources:
+          type: array
+          description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+          example:
+          - CommunityArticles
+          - SalesforceCatalog
+          items:
+            type: string
+            description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+            example: '["CommunityArticles","SalesforceCatalog"]'
+        filterConditions:
+          type: array
+          description: The custom filter conditions to target specific documents.
+          items:
+            $ref: '#/components/schemas/FilterConditionModel'
+        advancedQuery:
+          type: string
+          description: The query that determines the documents to extract. Cannot be used with other document extraction parameters, e.g. sources, filter conditions, etc.<br />**Example:** `@source==("My source") AND @permanentid AND @language="English"`
+          example: '@source==("My source") AND @permanentid AND @language="English"'
+      description: The configuration for the Smart Snippets preview.
+    SmartSnippetsContentFieldsRequest:
+      type: object
+      properties:
+        sources:
+          type: array
+          description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+          example:
+          - CommunityArticles
+          - SalesforceCatalog
+          items:
+            type: string
+            description: The names of the sources containing the items that the model should use to extract snippets.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+            example: '["CommunityArticles","SalesforceCatalog"]'
+        filterConditions:
+          type: array
+          description: The custom filter conditions to target specific documents.
+          items:
+            $ref: '#/components/schemas/FilterConditionModel'
+        advancedQuery:
+          type: string
+          description: The query that determines the documents to extract. Cannot be used with other document extraction parameters, e.g. sources, filter conditions, etc.<br />**Example:** `@source==("My source") AND @permanentid AND @language="English"`
+          example: '@source==("My source") AND @permanentid AND @language="English"'
+        documentType:
+          type: string
+          description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
+          example: SupportArticle
+      description: The configuration for the Smart Snippets content fields request.
+    FieldCandidateModel:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the field, also referred to as the field identifier.<br />**Example:** `article_description`
+          example: article_description
+      description: The list of non-empty fields for at least one item.
+    ContentFieldsResponse:
       type: object
       properties:
         query:
           type: string
-          description: The query that was used to fetch document information.<br />**Example:** `@source==("Salesforce Notifier")`
-          example: '@source==("Salesforce Notifier")'
-        documentTypes:
+          description: The query used to retrieve item information.
+          example: '@language="English" AND @documenttype=="SupportArticle"'
+        fields:
           type: array
-          description: List of available document types
+          description: The list of non-empty fields for at least one item.
           items:
-            $ref: '#/components/schemas/DocumentTypeResponse'
+            $ref: '#/components/schemas/FieldCandidateModel'
     FilterConditionModel:
       required:
       - field
@@ -304,16 +314,6 @@ components:
           description: The value to use for the filter.<br />**Example:** `John Smith`
           example: John Smith
       description: A custom filter condition.
-    DocumentTypeResponse:
-      required:
-      - documentType
-      type: object
-      properties:
-        documentType:
-          type: string
-          description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
-          example: SupportArticle
-      description: List of available document types
   securitySchemes:
     oauth2:
       type: oauth2

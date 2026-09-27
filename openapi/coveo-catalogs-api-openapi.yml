@@ -646,399 +646,6 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/catalogs/project_get
 components:
   schemas:
-    CreateProductHierarchyModel:
-      required:
-      - idField
-      - objectType
-      type: object
-      properties:
-        objectType:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of a _product_ in the catalog.
-          example: Product
-        idField:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _product_ in the catalog.
-          example: productid
-      description: '[Deprecated - use `configuration.product` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/)representing distinct _products_ in the catalog to be identified as such.'
-    CreateCatalogConfigurationModel:
-      required:
-      - name
-      - product
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the catalog configuration.
-          format: uuid
-          readOnly: true
-          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
-        name:
-          maxLength: 50
-          minLength: 1
-          type: string
-          description: A name for the configuration.
-          example: ACME Configuration
-        product:
-          $ref: '#/components/schemas/CreateProductHierarchyModel'
-        variant:
-          $ref: '#/components/schemas/CreateVariantHierarchyModel'
-        availability:
-          $ref: '#/components/schemas/CreateAvailabilityHierarchyModel'
-        fieldsMapping:
-          type: object
-          additionalProperties:
-            type: string
-            description: The standard fields mapping for the configuration
-            example: '{"ec_name":"title","ec_price":"prix"}'
-          description: The standard fields mapping for the configuration
-          example:
-            ec_name: title
-            ec_price: prix
-        availabilityFilterStrategy:
-          type: string
-          description: Strategy for filtering availabilities when executing a search. <br>**Default:** `ALWAYS`<br>The current supported strategies are `ALWAYS` and `WHEN_SPECIFIED`.<br>`ALWAYS` will perform the search filtering by availabilities and it will only return items with availabilities.<br>`WHEN_SPECIFIED` will only perform the search filtering by availabilities if an availabilityId is specified in the query, otherwise it won't filter by availabilities and it will return all items.
-          enum:
-          - ALWAYS
-          - WHEN_SPECIFIED
-      description: The catalog configuration to update.
-    FieldSuggestionsModel:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-        examples:
-          uniqueItems: true
-          type: array
-          description: The field examples.
-          items:
-            type: object
-            description: The field examples.
-        objectTypes:
-          uniqueItems: true
-          type: array
-          description: The field object types.
-          items:
-            type: string
-            description: The field object types.
-      description: The list of fields suggestions.
-    CachedFieldStats:
-      required:
-      - lastUpdated
-      - nextUpdate
-      type: object
-      properties:
-        fieldStats:
-          type: array
-          description: Collection of statistics about the usage of fields by a catalog
-          items:
-            $ref: '#/components/schemas/FieldStatsModel'
-        lastUpdated:
-          type: string
-          description: The date at which the cached item was last refreshed in number of milliseconds since UNIX epoch.
-          format: date-time
-        nextUpdate:
-          type: string
-          description: The date at which the cached item will next be refreshed in number of milliseconds since UNIX epoch.
-          format: date-time
-    ProductHierarchyModel:
-      required:
-      - idField
-      - objectType
-      type: object
-      properties:
-        objectType:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of a _product_ in the catalog.
-          example: Product
-        idField:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _product_ in the catalog.
-          example: productid
-        fields:
-          uniqueItems: true
-          type: array
-          description: The [fields](https://docs.coveo.com/200/) that only seen on _products_ objects in the catalog.
-          example:
-          - color
-          - size
-          items:
-            type: string
-            description: The [fields](https://docs.coveo.com/200/) that only seen on _products_ objects in the catalog.
-            example: '["color","size"]'
-      description: '[Deprecated - use `configuration.product` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/)representing distinct _products_ in the catalog to be identified as such.'
-    VariantHierarchyModel:
-      required:
-      - idField
-      - objectType
-      type: object
-      properties:
-        objectType:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of a _variant_ in the catalog.
-          example: Variant
-        idField:
-          maxLength: 255
-          minLength: 1
-          pattern: '[a-z][a-z0-9_]*'
-          type: string
-          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _variant_ in the catalog.
-          example: sku
-        fields:
-          uniqueItems: true
-          type: array
-          description: The [fields](https://docs.coveo.com/200/) that are folded when performing a [nested query](https://docs.coveo.com/220/) for _variants_. In a [search interface](https://docs.coveo.com/2741/), a [facet](https://docs.coveo.com/198/) based on any of those fields transforms its [`aq`](https://docs.coveo.com/175/) override to match _variants_ rather than _products_.
-          example:
-          - color
-          - size
-          items:
-            type: string
-            description: The [fields](https://docs.coveo.com/200/) that are folded when performing a [nested query](https://docs.coveo.com/220/) for _variants_. In a [search interface](https://docs.coveo.com/2741/), a [facet](https://docs.coveo.com/198/) based on any of those fields transforms its [`aq`](https://docs.coveo.com/175/) override to match _variants_ rather than _products_.
-            example: '["color","size"]'
-      description: '[Deprecated - use `configuration.variant` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/) representing distinct _variants_ in the catalog to be identified as such.'
-    CreateCatalogV1Model:
-      required:
-      - name
-      - sourceId
-      type: object
-      properties:
-        name:
-          maxLength: 50
-          minLength: 1
-          type: string
-          example: ACME Corp Full Catalog
-        description:
-          maxLength: 255
-          minLength: 0
-          type: string
-          example: Allows all products offered by the ACME Corporation to be represented
-        configuration:
-          $ref: '#/components/schemas/CreateCatalogConfigurationModel'
-        sourceId:
-          minLength: 1
-          type: string
-          example: acmecorporation8tp8wu3-qwpdaajjq3ahak5wlq7adhciuq
-        availabilitySourceId:
-          type: string
-          example: acmecorporation8tp8wu3-wj6vgp4x7ov6mfaw5a0w3dnve
-        catalogConfigurationId:
-          type: string
-          format: uuid
-          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
-      description: The [catalog](https://docs.coveo.com/en/3143/) to create.
-    FieldStatsModel:
-      type: object
-      properties:
-        fieldName:
-          type: string
-          description: Name of the field
-          example: ec_brand
-        product:
-          $ref: '#/components/schemas/FieldStatsItemModel'
-        variant:
-          $ref: '#/components/schemas/FieldStatsItemModel'
-        availability:
-          $ref: '#/components/schemas/FieldStatsItemModel'
-      description: Collection of statistics about the usage of fields by a catalog
-    AvailabilityHierarchyModel:
-      required:
-      - availableSkusField
-      - objectType
-      type: object
-      properties:
-        objectType:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of an _availability channel_ in the catalog.
-          example: Store
-        idField:
-          maxLength: 255
-          minLength: 1
-          pattern: '[a-z][a-z0-9_]*'
-          type: string
-          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _product_ in the catalog.
-          example: productid
-        availableSkusField:
-          maxLength: 255
-          minLength: 1
-          pattern: '[a-z][a-z0-9_]*'
-          type: string
-          description: The name of a multi-value [field](https://docs.coveo.com/200/) that lists the available SKUs of each indexed [item](https://docs.coveo.com/210/) marked as a representation of an _availability channel_ in the catalog.
-          example: availableskus
-        fields:
-          uniqueItems: true
-          type: array
-          description: The [fields](https://docs.coveo.com/200/) that are folded when performing a [nested query](https://docs.coveo.com/220/) for _availability channels_. In a [search interface](https://docs.coveo.com/2741/), a [facet](https://docs.coveo.com/198/) based on any of those fields transforms its [`aq`](https://docs.coveo.com/175/) override to match _availability channels_ rather than _products_.
-          example:
-          - storeid
-          - city
-          items:
-            type: string
-            description: The [fields](https://docs.coveo.com/200/) that are folded when performing a [nested query](https://docs.coveo.com/220/) for _availability channels_. In a [search interface](https://docs.coveo.com/2741/), a [facet](https://docs.coveo.com/198/) based on any of those fields transforms its [`aq`](https://docs.coveo.com/175/) override to match _availability channels_ rather than _products_.
-            example: '["storeid","city"]'
-      description: '[Deprecated - use `configuration.availability` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/) representing distinct _variants_ in the catalog to be identified as such.'
-    CreateCatalogModel:
-      required:
-      - name
-      - sourceId
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the catalog. Ignored when included in the body of a POST or PUT request.
-          format: uuid
-          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
-        name:
-          maxLength: 50
-          minLength: 1
-          type: string
-          description: A unique name for the catalog.
-          example: ACME Corp Full Catalog
-        description:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: A textual description of the catalog.
-          example: Allows all products offered by the ACME Corporation to be represented
-        configuration:
-          $ref: '#/components/schemas/CreateCatalogConfigurationModel'
-        sourceId:
-          minLength: 1
-          type: string
-          description: A source containing the product content of the catalog
-          example: acmecorporation8tp8wu3-qwpdaajjq3ahak5wlq7adhciuq
-        availabilitySourceId:
-          type: string
-          description: A source containing the availability objects for the catalog
-          example: acmecorporation8tp8wu3-wj6vgp4x7ov6mfaw5a0w3dnve
-        catalogConfigurationId:
-          type: string
-          description: The unique identifier of the catalog configuration.
-          format: uuid
-          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
-      description: The [catalog](https://docs.coveo.com/en/3143/) to update.
-    FieldsSuggestionsModel:
-      type: object
-      properties:
-        fields:
-          type: array
-          description: The list of fields suggestions.
-          items:
-            $ref: '#/components/schemas/FieldSuggestionsModel'
-    CreateAvailabilityHierarchyModel:
-      required:
-      - availableSkusField
-      - objectType
-      type: object
-      properties:
-        objectType:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of an _availability channel_ in the catalog.
-          example: Store
-        idField:
-          maxLength: 255
-          minLength: 1
-          pattern: '[a-z][a-z0-9_]*'
-          type: string
-          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _product_ in the catalog.
-          example: productid
-        availableSkusField:
-          maxLength: 255
-          minLength: 1
-          pattern: '[a-z][a-z0-9_]*'
-          type: string
-          description: The name of a multi-value [field](https://docs.coveo.com/200/) that lists the available SKUs of each indexed [item](https://docs.coveo.com/210/) marked as a representation of an _availability channel_ in the catalog.
-          example: availableskus
-      description: '[Deprecated - use `configuration.availability` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/) representing distinct _variants_ in the catalog to be identified as such.'
-    FieldStatsItemModel:
-      type: object
-      properties:
-        objectsWithField:
-          type: integer
-          description: Number of objects with this field
-          format: int32
-          example: 9
-        objectsWithType:
-          type: integer
-          description: Number of objects with this type
-          format: int32
-          example: 100
-      description: Availability stats
-    CatalogConfigurationModel:
-      required:
-      - name
-      - product
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the catalog configuration.
-          format: uuid
-          readOnly: true
-          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
-        name:
-          maxLength: 50
-          minLength: 1
-          type: string
-          description: A name for the configuration.
-          example: ACME Configuration
-        product:
-          $ref: '#/components/schemas/ProductHierarchyModel'
-        variant:
-          $ref: '#/components/schemas/VariantHierarchyModel'
-        availability:
-          $ref: '#/components/schemas/AvailabilityHierarchyModel'
-        fieldsMapping:
-          type: object
-          additionalProperties:
-            type: string
-            description: The standard fields mapping for the configuration
-            example: '{"ec_name":"title","ec_price":"prix"}'
-          description: The standard fields mapping for the configuration
-          example:
-            ec_name: title
-            ec_price: prix
-        availabilityFilterStrategy:
-          type: string
-          description: Strategy for filtering availabilities when executing a search. <br>**Default:** `ALWAYS`<br>The current supported strategies are `ALWAYS` and `WHEN_SPECIFIED`.<br>`ALWAYS` will perform the search filtering by availabilities and it will only return items with availabilities.<br>`WHEN_SPECIFIED` will only perform the search filtering by availabilities if an availabilityId is specified in the query, otherwise it won't filter by availabilities and it will return all items.
-          enum:
-          - ALWAYS
-          - WHEN_SPECIFIED
-      description: The catalog configuration.
-    CreateVariantHierarchyModel:
-      required:
-      - idField
-      - objectType
-      type: object
-      properties:
-        objectType:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of a _variant_ in the catalog.
-          example: Variant
-        idField:
-          maxLength: 255
-          minLength: 1
-          pattern: '[a-z][a-z0-9_]*'
-          type: string
-          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _variant_ in the catalog.
-          example: sku
-      description: '[Deprecated - use `configuration.variant` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/) representing distinct _variants_ in the catalog to be identified as such.'
     FieldsSuggestionsQueryModel:
       required:
       - productObjectType
@@ -1092,6 +699,385 @@ components:
           description: The total number of pages of items available.
           format: int32
       description: Page
+    CreateAvailabilityHierarchyModel:
+      required:
+      - availableSkusField
+      - objectType
+      type: object
+      properties:
+        objectType:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of an _availability channel_ in the catalog.
+          example: Store
+        idField:
+          maxLength: 255
+          minLength: 1
+          pattern: '[a-z][a-z0-9_]*'
+          type: string
+          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _product_ in the catalog.
+          example: productid
+        availableSkusField:
+          maxLength: 255
+          minLength: 1
+          pattern: '[a-z][a-z0-9_]*'
+          type: string
+          description: The name of a multi-value [field](https://docs.coveo.com/200/) that lists the available SKUs of each indexed [item](https://docs.coveo.com/210/) marked as a representation of an _availability channel_ in the catalog.
+          example: availableskus
+      description: '[Deprecated - use `configuration.availability` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/) representing distinct _variants_ in the catalog to be identified as such.'
+    CreateCatalogConfigurationModel:
+      required:
+      - name
+      - product
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the catalog configuration.
+          format: uuid
+          readOnly: true
+          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
+        name:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: A name for the configuration.
+          example: ACME Configuration
+        product:
+          $ref: '#/components/schemas/CreateProductHierarchyModel'
+        variant:
+          $ref: '#/components/schemas/CreateVariantHierarchyModel'
+        availability:
+          $ref: '#/components/schemas/CreateAvailabilityHierarchyModel'
+        fieldsMapping:
+          type: object
+          additionalProperties:
+            type: string
+            description: The standard fields mapping for the configuration
+            example: '{"ec_name":"title","ec_price":"prix"}'
+          description: The standard fields mapping for the configuration
+          example:
+            ec_name: title
+            ec_price: prix
+        availabilityFilterStrategy:
+          type: string
+          description: Strategy for filtering availabilities when executing a search. <br>**Default:** `ALWAYS`<br>The current supported strategies are `ALWAYS` and `WHEN_SPECIFIED`.<br>`ALWAYS` will perform the search filtering by availabilities and it will only return items with availabilities.<br>`WHEN_SPECIFIED` will only perform the search filtering by availabilities if an availabilityId is specified in the query, otherwise it won't filter by availabilities and it will return all items.
+          enum:
+          - ALWAYS
+          - WHEN_SPECIFIED
+      description: The catalog configuration to update.
+    CreateVariantHierarchyModel:
+      required:
+      - idField
+      - objectType
+      type: object
+      properties:
+        objectType:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of a _variant_ in the catalog.
+          example: Variant
+        idField:
+          maxLength: 255
+          minLength: 1
+          pattern: '[a-z][a-z0-9_]*'
+          type: string
+          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _variant_ in the catalog.
+          example: sku
+      description: '[Deprecated - use `configuration.variant` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/) representing distinct _variants_ in the catalog to be identified as such.'
+    CatalogConfigurationModel:
+      required:
+      - name
+      - product
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the catalog configuration.
+          format: uuid
+          readOnly: true
+          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
+        name:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: A name for the configuration.
+          example: ACME Configuration
+        product:
+          $ref: '#/components/schemas/ProductHierarchyModel'
+        variant:
+          $ref: '#/components/schemas/VariantHierarchyModel'
+        availability:
+          $ref: '#/components/schemas/AvailabilityHierarchyModel'
+        fieldsMapping:
+          type: object
+          additionalProperties:
+            type: string
+            description: The standard fields mapping for the configuration
+            example: '{"ec_name":"title","ec_price":"prix"}'
+          description: The standard fields mapping for the configuration
+          example:
+            ec_name: title
+            ec_price: prix
+        availabilityFilterStrategy:
+          type: string
+          description: Strategy for filtering availabilities when executing a search. <br>**Default:** `ALWAYS`<br>The current supported strategies are `ALWAYS` and `WHEN_SPECIFIED`.<br>`ALWAYS` will perform the search filtering by availabilities and it will only return items with availabilities.<br>`WHEN_SPECIFIED` will only perform the search filtering by availabilities if an availabilityId is specified in the query, otherwise it won't filter by availabilities and it will return all items.
+          enum:
+          - ALWAYS
+          - WHEN_SPECIFIED
+      description: The catalog configuration.
+    AvailabilityHierarchyModel:
+      required:
+      - availableSkusField
+      - objectType
+      type: object
+      properties:
+        objectType:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of an _availability channel_ in the catalog.
+          example: Store
+        idField:
+          maxLength: 255
+          minLength: 1
+          pattern: '[a-z][a-z0-9_]*'
+          type: string
+          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _product_ in the catalog.
+          example: productid
+        availableSkusField:
+          maxLength: 255
+          minLength: 1
+          pattern: '[a-z][a-z0-9_]*'
+          type: string
+          description: The name of a multi-value [field](https://docs.coveo.com/200/) that lists the available SKUs of each indexed [item](https://docs.coveo.com/210/) marked as a representation of an _availability channel_ in the catalog.
+          example: availableskus
+        fields:
+          uniqueItems: true
+          type: array
+          description: The [fields](https://docs.coveo.com/200/) that are folded when performing a [nested query](https://docs.coveo.com/220/) for _availability channels_. In a [search interface](https://docs.coveo.com/2741/), a [facet](https://docs.coveo.com/198/) based on any of those fields transforms its [`aq`](https://docs.coveo.com/175/) override to match _availability channels_ rather than _products_.
+          example:
+          - storeid
+          - city
+          items:
+            type: string
+            description: The [fields](https://docs.coveo.com/200/) that are folded when performing a [nested query](https://docs.coveo.com/220/) for _availability channels_. In a [search interface](https://docs.coveo.com/2741/), a [facet](https://docs.coveo.com/198/) based on any of those fields transforms its [`aq`](https://docs.coveo.com/175/) override to match _availability channels_ rather than _products_.
+            example: '["storeid","city"]'
+      description: '[Deprecated - use `configuration.availability` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/) representing distinct _variants_ in the catalog to be identified as such.'
+    FieldsSuggestionsModel:
+      type: object
+      properties:
+        fields:
+          type: array
+          description: The list of fields suggestions.
+          items:
+            $ref: '#/components/schemas/FieldSuggestionsModel'
+    CreateCatalogModel:
+      required:
+      - name
+      - sourceId
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the catalog. Ignored when included in the body of a POST or PUT request.
+          format: uuid
+          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
+        name:
+          maxLength: 50
+          minLength: 1
+          type: string
+          description: A unique name for the catalog.
+          example: ACME Corp Full Catalog
+        description:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: A textual description of the catalog.
+          example: Allows all products offered by the ACME Corporation to be represented
+        configuration:
+          $ref: '#/components/schemas/CreateCatalogConfigurationModel'
+        sourceId:
+          minLength: 1
+          type: string
+          description: A source containing the product content of the catalog
+          example: acmecorporation8tp8wu3-qwpdaajjq3ahak5wlq7adhciuq
+        availabilitySourceId:
+          type: string
+          description: A source containing the availability objects for the catalog
+          example: acmecorporation8tp8wu3-wj6vgp4x7ov6mfaw5a0w3dnve
+        catalogConfigurationId:
+          type: string
+          description: The unique identifier of the catalog configuration.
+          format: uuid
+          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
+      description: The [catalog](https://docs.coveo.com/en/3143/) to update.
+    VariantHierarchyModel:
+      required:
+      - idField
+      - objectType
+      type: object
+      properties:
+        objectType:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of a _variant_ in the catalog.
+          example: Variant
+        idField:
+          maxLength: 255
+          minLength: 1
+          pattern: '[a-z][a-z0-9_]*'
+          type: string
+          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _variant_ in the catalog.
+          example: sku
+        fields:
+          uniqueItems: true
+          type: array
+          description: The [fields](https://docs.coveo.com/200/) that are folded when performing a [nested query](https://docs.coveo.com/220/) for _variants_. In a [search interface](https://docs.coveo.com/2741/), a [facet](https://docs.coveo.com/198/) based on any of those fields transforms its [`aq`](https://docs.coveo.com/175/) override to match _variants_ rather than _products_.
+          example:
+          - color
+          - size
+          items:
+            type: string
+            description: The [fields](https://docs.coveo.com/200/) that are folded when performing a [nested query](https://docs.coveo.com/220/) for _variants_. In a [search interface](https://docs.coveo.com/2741/), a [facet](https://docs.coveo.com/198/) based on any of those fields transforms its [`aq`](https://docs.coveo.com/175/) override to match _variants_ rather than _products_.
+            example: '["color","size"]'
+      description: '[Deprecated - use `configuration.variant` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/) representing distinct _variants_ in the catalog to be identified as such.'
+    FieldStatsModel:
+      type: object
+      properties:
+        fieldName:
+          type: string
+          description: Name of the field
+          example: ec_brand
+        product:
+          $ref: '#/components/schemas/FieldStatsItemModel'
+        variant:
+          $ref: '#/components/schemas/FieldStatsItemModel'
+        availability:
+          $ref: '#/components/schemas/FieldStatsItemModel'
+      description: Collection of statistics about the usage of fields by a catalog
+    CreateCatalogV1Model:
+      required:
+      - name
+      - sourceId
+      type: object
+      properties:
+        name:
+          maxLength: 50
+          minLength: 1
+          type: string
+          example: ACME Corp Full Catalog
+        description:
+          maxLength: 255
+          minLength: 0
+          type: string
+          example: Allows all products offered by the ACME Corporation to be represented
+        configuration:
+          $ref: '#/components/schemas/CreateCatalogConfigurationModel'
+        sourceId:
+          minLength: 1
+          type: string
+          example: acmecorporation8tp8wu3-qwpdaajjq3ahak5wlq7adhciuq
+        availabilitySourceId:
+          type: string
+          example: acmecorporation8tp8wu3-wj6vgp4x7ov6mfaw5a0w3dnve
+        catalogConfigurationId:
+          type: string
+          format: uuid
+          example: 644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b
+      description: The [catalog](https://docs.coveo.com/en/3143/) to create.
+    CreateProductHierarchyModel:
+      required:
+      - idField
+      - objectType
+      type: object
+      properties:
+        objectType:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of a _product_ in the catalog.
+          example: Product
+        idField:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _product_ in the catalog.
+          example: productid
+      description: '[Deprecated - use `configuration.product` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/)representing distinct _products_ in the catalog to be identified as such.'
+    FieldSuggestionsModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        examples:
+          uniqueItems: true
+          type: array
+          description: The field examples.
+          items:
+            type: object
+            description: The field examples.
+        objectTypes:
+          uniqueItems: true
+          type: array
+          description: The field object types.
+          items:
+            type: string
+            description: The field object types.
+      description: The list of fields suggestions.
+    ProductHierarchyModel:
+      required:
+      - idField
+      - objectType
+      type: object
+      properties:
+        objectType:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The `objecttype` [field](https://docs.coveo.com/200/) value that marks an indexed [item](https://docs.coveo.com/210/) as a representation of a _product_ in the catalog.
+          example: Product
+        idField:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The name of a [field](https://docs.coveo.com/200/) that provides a unique identifier for each indexed [item](https://docs.coveo.com/210/) marked as a representation of a _product_ in the catalog.
+          example: productid
+        fields:
+          uniqueItems: true
+          type: array
+          description: The [fields](https://docs.coveo.com/200/) that only seen on _products_ objects in the catalog.
+          example:
+          - color
+          - size
+          items:
+            type: string
+            description: The [fields](https://docs.coveo.com/200/) that only seen on _products_ objects in the catalog.
+            example: '["color","size"]'
+      description: '[Deprecated - use `configuration.product` instead]. The configuration that allows indexed [items](https://docs.coveo.com/210/)representing distinct _products_ in the catalog to be identified as such.'
+    CachedFieldStats:
+      required:
+      - lastUpdated
+      - nextUpdate
+      type: object
+      properties:
+        fieldStats:
+          type: array
+          description: Collection of statistics about the usage of fields by a catalog
+          items:
+            $ref: '#/components/schemas/FieldStatsModel'
+        lastUpdated:
+          type: string
+          description: The date at which the cached item was last refreshed in number of milliseconds since UNIX epoch.
+          format: date-time
+        nextUpdate:
+          type: string
+          description: The date at which the cached item will next be refreshed in number of milliseconds since UNIX epoch.
+          format: date-time
     CatalogModel:
       required:
       - configuration
@@ -1139,6 +1125,20 @@ components:
             type: string
             description: The list of project ids associated with the catalog.
       description: The retrieved page of items.
+    FieldStatsItemModel:
+      type: object
+      properties:
+        objectsWithField:
+          type: integer
+          description: Number of objects with this field
+          format: int32
+          example: 9
+        objectsWithType:
+          type: integer
+          description: Number of objects with this type
+          format: int32
+          example: 100
+      description: Availability stats
   securitySchemes:
     oauth2:
       type: oauth2

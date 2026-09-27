@@ -209,16 +209,31 @@ components:
           format: int32
       required:
       - id
-    RestListOfMetricValues:
+    RestListOfSearchHubMetrics:
       type: object
       properties:
-        values:
-          description: The list of daily metric values
+        searchHubs:
+          description: The list of search hubs
           type: array
           items:
-            $ref: '#/components/schemas/RestMetricValueforDate'
+            $ref: '#/components/schemas/RestSearchHubMetrics'
       required:
-      - values
+      - searchHubs
+    RestMetricValueforDate:
+      type: object
+      properties:
+        date:
+          example: '"2019-01-01"'
+          description: The date for the usage metric value
+          type: string
+        value:
+          example: 123
+          description: The numeric metric value
+          type: integer
+          format: int64
+      required:
+      - date
+      - value
     RestSearchHubMetrics:
       type: object
       properties:
@@ -263,31 +278,16 @@ components:
       - users
       - staticQueries
       - productListingQueries
-    RestMetricValueforDate:
+    RestListOfMetricValues:
       type: object
       properties:
-        date:
-          example: '"2019-01-01"'
-          description: The date for the usage metric value
-          type: string
-        value:
-          example: 123
-          description: The numeric metric value
-          type: integer
-          format: int64
-      required:
-      - date
-      - value
-    RestListOfSearchHubMetrics:
-      type: object
-      properties:
-        searchHubs:
-          description: The list of search hubs
+        values:
+          description: The list of daily metric values
           type: array
           items:
-            $ref: '#/components/schemas/RestSearchHubMetrics'
+            $ref: '#/components/schemas/RestMetricValueforDate'
       required:
-      - searchHubs
+      - values
   securitySchemes:
     oauth2:
       type: oauth2

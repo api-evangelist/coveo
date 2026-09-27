@@ -1750,64 +1750,22 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Error:
-      properties:
-        errorCode:
-          type: string
-        message:
-          type: string
-      type: object
-    Identity:
-      properties:
-        additionalInfo:
-          additionalProperties:
-            type: string
-          type: object
-        name:
-          description: "The unique name of the security identity.  \n**Example:** `\"Alpha Group\""
-          type: string
-        type:
-          description: "The security identity type.  \n- `UNKNOWN`: a security identity whose type is unknown.  \n- `USER`: an individual user security identity  \n- `GROUP`: an existing group in the original secured enterprise system. Groups can have members of any valid security identity `type` (i.e., `UNKNOWN`, `USER`, `GROUP`, or `VIRTUAL_GROUP`).  \n- `VIRTUAL_GROUP`: a group that does not exist in the original secured enterprise system. Mechanically, a `VIRTUAL_GROUP` works just like a `GROUP`.  \n**Example:** `\"GROUP\""
-          enum:
-          - USER
-          - GROUP
-          - VIRTUAL_GROUP
-          - UNKNOWN
-          type: string
-      type: object
-    EntityUpdateResult:
-      properties:
-        errorDetails:
-          type: string
-        result:
-          enum:
-          - Success
-          - AccessDenied
-          - TimedOut
-          - EntityIsInvalid
-          - EntityIsUnavailable
-          - SecurityProviderIsUnavailable
-          - SecurityProviderIsUnreachable
-          - SecurityProviderIsNotReady
-          - UnexpectedError
-          type: string
-      type: object
-    IdentityBody:
+    MappedIdentityBody:
       properties:
         Result:
           $ref: '#/components/schemas/EntityUpdateResult'
           description: The security identity entity update result.
         identity:
           $ref: '#/components/schemas/Identity'
-        members:
+        mappings:
           items:
-            $ref: '#/components/schemas/Identity'
-            description: "The security identities to include as children of this security identity.  \n**Notes:**  \n>- Only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` typically have an array of `members`.  \n>- A security identity in the `members` array can be of any valid `type` (i.e., `UNKNOWN`, `USER`, `GROUP`, or `VIRTUAL_GROUP`)."
+            $ref: '#/components/schemas/MappedIdentity'
+            description: The security identities to establish an alias relationship with.
           type: array
         wellKnowns:
           items:
             $ref: '#/components/schemas/Identity'
-            description: "The granted identities to give to this security identity.  \n**Notes:**  \n>- While all security identity types (i.e., `UNKNOWN`, `USER`, `GROUP`, and `VIRTUAL_GROUP`) are theoretically available, only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` should be given as granted identities.  \n>- For legacy reasons, the Push API requires you to specify *granted identities* in an array property whose name is `wellKnowns`."
+            description: "The granted identities to give to this security identity alias.  \n**Notes:**  \n>- While all security identity types (i.e., `UNKNOWN`, `USER`, `GROUP`, and `VIRTUAL_GROUP`) are theoretically available, only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` should be given as granted identities.  \n>- For legacy reasons, the Push API requires you to specify *granted identities* in an array property whose name is `wellKnowns`."
           type: array
       type: object
     BaseIdentityBody:
@@ -1836,23 +1794,65 @@ components:
           - UNKNOWN
           type: string
       type: object
-    MappedIdentityBody:
+    IdentityBody:
       properties:
         Result:
           $ref: '#/components/schemas/EntityUpdateResult'
           description: The security identity entity update result.
         identity:
           $ref: '#/components/schemas/Identity'
-        mappings:
+        members:
           items:
-            $ref: '#/components/schemas/MappedIdentity'
-            description: The security identities to establish an alias relationship with.
+            $ref: '#/components/schemas/Identity'
+            description: "The security identities to include as children of this security identity.  \n**Notes:**  \n>- Only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` typically have an array of `members`.  \n>- A security identity in the `members` array can be of any valid `type` (i.e., `UNKNOWN`, `USER`, `GROUP`, or `VIRTUAL_GROUP`)."
           type: array
         wellKnowns:
           items:
             $ref: '#/components/schemas/Identity'
-            description: "The granted identities to give to this security identity alias.  \n**Notes:**  \n>- While all security identity types (i.e., `UNKNOWN`, `USER`, `GROUP`, and `VIRTUAL_GROUP`) are theoretically available, only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` should be given as granted identities.  \n>- For legacy reasons, the Push API requires you to specify *granted identities* in an array property whose name is `wellKnowns`."
+            description: "The granted identities to give to this security identity.  \n**Notes:**  \n>- While all security identity types (i.e., `UNKNOWN`, `USER`, `GROUP`, and `VIRTUAL_GROUP`) are theoretically available, only security identities whose `type` is `GROUP` or `VIRTUAL_GROUP` should be given as granted identities.  \n>- For legacy reasons, the Push API requires you to specify *granted identities* in an array property whose name is `wellKnowns`."
           type: array
+      type: object
+    EntityUpdateResult:
+      properties:
+        errorDetails:
+          type: string
+        result:
+          enum:
+          - Success
+          - AccessDenied
+          - TimedOut
+          - EntityIsInvalid
+          - EntityIsUnavailable
+          - SecurityProviderIsUnavailable
+          - SecurityProviderIsUnreachable
+          - SecurityProviderIsNotReady
+          - UnexpectedError
+          type: string
+      type: object
+    Identity:
+      properties:
+        additionalInfo:
+          additionalProperties:
+            type: string
+          type: object
+        name:
+          description: "The unique name of the security identity.  \n**Example:** `\"Alpha Group\""
+          type: string
+        type:
+          description: "The security identity type.  \n- `UNKNOWN`: a security identity whose type is unknown.  \n- `USER`: an individual user security identity  \n- `GROUP`: an existing group in the original secured enterprise system. Groups can have members of any valid security identity `type` (i.e., `UNKNOWN`, `USER`, `GROUP`, or `VIRTUAL_GROUP`).  \n- `VIRTUAL_GROUP`: a group that does not exist in the original secured enterprise system. Mechanically, a `VIRTUAL_GROUP` works just like a `GROUP`.  \n**Example:** `\"GROUP\""
+          enum:
+          - USER
+          - GROUP
+          - VIRTUAL_GROUP
+          - UNKNOWN
+          type: string
+      type: object
+    Error:
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
       type: object
   securitySchemes:
     oauth2:

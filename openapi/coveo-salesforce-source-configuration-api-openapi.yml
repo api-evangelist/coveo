@@ -701,6 +701,92 @@ paths:
       x-ui-operation-id: /rest/sourceconfiguration/salesforce/objects/paramId/paramId_get
 components:
   schemas:
+    SalesforceRelationship:
+      type: object
+      properties:
+        relationshipName:
+          type: string
+        relationshipType:
+          type: string
+          enum:
+          - NON_POLYMORPHIC_PARENT
+          - POLYMORPHIC_PARENT
+          - CHILD
+        referenceField:
+          type: string
+        referencesTo:
+          type: array
+          items:
+            type: string
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceField'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceCondition'
+        createRecord:
+          type: boolean
+    SalesforceCondition:
+      type: object
+      properties:
+        fieldName:
+          type: string
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - LESS_THAN
+          - LESS_OR_EQUAL_THAN
+          - GREATER_THAN
+          - GREATER_OR_EQUAL_THAN
+          - LIKE
+          - NOT_LIKE
+          - INCLUDES
+          - EXCLUDES
+          - IN
+          - NOT_IN
+        value:
+          type: string
+        inConditionValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceInConditionValue'
+    MappingModel:
+      type: object
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+          deprecated: true
+          enum:
+          - COMMON
+          - MAPPING
+        type:
+          type: string
+        fieldName:
+          type: string
+        extractionMethod:
+          type: string
+        content:
+          type: string
+          deprecated: true
+        rules:
+          type: array
+          items:
+            type: string
+        fieldTypeHint:
+          type: string
+          enum:
+          - LONG
+          - LONG_64
+          - DOUBLE
+          - DATE
+          - STRING
+          - VECTOR
     SalesforceField:
       type: object
       properties:
@@ -739,59 +825,19 @@ components:
           type: boolean
         relationshipPolymorphic:
           type: boolean
-    SalesforceCondition:
+    SalesforceInConditionValue:
       type: object
       properties:
-        fieldName:
-          type: string
-        operator:
+        type:
           type: string
           enum:
-          - EQUALS
-          - NOT_EQUALS
-          - LESS_THAN
-          - LESS_OR_EQUAL_THAN
-          - GREATER_THAN
-          - GREATER_OR_EQUAL_THAN
-          - LIKE
-          - NOT_LIKE
-          - INCLUDES
-          - EXCLUDES
-          - IN
-          - NOT_IN
+          - SOQL_STRING
+          - SOQL_ID
+          - SOQL_DATETIME
+          - SOQL_BOOLEAN
+          - SOQL_OTHER
         value:
           type: string
-        inConditionValues:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceInConditionValue'
-    SalesforceRelationship:
-      type: object
-      properties:
-        relationshipName:
-          type: string
-        relationshipType:
-          type: string
-          enum:
-          - NON_POLYMORPHIC_PARENT
-          - POLYMORPHIC_PARENT
-          - CHILD
-        referenceField:
-          type: string
-        referencesTo:
-          type: array
-          items:
-            type: string
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceField'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceCondition'
-        createRecord:
-          type: boolean
     SalesforceObject:
       type: object
       properties:
@@ -842,52 +888,6 @@ components:
             - CUSTOM_OBJECT
             - STANDARD
             - CHATTER
-    SalesforceInConditionValue:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - SOQL_STRING
-          - SOQL_ID
-          - SOQL_DATETIME
-          - SOQL_BOOLEAN
-          - SOQL_OTHER
-        value:
-          type: string
-    MappingModel:
-      type: object
-      properties:
-        id:
-          type: string
-        kind:
-          type: string
-          deprecated: true
-          enum:
-          - COMMON
-          - MAPPING
-        type:
-          type: string
-        fieldName:
-          type: string
-        extractionMethod:
-          type: string
-        content:
-          type: string
-          deprecated: true
-        rules:
-          type: array
-          items:
-            type: string
-        fieldTypeHint:
-          type: string
-          enum:
-          - LONG
-          - LONG_64
-          - DOUBLE
-          - DATE
-          - STRING
-          - VECTOR
   securitySchemes:
     oauth2:
       type: oauth2

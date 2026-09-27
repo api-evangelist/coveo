@@ -526,192 +526,23 @@ paths:
         ```'
 components:
   schemas:
-    EditAssociationRequest:
+    RestSingleOperationValidationResponse:
+      required:
+      - result
       type: object
       properties:
-        rankingModifier:
-          type: integer
-          description: "The ranking score modifier the ML model should apply to each item it recommends.\n \nUsed by the following ML models:\n- Automatic relevance tuning (default value: `1000`)\n- Event recommendation (default value: `1000`)"
-          format: int32
-          example: 500
-        matchBasicExpression:
-          type: boolean
-          description: 'Whether all items recommended by the ML model should match the basic query expression (e.g., end-user input in the search box).
-
-
-            Used by the following ML models:
-
-            - Automatic relevance tuning (default value: `false`)'
-        matchAdvancedExpression:
-          type: boolean
-          description: 'Whether all items recommended by the ML model should match the advanced query expression (e.g., facet selections).
-
-
-            Used by the following ML models:
-
-            - Automatic relevance tuning (default value: `true`)'
-        intelligentTermDetection:
-          type: boolean
-          description: "Whether the ML model should use the Intelligent Term Detection (ITD) feature to refine queries by extracting relevant keywords from the large query expression and injecting those in the basic query expression.\n  \nUsed by the following ML models:\n- Automatic relevance tuning (default value: `false`)"
-        intelligentTermDetectionPartialMatchThreshold:
-          type: string
-          description: 'An absolute or relative value indicating the minimum number (rounded up) of partial match expression keywords an item must contain to match the expression refined by the Intelligent Term Detection (ITD) feature.
-
-
-            If specified, the `intelligentTermDetectionPartialMatchKeywords` value must either be:
-
-
-            - a number between 1 and 10
-
-            - a percentage value between 1% and 100% (e.g., `75%`)
-
-
-            **Examples:**
-
-
-            - `3`
-
-            - `75%`
-
-
-            **Notes:**
-
-
-            - This parameter has no meaning unless the `intelligentTermDetection` parameter is set to `true`.
-
-
-            Used by the following ML model:
-
-            - Automatic relevance tuning (default value: `60%`)'
-          example: 75%
-          default: 60%
-        intelligentTermDetectionPartialMatchKeywords:
-          type: integer
-          description: 'The minimum number of keywords that need to be present in an Intelligent Term Detection (ITD) response to convert it to a partial match expression.
-
-
-            **Notes:**
-
-
-            - This parameter has no meaning unless the `intelligentTermDetection` parameter is set to `true`.
-
-
-            Used by the following ML model:
-
-            - Automatic relevance tuning (default value: `1`)'
-          format: int32
-          example: 4
-          default: 1
-        condition:
-          type: string
-          description: The unique identifier of the condition that must be satisfied for a request to be processed by the ML model.
-          example: 45a7892e-a63f-4c8e-8795-ab38c8c18d7e
-        maxRecommendations:
-          type: integer
-          description: 'The maximum number of recommendations the ML model should return. This should be set to a relatively low value (typically well below 50), otherwise some of the recommended items may not actually be relevant. (Automatic relevance tuning default value: 5. Query suggest default value: 10)'
-          format: int32
-        cacheMaximumAge:
-          type: string
-          description: 'The maximum age of cached query results the ML model should accept, in the ISO - 8601 format only including the seconds and milliseconds part. **Default:** `PT1800S`.
-
-
-            For each incoming query to be processed by the ML model, if a result set for an identical previously made query is available in cache and this result set is not older than the specified value, the ML model makes recommendations based on that cached query result set. Otherwise, the query is executed against the index.'
-          example: PT300S
-        enableWordCompletion:
-          type: boolean
-          description: 'Whether the ML model should attempt to complete the last word of the basic query expression and increase the ranking score of the resulting expression so that it is returned as the first completion suggestion.
-
-
-            Used by the following ML models:
-
-            - Query suggestions (default value: `true`)'
-        description:
-          type: string
-          description: The ML model association description.
-        exclusive:
-          type: boolean
-          description: 'Whether the Search API should only return items which were recommended by the ML model, even if other items matching the query were found in the index.
-
-
-            Used by the following ML models:
-
-            - Event recommendations (default value: `true`)
-
-            - Product recommendations (default value: `true`)'
-        customQueryParameters:
-          type: object
-          additionalProperties: true
-          description: 'The additional parameters to send to Coveo ML.
-
-
-            Among other things, this can be used to specify the [`strategy`](https://docs.coveo.com/en/p85e0425/) to use when querying a Product Recommendations model (for example, `{ "strategy": "frequentBought" }`. The valid `strategy` values are:
-
-
-            - `cart`
-
-            - `frequentBought`
-
-            - `frequentViewed`
-
-            - `popularBought`
-
-            - `popularViewed`
-
-            - `recentlyBought`
-
-            - `recentlyViewed`
-
-            - `user`'
-        useAdvancedConfiguration:
-          type: boolean
-          description: '**Internal:** This property is exposed for internal use by the Coveo Cloud administration console.
-
-
-            Whether the administration console should show the advanced editor for this association.
-
-
-            **Note:** Properties not supported by the standard editor may not be preserved if managed via direct API calls or the advanced editor.
-
-
-            **Default:** `false`'
-        dynamicNavigationExperience:
-          $ref: '#/components/schemas/DynamicNavigationExperienceConfiguration'
-        contentIdKeys:
-          type: array
-          description: 'The names of the fields to use to uniquely identify items in the index.
-
-
-            **Default:** `["permanentid","urihash"]`'
-          items:
-            type: string
-        statementGroupId:
-          type: string
-          description: The unique identifier of the statement group.
-          example: 679adb80-444e-11ea-b77f-2e728ce88125
-        passageRetrieval:
-          $ref: '#/components/schemas/PassageRetrievalConfiguration'
-    ErrorMessage:
-      type: object
-      additionalProperties: true
-      properties:
-        statusCode:
-          type: number
-          example: 404
-        errorCode:
-          type: string
-          example: ORGANIZATION_DOES_NOT_EXIST
-        message:
-          type: string
-          example: The organization does not exist in the search api.
-    RestBulkGetRequest:
+        result:
+          $ref: '#/components/schemas/RestOperationValidationResponse'
+    PassageRetrievalConfiguration:
       type: object
       properties:
-        ids:
-          type: array
-          description: A list of resource identifiers to get. A maximum of **1000** can be sent.
-          items:
-            type: string
-            maxItems: 1000
+        numberOfDocumentsToConsider:
+          type: integer
+          description: The number of documents to consider for passage retrieval.
+          format: int32
+          minimum: 1
+          default: 40
+          maximum: 100
     AssociationWithConditionResponseBody:
       required:
       - rules
@@ -899,11 +730,6 @@ components:
           example: 679adb80-444e-11ea-b77f-2e728ce88125
         passageRetrieval:
           $ref: '#/components/schemas/PassageRetrievalConfiguration'
-    DynamicNavigationExperienceConfiguration:
-      type: object
-      properties:
-        automaticSelection:
-          $ref: '#/components/schemas/AutomaticSelectionConfiguration'
     RestOperationValidationError:
       required:
       - message
@@ -911,6 +737,284 @@ components:
       properties:
         message:
           type: string
+    ErrorMessage:
+      type: object
+      additionalProperties: true
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        errorCode:
+          type: string
+          example: ORGANIZATION_DOES_NOT_EXIST
+        message:
+          type: string
+          example: The organization does not exist in the search api.
+    EditAssociationRequest:
+      type: object
+      properties:
+        rankingModifier:
+          type: integer
+          description: "The ranking score modifier the ML model should apply to each item it recommends.\n \nUsed by the following ML models:\n- Automatic relevance tuning (default value: `1000`)\n- Event recommendation (default value: `1000`)"
+          format: int32
+          example: 500
+        matchBasicExpression:
+          type: boolean
+          description: 'Whether all items recommended by the ML model should match the basic query expression (e.g., end-user input in the search box).
+
+
+            Used by the following ML models:
+
+            - Automatic relevance tuning (default value: `false`)'
+        matchAdvancedExpression:
+          type: boolean
+          description: 'Whether all items recommended by the ML model should match the advanced query expression (e.g., facet selections).
+
+
+            Used by the following ML models:
+
+            - Automatic relevance tuning (default value: `true`)'
+        intelligentTermDetection:
+          type: boolean
+          description: "Whether the ML model should use the Intelligent Term Detection (ITD) feature to refine queries by extracting relevant keywords from the large query expression and injecting those in the basic query expression.\n  \nUsed by the following ML models:\n- Automatic relevance tuning (default value: `false`)"
+        intelligentTermDetectionPartialMatchThreshold:
+          type: string
+          description: 'An absolute or relative value indicating the minimum number (rounded up) of partial match expression keywords an item must contain to match the expression refined by the Intelligent Term Detection (ITD) feature.
+
+
+            If specified, the `intelligentTermDetectionPartialMatchKeywords` value must either be:
+
+
+            - a number between 1 and 10
+
+            - a percentage value between 1% and 100% (e.g., `75%`)
+
+
+            **Examples:**
+
+
+            - `3`
+
+            - `75%`
+
+
+            **Notes:**
+
+
+            - This parameter has no meaning unless the `intelligentTermDetection` parameter is set to `true`.
+
+
+            Used by the following ML model:
+
+            - Automatic relevance tuning (default value: `60%`)'
+          example: 75%
+          default: 60%
+        intelligentTermDetectionPartialMatchKeywords:
+          type: integer
+          description: 'The minimum number of keywords that need to be present in an Intelligent Term Detection (ITD) response to convert it to a partial match expression.
+
+
+            **Notes:**
+
+
+            - This parameter has no meaning unless the `intelligentTermDetection` parameter is set to `true`.
+
+
+            Used by the following ML model:
+
+            - Automatic relevance tuning (default value: `1`)'
+          format: int32
+          example: 4
+          default: 1
+        condition:
+          type: string
+          description: The unique identifier of the condition that must be satisfied for a request to be processed by the ML model.
+          example: 45a7892e-a63f-4c8e-8795-ab38c8c18d7e
+        maxRecommendations:
+          type: integer
+          description: 'The maximum number of recommendations the ML model should return. This should be set to a relatively low value (typically well below 50), otherwise some of the recommended items may not actually be relevant. (Automatic relevance tuning default value: 5. Query suggest default value: 10)'
+          format: int32
+        cacheMaximumAge:
+          type: string
+          description: 'The maximum age of cached query results the ML model should accept, in the ISO - 8601 format only including the seconds and milliseconds part. **Default:** `PT1800S`.
+
+
+            For each incoming query to be processed by the ML model, if a result set for an identical previously made query is available in cache and this result set is not older than the specified value, the ML model makes recommendations based on that cached query result set. Otherwise, the query is executed against the index.'
+          example: PT300S
+        enableWordCompletion:
+          type: boolean
+          description: 'Whether the ML model should attempt to complete the last word of the basic query expression and increase the ranking score of the resulting expression so that it is returned as the first completion suggestion.
+
+
+            Used by the following ML models:
+
+            - Query suggestions (default value: `true`)'
+        description:
+          type: string
+          description: The ML model association description.
+        exclusive:
+          type: boolean
+          description: 'Whether the Search API should only return items which were recommended by the ML model, even if other items matching the query were found in the index.
+
+
+            Used by the following ML models:
+
+            - Event recommendations (default value: `true`)
+
+            - Product recommendations (default value: `true`)'
+        customQueryParameters:
+          type: object
+          additionalProperties: true
+          description: 'The additional parameters to send to Coveo ML.
+
+
+            Among other things, this can be used to specify the [`strategy`](https://docs.coveo.com/en/p85e0425/) to use when querying a Product Recommendations model (for example, `{ "strategy": "frequentBought" }`. The valid `strategy` values are:
+
+
+            - `cart`
+
+            - `frequentBought`
+
+            - `frequentViewed`
+
+            - `popularBought`
+
+            - `popularViewed`
+
+            - `recentlyBought`
+
+            - `recentlyViewed`
+
+            - `user`'
+        useAdvancedConfiguration:
+          type: boolean
+          description: '**Internal:** This property is exposed for internal use by the Coveo Cloud administration console.
+
+
+            Whether the administration console should show the advanced editor for this association.
+
+
+            **Note:** Properties not supported by the standard editor may not be preserved if managed via direct API calls or the advanced editor.
+
+
+            **Default:** `false`'
+        dynamicNavigationExperience:
+          $ref: '#/components/schemas/DynamicNavigationExperienceConfiguration'
+        contentIdKeys:
+          type: array
+          description: 'The names of the fields to use to uniquely identify items in the index.
+
+
+            **Default:** `["permanentid","urihash"]`'
+          items:
+            type: string
+        statementGroupId:
+          type: string
+          description: The unique identifier of the statement group.
+          example: 679adb80-444e-11ea-b77f-2e728ce88125
+        passageRetrieval:
+          $ref: '#/components/schemas/PassageRetrievalConfiguration'
+    AssociationValidationRequest:
+      required:
+      - operationType
+      type: object
+      properties:
+        operationType:
+          type: string
+          description: 'The type of operation to validate. Each operation type has specific validation rules.
+
+
+            Additional request parameters are required based on the type of operation to validate:
+
+            - `CREATE`: You must provide a `model`.
+
+            - `UPDATE`: You must provide a `model` and a `resourceId`.
+
+            - `DELETE`: You must provide a `resourceId`.
+
+            '
+          example: CREATE
+          enum:
+          - CREATE
+          - UPDATE
+          - DELETE
+        model:
+          type: object
+          oneOf:
+          - $ref: '#/components/schemas/CreateAssociationRequest'
+          - $ref: '#/components/schemas/EditAssociationRequest'
+        resourceId:
+          type: string
+          description: 'The identifier of the resource. '
+          example: id
+    RestBulkGetRequest:
+      type: object
+      properties:
+        ids:
+          type: array
+          description: A list of resource identifiers to get. A maximum of **1000** can be sent.
+          items:
+            type: string
+            maxItems: 1000
+    DynamicNavigationExperienceConfiguration:
+      type: object
+      properties:
+        automaticSelection:
+          $ref: '#/components/schemas/AutomaticSelectionConfiguration'
+    RestBatchOperationValidationResponse:
+      required:
+      - results
+      type: object
+      properties:
+        results:
+          type: array
+          description: The list of operation validation results.
+          items:
+            $ref: '#/components/schemas/RestOperationValidationResponse'
+    RestOperationValidationResponse:
+      required:
+      - operationType
+      - operationValid
+      type: object
+      properties:
+        operationType:
+          type: string
+          description: The type of operation that has been validated.
+          example: CREATE
+        operationValid:
+          type: boolean
+          description: Whether the operation to validate was successful or not.
+          example: true
+        resourceId:
+          type: string
+          description: 'The identifier of the resource. '
+          example: id
+        validationErrors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/RestOperationValidationError'
+          description: If the operation failed, the `validationError` will contains the error message.
+          example: Access Denied. You don't have the required privileges to perform  this operation.
+    AssociationBatchValidationRequest:
+      required:
+      - operations
+      type: object
+      properties:
+        operations:
+          type: array
+          description: A list of operations to validate.
+          example:
+          - operationType: CREATE
+            model: {}
+          - operationType: UPDATE
+            model: {}
+            resourceId: resource-id
+          - operationType: DELETE
+            resourceId: resource-id
+          items:
+            $ref: '#/components/schemas/AssociationValidationRequest'
     AssociationSingleValidationRequest:
       required:
       - operation
@@ -977,110 +1081,6 @@ components:
           type: string
         passageRetrieval:
           $ref: '#/components/schemas/PassageRetrievalConfiguration'
-    RestSingleOperationValidationResponse:
-      required:
-      - result
-      type: object
-      properties:
-        result:
-          $ref: '#/components/schemas/RestOperationValidationResponse'
-    AssociationBatchValidationRequest:
-      required:
-      - operations
-      type: object
-      properties:
-        operations:
-          type: array
-          description: A list of operations to validate.
-          example:
-          - operationType: CREATE
-            model: {}
-          - operationType: UPDATE
-            model: {}
-            resourceId: resource-id
-          - operationType: DELETE
-            resourceId: resource-id
-          items:
-            $ref: '#/components/schemas/AssociationValidationRequest'
-    AssociationValidationRequest:
-      required:
-      - operationType
-      type: object
-      properties:
-        operationType:
-          type: string
-          description: 'The type of operation to validate. Each operation type has specific validation rules.
-
-
-            Additional request parameters are required based on the type of operation to validate:
-
-            - `CREATE`: You must provide a `model`.
-
-            - `UPDATE`: You must provide a `model` and a `resourceId`.
-
-            - `DELETE`: You must provide a `resourceId`.
-
-            '
-          example: CREATE
-          enum:
-          - CREATE
-          - UPDATE
-          - DELETE
-        model:
-          type: object
-          oneOf:
-          - $ref: '#/components/schemas/CreateAssociationRequest'
-          - $ref: '#/components/schemas/EditAssociationRequest'
-        resourceId:
-          type: string
-          description: 'The identifier of the resource. '
-          example: id
-    RestOperationValidationResponse:
-      required:
-      - operationType
-      - operationValid
-      type: object
-      properties:
-        operationType:
-          type: string
-          description: The type of operation that has been validated.
-          example: CREATE
-        operationValid:
-          type: boolean
-          description: Whether the operation to validate was successful or not.
-          example: true
-        resourceId:
-          type: string
-          description: 'The identifier of the resource. '
-          example: id
-        validationErrors:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              $ref: '#/components/schemas/RestOperationValidationError'
-          description: If the operation failed, the `validationError` will contains the error message.
-          example: Access Denied. You don't have the required privileges to perform  this operation.
-    PassageRetrievalConfiguration:
-      type: object
-      properties:
-        numberOfDocumentsToConsider:
-          type: integer
-          description: The number of documents to consider for passage retrieval.
-          format: int32
-          minimum: 1
-          default: 40
-          maximum: 100
-    RestBatchOperationValidationResponse:
-      required:
-      - results
-      type: object
-      properties:
-        results:
-          type: array
-          description: The list of operation validation results.
-          items:
-            $ref: '#/components/schemas/RestOperationValidationResponse'
     AutomaticSelectionConfiguration:
       type: object
       properties:
@@ -1089,16 +1089,6 @@ components:
           description: Whether to enable automatic facet value selection.
           default: true
   parameters:
-    PerPage:
-      name: perPage
-      in: query
-      description: The number of results to include per page.
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        maximum: 200
-        default: 20
     Page:
       name: page
       in: query
@@ -1118,6 +1108,16 @@ components:
       example: mycoveocloudv2organization
       schema:
         type: string
+    PerPage:
+      name: perPage
+      in: query
+      description: The number of results to include per page.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 200
+        default: 20
     PipelineIdPath:
       name: pipelineId
       in: path
@@ -1126,6 +1126,15 @@ components:
       schema:
         type: string
   responses:
+    AuthenticationTimeout:
+      description: Authentication Timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 419
+            message: Authentication timeout.
     UnprocessableEntity:
       description: Unprocessable Entity
       content:
@@ -1163,6 +1172,26 @@ components:
           example:
             statusCode: 429
             message: Too many requests.
+    Unauthorized:
+      description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 401
+            message: Invalid access token.
+            errorCode: UNAUTHORIZED
+    Forbidden:
+      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 403
+            message: Access denied. API key does not have sufficient privileges.
+            errorCode: FORBIDDEN
     BadRequest:
       description: Bad Request
       content:
@@ -1187,35 +1216,6 @@ components:
                 statusCode: 400
                 message: Failed to evaluate your query as some conditions in your pipeline took too much time.
                 errorCode: QUERY_PIPELINE_INTERRUPTED
-    Unauthorized:
-      description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 401
-            message: Invalid access token.
-            errorCode: UNAUTHORIZED
-    AuthenticationTimeout:
-      description: Authentication Timeout
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 419
-            message: Authentication timeout.
-    Forbidden:
-      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 403
-            message: Access denied. API key does not have sufficient privileges.
-            errorCode: FORBIDDEN
   securitySchemes:
     oauth2:
       type: oauth2

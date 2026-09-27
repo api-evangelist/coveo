@@ -866,43 +866,6 @@ paths:
       description: Coveo public API endpoint
 components:
   schemas:
-    CrawlingModuleExceptionModel:
-      type: object
-      properties:
-        message:
-          type: string
-        type:
-          type: string
-        source:
-          type: string
-        stackTrace:
-          type: string
-    CrawlingModuleLogRequestModel:
-      type: object
-      properties:
-        id:
-          type: string
-        logType:
-          type: string
-          enum:
-          - MAESTRO
-          - WORKER
-        operationId:
-          type: string
-        instanceId:
-          type: string
-        state:
-          type: string
-          enum:
-          - SUCCESSFUL
-          - EMPTY
-          - ERROR
-          - TIMEOUT
-          - RUNNING
-          - CREATED
-        createdDate:
-          type: string
-          format: date-time
     CrawlingModuleLogRequestDownloadModel:
       type: object
       properties:
@@ -919,31 +882,11 @@ components:
           type: string
         url:
           type: string
-    CreateCrawlingModuleLogRequestModel:
+    ValueModelString:
       type: object
       properties:
-        logType:
+        value:
           type: string
-          enum:
-          - MAESTRO
-          - WORKER
-        operationId:
-          type: string
-        instanceId:
-          type: string
-    PageModelCrawlingModuleLogRequestModel:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CrawlingModuleLogRequestModel'
-        totalPages:
-          type: integer
-          format: int32
-        totalEntries:
-          type: integer
-          format: int64
     CrawlingModuleLogRequestStateModel:
       type: object
       properties:
@@ -958,10 +901,17 @@ components:
           - CREATED
         info:
           type: string
-    ValueModelString:
+    CreateCrawlingModuleLogRequestModel:
       type: object
       properties:
-        value:
+        logType:
+          type: string
+          enum:
+          - MAESTRO
+          - WORKER
+        operationId:
+          type: string
+        instanceId:
           type: string
     CrawlingModuleReportModel:
       type: object
@@ -988,6 +938,91 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CrawlingModuleExceptionModel'
+    CrawlingModuleExceptionModel:
+      type: object
+      properties:
+        message:
+          type: string
+        type:
+          type: string
+        source:
+          type: string
+        stackTrace:
+          type: string
+    PageModelCrawlingModuleLogRequestModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrawlingModuleLogRequestModel'
+        totalPages:
+          type: integer
+          format: int32
+        totalEntries:
+          type: integer
+          format: int64
+    CrawlingModuleLogRequestModel:
+      type: object
+      properties:
+        id:
+          type: string
+        logType:
+          type: string
+          enum:
+          - MAESTRO
+          - WORKER
+        operationId:
+          type: string
+        instanceId:
+          type: string
+        state:
+          type: string
+          enum:
+          - SUCCESSFUL
+          - EMPTY
+          - ERROR
+          - TIMEOUT
+          - RUNNING
+          - CREATED
+        createdDate:
+          type: string
+          format: date-time
+    JsonNode:
+      type: object
+    CrawlingModuleVersionsModel:
+      type: object
+      properties:
+        maestroVersion:
+          type: string
+          description: The version of Maestro that is being used for the crawling module.</br>See [Updating Maestro](https://docs.coveo.com/en/3266/index-content/crawling-module-rest-api-reference#updating-maestro).</br>**Example:** `0.9.33`
+      description: Various versions of a crawling module.
+    CrawlingModuleUpdateStatusModel:
+      type: object
+      properties:
+        updateAvailable:
+          type: boolean
+          description: If a specified crawling module has an update available.
+        updateCategory:
+          type: string
+          description: The update category for a specified crawling module.
+          enum:
+          - MINOR
+          - CRITICAL
+          - BREAKING
+          - ROLLBACK
+      description: A crawling module update status.
+    ReportCrawlingModuleModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the crawling module.</br>**Example:** `Prod Crawling Module`
+        versions:
+          $ref: '#/components/schemas/CrawlingModuleVersionsModel'
+        status:
+          $ref: '#/components/schemas/JsonNode'
+      description: A crawling module report.
     CrawlingModuleModel:
       type: object
       properties:
@@ -1029,41 +1064,6 @@ components:
           items:
             type: string
       description: A crawling module.
-    ReportCrawlingModuleModel:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the crawling module.</br>**Example:** `Prod Crawling Module`
-        versions:
-          $ref: '#/components/schemas/CrawlingModuleVersionsModel'
-        status:
-          $ref: '#/components/schemas/JsonNode'
-      description: A crawling module report.
-    JsonNode:
-      type: object
-    CrawlingModuleVersionsModel:
-      type: object
-      properties:
-        maestroVersion:
-          type: string
-          description: The version of Maestro that is being used for the crawling module.</br>See [Updating Maestro](https://docs.coveo.com/en/3266/index-content/crawling-module-rest-api-reference#updating-maestro).</br>**Example:** `0.9.33`
-      description: Various versions of a crawling module.
-    CrawlingModuleUpdateStatusModel:
-      type: object
-      properties:
-        updateAvailable:
-          type: boolean
-          description: If a specified crawling module has an update available.
-        updateCategory:
-          type: string
-          description: The update category for a specified crawling module.
-          enum:
-          - MINOR
-          - CRITICAL
-          - BREAKING
-          - ROLLBACK
-      description: A crawling module update status.
   securitySchemes:
     oauth2:
       type: oauth2

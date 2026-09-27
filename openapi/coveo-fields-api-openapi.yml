@@ -574,6 +574,20 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/indexes/fields/batch/delete/results_delete
 components:
   schemas:
+    BatchOperationProgressModelFieldModel:
+      type: object
+      properties:
+        batchOperationId:
+          type: string
+        status:
+          type: string
+          enum:
+          - IN_PROGRESS
+          - COMPLETED
+        batchOperationResourcesStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/BatchOperationResourceStatusModelFieldModel'
     FieldListingFilters:
       type: object
       properties:
@@ -638,62 +652,6 @@ components:
             type: string
             description: Only return fields whose ids are present in this list. <br />**Optional <br />**Default:** Null
       description: Filters to narrow down the returned [fields](https://docs.coveo.com/en/200/).
-    FieldListingOptions:
-      type: object
-      properties:
-        page:
-          type: integer
-          description: 'The 0-based number of the page of results to list.<br />Minimum: `0`<br />**Default:** `0`'
-          format: int32
-          example: 0
-          default: 0
-        perPage:
-          type: integer
-          description: The maximum number of results to include per page.<br />**Must be in range:** `[1, 1000]`<br />**Default:** `100`
-          format: int32
-          example: 100
-          default: 100
-        sortBy:
-          type: string
-          description: The [field](https://docs.coveo.com/en/200/) property by which to sort results.<br />**Default:** `name`
-          example: name
-          default: name
-        order:
-          type: string
-          description: 'The sort direction of the results.<br />**Allowed values:**<br /> - `ASC`: Ascending order.<br />- `DESC`: Descending order. <br /><br />**Default:** `ASC`'
-          example: ASC
-          default: ASC
-        filters:
-          $ref: '#/components/schemas/FieldListingFilters'
-      description: Options to control the pagination and filtering of [fields](https://docs.coveo.com/en/200/).
-    BatchOperationProgressModelFieldModel:
-      type: object
-      properties:
-        batchOperationId:
-          type: string
-        status:
-          type: string
-          enum:
-          - IN_PROGRESS
-          - COMPLETED
-        batchOperationResourcesStatus:
-          type: array
-          items:
-            $ref: '#/components/schemas/BatchOperationResourceStatusModelFieldModel'
-    BatchOperationResourceStatusModelFieldModel:
-      type: object
-      properties:
-        resourceModel:
-          $ref: '#/components/schemas/FieldModel'
-        operationResult:
-          type: string
-          enum:
-          - SUCCESS
-          - ERROR
-        errorDetails:
-          type: string
-        successful:
-          type: boolean
     FieldModel:
       type: object
       properties:
@@ -836,6 +794,20 @@ components:
             type: string
             description: List of Project IDs a [field](https://docs.coveo.com/en/200/) can be associated with.<br />**Note:** This is an optional list of `STRING`<br />**Default:** `null`
       description: The information to create the new field with.
+    BatchOperationResourceStatusModelFieldModel:
+      type: object
+      properties:
+        resourceModel:
+          $ref: '#/components/schemas/FieldModel'
+        operationResult:
+          type: string
+          enum:
+          - SUCCESS
+          - ERROR
+        errorDetails:
+          type: string
+        successful:
+          type: boolean
     PageModelFieldModel:
       type: object
       properties:
@@ -849,6 +821,34 @@ components:
         totalPages:
           type: integer
           format: int32
+    FieldListingOptions:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: 'The 0-based number of the page of results to list.<br />Minimum: `0`<br />**Default:** `0`'
+          format: int32
+          example: 0
+          default: 0
+        perPage:
+          type: integer
+          description: The maximum number of results to include per page.<br />**Must be in range:** `[1, 1000]`<br />**Default:** `100`
+          format: int32
+          example: 100
+          default: 100
+        sortBy:
+          type: string
+          description: The [field](https://docs.coveo.com/en/200/) property by which to sort results.<br />**Default:** `name`
+          example: name
+          default: name
+        order:
+          type: string
+          description: 'The sort direction of the results.<br />**Allowed values:**<br /> - `ASC`: Ascending order.<br />- `DESC`: Descending order. <br /><br />**Default:** `ASC`'
+          example: ASC
+          default: ASC
+        filters:
+          $ref: '#/components/schemas/FieldListingFilters'
+      description: Options to control the pagination and filtering of [fields](https://docs.coveo.com/en/200/).
   securitySchemes:
     oauth2:
       type: oauth2

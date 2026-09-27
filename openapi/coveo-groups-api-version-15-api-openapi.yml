@@ -200,6 +200,43 @@ paths:
                 $ref: '#/components/schemas/StatusResponse'
 components:
   schemas:
+    StatusResponse:
+      type: object
+      description: Service's status information
+    GroupResponseV15:
+      type: object
+      properties:
+        groupId:
+          type: string
+          description: The group id.
+        account:
+          type: string
+          description: The group account.
+        filters:
+          uniqueItems: true
+          type: array
+          description: The filters that are applied to the users of the group.
+          items:
+            type: string
+            description: The filters that are applied to the users of the group.
+        reports:
+          uniqueItems: true
+          type: array
+          description: The reports the users of the group can view.
+          items:
+            type: string
+            description: The reports the users of the group can view.
+      description: A group of users.
+    ReportsResponseV14:
+      type: object
+      properties:
+        reports:
+          uniqueItems: true
+          type: array
+          description: The reports the user can view.
+          items:
+            $ref: '#/components/schemas/ReportResponseV14'
+      description: The reports the user can view.
     ReportResponseV14:
       type: object
       properties:
@@ -232,19 +269,15 @@ components:
             type: string
             description: List of associated filters.
       description: A report configuration.
-    ReportsResponseV14:
+    FiltersResponseV14:
       type: object
       properties:
-        reports:
-          uniqueItems: true
+        filters:
           type: array
-          description: The reports the user can view.
+          description: The filters that are applied to the user
           items:
-            $ref: '#/components/schemas/ReportResponseV14'
-      description: The reports the user can view.
-    StatusResponse:
-      type: object
-      description: Service's status information
+            $ref: '#/components/schemas/FilterResponseV14'
+      description: The filters that are applied to the user
     FilterResponseV14:
       type: object
       properties:
@@ -264,30 +297,6 @@ components:
           type: string
           description: The actual filter.
       description: A filter.
-    GroupResponseV15:
-      type: object
-      properties:
-        groupId:
-          type: string
-          description: The group id.
-        account:
-          type: string
-          description: The group account.
-        filters:
-          uniqueItems: true
-          type: array
-          description: The filters that are applied to the users of the group.
-          items:
-            type: string
-            description: The filters that are applied to the users of the group.
-        reports:
-          uniqueItems: true
-          type: array
-          description: The reports the users of the group can view.
-          items:
-            type: string
-            description: The reports the users of the group can view.
-      description: A group of users.
     GroupsResponseV15:
       type: object
       properties:
@@ -311,15 +320,6 @@ components:
           type: boolean
           description: Whether the value is a persisted filter ID or a filter value
       description: A filter value.
-    FiltersResponseV14:
-      type: object
-      properties:
-        filters:
-          type: array
-          description: The filters that are applied to the user
-          items:
-            $ref: '#/components/schemas/FilterResponseV14'
-      description: The filters that are applied to the user
   securitySchemes:
     v8:
       type: oauth2

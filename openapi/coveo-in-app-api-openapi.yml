@@ -773,75 +773,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    swaggermodels.ResponseApplicationErrorNotFound:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 404
-        message:
-          type: string
-    swaggermodels.ResponseApplicationErrorBadRequest:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 400
-        message:
-          type: string
-    swaggermodels.searchTokenConfigurationResponseModel:
-      type: object
-      required:
-      - pipeline
-      - searchHub
-      properties:
-        filter:
-          description: The [constant query expression ('cq')](https://docs.coveo.com/en/179/) to apply when executing search requests with the token.
-          type: string
-          example: '@source==KnowledgeBase'
-        pipeline:
-          description: The name of the [query pipeline](https://docs.coveo.com/en/180/) to enforce when executing search requests with the token.
-          type: string
-          example: InternalSearch
-        searchHub:
-          description: The name of the [search hub](https://docs.coveo.com/en/1342/) / [origin level 1](https://docs.coveo.com/en/1337/) to pass when executing search requests and logging usage analytics events with the token.
-          type: string
-          example: SupportHub
-        userDisplayName:
-          description: The userDisplayName to pass when logging usage analytics search events.
-          type: string
-          default: Anonymous
-          example: Alice Smith
-        userGroups:
-          description: The userGroups to passed when logging usage analytics search events.
-          type: array
-          items:
-            type: string
-          example:
-          - Tech support agents
-          - Employees
-        userIds:
-          description: 'The security identities impersonated when authenticating this query.
-
-            By default, the service uses a single security identity representing an anonymous user.'
-          type: array
-          items:
-            $ref: '#/components/schemas/swaggermodels.userIDResponseModel'
-        validFor:
-          description: The number of milliseconds the search token will remain valid for once it has been created.
-          type: integer
-          default: 86400000
-          maximum: 86400000
-          minimum: 900000
-          example: 3600000
-    swaggermodels.ResponseApplicationErrorInternalServerError:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 500
-        message:
-          type: string
     swaggermodels.JavaScriptResourceSharedModel:
       type: object
       properties:
@@ -857,19 +788,21 @@ components:
           description: The URL of the JavaScript source file.
           type: string
           example: https://code.jquery.com/jquery-3.4.1.min.js
-    swaggermodels.userIDResponseModel:
+    swaggermodels.buttonJavaScriptResponseModel:
       type: object
       properties:
+        inlineContent:
+          description: The content of the header "script" tag.
+          type: string
+          example: window.location = 'about:blank';
         name:
-          description: The [security identity](https://docs.coveo.com/en/240/) name.
+          description: The identifier of the header "script" tag.
           type: string
-          default: anonymous@coveo.com
-          example: johndoe@coveo.com
-        provider:
-          description: The [security identity provider](https://docs.coveo.com/en/242/) the [identity](https://docs.coveo.com/en/240/) is defined in.
+          example: CoveoSearchUI
+        url:
+          description: The URL of the JavaScript source file.
           type: string
-          default: Email Security Provider
-          example: Email Security Provider
+          example: https://code.jquery.com/jquery-3.4.1.min.js
     swaggermodels.buttonCSSResponseModel:
       type: object
       properties:
@@ -885,105 +818,14 @@ components:
           description: The URL of CSS stylesheet.
           type: string
           example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
-    swaggermodels.FullInAppWidgetRequestModel:
+    swaggermodels.ResponseApplicationErrorUnauthorized:
       type: object
-      required:
-      - name
-      - searchHub
-      - title
       properties:
-        buttonCSSClasses:
-          description: The CSS classes of the button.
-          type: string
-          default: btn mod-primary
-          example: myframework-button myframework-button-blue
-        buttonColor:
-          description: The value of the button CSS background-color property.
-          type: string
-          example: '#2a2aa2'
-        buttonFont:
-          description: The value of the button CSS font-family property.
-          type: string
-          example: '''Courier New'', Courier, monospace'
-        buttonFontSize:
-          description: The value of the button CSS font-size property.
-          type: string
-          example: 24px
-        buttonIcon:
-          description: The stringified HTML icon of the button.
-          type: string
-          default: "\n\t\t<svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\">     \n            <g fill=\"currentColor\">         \n                <path d=\"m1,11c0,5.52 4.48,10 10,10s10,-4.48 10,-10s-4.48,-10 -10,-10s-10,4.48 -10,10z\" fill=\"transparent\"></path>         \n                <path d=\"m11,22c-6.07,0 -11,-4.935 -11,-11s4.935,-11 11,-11s11,4.935 11,11s-4.935,11 -11,11m0,-20c-4.962,0 -9,4.04 -9,9s4.04,9 9,9s9,-4.04 9,-9s-4.04,-9 -9,-9\"></path>         \n                <path d=\"m10,17l2,0l0,-2l-2,0l0,2m1,-12.344c-2.21,0 -4,1.79 -4,4l2,0c0,-1.1 0.9,-2 2,-2s2,0.9 2,2c0,2 -3,1.75 -3,5l2,0c0,-2.25 3,-2.5 3,-5c0,-2.21 -1.79,-4 -4,-4\"></path>     \n            </g>\n        </svg>\n\t\t"
-          example: <svg><circle/></svg>
-        buttonPositionHorizontal:
-          description: The horizontal alignment of the button.
-          type: string
-          default: right
-          enum:
-          - left
-          - center
-          - right
-          example: center
-        buttonPositionVertical:
-          description: The vertical alignment of the button.
-          type: string
-          default: bottom
-          enum:
-          - top
-          - middle
-          - bottom
-          example: middle
-        buttonTargetSelector:
-          description: The selector corresponding to a DOM element that should open the in-app search page when clicked.
-          type: string
-          example: .in-app-portal-target
-        buttonTextColor:
-          description: The value of the button CSS color property.
-          type: string
-          example: '#e0e0e0'
-        filter:
-          description: The [constant query expression ('cq')](https://docs.coveo.com/en/179/) to apply when executing search requests with the token.
-          type: string
-          example: '@source==KnowledgeBase'
-        name:
-          description: The unique name of the search page.
-          type: string
-          example: My_Page
-        queryPipeline:
-          description: The name of the [query pipeline](https://docs.coveo.com/en/180/) to enforce when executing search requests with the token.
-          type: string
-          example: InternalSearch
-        searchHub:
-          description: The name of the [search hub](https://docs.coveo.com/en/1342/) / [origin level 1](https://docs.coveo.com/en/1337/) to pass when executing search requests and logging usage analytics events with the token.
-          type: string
-          example: SupportHub
-        title:
-          description: The search page HTML title tag value.
-          type: string
-          example: My page
-        userDisplayName:
-          description: The userDisplayName to pass when logging usage analytics search events.
-          type: string
-          default: Anonymous
-          example: Alice Smith
-        userGroups:
-          description: The userGroups to pass when logging usage analytics search events. Must be a stringified array in JSON.
-          type: string
-          default: '[]'
-          example: '["Tech support agents", "Employees"]'
-        userIds:
-          description: 'The security identities to impersonate when authenticating a query with this search token. Must be a stringified array in JSON.
-
-            By default, the service uses a single security identity representing an anonymous user.'
-          type: string
-          default: '[{"name":"anonymous@coveo.com","provider":"Email Security Provider"}]'
-          example: '[{"name":"johndoe@coveo.com","provider":"Email Security Provider"}]'
-        validFor:
-          description: The number of milliseconds the search token will remain valid for once it has been created.
+        errorCode:
           type: integer
-          default: 86400000
-          maximum: 86400000
-          minimum: 900000
-          example: 3600000
+          example: 401
+        message:
+          type: string
     swaggermodels.InAppWidgetCreateResponseBody:
       type: object
       required:
@@ -1095,6 +937,134 @@ components:
           description: The [search token](https://docs.coveo.com/en/1346/) to request when initializing the InAppWidget.
           allOf:
           - $ref: '#/components/schemas/swaggermodels.searchTokenConfigurationResponseModel'
+    swaggermodels.userIDResponseModel:
+      type: object
+      properties:
+        name:
+          description: The [security identity](https://docs.coveo.com/en/240/) name.
+          type: string
+          default: anonymous@coveo.com
+          example: johndoe@coveo.com
+        provider:
+          description: The [security identity provider](https://docs.coveo.com/en/242/) the [identity](https://docs.coveo.com/en/240/) is defined in.
+          type: string
+          default: Email Security Provider
+          example: Email Security Provider
+    swaggermodels.ResponseApplicationErrorNotFound:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 404
+        message:
+          type: string
+    swaggermodels.ResponseApplicationErrorInternalServerError:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 500
+        message:
+          type: string
+    swaggermodels.FullInAppWidgetRequestModel:
+      type: object
+      required:
+      - name
+      - searchHub
+      - title
+      properties:
+        buttonCSSClasses:
+          description: The CSS classes of the button.
+          type: string
+          default: btn mod-primary
+          example: myframework-button myframework-button-blue
+        buttonColor:
+          description: The value of the button CSS background-color property.
+          type: string
+          example: '#2a2aa2'
+        buttonFont:
+          description: The value of the button CSS font-family property.
+          type: string
+          example: '''Courier New'', Courier, monospace'
+        buttonFontSize:
+          description: The value of the button CSS font-size property.
+          type: string
+          example: 24px
+        buttonIcon:
+          description: The stringified HTML icon of the button.
+          type: string
+          default: "\n\t\t<svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\">     \n            <g fill=\"currentColor\">         \n                <path d=\"m1,11c0,5.52 4.48,10 10,10s10,-4.48 10,-10s-4.48,-10 -10,-10s-10,4.48 -10,10z\" fill=\"transparent\"></path>         \n                <path d=\"m11,22c-6.07,0 -11,-4.935 -11,-11s4.935,-11 11,-11s11,4.935 11,11s-4.935,11 -11,11m0,-20c-4.962,0 -9,4.04 -9,9s4.04,9 9,9s9,-4.04 9,-9s-4.04,-9 -9,-9\"></path>         \n                <path d=\"m10,17l2,0l0,-2l-2,0l0,2m1,-12.344c-2.21,0 -4,1.79 -4,4l2,0c0,-1.1 0.9,-2 2,-2s2,0.9 2,2c0,2 -3,1.75 -3,5l2,0c0,-2.25 3,-2.5 3,-5c0,-2.21 -1.79,-4 -4,-4\"></path>     \n            </g>\n        </svg>\n\t\t"
+          example: <svg><circle/></svg>
+        buttonPositionHorizontal:
+          description: The horizontal alignment of the button.
+          type: string
+          default: right
+          enum:
+          - left
+          - center
+          - right
+          example: center
+        buttonPositionVertical:
+          description: The vertical alignment of the button.
+          type: string
+          default: bottom
+          enum:
+          - top
+          - middle
+          - bottom
+          example: middle
+        buttonTargetSelector:
+          description: The selector corresponding to a DOM element that should open the in-app search page when clicked.
+          type: string
+          example: .in-app-portal-target
+        buttonTextColor:
+          description: The value of the button CSS color property.
+          type: string
+          example: '#e0e0e0'
+        filter:
+          description: The [constant query expression ('cq')](https://docs.coveo.com/en/179/) to apply when executing search requests with the token.
+          type: string
+          example: '@source==KnowledgeBase'
+        name:
+          description: The unique name of the search page.
+          type: string
+          example: My_Page
+        queryPipeline:
+          description: The name of the [query pipeline](https://docs.coveo.com/en/180/) to enforce when executing search requests with the token.
+          type: string
+          example: InternalSearch
+        searchHub:
+          description: The name of the [search hub](https://docs.coveo.com/en/1342/) / [origin level 1](https://docs.coveo.com/en/1337/) to pass when executing search requests and logging usage analytics events with the token.
+          type: string
+          example: SupportHub
+        title:
+          description: The search page HTML title tag value.
+          type: string
+          example: My page
+        userDisplayName:
+          description: The userDisplayName to pass when logging usage analytics search events.
+          type: string
+          default: Anonymous
+          example: Alice Smith
+        userGroups:
+          description: The userGroups to pass when logging usage analytics search events. Must be a stringified array in JSON.
+          type: string
+          default: '[]'
+          example: '["Tech support agents", "Employees"]'
+        userIds:
+          description: 'The security identities to impersonate when authenticating a query with this search token. Must be a stringified array in JSON.
+
+            By default, the service uses a single security identity representing an anonymous user.'
+          type: string
+          default: '[{"name":"anonymous@coveo.com","provider":"Email Security Provider"}]'
+          example: '[{"name":"johndoe@coveo.com","provider":"Email Security Provider"}]'
+        validFor:
+          description: The number of milliseconds the search token will remain valid for once it has been created.
+          type: integer
+          default: 86400000
+          maximum: 86400000
+          minimum: 900000
+          example: 3600000
     swaggermodels.ResponseApplicationErrorForbidden:
       type: object
       properties:
@@ -1103,29 +1073,6 @@ components:
           example: 403
         message:
           type: string
-    swaggermodels.ResponseApplicationErrorUnauthorized:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 401
-        message:
-          type: string
-    swaggermodels.buttonJavaScriptResponseModel:
-      type: object
-      properties:
-        inlineContent:
-          description: The content of the header "script" tag.
-          type: string
-          example: window.location = 'about:blank';
-        name:
-          description: The identifier of the header "script" tag.
-          type: string
-          example: CoveoSearchUI
-        url:
-          description: The URL of the JavaScript source file.
-          type: string
-          example: https://code.jquery.com/jquery-3.4.1.min.js
     swaggermodels.CSSResourceSharedModel:
       type: object
       properties:
@@ -1141,6 +1088,59 @@ components:
           description: The URL of CSS stylesheet.
           type: string
           example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
+    swaggermodels.ResponseApplicationErrorBadRequest:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 400
+        message:
+          type: string
+    swaggermodels.searchTokenConfigurationResponseModel:
+      type: object
+      required:
+      - pipeline
+      - searchHub
+      properties:
+        filter:
+          description: The [constant query expression ('cq')](https://docs.coveo.com/en/179/) to apply when executing search requests with the token.
+          type: string
+          example: '@source==KnowledgeBase'
+        pipeline:
+          description: The name of the [query pipeline](https://docs.coveo.com/en/180/) to enforce when executing search requests with the token.
+          type: string
+          example: InternalSearch
+        searchHub:
+          description: The name of the [search hub](https://docs.coveo.com/en/1342/) / [origin level 1](https://docs.coveo.com/en/1337/) to pass when executing search requests and logging usage analytics events with the token.
+          type: string
+          example: SupportHub
+        userDisplayName:
+          description: The userDisplayName to pass when logging usage analytics search events.
+          type: string
+          default: Anonymous
+          example: Alice Smith
+        userGroups:
+          description: The userGroups to passed when logging usage analytics search events.
+          type: array
+          items:
+            type: string
+          example:
+          - Tech support agents
+          - Employees
+        userIds:
+          description: 'The security identities impersonated when authenticating this query.
+
+            By default, the service uses a single security identity representing an anonymous user.'
+          type: array
+          items:
+            $ref: '#/components/schemas/swaggermodels.userIDResponseModel'
+        validFor:
+          description: The number of milliseconds the search token will remain valid for once it has been created.
+          type: integer
+          default: 86400000
+          maximum: 86400000
+          minimum: 900000
+          example: 3600000
   securitySchemes:
     OAuth2:
       type: oauth2
