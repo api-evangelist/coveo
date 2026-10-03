@@ -203,17 +203,12 @@ paths:
       deprecated: true
 components:
   schemas:
-    AddSearchEventResponseV14:
-      required:
-      - searchEventUid
+    AddClickEventResponseV14:
       type: object
       properties:
-        searchEventUid:
-          type: string
-          description: The searchEventUid associated with the provided search event
         visitId:
           type: string
-          description: The ID of the visit associated with the provided search event
+          description: The ID of the visit associated with the provided click event
         visitorId:
           type: string
           description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
@@ -222,10 +217,17 @@ components:
           type: string
           description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
           example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-      description: The response to add search event operations
-    StatusResponse:
+      description: The response to add click event operation
+    VisitInfoResponseV14:
       type: object
-      description: Service's status information
+      properties:
+        id:
+          type: string
+          description: The visit id.
+        visitorId:
+          type: string
+          description: The visitor id.
+      description: The user current visit
     ClickEventModelV14:
       required:
       - actionCause
@@ -319,12 +321,20 @@ components:
           type: string
           description: The ranking modifier that affected the clicked document.
       description: An event that represents a result that was clicked
-    AddCustomEventResponseV14:
+    StatusResponse:
+      type: object
+      description: Service's status information
+    AddSearchEventResponseV14:
+      required:
+      - searchEventUid
       type: object
       properties:
+        searchEventUid:
+          type: string
+          description: The searchEventUid associated with the provided search event
         visitId:
           type: string
-          description: The ID of the visit associated with the provided custom event
+          description: The ID of the visit associated with the provided search event
         visitorId:
           type: string
           description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
@@ -333,7 +343,7 @@ components:
           type: string
           description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
           example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-      description: The response to add custom event operation
+      description: The response to add search event operations
     CustomEventModelV14:
       required:
       - eventType
@@ -397,12 +407,12 @@ components:
           type: string
           description: The searchQueryUid of the last search event that occurred before this event
       description: An event that represents a custom action.
-    AddClickEventResponseV14:
+    AddCustomEventResponseV14:
       type: object
       properties:
         visitId:
           type: string
-          description: The ID of the visit associated with the provided click event
+          description: The ID of the visit associated with the provided custom event
         visitorId:
           type: string
           description: Unique identifier associated with the current visitor. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
@@ -411,17 +421,20 @@ components:
           type: string
           description: Unique identifier associated with the current logged user. See [UUID v4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random%29)>)
           example: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-      description: The response to add click event operation
-    VisitInfoResponseV14:
+      description: The response to add custom event operation
+    ResultModelV14:
+      required:
+      - documentUri
+      - documentUriHash
       type: object
       properties:
-        id:
+        documentUri:
           type: string
-          description: The visit id.
-        visitorId:
+          description: The @sysuri of this document
+        documentUriHash:
           type: string
-          description: The visitor id.
-      description: The user current visit
+          description: The @sysurihash of this document
+      description: A search result
     SearchEventModelV14:
       required:
       - actionCause
@@ -516,19 +529,6 @@ components:
           items:
             type: string
       description: An event that represents a search that was done to the index
-    ResultModelV14:
-      required:
-      - documentUri
-      - documentUriHash
-      type: object
-      properties:
-        documentUri:
-          type: string
-          description: The @sysuri of this document
-        documentUriHash:
-          type: string
-          description: The @sysurihash of this document
-      description: A search result
   securitySchemes:
     v8:
       type: oauth2

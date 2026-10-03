@@ -447,285 +447,6 @@ paths:
         - full
 components:
   schemas:
-    DocumentSuggestionConfiguration:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the case assist configuration.<br />
-          example: myCaseAssistConfiguration
-        documentSuggestionConfiguration:
-          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
-      description: A mock case assist configuration to test a document suggestions configuration.
-    RestCaseAssistConfigurationRequest:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the case assist configuration.<br />
-          example: myCaseAssistConfiguration
-        documentSuggestionConfiguration:
-          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
-        classificationConfigurations:
-          type: array
-          items:
-            $ref: '#/components/schemas/RestClassificationConfiguration'
-      description: A case assist configuration.
-    RestCaseAssistConfigurationWithProject:
-      allOf:
-      - $ref: '#/components/schemas/RestClassificationConfiguration'
-      - type: object
-        properties:
-          projectIds:
-            type: array
-            description: Each item is the unique identifier of a project associated with the case assist configuration.
-            items:
-              type: string
-        required:
-        - projectIds
-    RestClassificationConfiguration:
-      required:
-      - fieldsToPredict
-      - filter
-      - strategy
-      type: object
-      properties:
-        strategy:
-          type: string
-          description: 'The strategy with which to retrieve field value suggestions.<br /><b>Allowed value:</b><br /> - `Some`: Use the [`$some` query extension](https://docs.coveo.com/en/1462/#some).<br /> - `Axon`: Use a Case Classification Machine Learning Model.'
-          example: Some
-          enum:
-          - Some
-        filter:
-          type: string
-          description: A [filter query expression](https://docs.coveo.com/en/1552/) that restricts the items from which to base the field value suggestions.
-          example: '@objecttype==case'
-        fieldsToPredict:
-          type: array
-          description: The [fields](https://docs.coveo.com/en/200/) for which to retrieve suggestions.<br /><b>Example:</b> `[{"name":"opportunitytype"}]`
-          example:
-          - name: opportunitytype
-          - name: issuetype
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: A field name.
-      description: A document classification configuration.
-    RestCaseAssistConfigurationResponse:
-      required:
-      - classificationConfigurations
-      - id
-      - name
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the case assist configuration.
-          example: d9ff783c-574f-4d22-838c-df2c18a0c2b3
-        name:
-          type: string
-          description: The name of the case assist configuration.
-          example: myCaseAssistConfiguration
-        documentSuggestionConfiguration:
-          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
-        classificationConfigurations:
-          type: array
-          items:
-            $ref: '#/components/schemas/RestClassificationConfiguration'
-      description: A case assist configuration.
-    RestListOfCaseAssistConfigurations:
-      required:
-      - configurations
-      type: object
-      properties:
-        configurations:
-          type: array
-          items:
-            $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
-        totalEntries:
-          type: integer
-          description: The total number of configurations.
-          format: int32
-          example: 1
-        totalPages:
-          type: integer
-          description: The total number of pages.
-          format: int32
-          example: 1
-    RestDocumentSuggestions:
-      required:
-      - documents
-      - responseId
-      - totalCount
-      type: object
-      properties:
-        documents:
-          type: array
-          description: The document suggestions.
-          items:
-            required:
-            - clickUri
-            - excerpt
-            - fields
-            - hasHtmlVersion
-            - title
-            - uniqueId
-            type: object
-            properties:
-              title:
-                type: string
-                description: The document title.
-                example: GC3000 Series Propane Generator Ignition
-              clickUri:
-                type: string
-                description: The document clickable URI.
-                example: http://www.salesforce.com/org:organization/object:Solution/record:5013h000000tPmnAAE
-              excerpt:
-                type: string
-                description: An excerpt from the document.
-                example: The GC3000 series propane generators need to be started up using the following process if the ignition fails at the first try
-              uniqueId:
-                type: string
-                description: The unique ID of the document.
-                example: 84.72597$http://www.salesforce.com/org:organization/object:Solution/record:5013h000000tPmnAAE:2
-              hasHtmlVersion:
-                type: boolean
-                description: Whether the index contains an HTML version of this item.
-                example: true
-              fields:
-                type: object
-                properties:
-                  title:
-                    type: string
-                    example: GC3000 Series Propane Generator Ignition
-                  urihash:
-                    type: string
-                    example: EFQOedWwU1M5af37
-                  '...':
-                    type: object
-                    example: '...'
-                description: The `raw` fields of the item.
-        totalCount:
-          type: integer
-          description: The total number of suggestions.
-          format: int32
-          example: 1
-        responseId:
-          type: string
-          description: The unique identifier of the response.
-          example: 123e4567-e89b-12d3-a456-426614174000
-    locale:
-      type: string
-      description: <p>The locale of the current user. Must comply with IETF's <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">BCP 47</a> definition.</p> <p>Coveo Machine Learning models use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the <code>$locale</code> object.</p> <p><strong>Note:</strong> When logging a Search Usage Analytics event, the <code>language</code> field of that event should match the language part of the <code>locale</code> value of the query (e.g., <code>en-US</code> in <code>locale</code> becomes <code>en</code> in <code>language</code>).</p>
-      example: en-US
-    clientId:
-      type: string
-      description: The <a href="https://docs.coveo.com/en/masb0234/"><code>clientId</code><a> identifies a user on a browser of a Coveo-powered search page and provides insight into the events they performed
-      example: 5cb98953-9c13-42ff-8176-e6fcba6a50bf
-    RestCaseAssistConfigurationWithProjectResponse:
-      allOf:
-      - $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
-      - type: object
-        properties:
-          classificationConfigurations:
-            type: array
-            items:
-              $ref: '#/components/schemas/RestCaseAssistConfigurationWithProject'
-    Fields:
-      type: object
-      additionalProperties:
-        type: object
-        properties:
-          value:
-            type: string
-            description: The value of the field.
-            example: My GC3000 series propane generator won't start
-      description: 'A dictionary where each key is the name of a field that pertains to the target case, and each value is an object that describes the content of that field.<br /><b>Example:</b> `{"subject": {"value": "GC3000 won''t start"}, "description": {"value": "My GC3000 series propane generator won''t start"}`}'
-      example:
-        subject:
-          value: GC3000 won't start
-        description:
-          value: My GC3000 series propane generator won't start
-    RestClassification:
-      type: object
-      properties:
-        fields:
-          type: object
-          additionalProperties:
-            type: object
-            properties:
-              predictions:
-                type: array
-                description: The field value suggestions.
-                items:
-                  type: object
-                  properties:
-                    value:
-                      type: string
-                      description: The field value suggestion.
-                      example: Electrical
-                    confidence:
-                      type: number
-                      description: 'A floating-point number between `0` and `1` indicating the level of certainty that the suggested field value is actually relevant to the case.<br />Minimum: `0.0` Maximum: `1.0`'
-                      format: float
-                      example: 0.9
-                    id:
-                      type: string
-                      description: The unique identifier of the predicted value.
-                      example: 5ac61db7-49ab-50be-b9c5-d62dd6083fde
-          example:
-            opportunitytype:
-              predictions:
-              - value: Propane
-                confidence: 0.9178082346916199
-                id: c38dec1f-349e-5dc1-bc24-4de96dc53bbd
-            issuetype:
-              predictions:
-              - value: Ignition
-                confidence: 0.8325673948382833
-                id: 7ac53b91-afd2-5472-8f6d-e829a0a8232f
-              - value: Controller
-                confidence: 0.5364940382730438
-                id: 7cf52516-3dc6-5a1a-ba2e-d05b0c255c1c
-        responseId:
-          type: string
-          description: The unique identifier of the response.
-          example: 123e4567-e89b-12d3-a456-426614174000
-    PreviewClassificationRequest:
-      required:
-      - configuration
-      - fields
-      type: object
-      properties:
-        allOf:
-        - $ref: '#/components/schemas/RestCaseAssistContext'
-        configuration:
-          $ref: '#/components/schemas/CaseClassificationConfiguration'
-    RestListOfCaseAssistConfigurationsWithProjects:
-      required:
-      - configurations
-      type: object
-      properties:
-        configurations:
-          type: array
-          items:
-            $ref: '#/components/schemas/RestCaseAssistConfigurationWithProjectResponse'
-        totalEntries:
-          type: integer
-          format: int32
-          description: The total number of configurations
-          example: 1
-        totalPages:
-          type: integer
-          format: int32
-          description: The total number of pages
-          example: 1
     Analytics:
       type:
       - object
@@ -855,21 +576,213 @@ components:
       example:
         product: Propane Generator
         subproduct: GC3000 Series
-    RestCaseAssistContext:
+    RestListOfCaseAssistConfigurationsWithProjects:
+      required:
+      - configurations
       type: object
       properties:
-        analytics:
-          $ref: '#/components/schemas/Analytics'
-        visitorId:
-          $ref: '#/components/schemas/visitorId'
-        clientId:
-          $ref: '#/components/schemas/clientId'
-        locale:
-          $ref: '#/components/schemas/locale'
+        configurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestCaseAssistConfigurationWithProjectResponse'
+        totalEntries:
+          type: integer
+          format: int32
+          description: The total number of configurations
+          example: 1
+        totalPages:
+          type: integer
+          format: int32
+          description: The total number of pages
+          example: 1
+    RestClassification:
+      type: object
+      properties:
         fields:
-          $ref: '#/components/schemas/Fields'
-        context:
-          $ref: '#/components/schemas/ContextAttributes'
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              predictions:
+                type: array
+                description: The field value suggestions.
+                items:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                      description: The field value suggestion.
+                      example: Electrical
+                    confidence:
+                      type: number
+                      description: 'A floating-point number between `0` and `1` indicating the level of certainty that the suggested field value is actually relevant to the case.<br />Minimum: `0.0` Maximum: `1.0`'
+                      format: float
+                      example: 0.9
+                    id:
+                      type: string
+                      description: The unique identifier of the predicted value.
+                      example: 5ac61db7-49ab-50be-b9c5-d62dd6083fde
+          example:
+            opportunitytype:
+              predictions:
+              - value: Propane
+                confidence: 0.9178082346916199
+                id: c38dec1f-349e-5dc1-bc24-4de96dc53bbd
+            issuetype:
+              predictions:
+              - value: Ignition
+                confidence: 0.8325673948382833
+                id: 7ac53b91-afd2-5472-8f6d-e829a0a8232f
+              - value: Controller
+                confidence: 0.5364940382730438
+                id: 7cf52516-3dc6-5a1a-ba2e-d05b0c255c1c
+        responseId:
+          type: string
+          description: The unique identifier of the response.
+          example: 123e4567-e89b-12d3-a456-426614174000
+    DocumentSuggestionConfiguration:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the case assist configuration.<br />
+          example: myCaseAssistConfiguration
+        documentSuggestionConfiguration:
+          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
+      description: A mock case assist configuration to test a document suggestions configuration.
+    PreviewClassificationRequest:
+      required:
+      - configuration
+      - fields
+      type: object
+      properties:
+        allOf:
+        - $ref: '#/components/schemas/RestCaseAssistContext'
+        configuration:
+          $ref: '#/components/schemas/CaseClassificationConfiguration'
+    RestListOfCaseAssistConfigurations:
+      required:
+      - configurations
+      type: object
+      properties:
+        configurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
+        totalEntries:
+          type: integer
+          description: The total number of configurations.
+          format: int32
+          example: 1
+        totalPages:
+          type: integer
+          description: The total number of pages.
+          format: int32
+          example: 1
+    RestCaseAssistConfigurationWithProjectResponse:
+      allOf:
+      - $ref: '#/components/schemas/RestCaseAssistConfigurationResponse'
+      - type: object
+        properties:
+          classificationConfigurations:
+            type: array
+            items:
+              $ref: '#/components/schemas/RestCaseAssistConfigurationWithProject'
+    Fields:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          value:
+            type: string
+            description: The value of the field.
+            example: My GC3000 series propane generator won't start
+      description: 'A dictionary where each key is the name of a field that pertains to the target case, and each value is an object that describes the content of that field.<br /><b>Example:</b> `{"subject": {"value": "GC3000 won''t start"}, "description": {"value": "My GC3000 series propane generator won''t start"}`}'
+      example:
+        subject:
+          value: GC3000 won't start
+        description:
+          value: My GC3000 series propane generator won't start
+    RestCaseAssistConfigurationRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the case assist configuration.<br />
+          example: myCaseAssistConfiguration
+        documentSuggestionConfiguration:
+          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
+        classificationConfigurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestClassificationConfiguration'
+      description: A case assist configuration.
+    RestDocumentSuggestions:
+      required:
+      - documents
+      - responseId
+      - totalCount
+      type: object
+      properties:
+        documents:
+          type: array
+          description: The document suggestions.
+          items:
+            required:
+            - clickUri
+            - excerpt
+            - fields
+            - hasHtmlVersion
+            - title
+            - uniqueId
+            type: object
+            properties:
+              title:
+                type: string
+                description: The document title.
+                example: GC3000 Series Propane Generator Ignition
+              clickUri:
+                type: string
+                description: The document clickable URI.
+                example: http://www.salesforce.com/org:organization/object:Solution/record:5013h000000tPmnAAE
+              excerpt:
+                type: string
+                description: An excerpt from the document.
+                example: The GC3000 series propane generators need to be started up using the following process if the ignition fails at the first try
+              uniqueId:
+                type: string
+                description: The unique ID of the document.
+                example: 84.72597$http://www.salesforce.com/org:organization/object:Solution/record:5013h000000tPmnAAE:2
+              hasHtmlVersion:
+                type: boolean
+                description: Whether the index contains an HTML version of this item.
+                example: true
+              fields:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: GC3000 Series Propane Generator Ignition
+                  urihash:
+                    type: string
+                    example: EFQOedWwU1M5af37
+                  '...':
+                    type: object
+                    example: '...'
+                description: The `raw` fields of the item.
+        totalCount:
+          type: integer
+          description: The total number of suggestions.
+          format: int32
+          example: 1
+        responseId:
+          type: string
+          description: The unique identifier of the response.
+          example: 123e4567-e89b-12d3-a456-426614174000
     RestDocumentSuggestionConfiguration:
       required:
       - filter
@@ -892,6 +805,10 @@ components:
           description: The name of a [query pipeline](https://docs.coveo.com/en/180/) to use to retrieve document suggestions. The query pipeline must support the strategy defined in the `strategy` parameter.<br />For example, if you have selected `ITD` as `strategy` value, you must provide the name of a pipeline that has an [ITD](https://docs.coveo.com/en/207/)-enabled [Coveo ML](https://docs.coveo.com/en/188/) [ART](https://docs.coveo.com/en/1013/) model association.
           example: myPipelineName
       description: A document suggestions configuration.
+    locale:
+      type: string
+      description: <p>The locale of the current user. Must comply with IETF's <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">BCP 47</a> definition.</p> <p>Coveo Machine Learning models use this information to provide contextually relevant output. Moreover, this information can be referred to in query expressions and QPL statements by using the <code>$locale</code> object.</p> <p><strong>Note:</strong> When logging a Search Usage Analytics event, the <code>language</code> field of that event should match the language part of the <code>locale</code> value of the query (e.g., <code>en-US</code> in <code>locale</code> becomes <code>en</code> in <code>language</code>).</p>
+      example: en-US
     PreviewDocumentSuggestionRequest:
       required:
       - configuration
@@ -902,10 +819,63 @@ components:
         - $ref: '#/components/schemas/RestCaseAssistContext'
         configuration:
           $ref: '#/components/schemas/DocumentSuggestionConfiguration'
+    clientId:
+      type: string
+      description: The <a href="https://docs.coveo.com/en/masb0234/"><code>clientId</code><a> identifies a user on a browser of a Coveo-powered search page and provides insight into the events they performed
+      example: 5cb98953-9c13-42ff-8176-e6fcba6a50bf
+    RestCaseAssistContext:
+      type: object
+      properties:
+        analytics:
+          $ref: '#/components/schemas/Analytics'
+        visitorId:
+          $ref: '#/components/schemas/visitorId'
+        clientId:
+          $ref: '#/components/schemas/clientId'
+        locale:
+          $ref: '#/components/schemas/locale'
+        fields:
+          $ref: '#/components/schemas/Fields'
+        context:
+          $ref: '#/components/schemas/ContextAttributes'
+    RestCaseAssistConfigurationWithProject:
+      allOf:
+      - $ref: '#/components/schemas/RestClassificationConfiguration'
+      - type: object
+        properties:
+          projectIds:
+            type: array
+            description: Each item is the unique identifier of a project associated with the case assist configuration.
+            items:
+              type: string
+        required:
+        - projectIds
     visitorId:
       type: string
       description: <p>A GUID which represents the current user, who can either be authenticated or anonymous.</p> <p><code>visitorId</code> is deprecated and has been replaced by <a href="https://docs.coveo.com/en/masb0234/"><code>clientId</code><a> in newer versions of the Coveo UI libraries. For compatibility, the new first-party cookie and local storage values are still named <code>coveo_visitorId</code>.</p> <p>For older versions of the JavaScript Search Framework, the visitor ID is generated by the Coveo Usage Analytics service and stored in a non-expiring third-party cookie. <strong>Note:</strong> Third-party cookies <a href="https://docs.coveo.com/en/m54b9238/">have also been deprecated</a>. This is unrelated to the deprecation of <code>visitorId</code>.</p>
       example: 5cb98953-9c13-42ff-8176-e6fcba6a50bf
+    RestCaseAssistConfigurationResponse:
+      required:
+      - classificationConfigurations
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the case assist configuration.
+          example: d9ff783c-574f-4d22-838c-df2c18a0c2b3
+        name:
+          type: string
+          description: The name of the case assist configuration.
+          example: myCaseAssistConfiguration
+        documentSuggestionConfiguration:
+          $ref: '#/components/schemas/RestDocumentSuggestionConfiguration'
+        classificationConfigurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestClassificationConfiguration'
+      description: A case assist configuration.
     CaseClassificationConfiguration:
       required:
       - name
@@ -920,6 +890,36 @@ components:
           items:
             $ref: '#/components/schemas/RestClassificationConfiguration'
       description: A mock case assist configuration to test a case classification configuration.
+    RestClassificationConfiguration:
+      required:
+      - fieldsToPredict
+      - filter
+      - strategy
+      type: object
+      properties:
+        strategy:
+          type: string
+          description: 'The strategy with which to retrieve field value suggestions.<br /><b>Allowed value:</b><br /> - `Some`: Use the [`$some` query extension](https://docs.coveo.com/en/1462/#some).<br /> - `Axon`: Use a Case Classification Machine Learning Model.'
+          example: Some
+          enum:
+          - Some
+        filter:
+          type: string
+          description: A [filter query expression](https://docs.coveo.com/en/1552/) that restricts the items from which to base the field value suggestions.
+          example: '@objecttype==case'
+        fieldsToPredict:
+          type: array
+          description: The [fields](https://docs.coveo.com/en/200/) for which to retrieve suggestions.<br /><b>Example:</b> `[{"name":"opportunitytype"}]`
+          example:
+          - name: opportunitytype
+          - name: issuetype
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: A field name.
+      description: A document classification configuration.
   securitySchemes:
     oauth2:
       type: oauth2

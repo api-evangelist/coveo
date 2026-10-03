@@ -773,59 +773,51 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    swaggermodels.JavaScriptResourceSharedModel:
+    swaggermodels.searchTokenConfigurationResponseModel:
       type: object
+      required:
+      - pipeline
+      - searchHub
       properties:
-        inlineContent:
-          description: The content of the header "script" tag.
+        filter:
+          description: The [constant query expression ('cq')](https://docs.coveo.com/en/179/) to apply when executing search requests with the token.
           type: string
-          example: window.location = 'about:blank';
-        name:
-          description: The identifier of the header "script" tag.
+          example: '@source==KnowledgeBase'
+        pipeline:
+          description: The name of the [query pipeline](https://docs.coveo.com/en/180/) to enforce when executing search requests with the token.
           type: string
-          example: CoveoSearchUI
-        url:
-          description: The URL of the JavaScript source file.
+          example: InternalSearch
+        searchHub:
+          description: The name of the [search hub](https://docs.coveo.com/en/1342/) / [origin level 1](https://docs.coveo.com/en/1337/) to pass when executing search requests and logging usage analytics events with the token.
           type: string
-          example: https://code.jquery.com/jquery-3.4.1.min.js
-    swaggermodels.buttonJavaScriptResponseModel:
-      type: object
-      properties:
-        inlineContent:
-          description: The content of the header "script" tag.
+          example: SupportHub
+        userDisplayName:
+          description: The userDisplayName to pass when logging usage analytics search events.
           type: string
-          example: window.location = 'about:blank';
-        name:
-          description: The identifier of the header "script" tag.
-          type: string
-          example: CoveoSearchUI
-        url:
-          description: The URL of the JavaScript source file.
-          type: string
-          example: https://code.jquery.com/jquery-3.4.1.min.js
-    swaggermodels.buttonCSSResponseModel:
-      type: object
-      properties:
-        inlineContent:
-          description: The content of the header "style" tag.
-          type: string
-          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
-        name:
-          description: The identifier of the header "style" tag.
-          type: string
-          example: CoveoSearchUI
-        url:
-          description: The URL of CSS stylesheet.
-          type: string
-          example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
-    swaggermodels.ResponseApplicationErrorUnauthorized:
-      type: object
-      properties:
-        errorCode:
+          default: Anonymous
+          example: Alice Smith
+        userGroups:
+          description: The userGroups to passed when logging usage analytics search events.
+          type: array
+          items:
+            type: string
+          example:
+          - Tech support agents
+          - Employees
+        userIds:
+          description: 'The security identities impersonated when authenticating this query.
+
+            By default, the service uses a single security identity representing an anonymous user.'
+          type: array
+          items:
+            $ref: '#/components/schemas/swaggermodels.userIDResponseModel'
+        validFor:
+          description: The number of milliseconds the search token will remain valid for once it has been created.
           type: integer
-          example: 401
-        message:
-          type: string
+          default: 86400000
+          maximum: 86400000
+          minimum: 900000
+          example: 3600000
     swaggermodels.InAppWidgetCreateResponseBody:
       type: object
       required:
@@ -937,6 +929,37 @@ components:
           description: The [search token](https://docs.coveo.com/en/1346/) to request when initializing the InAppWidget.
           allOf:
           - $ref: '#/components/schemas/swaggermodels.searchTokenConfigurationResponseModel'
+    swaggermodels.buttonJavaScriptResponseModel:
+      type: object
+      properties:
+        inlineContent:
+          description: The content of the header "script" tag.
+          type: string
+          example: window.location = 'about:blank';
+        name:
+          description: The identifier of the header "script" tag.
+          type: string
+          example: CoveoSearchUI
+        url:
+          description: The URL of the JavaScript source file.
+          type: string
+          example: https://code.jquery.com/jquery-3.4.1.min.js
+    swaggermodels.ResponseApplicationErrorBadRequest:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 400
+        message:
+          type: string
+    swaggermodels.ResponseApplicationErrorUnauthorized:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 401
+        message:
+          type: string
     swaggermodels.userIDResponseModel:
       type: object
       properties:
@@ -950,22 +973,36 @@ components:
           type: string
           default: Email Security Provider
           example: Email Security Provider
-    swaggermodels.ResponseApplicationErrorNotFound:
+    swaggermodels.CSSResourceSharedModel:
       type: object
       properties:
-        errorCode:
-          type: integer
-          example: 404
-        message:
+        inlineContent:
+          description: The content of the header "style" tag.
           type: string
-    swaggermodels.ResponseApplicationErrorInternalServerError:
+          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
+        name:
+          description: The identifier of the header "style" tag.
+          type: string
+          example: CoveoSearchUI
+        url:
+          description: The URL of CSS stylesheet.
+          type: string
+          example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
+    swaggermodels.buttonCSSResponseModel:
       type: object
       properties:
-        errorCode:
-          type: integer
-          example: 500
-        message:
+        inlineContent:
+          description: The content of the header "style" tag.
           type: string
+          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
+        name:
+          description: The identifier of the header "style" tag.
+          type: string
+          example: CoveoSearchUI
+        url:
+          description: The URL of CSS stylesheet.
+          type: string
+          example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
     swaggermodels.FullInAppWidgetRequestModel:
       type: object
       required:
@@ -1065,6 +1102,37 @@ components:
           maximum: 86400000
           minimum: 900000
           example: 3600000
+    swaggermodels.ResponseApplicationErrorNotFound:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 404
+        message:
+          type: string
+    swaggermodels.ResponseApplicationErrorInternalServerError:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 500
+        message:
+          type: string
+    swaggermodels.JavaScriptResourceSharedModel:
+      type: object
+      properties:
+        inlineContent:
+          description: The content of the header "script" tag.
+          type: string
+          example: window.location = 'about:blank';
+        name:
+          description: The identifier of the header "script" tag.
+          type: string
+          example: CoveoSearchUI
+        url:
+          description: The URL of the JavaScript source file.
+          type: string
+          example: https://code.jquery.com/jquery-3.4.1.min.js
     swaggermodels.ResponseApplicationErrorForbidden:
       type: object
       properties:
@@ -1073,74 +1141,6 @@ components:
           example: 403
         message:
           type: string
-    swaggermodels.CSSResourceSharedModel:
-      type: object
-      properties:
-        inlineContent:
-          description: The content of the header "style" tag.
-          type: string
-          example: 'body { color: #e0e0e0; background-color: #2a2aa2; }'
-        name:
-          description: The identifier of the header "style" tag.
-          type: string
-          example: CoveoSearchUI
-        url:
-          description: The URL of CSS stylesheet.
-          type: string
-          example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
-    swaggermodels.ResponseApplicationErrorBadRequest:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 400
-        message:
-          type: string
-    swaggermodels.searchTokenConfigurationResponseModel:
-      type: object
-      required:
-      - pipeline
-      - searchHub
-      properties:
-        filter:
-          description: The [constant query expression ('cq')](https://docs.coveo.com/en/179/) to apply when executing search requests with the token.
-          type: string
-          example: '@source==KnowledgeBase'
-        pipeline:
-          description: The name of the [query pipeline](https://docs.coveo.com/en/180/) to enforce when executing search requests with the token.
-          type: string
-          example: InternalSearch
-        searchHub:
-          description: The name of the [search hub](https://docs.coveo.com/en/1342/) / [origin level 1](https://docs.coveo.com/en/1337/) to pass when executing search requests and logging usage analytics events with the token.
-          type: string
-          example: SupportHub
-        userDisplayName:
-          description: The userDisplayName to pass when logging usage analytics search events.
-          type: string
-          default: Anonymous
-          example: Alice Smith
-        userGroups:
-          description: The userGroups to passed when logging usage analytics search events.
-          type: array
-          items:
-            type: string
-          example:
-          - Tech support agents
-          - Employees
-        userIds:
-          description: 'The security identities impersonated when authenticating this query.
-
-            By default, the service uses a single security identity representing an anonymous user.'
-          type: array
-          items:
-            $ref: '#/components/schemas/swaggermodels.userIDResponseModel'
-        validFor:
-          description: The number of milliseconds the search token will remain valid for once it has been created.
-          type: integer
-          default: 86400000
-          maximum: 86400000
-          minimum: 900000
-          example: 3600000
   securitySchemes:
     OAuth2:
       type: oauth2

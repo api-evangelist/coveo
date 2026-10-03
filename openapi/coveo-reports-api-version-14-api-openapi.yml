@@ -247,19 +247,6 @@ paths:
       deprecated: true
 components:
   schemas:
-    StatusResponse:
-      type: object
-      description: Service's status information
-    ReportsResponseV14:
-      type: object
-      properties:
-        reports:
-          uniqueItems: true
-          type: array
-          description: The reports the user can view.
-          items:
-            $ref: '#/components/schemas/ReportResponseV14'
-      description: The reports the user can view.
     ReportIdResponseV14:
       type: object
       properties:
@@ -267,6 +254,23 @@ components:
           type: string
           description: The report id.
       description: A report id.
+    ReportUsersResponseV14:
+      type: object
+      properties:
+        access:
+          type: string
+          description: The access type of the report. Can be PUBLIC or PRIVATE.
+          enum:
+          - PUBLIC
+          - PRIVATE
+          - PUBLIC
+          - PRIVATE
+        allowedUsers:
+          type: array
+          description: The users allowed to access the specified report.
+          items:
+            $ref: '#/components/schemas/UserResponseV14'
+      description: The users allowed to access the specified report.
     ReportModelV14:
       required:
       - allAnalyticsViewer
@@ -301,6 +305,30 @@ components:
             type: string
             description: The ids of the persisted filters associated with the report.
       description: The configuration of a report.
+    UserResponseV14:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The user id.
+        account:
+          type: string
+          description: The user account.
+        filters:
+          uniqueItems: true
+          type: array
+          description: The filters that are applied to the user
+          items:
+            type: string
+            description: The filters that are applied to the user
+        reports:
+          uniqueItems: true
+          type: array
+          description: The reports the user can view.
+          items:
+            type: string
+            description: The reports the user can view.
+      description: A user.
     ReportResponseV14:
       type: object
       properties:
@@ -333,47 +361,19 @@ components:
             type: string
             description: List of associated filters.
       description: A report configuration.
-    UserResponseV14:
+    StatusResponse:
+      type: object
+      description: Service's status information
+    ReportsResponseV14:
       type: object
       properties:
-        userId:
-          type: string
-          description: The user id.
-        account:
-          type: string
-          description: The user account.
-        filters:
-          uniqueItems: true
-          type: array
-          description: The filters that are applied to the user
-          items:
-            type: string
-            description: The filters that are applied to the user
         reports:
           uniqueItems: true
           type: array
           description: The reports the user can view.
           items:
-            type: string
-            description: The reports the user can view.
-      description: A user.
-    ReportUsersResponseV14:
-      type: object
-      properties:
-        access:
-          type: string
-          description: The access type of the report. Can be PUBLIC or PRIVATE.
-          enum:
-          - PUBLIC
-          - PRIVATE
-          - PUBLIC
-          - PRIVATE
-        allowedUsers:
-          type: array
-          description: The users allowed to access the specified report.
-          items:
-            $ref: '#/components/schemas/UserResponseV14'
-      description: The users allowed to access the specified report.
+            $ref: '#/components/schemas/ReportResponseV14'
+      description: The reports the user can view.
   securitySchemes:
     v8:
       type: oauth2

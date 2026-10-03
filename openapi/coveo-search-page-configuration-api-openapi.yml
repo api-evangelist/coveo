@@ -317,46 +317,6 @@ paths:
           description: Not Found
 components:
   parameters:
-    filter:
-      name: filter
-      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
-      example: Store
-      in: query
-      schema:
-        type: string
-    interface-id:
-      name: interfaceId
-      description: The unique identifier of the target search interface.
-      example: 123e4567-e89b-12d3-a456-426614174000
-      in: path
-      required: true
-      schema:
-        type: string
-    organization-id:
-      name: organizationId
-      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
-      example: mycoveocloudv2organizationg8tp8wu3
-      in: path
-      required: true
-      schema:
-        type: string
-    page:
-      name: page
-      description: The 0-based number of the page of configurations to list.
-      in: query
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 100
-    order:
-      name: order
-      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
-      in: query
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
     notify:
       name: notify
       description: Whether to send an email notification to new search page users.
@@ -372,13 +332,58 @@ components:
         type: integer
         minimum: 0
         maximum: 20
+    page:
+      name: page
+      description: The 0-based number of the page of configurations to list.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
+      schema:
+        type: string
+    interface-id:
+      name: interfaceId
+      description: The unique identifier of the target search interface.
+      example: 123e4567-e89b-12d3-a456-426614174000
+      in: path
+      required: true
+      schema:
+        type: string
     projectId:
       name: projectId
       description: The id of the project to which the resource belongs.
       in: query
       schema:
         type: string
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    filter:
+      name: filter
+      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
+      example: Store
+      in: query
+      schema:
+        type: string
   schemas:
+    pipelines-status:
+      type: array
+      description: A list containing the pipeline(s) used by the interface.
+      items:
+        $ref: '#/components/schemas/pipeline-status'
     search-page-interface-config-project:
       allOf:
       - $ref: '#/components/schemas/search-page-interface-config'
@@ -389,14 +394,16 @@ components:
             description: The list of project IDs associated with the search page interface.
             items:
               type: string
-    interface-user-list:
-      type: array
-      description: The list of users that are allowed to access the search interface.
-      example:
-      - alice@example.com
-      - bob@example.com
-      items:
-        type: string
+    interface-add-user:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/interface-user-list'
+        message:
+          type: string
+          description: Message to send as part of email notifications, when `notify` is set to `true`.
+          example: Hey, check out this new search page
+          required: false
     search-page-interface-config-id:
       type: object
       properties:
@@ -650,25 +657,43 @@ components:
       required:
       - id
       - name
-    interface-access:
+    pipeline-status:
       type: object
+      description: The status of a pipeline.
       properties:
-        users:
-          $ref: '#/components/schemas/interface-user-list'
-        domains:
+        id:
+          type: string
+          description: The unique identifier of the pipeline.
+          example: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+        name:
+          type: string
+          description: The name of the pipeline.
+          example: My pipeline
+        pipelineType:
+          type: string
+          description: The type of the pipeline.
+          example: search
+        conditionId:
+          type: string
+          description: The unique identifier of the associated condition.
+          example: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
+        models:
           type: array
-          description: The list of domains that are allowed to access the search interface.
-          example:
-          - example.com
-          - sample.com
           items:
-            type: string
-        sharingLinkEnabled:
-          type: boolean
-          example: true
-        sharingDomainEnabled:
-          type: boolean
-          example: true
+            description: The list of models used by the pipeline.
+            properties:
+              id:
+                type: string
+                description: The unique identifier of the model.
+                example: cccccccc-cccc-cccc-cccc-cccccccccccc
+              modelStatus:
+                type: string
+                description: The status of the model.
+                example: ACTIVE
+              modelEngine:
+                type: string
+                description: The type of the model.
+                example: genqa
     search-page-interface-config:
       type: object
       properties:
@@ -899,58 +924,33 @@ components:
                   default: false
       required:
       - name
-    pipelines-status:
-      type: array
-      description: A list containing the pipeline(s) used by the interface.
-      items:
-        $ref: '#/components/schemas/pipeline-status'
-    interface-add-user:
+    interface-access:
       type: object
       properties:
         users:
           $ref: '#/components/schemas/interface-user-list'
-        message:
-          type: string
-          description: Message to send as part of email notifications, when `notify` is set to `true`.
-          example: Hey, check out this new search page
-          required: false
-    pipeline-status:
-      type: object
-      description: The status of a pipeline.
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the pipeline.
-          example: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
-        name:
-          type: string
-          description: The name of the pipeline.
-          example: My pipeline
-        pipelineType:
-          type: string
-          description: The type of the pipeline.
-          example: search
-        conditionId:
-          type: string
-          description: The unique identifier of the associated condition.
-          example: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
-        models:
+        domains:
           type: array
+          description: The list of domains that are allowed to access the search interface.
+          example:
+          - example.com
+          - sample.com
           items:
-            description: The list of models used by the pipeline.
-            properties:
-              id:
-                type: string
-                description: The unique identifier of the model.
-                example: cccccccc-cccc-cccc-cccc-cccccccccccc
-              modelStatus:
-                type: string
-                description: The status of the model.
-                example: ACTIVE
-              modelEngine:
-                type: string
-                description: The type of the model.
-                example: genqa
+            type: string
+        sharingLinkEnabled:
+          type: boolean
+          example: true
+        sharingDomainEnabled:
+          type: boolean
+          example: true
+    interface-user-list:
+      type: array
+      description: The list of users that are allowed to access the search interface.
+      example:
+      - alice@example.com
+      - bob@example.com
+      items:
+        type: string
   securitySchemes:
     oauth2:
       type: oauth2

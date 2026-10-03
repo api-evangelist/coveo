@@ -224,6 +224,28 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ContentFieldsResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The query used to retrieve item information.
+          example: '@language="English" AND @documenttype=="SupportArticle"'
+        fields:
+          type: array
+          description: The list of non-empty fields for at least one item.
+          items:
+            $ref: '#/components/schemas/FieldCandidateModel'
+    FieldCandidateModel:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the field, also referred to as the field identifier.<br />**Example:** `article_description`
+          example: article_description
+      description: The list of non-empty fields for at least one item.
     CaseExtractionPeriodModel:
       type: object
       properties:
@@ -246,81 +268,6 @@ components:
           description: The field that identifies the support cases' creation date.<br />**Example:** `sfdate`
           example: sfdate
       description: The period during which the cases will be extracted.
-    CaseFilterConditionModel:
-      required:
-      - field
-      - operator
-      - value
-      type: object
-      properties:
-        field:
-          type: string
-          description: The field to use for the filter.<br />**Example:** `author`
-          example: author
-        operator:
-          type: string
-          description: The operator to use for the condition.<br />**Example:** `EQUALS`
-          example: EQUALS
-          enum:
-          - EQUALS
-          - NOT_EQUALS
-          - EQUALS, NOT_EQUALS
-        value:
-          type: string
-          description: The value to use for the filter.<br />**Example:** `John Smith`
-          example: John Smith
-      description: A custom case filter condition.
-    CaseClassificationPreviewRequest:
-      type: object
-      properties:
-        advancedQuery:
-          type: string
-          description: The query that determines the documents to extract. Cannot be used with other document extraction parameters, e.g. sources, filter conditions, etc.<br />**Example:** `@source==("My source") AND @permanentid AND @language="English"`
-          example: '@source==("My source") AND @permanentid AND @language="English"'
-        sources:
-          type: array
-          description: The names of the sources that contain the cases.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
-          example:
-          - CommunityArticles
-          - SalesforceCatalog
-          items:
-            type: string
-            description: The names of the sources that contain the cases.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
-            example: '["CommunityArticles","SalesforceCatalog"]'
-        caseFilterConditions:
-          type: array
-          description: The custom filter conditions for the cases.
-          items:
-            $ref: '#/components/schemas/CaseFilterConditionModel'
-        languageField:
-          type: string
-          description: The field used to identify the language.<br />**Example:** `language`
-          example: language
-        caseExtractionPeriod:
-          $ref: '#/components/schemas/CaseExtractionPeriodModel'
-      description: The configuration for the Case Classification preview.
-    FieldCandidateModel:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the field, also referred to as the field identifier.<br />**Example:** `article_description`
-          example: article_description
-      description: The list of non-empty fields for at least one item.
-    ContentFieldsResponse:
-      type: object
-      properties:
-        query:
-          type: string
-          description: The query used to retrieve item information.
-          example: '@language="English" AND @documenttype=="SupportArticle"'
-        fields:
-          type: array
-          description: The list of non-empty fields for at least one item.
-          items:
-            $ref: '#/components/schemas/FieldCandidateModel'
     CaseClassificationPreviewResponse:
       type: object
       properties:
@@ -351,13 +298,6 @@ components:
           - OK
           - INSUFFICIENT_DOCUMENTS
           - NB_OF_DOCUMENTS_OVER_LIMIT
-    CaseClassificationDocumentCountResponse:
-      type: object
-      properties:
-        documentCount:
-          type: integer
-          description: Number of items
-          format: int64
     CaseClassificationValueCountResponse:
       type: object
       properties:
@@ -368,6 +308,66 @@ components:
         areMoreValuesAvailable:
           type: boolean
           description: Indicates more field values available
+    CaseFilterConditionModel:
+      required:
+      - field
+      - operator
+      - value
+      type: object
+      properties:
+        field:
+          type: string
+          description: The field to use for the filter.<br />**Example:** `author`
+          example: author
+        operator:
+          type: string
+          description: The operator to use for the condition.<br />**Example:** `EQUALS`
+          example: EQUALS
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - EQUALS, NOT_EQUALS
+        value:
+          type: string
+          description: The value to use for the filter.<br />**Example:** `John Smith`
+          example: John Smith
+      description: A custom case filter condition.
+    CaseClassificationDocumentCountResponse:
+      type: object
+      properties:
+        documentCount:
+          type: integer
+          description: Number of items
+          format: int64
+    CaseClassificationPreviewRequest:
+      type: object
+      properties:
+        advancedQuery:
+          type: string
+          description: The query that determines the documents to extract. Cannot be used with other document extraction parameters, e.g. sources, filter conditions, etc.<br />**Example:** `@source==("My source") AND @permanentid AND @language="English"`
+          example: '@source==("My source") AND @permanentid AND @language="English"'
+        sources:
+          type: array
+          description: The names of the sources that contain the cases.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+          example:
+          - CommunityArticles
+          - SalesforceCatalog
+          items:
+            type: string
+            description: The names of the sources that contain the cases.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+            example: '["CommunityArticles","SalesforceCatalog"]'
+        caseFilterConditions:
+          type: array
+          description: The custom filter conditions for the cases.
+          items:
+            $ref: '#/components/schemas/CaseFilterConditionModel'
+        languageField:
+          type: string
+          description: The field used to identify the language.<br />**Example:** `language`
+          example: language
+        caseExtractionPeriod:
+          $ref: '#/components/schemas/CaseExtractionPeriodModel'
+      description: The configuration for the Case Classification preview.
   securitySchemes:
     oauth2:
       type: oauth2

@@ -892,6 +892,19 @@ components:
         totalPages:
           type: integer
           format: int32
+    PageModelProjectModel:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
     PageModelResourceWithProjectIds:
       type: object
       properties:
@@ -905,6 +918,42 @@ components:
         totalPages:
           type: integer
           format: int32
+    ProjectResourceModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of a [resource](https://docs.coveo.com/2820).
+          readOnly: true
+          example: 3987990e-0f0d-440f-bcf6-22279078a20f
+        name:
+          type: string
+          description: The name of the [resource](https://docs.coveo.com/2820).
+          readOnly: true
+          example: My Web source
+        type:
+          type: string
+          description: The resource type subset that the resource belongs to (often reflected in the related Coveo Administration Console resource list page).
+          readOnly: true
+          example: WEB2
+        version:
+          type: string
+          description: The resource version.
+          readOnly: true
+          example: 1.2.3
+        additionalInfo:
+          type: object
+          additionalProperties:
+            type: object
+            description: Additional information about the resource.
+            readOnly: true
+            example:
+              CatalogName: Test Catalog
+          description: Additional information about the resource.
+          readOnly: true
+          example:
+            CatalogName: Test Catalog
+      description: A resource.
     ResourceWithProjectIds:
       type: object
       properties:
@@ -914,6 +963,149 @@ components:
           type: array
           items:
             type: string
+    ProjectModel:
+      required:
+      - description
+      - name
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).
+          readOnly: true
+          example: uwthtvihpqjbzktjdfexk3covi
+        name:
+          maxLength: 255
+          minLength: 3
+          type: string
+          description: The name of the project.
+          example: Project maple
+        description:
+          maxLength: 510
+          minLength: 3
+          type: string
+          description: The description of the project.
+          example: Project maple contains the maple related resources.
+        type:
+          type: string
+          description: The project type.
+          example: COMMERCE
+          enum:
+          - CASE_DEFLECTION
+          - COMMERCE
+          - COMMUNITY_PORTAL
+          - CORPORATE_WEBSITE
+          - HR_EMPLOYEE_PORTAL
+          - INTRANET
+          - IN_PRODUCT_SEARCH
+          - IT_EMPLOYEE_PORTAL
+          - OTHER
+          - SUPPORT_EXPERIENCE
+          - SUPPORT_PORTAL
+        createdBy:
+          type: string
+          description: The username of the project creator.
+          readOnly: true
+          example: jdoe@example.com
+        updatedBy:
+          type: string
+          description: The username of the user that last updated the project.
+          readOnly: true
+          example: jdoe@example.com
+        pointsOfContact:
+          type: array
+          description: The list of emails that will be points of contact for the project.
+          example:
+          - johndoe@example.com
+          - janedoe@example.com
+          items:
+            type: string
+            description: The list of emails that will be points of contact for the project.
+            example: '["johndoe@example.com","janedoe@example.com"]'
+        resources:
+          type: object
+          additionalProperties:
+            type: array
+            description: The resource ids grouped by resource types.
+            example:
+              SOURCE:
+              - source-123
+              CRAWLING_MODULE:
+              - crawling-module-123
+              SECURITY_PROVIDER:
+              - security-provider-123
+              EXTENSION:
+              - extension-123
+              SEARCH_PAGE:
+              - search-page-123
+              QUERY_PIPELINE:
+              - query-pipeline-123
+              UA_REPORT:
+              - ua-report-123
+              ML_MODEL:
+              - ml-model-123
+              CATALOG:
+              - catalog-123
+              CASE_ASSIST:
+              - case-assist-123
+              IN_PRODUCT_EXPERIENCE:
+              - in-product-experience-123
+              INSIGHT_PANEL:
+              - insight-panel-123
+              SEARCH_HUB:
+              - search-hub-123
+            items:
+              type: string
+              description: The resource ids grouped by resource types.
+              example: '{"SOURCE":["source-123"],"CRAWLING_MODULE":["crawling-module-123"],"SECURITY_PROVIDER":["security-provider-123"],"EXTENSION":["extension-123"],"SEARCH_PAGE":["search-page-123"],"QUERY_PIPELINE":["query-pipeline-123"],"UA_REPORT":["ua-report-123"],"ML_MODEL":["ml-model-123"],"CATALOG":["catalog-123"],"CASE_ASSIST":["case-assist-123"],"IN_PRODUCT_EXPERIENCE":["in-product-experience-123"],"INSIGHT_PANEL":["insight-panel-123"],"SEARCH_HUB":["search-hub-123"]}'
+          description: The resource ids grouped by resource types.
+          example:
+            SOURCE:
+            - source-123
+            CRAWLING_MODULE:
+            - crawling-module-123
+            SECURITY_PROVIDER:
+            - security-provider-123
+            EXTENSION:
+            - extension-123
+            SEARCH_PAGE:
+            - search-page-123
+            QUERY_PIPELINE:
+            - query-pipeline-123
+            UA_REPORT:
+            - ua-report-123
+            ML_MODEL:
+            - ml-model-123
+            CATALOG:
+            - catalog-123
+            CASE_ASSIST:
+            - case-assist-123
+            IN_PRODUCT_EXPERIENCE:
+            - in-product-experience-123
+            INSIGHT_PANEL:
+            - insight-panel-123
+            SEARCH_HUB:
+            - search-hub-123
+        createdDate:
+          type: string
+          description: The date of creation of the project in number of milliseconds since UNIX epoch.
+          format: date-time
+          readOnly: true
+        updatedDate:
+          type: string
+          description: The date at which the report was created in number of milliseconds since UNIX epoch.
+          format: date-time
+          readOnly: true
+        editNotificationsEnabled:
+          type: boolean
+          description: Controls whether project-specific edit confirmation prompts are shown for associated resources.
+          example: true
+        createdFrom:
+          type: string
+          description: The source or origin where the project was created from.
+          example: SHOPIFY
+      description: A project.
     ProjectResourceStatusModel:
       type: object
       properties:
@@ -1110,198 +1302,6 @@ components:
             SEARCH_HUB:
             - search-hub-123
       description: Resources
-    PageModelProjectModel:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectModel'
-        totalEntries:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-    ProjectModel:
-      required:
-      - description
-      - name
-      - type
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the [project](https://docs.coveo.com/n7ed6189/).
-          readOnly: true
-          example: uwthtvihpqjbzktjdfexk3covi
-        name:
-          maxLength: 255
-          minLength: 3
-          type: string
-          description: The name of the project.
-          example: Project maple
-        description:
-          maxLength: 510
-          minLength: 3
-          type: string
-          description: The description of the project.
-          example: Project maple contains the maple related resources.
-        type:
-          type: string
-          description: The project type.
-          example: COMMERCE
-          enum:
-          - CASE_DEFLECTION
-          - COMMERCE
-          - COMMUNITY_PORTAL
-          - CORPORATE_WEBSITE
-          - HR_EMPLOYEE_PORTAL
-          - INTRANET
-          - IN_PRODUCT_SEARCH
-          - IT_EMPLOYEE_PORTAL
-          - OTHER
-          - SUPPORT_EXPERIENCE
-          - SUPPORT_PORTAL
-        createdBy:
-          type: string
-          description: The username of the project creator.
-          readOnly: true
-          example: jdoe@example.com
-        updatedBy:
-          type: string
-          description: The username of the user that last updated the project.
-          readOnly: true
-          example: jdoe@example.com
-        pointsOfContact:
-          type: array
-          description: The list of emails that will be points of contact for the project.
-          example:
-          - johndoe@example.com
-          - janedoe@example.com
-          items:
-            type: string
-            description: The list of emails that will be points of contact for the project.
-            example: '["johndoe@example.com","janedoe@example.com"]'
-        resources:
-          type: object
-          additionalProperties:
-            type: array
-            description: The resource ids grouped by resource types.
-            example:
-              SOURCE:
-              - source-123
-              CRAWLING_MODULE:
-              - crawling-module-123
-              SECURITY_PROVIDER:
-              - security-provider-123
-              EXTENSION:
-              - extension-123
-              SEARCH_PAGE:
-              - search-page-123
-              QUERY_PIPELINE:
-              - query-pipeline-123
-              UA_REPORT:
-              - ua-report-123
-              ML_MODEL:
-              - ml-model-123
-              CATALOG:
-              - catalog-123
-              CASE_ASSIST:
-              - case-assist-123
-              IN_PRODUCT_EXPERIENCE:
-              - in-product-experience-123
-              INSIGHT_PANEL:
-              - insight-panel-123
-              SEARCH_HUB:
-              - search-hub-123
-            items:
-              type: string
-              description: The resource ids grouped by resource types.
-              example: '{"SOURCE":["source-123"],"CRAWLING_MODULE":["crawling-module-123"],"SECURITY_PROVIDER":["security-provider-123"],"EXTENSION":["extension-123"],"SEARCH_PAGE":["search-page-123"],"QUERY_PIPELINE":["query-pipeline-123"],"UA_REPORT":["ua-report-123"],"ML_MODEL":["ml-model-123"],"CATALOG":["catalog-123"],"CASE_ASSIST":["case-assist-123"],"IN_PRODUCT_EXPERIENCE":["in-product-experience-123"],"INSIGHT_PANEL":["insight-panel-123"],"SEARCH_HUB":["search-hub-123"]}'
-          description: The resource ids grouped by resource types.
-          example:
-            SOURCE:
-            - source-123
-            CRAWLING_MODULE:
-            - crawling-module-123
-            SECURITY_PROVIDER:
-            - security-provider-123
-            EXTENSION:
-            - extension-123
-            SEARCH_PAGE:
-            - search-page-123
-            QUERY_PIPELINE:
-            - query-pipeline-123
-            UA_REPORT:
-            - ua-report-123
-            ML_MODEL:
-            - ml-model-123
-            CATALOG:
-            - catalog-123
-            CASE_ASSIST:
-            - case-assist-123
-            IN_PRODUCT_EXPERIENCE:
-            - in-product-experience-123
-            INSIGHT_PANEL:
-            - insight-panel-123
-            SEARCH_HUB:
-            - search-hub-123
-        createdDate:
-          type: string
-          description: The date of creation of the project in number of milliseconds since UNIX epoch.
-          format: date-time
-          readOnly: true
-        updatedDate:
-          type: string
-          description: The date at which the report was created in number of milliseconds since UNIX epoch.
-          format: date-time
-          readOnly: true
-        editNotificationsEnabled:
-          type: boolean
-          description: Controls whether project-specific edit confirmation prompts are shown for associated resources.
-          example: true
-        createdFrom:
-          type: string
-          description: The source or origin where the project was created from.
-          example: SHOPIFY
-      description: A project.
-    ProjectResourceModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of a [resource](https://docs.coveo.com/2820).
-          readOnly: true
-          example: 3987990e-0f0d-440f-bcf6-22279078a20f
-        name:
-          type: string
-          description: The name of the [resource](https://docs.coveo.com/2820).
-          readOnly: true
-          example: My Web source
-        type:
-          type: string
-          description: The resource type subset that the resource belongs to (often reflected in the related Coveo Administration Console resource list page).
-          readOnly: true
-          example: WEB2
-        version:
-          type: string
-          description: The resource version.
-          readOnly: true
-          example: 1.2.3
-        additionalInfo:
-          type: object
-          additionalProperties:
-            type: object
-            description: Additional information about the resource.
-            readOnly: true
-            example:
-              CatalogName: Test Catalog
-          description: Additional information about the resource.
-          readOnly: true
-          example:
-            CatalogName: Test Catalog
-      description: A resource.
   securitySchemes:
     oauth2:
       type: oauth2

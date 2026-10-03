@@ -1426,6 +1426,30 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    PermissionIdentityModel:
+      properties:
+        identity:
+          description: "The unique name of the security identity (see [Manage security identities in a security identity provider](https://docs.coveo.com/en/132/)).  \n**Example:** `\"asmith@example.com\"`"
+          type: string
+        identityType:
+          description: "The type of the security identity (see [Manage security identities in a security identity provider](https://docs.coveo.com/en/132/)).  \n**Example:** `\"User\"`"
+          enum:
+          - User
+          - Group
+          - VirtualGroup
+          - Unknown
+          type: string
+        securityProvider:
+          description: "The unique name of the security identity provider in which the security identity is defined. Defaults to the first security identity provider associated with the target Push source (see [Creating a Security Identity Provider for a Secured Push Source](https://docs.coveo.com/en/85/).  \n**Example:** `My Secured Push Source Security Identity Provider`"
+          type: string
+      type: object
+    Error:
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
+      type: object
     PermissionSetsModel:
       properties:
         allowAnonymous:
@@ -1467,30 +1491,6 @@ components:
             $ref: '#/components/schemas/PermissionSetsModel'
             description: "The permission sets for this item.  \nThis is only useful when pushing items in a secured Push source.  \nA security identity must be explicitly allowed in **all** permission sets, and not be explicitly denied in **any** permission set to be allowed to see the item.  \n**Note:**  \n> The permission model described in this specification is flexible enough to allow you to faithfully replicate most secured enterprise systems (see [Simplified permission model](https://docs.coveo.com/en/107/)). However, the Push API also accepts a more complex permission model which allows you to define multiple permission levels and sets (see [Complete permission model](https://docs.coveo.com/en/25/))."
           type: array
-      type: object
-    Error:
-      properties:
-        errorCode:
-          type: string
-        message:
-          type: string
-      type: object
-    PermissionIdentityModel:
-      properties:
-        identity:
-          description: "The unique name of the security identity (see [Manage security identities in a security identity provider](https://docs.coveo.com/en/132/)).  \n**Example:** `\"asmith@example.com\"`"
-          type: string
-        identityType:
-          description: "The type of the security identity (see [Manage security identities in a security identity provider](https://docs.coveo.com/en/132/)).  \n**Example:** `\"User\"`"
-          enum:
-          - User
-          - Group
-          - VirtualGroup
-          - Unknown
-          type: string
-        securityProvider:
-          description: "The unique name of the security identity provider in which the security identity is defined. Defaults to the first security identity provider associated with the target Push source (see [Creating a Security Identity Provider for a Secured Push Source](https://docs.coveo.com/en/85/).  \n**Example:** `My Secured Push Source Security Identity Provider`"
-          type: string
       type: object
   securitySchemes:
     oauth2:

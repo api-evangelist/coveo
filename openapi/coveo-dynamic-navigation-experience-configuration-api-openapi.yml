@@ -597,19 +597,42 @@ components:
           items:
             $ref: '#/components/schemas/SourceModel'
       description: A preview of what would happen if a specific document extraction was executed.
-    SourceModel:
+    DocumentExtractionQueryModel:
+      type: object
+      properties:
+        fields:
+          type: array
+          description: The names of the fields to consider for the document extraction query. Documents for which at least one of these fields is defined will be included in the preview.<br />**Example:** `["filetype","category"]`
+          example:
+          - filetype
+          - category
+          items:
+            type: string
+            description: The names of the fields to consider for the document extraction query. Documents for which at least one of these fields is defined will be included in the preview.<br />**Example:** `["filetype","category"]`
+            example: '["filetype","category"]'
+        sources:
+          type: array
+          description: The names of the sources to consider for the document extraction query. If unspecified, documents from any sources may be included in the preview.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+          example:
+          - CommunityArticles
+          - SalesforceCatalog
+          items:
+            type: string
+            description: The names of the sources to consider for the document extraction query. If unspecified, documents from any sources may be included in the preview.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
+            example: '["CommunityArticles","SalesforceCatalog"]'
+      description: The constraints for the document extraction query of a DNE model.
+    AutoSelectionFieldCandidateModel:
       type: object
       properties:
         name:
           type: string
-          description: The name of the source.<br />**Example:** `SalesforceCatalog`
-          example: SalesforceCatalog
-        numberOfDocuments:
-          type: integer
-          description: The total number of documents in that source.<br />**Example:** `100`
-          format: int32
-          example: 100
-      description: A source, in regards to documents availability.
+          description: The name of the field, also referred to as the field identifier.<br />**Example:** `category`
+          example: category
+        description:
+          type: string
+          description: The description of the field.<br />**Example:** `The category the product belongs to.`
+          example: The category the product belongs to.
+      description: A candidate field for autoselection.
     DneConfigurationModel:
       required:
       - modelDisplayName
@@ -675,18 +698,19 @@ components:
           description: The unique identifier of the target machine learning model.<br />**Example:** `My_Model_ID`
           example: My_Model_ID
       description: The configuration for the update of a DNE model.
-    AutoSelectionFieldCandidateModel:
+    SourceModel:
       type: object
       properties:
         name:
           type: string
-          description: The name of the field, also referred to as the field identifier.<br />**Example:** `category`
-          example: category
-        description:
-          type: string
-          description: The description of the field.<br />**Example:** `The category the product belongs to.`
-          example: The category the product belongs to.
-      description: A candidate field for autoselection.
+          description: The name of the source.<br />**Example:** `SalesforceCatalog`
+          example: SalesforceCatalog
+        numberOfDocuments:
+          type: integer
+          description: The total number of documents in that source.<br />**Example:** `100`
+          format: int32
+          example: 100
+      description: A source, in regards to documents availability.
     PageModelAutoSelectionFieldCandidateModel:
       type: object
       properties:
@@ -700,30 +724,6 @@ components:
         totalPages:
           type: integer
           format: int32
-    DocumentExtractionQueryModel:
-      type: object
-      properties:
-        fields:
-          type: array
-          description: The names of the fields to consider for the document extraction query. Documents for which at least one of these fields is defined will be included in the preview.<br />**Example:** `["filetype","category"]`
-          example:
-          - filetype
-          - category
-          items:
-            type: string
-            description: The names of the fields to consider for the document extraction query. Documents for which at least one of these fields is defined will be included in the preview.<br />**Example:** `["filetype","category"]`
-            example: '["filetype","category"]'
-        sources:
-          type: array
-          description: The names of the sources to consider for the document extraction query. If unspecified, documents from any sources may be included in the preview.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
-          example:
-          - CommunityArticles
-          - SalesforceCatalog
-          items:
-            type: string
-            description: The names of the sources to consider for the document extraction query. If unspecified, documents from any sources may be included in the preview.<br />**Example:** `["CommunityArticles","SalesforceCatalog"]`
-            example: '["CommunityArticles","SalesforceCatalog"]'
-      description: The constraints for the document extraction query of a DNE model.
   securitySchemes:
     oauth2:
       type: oauth2

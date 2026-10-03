@@ -872,184 +872,6 @@ paths:
       description: Coveo public API endpoint
 components:
   schemas:
-    ApiKeyModel:
-      type: object
-      properties:
-        groupsThatCanEdit:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        apiKeysThatCanEdit:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        id:
-          type: string
-        tokenId:
-          type: string
-        value:
-          type: string
-        organizationId:
-          type: string
-        displayName:
-          type: string
-        description:
-          type: string
-        privileges:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/PrivilegeModel'
-        enabled:
-          type: boolean
-        createdDate:
-          type: string
-          format: date-time
-        createdBy:
-          $ref: '#/components/schemas/UserModel'
-        allowedIps:
-          type: array
-          items:
-            type: string
-        deniedIps:
-          type: array
-          items:
-            type: string
-        apiKeyTemplateId:
-          type: string
-        additionalConfiguration:
-          $ref: '#/components/schemas/ApiKeyAdditionalConfigurationModel'
-        lastUsedDate:
-          type: string
-          format: date-time
-        privacyLevel:
-          type: string
-          enum:
-          - PUBLIC
-          - PRIVATE
-        status:
-          type: string
-          enum:
-          - ENABLED
-          - SOON_TO_BE_EXPIRED
-          - SOON_TO_BE_DISABLED
-          - DISABLED
-          - DISABLED_FOR_INACTIVITY
-          - DISABLED_EXPOSED
-          - EXPIRED
-        expirationDate:
-          type: string
-          format: date-time
-        lifetimeDuration:
-          type: string
-        disabledDate:
-          type: string
-          format: date-time
-        activationDate:
-          type: string
-          format: date-time
-        exposureReport:
-          $ref: '#/components/schemas/ApiKeyExposureReportResponse'
-        rotationEnabled:
-          type: boolean
-        rotationSecret:
-          type: string
-        disabled:
-          type: boolean
-        resourceId:
-          type: string
-    ApiKeyExposureReportResponse:
-      type: object
-      properties:
-        apiKeyLoggerId:
-          type: string
-          description: The unique identifier of the API key.
-          readOnly: true
-          example: t4hk287bfj5sg6wskg64ckk5a
-        severity:
-          type: string
-          description: The severity of the exposure report.
-          readOnly: true
-          example: CRITICAL
-          enum:
-          - CRITICAL
-          - HIGH
-          - MEDIUM
-          - LOW
-          - WARN
-        deactivationDate:
-          type: string
-          description: The expected deactivation date of the API key according to the severity.
-          format: date-time
-          readOnly: true
-        creationType:
-          type: string
-          description: The creation type of the exposure report
-          readOnly: true
-          example: MANUAL
-          enum:
-          - MANUAL
-          - AUTOMATED
-        createdBy:
-          $ref: '#/components/schemas/UserModel'
-        reasons:
-          type: array
-          description: The reasons for the API key exposure.
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/ApiKeyExposureReportReasonResponse'
-        createdDate:
-          type: string
-          description: The date when the exposure report was created.
-          format: date-time
-          readOnly: true
-      description: An API key Exposure Report
-    EventModel:
-      type: object
-      properties:
-        userId:
-          type: string
-          description: The unique identifier of the user.
-        userDisplayName:
-          type: string
-          description: The display name of the user. **Example:** `Alice`
-      description: The user information to send along with usage analytics events.
-    MachineLearningModelInformationModel_Response:
-      type: object
-      properties:
-        buildFrequency:
-          type: string
-        numberOfModelsLimit:
-          type: integer
-          format: int32
-        enabled:
-          type: boolean
-      description: The Machine Learning Models configurations.
-    PrivilegeModel:
-      type: object
-      properties:
-        type:
-          type: string
-          description: The type of the privilege.
-          example: VIEW
-        targetDomain:
-          type: string
-          description: The target domain of the privilege.
-          example: ORGANIZATION
-        targetId:
-          type: string
-          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
-          example: '*'
-        owner:
-          type: string
-          description: The owner of the privilege.
-          example: PLATFORM
-      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
-      externalDocs:
-        description: Privilege reference
-        url: https://docs.coveo.com/en/1707/
     ImpersonationRestrictionsModel:
       type: object
       properties:
@@ -1060,82 +882,6 @@ components:
           items:
             $ref: '#/components/schemas/ImpersonatedUserModel'
       description: The security identities to impersonate when authenticating queries with the API key.
-    EntitlementModel_Response:
-      type: object
-      properties:
-        id:
-          type: string
-        productId:
-          type: string
-        pricingUnit:
-          type: string
-        displayName:
-          type: string
-        productName:
-          type: string
-        useCase:
-          type: string
-        status:
-          type: string
-        itemLimit:
-          type: integer
-          format: int64
-        semanticSearchDocumentLimit:
-          type: integer
-          format: int64
-        semanticSearchQPMLimit:
-          type: integer
-          format: int64
-        lrpmLimit:
-          type: integer
-          format: int64
-        qpmLimit:
-          type: integer
-          format: int64
-        unlimitedQPM:
-          type: boolean
-        recommendationLimit:
-          type: integer
-          format: int64
-        unlimitedRecommendations:
-          type: boolean
-        userLimit:
-          type: integer
-          format: int64
-        unlimitedUsers:
-          type: boolean
-        passageRetrievalQPMLimit:
-          type: integer
-          format: int64
-        unlimitedPassageRetrievalQPM:
-          type: boolean
-        shouldShowInConsumptionDashboard:
-          type: boolean
-        expirationDate:
-          type: string
-          format: date-time
-        expirationStatus:
-          type: string
-          description: The expiration status indicating whether the license is active, about to expire, or expired.
-          enum:
-          - ACTIVE
-          - SOON_TO_BE_EXPIRED
-          - EXPIRED
-      description: A set of entitlements describing what the organization has access to.
-    CommerceApiKeyConfigurationModel:
-      type: object
-      properties:
-        catalogId:
-          type: string
-          description: The catalogId to enforce on the queries using the API key. </br>**Example:** `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
-      description: The commerce configuration to enforce on the queries using the API key.
-    EnforcedQueryPipelineConfigurationModel:
-      type: object
-      properties:
-        searchHub:
-          type: string
-          description: The search hub to enforce on the queries using the API key. </br>**Example:** `SupportHub`
-      description: The query pipeline configuration to enforce on the API key.
     OrganizationModel_Request:
       type: object
       properties:
@@ -1146,93 +892,6 @@ components:
         owner:
           $ref: '#/components/schemas/OrganizationOwnerModel_Request'
       description: An [organization](https://docs.coveo.com/en/185/).
-    ImpersonatedUserModel:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the security identity to impersonate.</br>**Example:** `asmith@example.com`
-        provider:
-          type: string
-          description: The security identity provider containing the security identity to impersonate.</br>**Example:** `Email Security Provider`
-        type:
-          type: string
-          description: The type of the security identity to impersonate.</br>**Default:** `User`</br> **Allowed values:** </br>- `User` </br>- `Group` </br>- `VirtualGroup` </br>- `Unknown`
-      description: The security identities to impersonate when authenticating queries with the API key. </br>**Note:** If specified, the API key must have the `IMPERSONATE` privilege.
-    AnalyticsConfigurationModel:
-      type: object
-      properties:
-        event:
-          $ref: '#/components/schemas/EventModel'
-      description: The user information to send to Coveo Usage Analytics
-    PageModelOrganizationModel_Response:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationModel_Response'
-        totalEntries:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-    ValueModelBoolean:
-      type: object
-      properties:
-        value:
-          type: boolean
-    ApiKeyAdditionalConfigurationModel:
-      type: object
-      properties:
-        commerce:
-          $ref: '#/components/schemas/CommerceApiKeyConfigurationModel'
-        search:
-          $ref: '#/components/schemas/SearchApiKeyConfigurationModel'
-        analytics:
-          $ref: '#/components/schemas/AnalyticsConfigurationModel'
-      description: The additional configuration to attach to the API key.
-    RealmModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
-        provider:
-          type: string
-          description: The provider of the realm.
-          enum:
-          - SALESFORCE
-          - SALESFORCE_SANDBOX
-          - GOOGLE
-          - OFFICE365
-          - SAML
-          - EMAIL
-        displayName:
-          type: string
-          description: The display name of the realm.</br>**Example:** `example.com`
-        samlIdentityProviderId:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `myprovider`
-      description: A realm.
-    UserRealmModel:
-      type: object
-      properties:
-        member:
-          type: boolean
-        realm:
-          $ref: '#/components/schemas/RealmModel'
-        realmModel:
-          $ref: '#/components/schemas/RealmModel'
-      description: The realms the user is a part of.
-    OrganizationOwnerModel_Request:
-      type: object
-      properties:
-        email:
-          type: string
-          description: The email address of the organization owner.
-      description: The owner of the [organization](https://docs.coveo.com/en/185/).
     ApiKeyExposureReportReasonResponse:
       type: object
       properties:
@@ -1266,33 +925,6 @@ components:
           example: '2023-10-01T12:00:00Z'
       description: Response containing the reason for API key exposure, it contain at least one of the reason or url
       readOnly: true
-    BusinessAnalyticsModel_Response:
-      type: object
-      properties:
-        creationOrigin:
-          type: string
-          enum:
-          - ADMIN_UI
-          - API
-          - BUSINESS_CRM
-          - CLI
-          - TRAINING
-          - PARTNER_PROGRAM
-          - TEST
-          - WEBSITE
-          - SALESFORCE_INTEGRATION_TRIAL
-          - SERVICENOW_INTEGRATION_TRIAL
-          - SITECORE_INTEGRATION_TRIAL
-          - UNKNOWN
-        userCategory:
-          type: string
-          enum:
-          - INTERNAL
-          - PARTNER
-          - CUSTOMER
-        trackingAllowed:
-          type: boolean
-      description: The organization business analytics settings.
     LicenseModel_Response:
       type: object
       properties:
@@ -1402,6 +1034,117 @@ components:
             description: Various properties/configuration settings that apply to the organization.
           description: Various properties/configuration settings that apply to the organization.
       description: The organization license.
+    CommerceApiKeyConfigurationModel:
+      type: object
+      properties:
+        catalogId:
+          type: string
+          description: The catalogId to enforce on the queries using the API key. </br>**Example:** `644e1dd7-2a7f-18fb-b8ed-ed78c3f92c2b`
+      description: The commerce configuration to enforce on the queries using the API key.
+    AnalyticsConfigurationModel:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/EventModel'
+      description: The user information to send to Coveo Usage Analytics
+    OrganizationOwnerModel_Request:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email address of the organization owner.
+      description: The owner of the [organization](https://docs.coveo.com/en/185/).
+    PrivilegeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the privilege.
+          example: VIEW
+        targetDomain:
+          type: string
+          description: The target domain of the privilege.
+          example: ORGANIZATION
+        targetId:
+          type: string
+          description: The identifier of the resource targeted by the privilege.<br/>**Note:** The wildcard character (`*`) will include _all_ resources.
+          example: '*'
+        owner:
+          type: string
+          description: The owner of the privilege.
+          example: PLATFORM
+      description: The [privilege](https://docs.coveo.com/en/228/) of a resource.
+      externalDocs:
+        description: Privilege reference
+        url: https://docs.coveo.com/en/1707/
+    SearchApiKeyConfigurationModel:
+      type: object
+      properties:
+        enforcedQueryPipelineConfiguration:
+          $ref: '#/components/schemas/EnforcedQueryPipelineConfigurationModel'
+        impersonationRestrictions:
+          $ref: '#/components/schemas/ImpersonationRestrictionsModel'
+        apiKeyQueryAuthentication:
+          uniqueItems: true
+          type: array
+          description: The security identity used to authenticate queries with the API key.
+          items:
+            $ref: '#/components/schemas/ImpersonatedUserModel'
+      description: The Search API configuration to enforce in the API key.
+    PageModelOrganizationModel_Response:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationModel_Response'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+    ImpersonatedUserModel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the security identity to impersonate.</br>**Example:** `asmith@example.com`
+        provider:
+          type: string
+          description: The security identity provider containing the security identity to impersonate.</br>**Example:** `Email Security Provider`
+        type:
+          type: string
+          description: The type of the security identity to impersonate.</br>**Default:** `User`</br> **Allowed values:** </br>- `User` </br>- `Group` </br>- `VirtualGroup` </br>- `Unknown`
+      description: The security identities to impersonate when authenticating queries with the API key. </br>**Note:** If specified, the API key must have the `IMPERSONATE` privilege.
+    AllowedScheduleModel_Response:
+      type: object
+      properties:
+        refreshType:
+          type: string
+          description: The refresh type to use for a given connector.
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        scheduleFrequencies:
+          type: array
+          description: 'The frequency at which to refresh the connector.</br>**Allowed values:**</br>- `MINUTELY`: Once per minute.</br>- `HOURLY`: Once per hour.</br>- `DAILY`: Once per day.</br>- `WEEKLY`: Once per week.</br>- `MONTHLY`: Once per month.'
+          items:
+            type: string
+            description: 'The frequency at which to refresh the connector.</br>**Allowed values:**</br>- `MINUTELY`: Once per minute.</br>- `HOURLY`: Once per hour.</br>- `DAILY`: Once per day.</br>- `WEEKLY`: Once per week.</br>- `MONTHLY`: Once per month.'
+            enum:
+            - MINUTELY
+            - HOURLY
+            - DAILY
+            - WEEKLY
+            - MONTHLY
+      description: The schedule that is used by the [connector](https://docs.coveo.com/en/2734/).
     OrganizationCreatedModel:
       type: object
       properties:
@@ -1411,13 +1154,94 @@ components:
         apiKey:
           $ref: '#/components/schemas/ApiKeyModel'
       description: Information pertaining to the newly created organization model.
-    OrganizationOwnerModel_Response:
+    BusinessAnalyticsModel_Response:
       type: object
       properties:
-        email:
+        creationOrigin:
           type: string
-          description: The email address of the organization owner.
-      description: The owner of the [organization](https://docs.coveo.com/en/185/).
+          enum:
+          - ADMIN_UI
+          - API
+          - BUSINESS_CRM
+          - CLI
+          - TRAINING
+          - PARTNER_PROGRAM
+          - TEST
+          - WEBSITE
+          - SALESFORCE_INTEGRATION_TRIAL
+          - SERVICENOW_INTEGRATION_TRIAL
+          - SITECORE_INTEGRATION_TRIAL
+          - UNKNOWN
+        userCategory:
+          type: string
+          enum:
+          - INTERNAL
+          - PARTNER
+          - CUSTOMER
+        trackingAllowed:
+          type: boolean
+      description: The organization business analytics settings.
+    ApiKeyAdditionalConfigurationModel:
+      type: object
+      properties:
+        commerce:
+          $ref: '#/components/schemas/CommerceApiKeyConfigurationModel'
+        search:
+          $ref: '#/components/schemas/SearchApiKeyConfigurationModel'
+        analytics:
+          $ref: '#/components/schemas/AnalyticsConfigurationModel'
+      description: The additional configuration to attach to the API key.
+    OrganizationConfigurationModel_Response:
+      type: object
+      properties:
+        servingExperimentAllowed:
+          type: boolean
+    ApiKeyExposureReportResponse:
+      type: object
+      properties:
+        apiKeyLoggerId:
+          type: string
+          description: The unique identifier of the API key.
+          readOnly: true
+          example: t4hk287bfj5sg6wskg64ckk5a
+        severity:
+          type: string
+          description: The severity of the exposure report.
+          readOnly: true
+          example: CRITICAL
+          enum:
+          - CRITICAL
+          - HIGH
+          - MEDIUM
+          - LOW
+          - WARN
+        deactivationDate:
+          type: string
+          description: The expected deactivation date of the API key according to the severity.
+          format: date-time
+          readOnly: true
+        creationType:
+          type: string
+          description: The creation type of the exposure report
+          readOnly: true
+          example: MANUAL
+          enum:
+          - MANUAL
+          - AUTOMATED
+        createdBy:
+          $ref: '#/components/schemas/UserModel'
+        reasons:
+          type: array
+          description: The reasons for the API key exposure.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ApiKeyExposureReportReasonResponse'
+        createdDate:
+          type: string
+          description: The date when the exposure report was created.
+          format: date-time
+          readOnly: true
+      description: An API key Exposure Report
     ConnectorInformationModel_Response:
       type: object
       properties:
@@ -1487,6 +1311,322 @@ components:
           items:
             $ref: '#/components/schemas/AllowedScheduleModel_Response'
       description: Information for a connector.
+    EntitlementModel_Response:
+      type: object
+      properties:
+        id:
+          type: string
+        productId:
+          type: string
+        pricingUnit:
+          type: string
+        displayName:
+          type: string
+        productName:
+          type: string
+        useCase:
+          type: string
+        status:
+          type: string
+        itemLimit:
+          type: integer
+          format: int64
+        semanticSearchDocumentLimit:
+          type: integer
+          format: int64
+        semanticSearchQPMLimit:
+          type: integer
+          format: int64
+        lrpmLimit:
+          type: integer
+          format: int64
+        qpmLimit:
+          type: integer
+          format: int64
+        unlimitedQPM:
+          type: boolean
+        recommendationLimit:
+          type: integer
+          format: int64
+        unlimitedRecommendations:
+          type: boolean
+        userLimit:
+          type: integer
+          format: int64
+        unlimitedUsers:
+          type: boolean
+        passageRetrievalQPMLimit:
+          type: integer
+          format: int64
+        unlimitedPassageRetrievalQPM:
+          type: boolean
+        shouldShowInConsumptionDashboard:
+          type: boolean
+        expirationDate:
+          type: string
+          format: date-time
+        expirationStatus:
+          type: string
+          description: The expiration status indicating whether the license is active, about to expire, or expired.
+          enum:
+          - ACTIVE
+          - SOON_TO_BE_EXPIRED
+          - EXPIRED
+      description: A set of entitlements describing what the organization has access to.
+    IdAndDisplayNameModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+    EventModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the user.
+        userDisplayName:
+          type: string
+          description: The display name of the user. **Example:** `Alice`
+      description: The user information to send along with usage analytics events.
+    ApiKeyModel:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        id:
+          type: string
+        tokenId:
+          type: string
+        value:
+          type: string
+        organizationId:
+          type: string
+        displayName:
+          type: string
+        description:
+          type: string
+        privileges:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/PrivilegeModel'
+        enabled:
+          type: boolean
+        createdDate:
+          type: string
+          format: date-time
+        createdBy:
+          $ref: '#/components/schemas/UserModel'
+        allowedIps:
+          type: array
+          items:
+            type: string
+        deniedIps:
+          type: array
+          items:
+            type: string
+        apiKeyTemplateId:
+          type: string
+        additionalConfiguration:
+          $ref: '#/components/schemas/ApiKeyAdditionalConfigurationModel'
+        lastUsedDate:
+          type: string
+          format: date-time
+        privacyLevel:
+          type: string
+          enum:
+          - PUBLIC
+          - PRIVATE
+        status:
+          type: string
+          enum:
+          - ENABLED
+          - SOON_TO_BE_EXPIRED
+          - SOON_TO_BE_DISABLED
+          - DISABLED
+          - DISABLED_FOR_INACTIVITY
+          - DISABLED_EXPOSED
+          - EXPIRED
+        expirationDate:
+          type: string
+          format: date-time
+        lifetimeDuration:
+          type: string
+        disabledDate:
+          type: string
+          format: date-time
+        activationDate:
+          type: string
+          format: date-time
+        exposureReport:
+          $ref: '#/components/schemas/ApiKeyExposureReportResponse'
+        rotationEnabled:
+          type: boolean
+        rotationSecret:
+          type: string
+        disabled:
+          type: boolean
+        resourceId:
+          type: string
+    ValueModelBoolean:
+      type: object
+      properties:
+        value:
+          type: boolean
+    EnforcedQueryPipelineConfigurationModel:
+      type: object
+      properties:
+        searchHub:
+          type: string
+          description: The search hub to enforce on the queries using the API key. </br>**Example:** `SupportHub`
+      description: The query pipeline configuration to enforce on the API key.
+    LightProvisioningStatusModel:
+      type: object
+      properties:
+        currentProvisioningProgress:
+          type: number
+          description: The progress, in percentage, of the ongoing provisioning.</br>**Example:** `100`
+          format: float
+        initialProvisioningDone:
+          type: boolean
+          description: Whether the initial provisioning has been completed.
+        lastProvisioningCompletedDate:
+          type: string
+          description: The last time provisioning was successfully completed in number of milliseconds since UNIX epoch.</br>**Example:** `1556722921779`
+          format: date-time
+        ongoing:
+          type: boolean
+          description: Whether the provisioning is currently ongoing.
+        status:
+          type: string
+          description: 'The status of the last provisioning.</br>**Allowed values:**</br>- `ERROR`: The last provisioning failed with an error.</br>- `HEALTHY`: The last provisioning finished successfully.'
+          enum:
+          - ERROR
+          - HEALTHY
+      description: The provisioning status of the [organization](https://docs.coveo.com/en/185/).</br>See [Understanding Organization Provisioning](https://docs.coveo.com/en/2547/).
+    OrganizationOwnerModel_Response:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email address of the organization owner.
+      description: The owner of the [organization](https://docs.coveo.com/en/185/).
+    RealmModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: A realm.
+    LightProvisioningStatusModel_Response:
+      type: object
+      properties:
+        currentProvisioningProgress:
+          type: number
+          description: The progress, in percentage, of the ongoing provisioning.</br>**Example:** `100`
+          format: float
+        initialProvisioningDone:
+          type: boolean
+          description: Whether the initial provisioning has been completed.
+        lastProvisioningCompletedDate:
+          type: string
+          description: The last time provisioning was successfully completed in number of milliseconds since UNIX epoch.</br>**Example:** `1556722921779`
+          format: date-time
+        ongoing:
+          type: boolean
+          description: Whether the provisioning is currently ongoing.
+        status:
+          type: string
+          description: 'The status of the last provisioning.</br>**Allowed values:**</br>- `ERROR`: The last provisioning failed with an error.</br>- `HEALTHY`: The last provisioning finished successfully.'
+          enum:
+          - ERROR
+          - HEALTHY
+      description: The provisioning status of the [organization](https://docs.coveo.com/en/185/).</br>See [Understanding Organization Provisioning](https://docs.coveo.com/en/2547/).
+    OrganizationStatusModel:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'The current status of the organization.</br>**Allowed values:**</br>- `HEALTHY`: The organization is healthy and fully functional.</br>- `ERROR`: The organization has thrown an error and is currently inactive.'
+          enum:
+          - HEALTHY
+          - ERROR
+        lifeCycleState:
+          type: string
+          description: 'The life-cycle state of the organization.</br>**Allowed values**:</br>`ACTIVE`: The organization is healthy and fully functional.</br>`PAUSED`: The organization is currently inactive.</br>`DELETING`: The organization is currently in the process of being deleted.'
+          enum:
+          - ACTIVE
+          - PAUSED
+          - DELETING
+        errorCodes:
+          type: array
+          description: 'A list of error codes that are present in the organization at the time of the request.</br>**Allowed values:**</br>- `SEARCH_ERROR`: An error occurred during a search.</br>- `PAUSING_FAILED`: An error occurred when attempting to pause the organization.</br>- `RESUMING_FAILED`: An error occurred when attempting to resume the organization.'
+          items:
+            type: string
+            description: 'A list of error codes that are present in the organization at the time of the request.</br>**Allowed values:**</br>- `SEARCH_ERROR`: An error occurred during a search.</br>- `PAUSING_FAILED`: An error occurred when attempting to pause the organization.</br>- `RESUMING_FAILED`: An error occurred when attempting to resume the organization.'
+            enum:
+            - SEARCH_ERROR
+            - PAUSING_FAILED
+            - RESUMING_FAILED
+        provisioningStatus:
+          $ref: '#/components/schemas/LightProvisioningStatusModel'
+        pauseState:
+          type: string
+          description: 'The pause state of the organization.</br>**Allowed values:**</br>- `ACTIVE`: The organization is active.</br>- `IDLE`: The organization is inactive.</br>- `PAUSING`: The organization is transitioning to `PAUSED`.</br>- `PAUSED`: The organization is paused.</br>- `RESUMING`: The organization is transitioning to `ACTIVE`.</br>- `PAUSING_FAILED`: The organization threw an error while transitioning to `PAUSED`.</br>- `RESUMING_FAILED`: The organization threw an error while transitioning to `ACTIVE`'
+          enum:
+          - ACTIVE
+          - IDLE
+          - PAUSING
+          - PAUSED
+          - RESUMING
+          - PAUSING_FAILED
+          - RESUMING_FAILED
+        readOnly:
+          type: boolean
+          description: Whether the organization enforces all of its resources (e.g., query pipelines, sources, etc.) to be read-only.</br>**Note:** This parameter is typically only updated when an organization is inactive.
+          default: false
+        supportActivated:
+          type: boolean
+          description: Whether support has been activated for the organization.
+          externalDocs:
+            description: Coveo Customer Support and Success Guide
+            url: https://docs.coveo.com/en/1352/
+        paused:
+          type: boolean
+          description: Whether the organization is currently paused.
+          deprecated: true
+        resumable:
+          type: boolean
+      description: The status of an [organization](https://docs.coveo.com/en/185/).
+      externalDocs:
+        description: About Coveo system issue notifications
+        url: https://docs.coveo.com/en/1684/
     OrganizationStatusModel_Response:
       type: object
       properties:
@@ -1546,39 +1686,6 @@ components:
       externalDocs:
         description: About Coveo system issue notifications
         url: https://docs.coveo.com/en/1684/
-    OrganizationModel_Response:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the organization.
-        displayName:
-          maxLength: 255
-          type: string
-          description: The display name of the organization.
-        createdDate:
-          type: string
-          description: The organization creation date in number of milliseconds since UNIX epoch.
-          format: date-time
-        license:
-          $ref: '#/components/schemas/LicenseModel_Response'
-        businessAnalytics:
-          $ref: '#/components/schemas/BusinessAnalyticsModel_Response'
-        owner:
-          $ref: '#/components/schemas/OrganizationOwnerModel_Response'
-        readOnly:
-          type: boolean
-          description: Whether the organization enforces all of its resources (e.g., query pipelines, sources, etc.) to be read-only.
-        provisioningStatus:
-          $ref: '#/components/schemas/LightProvisioningStatusModel_Response'
-        adminUITimeoutInSeconds:
-          type: integer
-          format: int32
-        configuration:
-          $ref: '#/components/schemas/OrganizationConfigurationModel_Response'
-        organizationStatusModel:
-          $ref: '#/components/schemas/OrganizationStatusModel_Response'
-      description: An [organization](https://docs.coveo.com/en/185/).
     UserModel:
       type: object
       properties:
@@ -1949,209 +2056,88 @@ components:
           format: date-time
       description: A user.
       readOnly: true
-    SearchApiKeyConfigurationModel:
+    OrganizationModel_Response:
       type: object
       properties:
-        enforcedQueryPipelineConfiguration:
-          $ref: '#/components/schemas/EnforcedQueryPipelineConfigurationModel'
-        impersonationRestrictions:
-          $ref: '#/components/schemas/ImpersonationRestrictionsModel'
-        apiKeyQueryAuthentication:
-          uniqueItems: true
-          type: array
-          description: The security identity used to authenticate queries with the API key.
-          items:
-            $ref: '#/components/schemas/ImpersonatedUserModel'
-      description: The Search API configuration to enforce in the API key.
-    LightProvisioningStatusModel:
-      type: object
-      properties:
-        currentProvisioningProgress:
-          type: number
-          description: The progress, in percentage, of the ongoing provisioning.</br>**Example:** `100`
-          format: float
-        initialProvisioningDone:
-          type: boolean
-          description: Whether the initial provisioning has been completed.
-        lastProvisioningCompletedDate:
+        id:
           type: string
-          description: The last time provisioning was successfully completed in number of milliseconds since UNIX epoch.</br>**Example:** `1556722921779`
+          description: The unique identifier of the organization.
+        displayName:
+          maxLength: 255
+          type: string
+          description: The display name of the organization.
+        createdDate:
+          type: string
+          description: The organization creation date in number of milliseconds since UNIX epoch.
           format: date-time
-        ongoing:
-          type: boolean
-          description: Whether the provisioning is currently ongoing.
-        status:
-          type: string
-          description: 'The status of the last provisioning.</br>**Allowed values:**</br>- `ERROR`: The last provisioning failed with an error.</br>- `HEALTHY`: The last provisioning finished successfully.'
-          enum:
-          - ERROR
-          - HEALTHY
-      description: The provisioning status of the [organization](https://docs.coveo.com/en/185/).</br>See [Understanding Organization Provisioning](https://docs.coveo.com/en/2547/).
-    LightProvisioningStatusModel_Response:
-      type: object
-      properties:
-        currentProvisioningProgress:
-          type: number
-          description: The progress, in percentage, of the ongoing provisioning.</br>**Example:** `100`
-          format: float
-        initialProvisioningDone:
-          type: boolean
-          description: Whether the initial provisioning has been completed.
-        lastProvisioningCompletedDate:
-          type: string
-          description: The last time provisioning was successfully completed in number of milliseconds since UNIX epoch.</br>**Example:** `1556722921779`
-          format: date-time
-        ongoing:
-          type: boolean
-          description: Whether the provisioning is currently ongoing.
-        status:
-          type: string
-          description: 'The status of the last provisioning.</br>**Allowed values:**</br>- `ERROR`: The last provisioning failed with an error.</br>- `HEALTHY`: The last provisioning finished successfully.'
-          enum:
-          - ERROR
-          - HEALTHY
-      description: The provisioning status of the [organization](https://docs.coveo.com/en/185/).</br>See [Understanding Organization Provisioning](https://docs.coveo.com/en/2547/).
-    OrganizationConfigurationModel_Response:
-      type: object
-      properties:
-        servingExperimentAllowed:
-          type: boolean
-    OrganizationStatusModel:
-      type: object
-      properties:
-        status:
-          type: string
-          description: 'The current status of the organization.</br>**Allowed values:**</br>- `HEALTHY`: The organization is healthy and fully functional.</br>- `ERROR`: The organization has thrown an error and is currently inactive.'
-          enum:
-          - HEALTHY
-          - ERROR
-        lifeCycleState:
-          type: string
-          description: 'The life-cycle state of the organization.</br>**Allowed values**:</br>`ACTIVE`: The organization is healthy and fully functional.</br>`PAUSED`: The organization is currently inactive.</br>`DELETING`: The organization is currently in the process of being deleted.'
-          enum:
-          - ACTIVE
-          - PAUSED
-          - DELETING
-        errorCodes:
-          type: array
-          description: 'A list of error codes that are present in the organization at the time of the request.</br>**Allowed values:**</br>- `SEARCH_ERROR`: An error occurred during a search.</br>- `PAUSING_FAILED`: An error occurred when attempting to pause the organization.</br>- `RESUMING_FAILED`: An error occurred when attempting to resume the organization.'
-          items:
-            type: string
-            description: 'A list of error codes that are present in the organization at the time of the request.</br>**Allowed values:**</br>- `SEARCH_ERROR`: An error occurred during a search.</br>- `PAUSING_FAILED`: An error occurred when attempting to pause the organization.</br>- `RESUMING_FAILED`: An error occurred when attempting to resume the organization.'
-            enum:
-            - SEARCH_ERROR
-            - PAUSING_FAILED
-            - RESUMING_FAILED
-        provisioningStatus:
-          $ref: '#/components/schemas/LightProvisioningStatusModel'
-        pauseState:
-          type: string
-          description: 'The pause state of the organization.</br>**Allowed values:**</br>- `ACTIVE`: The organization is active.</br>- `IDLE`: The organization is inactive.</br>- `PAUSING`: The organization is transitioning to `PAUSED`.</br>- `PAUSED`: The organization is paused.</br>- `RESUMING`: The organization is transitioning to `ACTIVE`.</br>- `PAUSING_FAILED`: The organization threw an error while transitioning to `PAUSED`.</br>- `RESUMING_FAILED`: The organization threw an error while transitioning to `ACTIVE`'
-          enum:
-          - ACTIVE
-          - IDLE
-          - PAUSING
-          - PAUSED
-          - RESUMING
-          - PAUSING_FAILED
-          - RESUMING_FAILED
+        license:
+          $ref: '#/components/schemas/LicenseModel_Response'
+        businessAnalytics:
+          $ref: '#/components/schemas/BusinessAnalyticsModel_Response'
+        owner:
+          $ref: '#/components/schemas/OrganizationOwnerModel_Response'
         readOnly:
           type: boolean
-          description: Whether the organization enforces all of its resources (e.g., query pipelines, sources, etc.) to be read-only.</br>**Note:** This parameter is typically only updated when an organization is inactive.
-          default: false
-        supportActivated:
-          type: boolean
-          description: Whether support has been activated for the organization.
-          externalDocs:
-            description: Coveo Customer Support and Success Guide
-            url: https://docs.coveo.com/en/1352/
-        paused:
-          type: boolean
-          description: Whether the organization is currently paused.
-          deprecated: true
-        resumable:
-          type: boolean
-      description: The status of an [organization](https://docs.coveo.com/en/185/).
-      externalDocs:
-        description: About Coveo system issue notifications
-        url: https://docs.coveo.com/en/1684/
-    AllowedScheduleModel_Response:
-      type: object
-      properties:
-        refreshType:
-          type: string
-          description: The refresh type to use for a given connector.
-          enum:
-          - REBUILD
-          - FULL_REFRESH
-          - INCREMENTAL_REFRESH
-          - SECURITY_PROVIDER_REFRESH
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
-          - SECURITY_CACHE_REFRESH
-          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
-        scheduleFrequencies:
-          type: array
-          description: 'The frequency at which to refresh the connector.</br>**Allowed values:**</br>- `MINUTELY`: Once per minute.</br>- `HOURLY`: Once per hour.</br>- `DAILY`: Once per day.</br>- `WEEKLY`: Once per week.</br>- `MONTHLY`: Once per month.'
-          items:
-            type: string
-            description: 'The frequency at which to refresh the connector.</br>**Allowed values:**</br>- `MINUTELY`: Once per minute.</br>- `HOURLY`: Once per hour.</br>- `DAILY`: Once per day.</br>- `WEEKLY`: Once per week.</br>- `MONTHLY`: Once per month.'
-            enum:
-            - MINUTELY
-            - HOURLY
-            - DAILY
-            - WEEKLY
-            - MONTHLY
-      description: The schedule that is used by the [connector](https://docs.coveo.com/en/2734/).
-    IdAndDisplayNameModel:
-      type: object
-      properties:
-        id:
-          type: string
-        displayName:
-          type: string
-    OutgoingSamlAuthentication:
-      required:
-      - expiration
-      - id
-      - metadata
-      - name
-      - organization
-      - protocol
-      - secret
-      - enforceTrustedUris
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        organization:
-          type: string
-        relyingPartyIdentifier:
-          type: string
-        assertionConsumerServiceUrl:
-          type: string
-        metadata:
-          type: string
-        provider:
-          deprecated: true
-          type: string
-        secret:
-          type: string
-        expiration:
+          description: Whether the organization enforces all of its resources (e.g., query pipelines, sources, etc.) to be read-only.
+        provisioningStatus:
+          $ref: '#/components/schemas/LightProvisioningStatusModel_Response'
+        adminUITimeoutInSeconds:
           type: integer
           format: int32
-        protocol:
-          type: string
-          enum:
-          - SAML
-        enforceTrustedUris:
+        configuration:
+          $ref: '#/components/schemas/OrganizationConfigurationModel_Response'
+        organizationStatusModel:
+          $ref: '#/components/schemas/OrganizationStatusModel_Response'
+      description: An [organization](https://docs.coveo.com/en/185/).
+    UserRealmModel:
+      type: object
+      properties:
+        member:
           type: boolean
-    OutgoingAuthentication:
-      oneOf:
-      - $ref: '#/components/schemas/OutgoingSamlAuthentication'
-      - $ref: '#/components/schemas/OutgoingSharePointAuthentication'
+        realm:
+          $ref: '#/components/schemas/RealmModel'
+        realmModel:
+          $ref: '#/components/schemas/RealmModel'
+      description: The realms the user is a part of.
+    MachineLearningModelInformationModel_Response:
+      type: object
+      properties:
+        buildFrequency:
+          type: string
+        numberOfModelsLimit:
+          type: integer
+          format: int32
+        enabled:
+          type: boolean
+      description: The Machine Learning Models configurations.
+    CreateTrustedUriResponse:
+      required:
+      - trustedUri
+      type: object
+      properties:
+        trustedUri:
+          $ref: '#/components/schemas/TrustedUri'
+    CreateTrustedUriRequest:
+      required:
+      - trustedUri
+      type: object
+      properties:
+        trustedUri:
+          type: object
+          required:
+          - uriPrefix
+          properties:
+            uriPrefix:
+              type: string
+              description: The URI to trust. Any search page whose URI begins with this prefix will be trusted by the target Coveo Cloud organization.
+              example: https://example.com
+    CreatedSamlAuthentication:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
     OutgoingSharePointAuthentication:
       required:
       - expiration
@@ -2212,27 +2198,6 @@ components:
           type: boolean
           description: A value indicating whether redirects that do not match a configured trusted URI will be blocked.
           example: true
-    CreateTrustedUriResponse:
-      required:
-      - trustedUri
-      type: object
-      properties:
-        trustedUri:
-          $ref: '#/components/schemas/TrustedUri'
-    TrustedUri:
-      required:
-      - id
-      - uriPrefix
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the trusted search page URI entry.
-          example: 371af96a-18a2-11e8-accf-0ed5f89f718b
-        uriPrefix:
-          type: string
-          description: The trusted search page URI.
-          example: https://example.com
     IncomingSamlAuthentication:
       required:
       - expiration
@@ -2254,20 +2219,20 @@ components:
         enforceTrustedUris:
           type: boolean
           default: true
-    CreateTrustedUriRequest:
+    TrustedUri:
       required:
-      - trustedUri
+      - id
+      - uriPrefix
       type: object
       properties:
-        trustedUri:
-          type: object
-          required:
-          - uriPrefix
-          properties:
-            uriPrefix:
-              type: string
-              description: The URI to trust. Any search page whose URI begins with this prefix will be trusted by the target Coveo Cloud organization.
-              example: https://example.com
+        id:
+          type: string
+          description: The unique identifier of the trusted search page URI entry.
+          example: 371af96a-18a2-11e8-accf-0ed5f89f718b
+        uriPrefix:
+          type: string
+          description: The trusted search page URI.
+          example: https://example.com
     ListTrustedUriResponse:
       required:
       - items
@@ -2284,22 +2249,10 @@ components:
           description: The items contained in the page.
           items:
             $ref: '#/components/schemas/TrustedUri'
-    CreatedSamlAuthentication:
-      required:
-      - id
-      type: object
-      properties:
-        id:
-          type: string
-    CreatedSharePointAuthentication:
-      required:
-      - id
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of this SharePoint claims authentication provider.
-          example: beffaaed-1c4b-44c0-ad9a-ce95b9b169e5
+    OutgoingAuthentication:
+      oneOf:
+      - $ref: '#/components/schemas/OutgoingSamlAuthentication'
+      - $ref: '#/components/schemas/OutgoingSharePointAuthentication'
     IncomingSharePointAuthentication:
       required:
       - expiration
@@ -2349,6 +2302,44 @@ components:
         enforceTrustedUris:
           type: boolean
           default: true
+    OutgoingSamlAuthentication:
+      required:
+      - expiration
+      - id
+      - metadata
+      - name
+      - organization
+      - protocol
+      - secret
+      - enforceTrustedUris
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        organization:
+          type: string
+        relyingPartyIdentifier:
+          type: string
+        assertionConsumerServiceUrl:
+          type: string
+        metadata:
+          type: string
+        provider:
+          deprecated: true
+          type: string
+        secret:
+          type: string
+        expiration:
+          type: integer
+          format: int32
+        protocol:
+          type: string
+          enum:
+          - SAML
+        enforceTrustedUris:
+          type: boolean
     ListRecentUntrustedUriResponse:
       required:
       - items
@@ -2378,6 +2369,15 @@ components:
                 format: date-time
                 description: When the URI was seen
                 example: '2023-09-28T15:17:30.826Z'
+    CreatedSharePointAuthentication:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of this SharePoint claims authentication provider.
+          example: beffaaed-1c4b-44c0-ad9a-ce95b9b169e5
   parameters:
     Page:
       name: page

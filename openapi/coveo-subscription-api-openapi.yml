@@ -833,94 +833,59 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/subscriptions/me/paramId/test_post
 components:
   schemas:
-    SubscriptionStatisticsModel:
+    SubscriptionStatusModel:
       type: object
       properties:
-        numberOfSuccess:
-          type: integer
-          description: The number of times today that the notification was successfully processed and sent to the expected email addresses or service URLs.
-          format: int32
-        numberOfFailures:
-          type: integer
-          description: The number of times today that the email or webhook server to which the notification was sent returned an error or could not be reached.
-          format: int32
-        numberOfErrors:
-          type: integer
-          description: The number of times today that an unexpected error occurred while Coveo was processing the notification.
-          format: int32
-        numberOfCancellations:
-          type: integer
-          description: The number of times today that the activity related to the notification occurred but did not cause a notification to be sent.
-          format: int32
-      description: The usage statistics of a [subscription](https://docs.coveo.com/en/248/).
-      externalDocs:
-        description: Review the usage statistics of an organization notification
-        url: https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#review-the-usage-statistics-of-an-organization-notification
-    SubscriptionPatternModel:
+        healthIndicator:
+          type: string
+          description: 'A general indication of how well the subscription is doing</br>**Allowed values:**</br>- `GOOD`: A very low percentage (i.e., less than 5%) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `WARNING`: A relatively low, but still significant percentage (i.e., between 5% and 20%) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `PROBLEMATIC`: A relatively high percentage (i.e., 20% or more) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `UNKNOWN`: No statistics are available for the subscription.'
+          enum:
+          - GOOD
+          - WARNING
+          - PROBLEMATIC
+          - UNKNOWN
+        statistics:
+          $ref: '#/components/schemas/SubscriptionStatisticsModel'
+        latestResponseMessage:
+          type: string
+          description: The response message from the most recent service request.
+          example: '`200 OK`'
+      description: The [status of the subscription](https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#subscription-status).</br>See [Review the usage statistics of an organization notification](https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#review-the-usage-statistics-of-an-organization-notification).
+    EditSubscriptionModel:
       type: object
       properties:
-        content:
-          type: object
-          additionalProperties:
-            type: string
-            description: An object specifying which resource to target with the notification.
-            externalDocs:
-              description: See `Content` Object
-              url: https://docs.coveo.com/en/1660/#content-object
-          description: An object specifying which resource to target with the notification.
-          externalDocs:
-            description: See `Content` Object
-            url: https://docs.coveo.com/en/1660/#content-object
-        operations:
-          uniqueItems: true
-          type: array
-          description: An array specifying the actions performed on the [Coveo Cloud platform](https://docs.coveo.com/en/186/) module (i.e., resource type) for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
-          externalDocs:
-            description: See `Operations` Object
-            url: https://docs.coveo.com/en/1660/#operations-array
-          items:
-            type: string
-            description: An array specifying the actions performed on the [Coveo Cloud platform](https://docs.coveo.com/en/186/) module (i.e., resource type) for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
-            externalDocs:
-              description: See `Operations` Object
-              url: https://docs.coveo.com/en/1660/#operations-array
-        resourceTypes:
-          uniqueItems: true
-          type: array
-          description: An array specifying the [Coveo Cloud platform](https://docs.coveo.com/en/186/) modules for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
-          externalDocs:
-            description: See `ResourceTypes` Object
-            url: https://docs.coveo.com/en/1660/#resourcetypes-array
-          items:
-            type: string
-            description: An array specifying the [Coveo Cloud platform](https://docs.coveo.com/en/186/) modules for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
-            externalDocs:
-              description: See `ResourceTypes` Object
-              url: https://docs.coveo.com/en/1660/#resourcetypes-array
-        resultTypes:
-          uniqueItems: true
-          type: array
-          description: An array specifying operation results of for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
-          externalDocs:
-            description: See `ResultTypes` Object
-            url: https://docs.coveo.com/en/1660/#resulttypes-array)
-          items:
-            type: string
-            description: An array specifying operation results of for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
-            externalDocs:
-              description: See `ResultTypes` Object
-              url: https://docs.coveo.com/en/1660/#resulttypes-array)
-        eventNames:
-          uniqueItems: true
-          type: array
-          description: An array specifying notification event names for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
-          items:
-            type: string
-            description: An array specifying notification event names for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
-      description: The [subscription](https://docs.coveo.com/en/248/) configuration specifying which activities trigger notifications.
-      externalDocs:
-        description: Organization Notification JSON Filter Reference
-        url: https://docs.coveo.com/en/1660/
+        enabled:
+          type: boolean
+          description: Whether the subscription can send [notifications](https://docs.coveo.com/en/221/).
+        name:
+          type: string
+          description: The display name for the subscription.
+          example: Refresh Notifications
+        description:
+          type: string
+          description: A brief description for the subscription.
+          example: Sends a POST HTTP request to http://www.example.com/myendpoint when a refresh operation fails on a specific source.
+        pattern:
+          $ref: '#/components/schemas/SubscriptionPatternModel'
+        type:
+          type: string
+          description: 'The way the [subscription](https://docs.coveo.com/en/248/) sends notifications.</br>**Allowed values:**</br>- `EMAIL`: Send user-friendly, HTML formatted emails whose content includes only the most vital activity event information.</br>- `EMAIL_JSON`: Send un-formatted emails whose content includes the entire activity event data.</br>- `WEB_HOOK`: Send HTTP POST requests to the URL you specify as the `serviceUrl` property value of the `parameters` object.'
+          enum:
+          - EMAIL
+          - EMAIL_JSON
+          - WEB_HOOK
+          - HOME_PAGE
+        frequency:
+          type: string
+          description: 'The frequency at which the [subscription](https://docs.coveo.com/en/248/) sends notifications.</br>**Allowed values:**</br>- `LIVE`: Send notifications as soon as possible when a matching activity event occurs.</br>- `HOURLY`: Send periodical notifications including all matching activity events that occurred within the hour.</br>- `DAILY`: Send periodical notifications including all matching activity events that occurred within the day.</br>- `WEEKLY`: Send periodical notifications including all matching activity events that occurred within the week.'
+          enum:
+          - LIVE
+          - HOURLY
+          - DAILY
+          - WEEKLY
+        parameters:
+          $ref: '#/components/schemas/SubscriptionParametersModel'
+      description: The new configuration to update the [subscription](https://docs.coveo.com/en/248/) to.
     SubscriptionModel:
       type: object
       properties:
@@ -991,59 +956,94 @@ components:
             type: string
             description: The list of unsubscribed emails of the given subscription.
       description: A [subscription](https://docs.coveo.com/en/248/).
-    EditSubscriptionModel:
+    SubscriptionPatternModel:
       type: object
       properties:
-        enabled:
-          type: boolean
-          description: Whether the subscription can send [notifications](https://docs.coveo.com/en/221/).
-        name:
-          type: string
-          description: The display name for the subscription.
-          example: Refresh Notifications
-        description:
-          type: string
-          description: A brief description for the subscription.
-          example: Sends a POST HTTP request to http://www.example.com/myendpoint when a refresh operation fails on a specific source.
-        pattern:
-          $ref: '#/components/schemas/SubscriptionPatternModel'
-        type:
-          type: string
-          description: 'The way the [subscription](https://docs.coveo.com/en/248/) sends notifications.</br>**Allowed values:**</br>- `EMAIL`: Send user-friendly, HTML formatted emails whose content includes only the most vital activity event information.</br>- `EMAIL_JSON`: Send un-formatted emails whose content includes the entire activity event data.</br>- `WEB_HOOK`: Send HTTP POST requests to the URL you specify as the `serviceUrl` property value of the `parameters` object.'
-          enum:
-          - EMAIL
-          - EMAIL_JSON
-          - WEB_HOOK
-          - HOME_PAGE
-        frequency:
-          type: string
-          description: 'The frequency at which the [subscription](https://docs.coveo.com/en/248/) sends notifications.</br>**Allowed values:**</br>- `LIVE`: Send notifications as soon as possible when a matching activity event occurs.</br>- `HOURLY`: Send periodical notifications including all matching activity events that occurred within the hour.</br>- `DAILY`: Send periodical notifications including all matching activity events that occurred within the day.</br>- `WEEKLY`: Send periodical notifications including all matching activity events that occurred within the week.'
-          enum:
-          - LIVE
-          - HOURLY
-          - DAILY
-          - WEEKLY
-        parameters:
-          $ref: '#/components/schemas/SubscriptionParametersModel'
-      description: The new configuration to update the [subscription](https://docs.coveo.com/en/248/) to.
-    SubscriptionStatusModel:
+        content:
+          type: object
+          additionalProperties:
+            type: string
+            description: An object specifying which resource to target with the notification.
+            externalDocs:
+              description: See `Content` Object
+              url: https://docs.coveo.com/en/1660/#content-object
+          description: An object specifying which resource to target with the notification.
+          externalDocs:
+            description: See `Content` Object
+            url: https://docs.coveo.com/en/1660/#content-object
+        operations:
+          uniqueItems: true
+          type: array
+          description: An array specifying the actions performed on the [Coveo Cloud platform](https://docs.coveo.com/en/186/) module (i.e., resource type) for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
+          externalDocs:
+            description: See `Operations` Object
+            url: https://docs.coveo.com/en/1660/#operations-array
+          items:
+            type: string
+            description: An array specifying the actions performed on the [Coveo Cloud platform](https://docs.coveo.com/en/186/) module (i.e., resource type) for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
+            externalDocs:
+              description: See `Operations` Object
+              url: https://docs.coveo.com/en/1660/#operations-array
+        resourceTypes:
+          uniqueItems: true
+          type: array
+          description: An array specifying the [Coveo Cloud platform](https://docs.coveo.com/en/186/) modules for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
+          externalDocs:
+            description: See `ResourceTypes` Object
+            url: https://docs.coveo.com/en/1660/#resourcetypes-array
+          items:
+            type: string
+            description: An array specifying the [Coveo Cloud platform](https://docs.coveo.com/en/186/) modules for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
+            externalDocs:
+              description: See `ResourceTypes` Object
+              url: https://docs.coveo.com/en/1660/#resourcetypes-array
+        resultTypes:
+          uniqueItems: true
+          type: array
+          description: An array specifying operation results of for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
+          externalDocs:
+            description: See `ResultTypes` Object
+            url: https://docs.coveo.com/en/1660/#resulttypes-array)
+          items:
+            type: string
+            description: An array specifying operation results of for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
+            externalDocs:
+              description: See `ResultTypes` Object
+              url: https://docs.coveo.com/en/1660/#resulttypes-array)
+        eventNames:
+          uniqueItems: true
+          type: array
+          description: An array specifying notification event names for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
+          items:
+            type: string
+            description: An array specifying notification event names for which the [subscription](https://docs.coveo.com/en/248/) triggers a notification.
+      description: The [subscription](https://docs.coveo.com/en/248/) configuration specifying which activities trigger notifications.
+      externalDocs:
+        description: Organization Notification JSON Filter Reference
+        url: https://docs.coveo.com/en/1660/
+    SubscriptionStatisticsModel:
       type: object
       properties:
-        healthIndicator:
-          type: string
-          description: 'A general indication of how well the subscription is doing</br>**Allowed values:**</br>- `GOOD`: A very low percentage (i.e., less than 5%) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `WARNING`: A relatively low, but still significant percentage (i.e., between 5% and 20%) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `PROBLEMATIC`: A relatively high percentage (i.e., 20% or more) of the notifications triggered by the subscription are failures, errors, or cancellations.</br>- `UNKNOWN`: No statistics are available for the subscription.'
-          enum:
-          - GOOD
-          - WARNING
-          - PROBLEMATIC
-          - UNKNOWN
-        statistics:
-          $ref: '#/components/schemas/SubscriptionStatisticsModel'
-        latestResponseMessage:
-          type: string
-          description: The response message from the most recent service request.
-          example: '`200 OK`'
-      description: The [status of the subscription](https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#subscription-status).</br>See [Review the usage statistics of an organization notification](https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#review-the-usage-statistics-of-an-organization-notification).
+        numberOfSuccess:
+          type: integer
+          description: The number of times today that the notification was successfully processed and sent to the expected email addresses or service URLs.
+          format: int32
+        numberOfFailures:
+          type: integer
+          description: The number of times today that the email or webhook server to which the notification was sent returned an error or could not be reached.
+          format: int32
+        numberOfErrors:
+          type: integer
+          description: The number of times today that an unexpected error occurred while Coveo was processing the notification.
+          format: int32
+        numberOfCancellations:
+          type: integer
+          description: The number of times today that the activity related to the notification occurred but did not cause a notification to be sent.
+          format: int32
+      description: The usage statistics of a [subscription](https://docs.coveo.com/en/248/).
+      externalDocs:
+        description: Review the usage statistics of an organization notification
+        url: https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#review-the-usage-statistics-of-an-organization-notification
     SubscriptionParametersModel:
       type: object
       properties:

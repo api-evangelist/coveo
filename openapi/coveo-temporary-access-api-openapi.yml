@@ -456,6 +456,29 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/access/temporary/active_get
 components:
   schemas:
+    RealmModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
+        provider:
+          type: string
+          description: The provider of the realm.
+          enum:
+          - SALESFORCE
+          - SALESFORCE_SANDBOX
+          - GOOGLE
+          - OFFICE365
+          - SAML
+          - EMAIL
+        displayName:
+          type: string
+          description: The display name of the realm.</br>**Example:** `example.com`
+        samlIdentityProviderId:
+          type: string
+          description: The unique identifier of the realm.</br>**Example:** `myprovider`
+      description: The realm to add.
     UserModel:
       type: object
       properties:
@@ -825,6 +848,16 @@ components:
           description: The last day the user has logged in into the platform
           format: date-time
       description: A user.
+    UserRealmModel:
+      type: object
+      properties:
+        member:
+          type: boolean
+        realm:
+          $ref: '#/components/schemas/RealmModel'
+        realmModel:
+          $ref: '#/components/schemas/RealmModel'
+      description: The realms the user is a part of.
     GlobalPrivilegeModel:
       type: object
       properties:
@@ -884,39 +917,6 @@ components:
           description: The date at which the temporary access was revoked in number of milliseconds since UNIX epoch.</br>**Example:**`1556722981779`
           format: date-time
       description: Information pertaining to a temporary access in an organization.
-    RealmModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `example-domain.com`
-        provider:
-          type: string
-          description: The provider of the realm.
-          enum:
-          - SALESFORCE
-          - SALESFORCE_SANDBOX
-          - GOOGLE
-          - OFFICE365
-          - SAML
-          - EMAIL
-        displayName:
-          type: string
-          description: The display name of the realm.</br>**Example:** `example.com`
-        samlIdentityProviderId:
-          type: string
-          description: The unique identifier of the realm.</br>**Example:** `myprovider`
-      description: The realm to add.
-    UserRealmModel:
-      type: object
-      properties:
-        member:
-          type: boolean
-        realm:
-          $ref: '#/components/schemas/RealmModel'
-        realmModel:
-          $ref: '#/components/schemas/RealmModel'
-      description: The realms the user is a part of.
   securitySchemes:
     oauth2:
       type: oauth2

@@ -239,46 +239,6 @@ paths:
           description: Not Found
 components:
   parameters:
-    filter:
-      name: filter
-      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
-      example: Store
-      in: query
-      schema:
-        type: string
-    interface-id:
-      name: interfaceId
-      description: The unique identifier of the target search interface.
-      example: 123e4567-e89b-12d3-a456-426614174000
-      in: path
-      required: true
-      schema:
-        type: string
-    organization-id:
-      name: organizationId
-      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
-      example: mycoveocloudv2organizationg8tp8wu3
-      in: path
-      required: true
-      schema:
-        type: string
-    page:
-      name: page
-      description: The 0-based number of the page of configurations to list.
-      in: query
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 100
-    order:
-      name: order
-      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
-      in: query
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
     notify:
       name: notify
       description: Whether to send an email notification to new search page users.
@@ -294,115 +254,70 @@ components:
         type: integer
         minimum: 0
         maximum: 20
+    page:
+      name: page
+      description: The 0-based number of the page of configurations to list.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
+      schema:
+        type: string
+    interface-id:
+      name: interfaceId
+      description: The unique identifier of the target search interface.
+      example: 123e4567-e89b-12d3-a456-426614174000
+      in: path
+      required: true
+      schema:
+        type: string
     projectId:
       name: projectId
       description: The id of the project to which the resource belongs.
       in: query
       schema:
         type: string
-  schemas:
-    interface-user-list:
-      type: array
-      description: The list of users that are allowed to access the search interface.
-      example:
-      - alice@example.com
-      - bob@example.com
-      items:
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
         type: string
-    interface-config:
-      type: object
-      properties:
-        name:
-          type: string
-          description: A short descriptive name to help manage search pages.
-          example: ExStore
-        title:
-          type: string
-          description: The title of the search interface configuration. Will be displayed as the HTML page title.
-          example: My example store search page
-        facets:
-          type: array
-          description: The list of facets to display in the search interface.
-          items:
-            properties:
-              field:
-                type: string
-                description: The [field](https://docs.coveo.com/en/200) on which the facet is based.
-              label:
-                type: string
-                description: The label of the facet.
-          example:
-          - field: source
-            label: Source
-          - field: objecttype
-            label: Object Type
-        sortCriteria:
-          type: array
-          description: The array of sort criteria the end user can select when interacting with the search interface.
-          items:
-            properties:
-              by:
-                type: string
-                description: 'The kind of sort criterion. Required. <br />**Allowed values:**<br />- `relevancy`<br />- `date`<br />- `field`: sort based on the values of a target field, which you need to specify in the `field` parameter.'
-                enum:
-                - relevancy
-                - date
-                - field
-              label:
-                type: string
-                description: The label of the sort criterion. Required.
-              field:
-                type: string
-                description: The [field](https://docs.coveo.com/en/200) on which the sort is based. Required when `by` value is `field`, and ignored otherwise.<br />Must be [sortable in the index](https://docs.coveo.com/en/1833/index-content/add-or-edit-a-field#sortable).
-              order:
-                type: string
-                enum:
-                - ASC
-                - DESC
-                description: 'The sort direction, if applicable.<br />Default behaviour is a follows:<br />- If the `by` value is `relevancy`, this parameter does not apply.<br />- If the `by` value is `date`, the default value is `DESC`.<br />- If the `by` value is anything else, the default value is `ASC`.<br />**Allowed values:** <br />- `ASC`: ascending <br>- `DESC`: descending'
-            required:
-            - by
-            - label
-          example:
-          - by: relevancy
-            label: Relevance
-          - by: date
-            label: Date
-            order: DESC
-          - by: field
-            label: Price
-            field: price
-            order: ASC
-        accesses:
-          $ref: '#/components/schemas/interface-access'
-        content:
-          $ref: '#/components/schemas/interface-content'
-        layout:
-          type: string
-          enum:
-          - LIST
-          - GRID
-      required:
-      - name
-    interface-access:
+        enum:
+        - asc
+        - desc
+    filter:
+      name: filter
+      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
+      example: Store
+      in: query
+      schema:
+        type: string
+  schemas:
+    interface-add-user:
       type: object
       properties:
         users:
           $ref: '#/components/schemas/interface-user-list'
-        domains:
-          type: array
-          description: The list of domains that are allowed to access the search interface.
-          example:
-          - example.com
-          - sample.com
-          items:
-            type: string
-        sharingLinkEnabled:
-          type: boolean
-          example: true
-        sharingDomainEnabled:
-          type: boolean
-          example: true
+        message:
+          type: string
+          description: Message to send as part of email notifications, when `notify` is set to `true`.
+          example: Hey, check out this new search page
+          required: false
+    interface-pipeline-content:
+      type: object
+      properties:
+        pipeline:
+          type: string
+          description: The unique identifier of the query pipeline enforced in search requests.
+          example: 8652e601-fdc3-4ec9-90f8-510763ec0956
     interface-config-id:
       type: object
       properties:
@@ -507,23 +422,108 @@ components:
           - sourceNameB
           items:
             type: string
-    interface-pipeline-content:
+    interface-config:
       type: object
       properties:
-        pipeline:
+        name:
           type: string
-          description: The unique identifier of the query pipeline enforced in search requests.
-          example: 8652e601-fdc3-4ec9-90f8-510763ec0956
-    interface-add-user:
+          description: A short descriptive name to help manage search pages.
+          example: ExStore
+        title:
+          type: string
+          description: The title of the search interface configuration. Will be displayed as the HTML page title.
+          example: My example store search page
+        facets:
+          type: array
+          description: The list of facets to display in the search interface.
+          items:
+            properties:
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the facet is based.
+              label:
+                type: string
+                description: The label of the facet.
+          example:
+          - field: source
+            label: Source
+          - field: objecttype
+            label: Object Type
+        sortCriteria:
+          type: array
+          description: The array of sort criteria the end user can select when interacting with the search interface.
+          items:
+            properties:
+              by:
+                type: string
+                description: 'The kind of sort criterion. Required. <br />**Allowed values:**<br />- `relevancy`<br />- `date`<br />- `field`: sort based on the values of a target field, which you need to specify in the `field` parameter.'
+                enum:
+                - relevancy
+                - date
+                - field
+              label:
+                type: string
+                description: The label of the sort criterion. Required.
+              field:
+                type: string
+                description: The [field](https://docs.coveo.com/en/200) on which the sort is based. Required when `by` value is `field`, and ignored otherwise.<br />Must be [sortable in the index](https://docs.coveo.com/en/1833/index-content/add-or-edit-a-field#sortable).
+              order:
+                type: string
+                enum:
+                - ASC
+                - DESC
+                description: 'The sort direction, if applicable.<br />Default behaviour is a follows:<br />- If the `by` value is `relevancy`, this parameter does not apply.<br />- If the `by` value is `date`, the default value is `DESC`.<br />- If the `by` value is anything else, the default value is `ASC`.<br />**Allowed values:** <br />- `ASC`: ascending <br>- `DESC`: descending'
+            required:
+            - by
+            - label
+          example:
+          - by: relevancy
+            label: Relevance
+          - by: date
+            label: Date
+            order: DESC
+          - by: field
+            label: Price
+            field: price
+            order: ASC
+        accesses:
+          $ref: '#/components/schemas/interface-access'
+        content:
+          $ref: '#/components/schemas/interface-content'
+        layout:
+          type: string
+          enum:
+          - LIST
+          - GRID
+      required:
+      - name
+    interface-access:
       type: object
       properties:
         users:
           $ref: '#/components/schemas/interface-user-list'
-        message:
-          type: string
-          description: Message to send as part of email notifications, when `notify` is set to `true`.
-          example: Hey, check out this new search page
-          required: false
+        domains:
+          type: array
+          description: The list of domains that are allowed to access the search interface.
+          example:
+          - example.com
+          - sample.com
+          items:
+            type: string
+        sharingLinkEnabled:
+          type: boolean
+          example: true
+        sharingDomainEnabled:
+          type: boolean
+          example: true
+    interface-user-list:
+      type: array
+      description: The list of users that are allowed to access the search interface.
+      example:
+      - alice@example.com
+      - bob@example.com
+      items:
+        type: string
   securitySchemes:
     oauth2:
       type: oauth2

@@ -77,25 +77,6 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/facet_post
 components:
   schemas:
-    SortByFieldRequestResponseModel:
-      required:
-      - field
-      type: object
-      properties:
-        field:
-          minLength: 1
-          type: string
-          description: The name of a field to sort by.
-        direction:
-          type: string
-          description: 'Sort order:<br/>Default: `ascending`<br/><ul><li>`asc` - Ascending, from A to Z</li><li>`desc` - Descending, from Z to A</li></ul>'
-          enum:
-          - asc
-          - desc
-        displayName:
-          type: string
-          description: The display name of a field.
-      description: Defines the fields and, optionally, their sort order.
     FacetSearchRequestModel:
       required:
       - context
@@ -200,17 +181,217 @@ components:
           type: boolean
           description: Enable spotlight content in the results. When enabled, the products list in the response will always be empty and the results list should be used instead.
       description: The facet query to be executed.
-    FacetSearchResponseModel:
+    LegacyFacetOptions:
       type: object
       properties:
-        values:
-          type: array
-          description: The returned facet values.
-          items:
-            $ref: '#/components/schemas/FacetValuesModel'
-        moreValuesAvailable:
+        freezeFacetOrder:
           type: boolean
-          description: Whether additional facet values matching the request are available.
+          description: 'Default: `false`<br/>Whether facets should be returned in the same order in which they were requested.'
+      description: Facet Options for legacy (v1) facets.
+    RegularFacetModel:
+      required:
+      - field
+      - values
+      type: object
+      description: Regular (single string value) facet.
+      example:
+        facetId: ec_brand
+        field: ec_brand
+        displayNames:
+        - value: Brand
+          language: en
+        - value: Marque
+          language: fr
+        values:
+        - state: selected
+          preventAutoSelect: false
+          value: Aqua Sports
+        - state: idle
+          preventAutoSelect: false
+          value: Aqua Marina
+        - state: idle
+          preventAutoSelect: false
+          value: HO Sports
+        numberOfValues: 3
+        preventAutoSelect: false
+        sortCriteria: score
+        isFieldExpanded: true
+        type: regular
+        customOrder:
+        - string
+      allOf:
+      - $ref: '#/components/schemas/RequestFacetBaseObject'
+      - type: object
+        properties:
+          values:
+            minItems: 1
+            type: array
+            description: The values displayed by the facet in the search interface at the moment of the request.
+            items:
+              $ref: '#/components/schemas/RegularValueModel'
+          preventAutoSelect:
+            type: boolean
+            description: Whether to prevent Coveo ML from automatically selecting facet values.
+          sortCriteria:
+            type: string
+            description: The criterion to use for sorting returned facet values.
+            enum:
+            - score
+            - alphanumericNatural
+            - alphanumeric
+            - occurrences
+          customOrder:
+            type: array
+            description: A custom sort order for the facet values.
+            items:
+              type: string
+          freezeCurrentValues:
+            type: boolean
+            description: Should always be set to `false` except when selecting/unselecting facet values. See [here](https://docs.coveo.com/en/3199/build-a-search-ui/implement-facets#toggle-facet-values) for more guidance.
+          resultsMustMatch:
+            type: string
+            description: Specifies how a result must match the selected values.
+            default: atLeastOneValue
+            enum:
+            - atLeastOneValue
+            - allValues
+          isFieldExpanded:
+            type: boolean
+            description: The value provided is only copied back in the `isFieldExpanded` property of the response. It does not affect the behaviour of the Commerce Service in any way.
+    RequestFacetBaseObject:
+      required:
+      - field
+      - values
+      type: object
+      properties:
+        facetId:
+          type: string
+          description: Name of the field to execute the facet search request against.
+          example: color
+        field:
+          minLength: 1
+          type: string
+          description: The facet field name.
+          example: ec_brand
+        displayName:
+          type: string
+          description: The facet display name.
+          example: Brand
+        values:
+          minItems: 1
+          type: array
+          description: The values displayed by the facet in the search interface at the moment of the request.
+          items:
+            type: object
+            description: The values displayed by the facet in the search interface at the moment of the request.
+        numberOfValues:
+          type: object
+          properties:
+            empty:
+              type: boolean
+            present:
+              type: boolean
+            asInt:
+              type: integer
+              format: int32
+          description: 'The maximum number of facet values to fetch. It should typically be set to the value last received
+
+            in the `numberOfValues` property of the facet response.
+
+            <br/>
+
+            <br/>
+
+            An exception to this guideline is the case where the last response had
+
+            `moreValuesAvailable=true` and the user asks to see more values for this facet. In this case,
+
+            the front-end is expected to send a value greater than the `numberOfValues` that it last received
+
+            in the response. This ensures that more values are fetched from the index.
+
+            <br/>
+
+            <br/>
+
+            When not provided, the default number of values configured for this facet is used.
+
+            '
+        type:
+          type: string
+          description: 'One of: `regular`, `dateRange`, `numericalRange`, `hierarchical`. For more information, see the [facet types](https://docs.coveo.com/en/p3oa0420#facet-types) documentation.'
+          enum:
+          - regular
+          - dateRange
+          - numericalRange
+          - hierarchical
+          - regular
+      description: The facet operations to perform on the query. Note that this parameter is ignored in the '/productSuggest' endpoint.
+      example:
+      - field: ec_category
+        type: regular
+        values:
+        - value: shoes
+          state: idle
+      discriminator:
+        propertyName: type
+    RangeDomain:
+      required:
+      - max
+      - min
+      type: object
+      properties:
+        min:
+          minimum: 0
+          type: integer
+          format: int32
+        max:
+          maximum: 1000000
+          type: integer
+          format: int32
+        increment:
+          maximum: 1000000
+          minimum: 0
+          type: integer
+          format: int32
+      description: Limits the range values to the specified domain.
+    ViewModel:
+      required:
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: The URL used to retrieve the products. Used as `documentLocation` for analytics purposes, which indicates the URL of the resource where the request originated.
+          example: https://acme.com/summersale
+        referrer:
+          type:
+          - string
+          - 'null'
+          description: Typically the URL of the page that linked to the interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Used as `documentReferrer` for analytics purposes.
+          example: https://example.com/
+      description: 'A collection of data points describing the view. Note: The term ''view'' is used instead of ''page'' to accommodate usage in contexts such as mobile apps.'
+    FacetValuesModel:
+      type: object
+      properties:
+        displayValue:
+          type: string
+          description: Custom display name.
+        rawValue:
+          type: string
+          description: Facet value.
+        path:
+          type: array
+          description: Base path of the facet value.
+          items:
+            type: string
+            description: Base path of the facet value.
+        count:
+          type: integer
+          description: Estimated number of products matching the query.
+          format: int32
+      description: The returned facet values.
     HierarchicalFacetModel:
       required:
       - field
@@ -293,38 +474,6 @@ components:
           isFieldExpanded:
             type: boolean
             description: The value provided is only copied back in the `isFieldExpanded` property of the response. It does not affect the behaviour of the Commerce Service in any way.
-    HierarchicalValueModel:
-      required:
-      - value
-      type: object
-      properties:
-        state:
-          type: string
-          description: The current facet value state in the search interface.
-          enum:
-          - idle
-          - selected
-        preventAutoSelect:
-          type: boolean
-          description: Whether to prevent Coveo ML from automatically selecting facet values.
-        value:
-          minLength: 1
-          type: string
-          description: This represents a single path segment.
-        children:
-          type: array
-          description: The children of this hierarchical facet value.
-          items:
-            $ref: '#/components/schemas/HierarchicalValueModel'
-        retrieveCount:
-          type: integer
-          description: The maximum number of children to retrieve for this hierarchical facet value. Ignored if retrieveChildren is false.
-          format: int32
-      description: The values displayed by the facet in the search interface at the moment of the request.
-    SortByRelevanceRequestResponseModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/AbstractSortRequestResponseModel'
     DateRangeFacetModel:
       required:
       - field
@@ -391,102 +540,6 @@ components:
           isFieldExpanded:
             type: boolean
             description: The value provided is only copied back in the `isFieldExpanded` property of the response. It does not affect the behaviour of the Commerce Service in any way.
-    RequestFacetBaseObject:
-      required:
-      - field
-      - values
-      type: object
-      properties:
-        facetId:
-          type: string
-          description: Name of the field to execute the facet search request against.
-          example: color
-        field:
-          minLength: 1
-          type: string
-          description: The facet field name.
-          example: ec_brand
-        displayName:
-          type: string
-          description: The facet display name.
-          example: Brand
-        values:
-          minItems: 1
-          type: array
-          description: The values displayed by the facet in the search interface at the moment of the request.
-          items:
-            type: object
-            description: The values displayed by the facet in the search interface at the moment of the request.
-        numberOfValues:
-          type: object
-          properties:
-            empty:
-              type: boolean
-            present:
-              type: boolean
-            asInt:
-              type: integer
-              format: int32
-          description: 'The maximum number of facet values to fetch. It should typically be set to the value last received
-
-            in the `numberOfValues` property of the facet response.
-
-            <br/>
-
-            <br/>
-
-            An exception to this guideline is the case where the last response had
-
-            `moreValuesAvailable=true` and the user asks to see more values for this facet. In this case,
-
-            the front-end is expected to send a value greater than the `numberOfValues` that it last received
-
-            in the response. This ensures that more values are fetched from the index.
-
-            <br/>
-
-            <br/>
-
-            When not provided, the default number of values configured for this facet is used.
-
-            '
-        type:
-          type: string
-          description: 'One of: `regular`, `dateRange`, `numericalRange`, `hierarchical`. For more information, see the [facet types](https://docs.coveo.com/en/p3oa0420#facet-types) documentation.'
-          enum:
-          - regular
-          - dateRange
-          - numericalRange
-          - hierarchical
-          - regular
-      description: The facet operations to perform on the query. Note that this parameter is ignored in the '/productSuggest' endpoint.
-      example:
-      - field: ec_category
-        type: regular
-        values:
-        - value: shoes
-          state: idle
-      discriminator:
-        propertyName: type
-    RegularValueModel:
-      required:
-      - value
-      type: object
-      properties:
-        state:
-          type: string
-          description: The current facet value state in the search interface.
-          enum:
-          - idle
-          - selected
-        preventAutoSelect:
-          type: boolean
-          description: Whether to prevent Coveo ML from automatically selecting facet values.
-        value:
-          minLength: 1
-          type: string
-          description: The facet value name.
-      description: The values displayed by the facet in the search interface at the moment of the request.
     AbstractSortRequestResponseModel:
       type: object
       properties:
@@ -510,6 +563,10 @@ components:
       discriminator:
         propertyName: sortCriteria
       default: relevance
+    SortByRelevanceRequestResponseModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AbstractSortRequestResponseModel'
     CartItemModel:
       type: object
       properties:
@@ -523,125 +580,17 @@ components:
           format: int32
           example: 2
       description: A cart item.
-    RegularFacetModel:
-      required:
-      - field
-      - values
+    FacetSearchResponseModel:
       type: object
-      description: Regular (single string value) facet.
-      example:
-        facetId: ec_brand
-        field: ec_brand
-        displayNames:
-        - value: Brand
-          language: en
-        - value: Marque
-          language: fr
+      properties:
         values:
-        - state: selected
-          preventAutoSelect: false
-          value: Aqua Sports
-        - state: idle
-          preventAutoSelect: false
-          value: Aqua Marina
-        - state: idle
-          preventAutoSelect: false
-          value: HO Sports
-        numberOfValues: 3
-        preventAutoSelect: false
-        sortCriteria: score
-        isFieldExpanded: true
-        type: regular
-        customOrder:
-        - string
-      allOf:
-      - $ref: '#/components/schemas/RequestFacetBaseObject'
-      - type: object
-        properties:
-          values:
-            minItems: 1
-            type: array
-            description: The values displayed by the facet in the search interface at the moment of the request.
-            items:
-              $ref: '#/components/schemas/RegularValueModel'
-          preventAutoSelect:
-            type: boolean
-            description: Whether to prevent Coveo ML from automatically selecting facet values.
-          sortCriteria:
-            type: string
-            description: The criterion to use for sorting returned facet values.
-            enum:
-            - score
-            - alphanumericNatural
-            - alphanumeric
-            - occurrences
-          customOrder:
-            type: array
-            description: A custom sort order for the facet values.
-            items:
-              type: string
-          freezeCurrentValues:
-            type: boolean
-            description: Should always be set to `false` except when selecting/unselecting facet values. See [here](https://docs.coveo.com/en/3199/build-a-search-ui/implement-facets#toggle-facet-values) for more guidance.
-          resultsMustMatch:
-            type: string
-            description: Specifies how a result must match the selected values.
-            default: atLeastOneValue
-            enum:
-            - atLeastOneValue
-            - allValues
-          isFieldExpanded:
-            type: boolean
-            description: The value provided is only copied back in the `isFieldExpanded` property of the response. It does not affect the behaviour of the Commerce Service in any way.
-    FacetValuesModel:
-      type: object
-      properties:
-        displayValue:
-          type: string
-          description: Custom display name.
-        rawValue:
-          type: string
-          description: Facet value.
-        path:
           type: array
-          description: Base path of the facet value.
+          description: The returned facet values.
           items:
-            type: string
-            description: Base path of the facet value.
-        count:
-          type: integer
-          description: Estimated number of products matching the query.
-          format: int32
-      description: The returned facet values.
-    LegacyFacetOptions:
-      type: object
-      properties:
-        freezeFacetOrder:
+            $ref: '#/components/schemas/FacetValuesModel'
+        moreValuesAvailable:
           type: boolean
-          description: 'Default: `false`<br/>Whether facets should be returned in the same order in which they were requested.'
-      description: Facet Options for legacy (v1) facets.
-    SortByFieldsRequestResponseModel:
-      required:
-      - fields
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/AbstractSortRequestResponseModel'
-      - type: object
-        properties:
-          fields:
-            minItems: 1
-            type: array
-            description: Defines the fields and, optionally, their sort order.
-            items:
-              $ref: '#/components/schemas/SortByFieldRequestResponseModel'
-    UserModel:
-      type: object
-      properties:
-        userAgent:
-          type: string
-          description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.\n\n**Note**: This information is required when endpoints are behind a proxy.'
-          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
-      description: The user information.
+          description: Whether additional facet values matching the request are available.
     NumericalRangeFacetModel:
       required:
       - field
@@ -715,31 +664,6 @@ components:
           isFieldExpanded:
             type: boolean
             description: The value provided is only copied back in the `isFieldExpanded` property of the response. It does not affect the behaviour of the Commerce Service in any way.
-    NumericalRangeValueModel:
-      required:
-      - end
-      - start
-      type: object
-      properties:
-        state:
-          type: string
-          description: The current facet value state in the search interface.
-          enum:
-          - idle
-          - selected
-        preventAutoSelect:
-          type: boolean
-          description: Whether to prevent Coveo ML from automatically selecting facet values.
-        start:
-          type: number
-          description: The value to start the range at.
-        end:
-          type: number
-          description: The value to end the range at. Must be greater (or later) than the start value.
-        endInclusive:
-          type: boolean
-          description: Whether to include the end value in the range. It should typically be set to the value last received in the `endInclusive` property of the facet response.
-      description: The values displayed by the facet in the search interface at the moment of the request.
     DateRangeValueModel:
       required:
       - end
@@ -767,23 +691,42 @@ components:
           type: boolean
           description: Whether to include the end value in the range.
       description: The values displayed by the facet in the search interface at the moment of the request.
-    ViewModel:
-      required:
-      - url
+    UserModel:
       type: object
       properties:
-        url:
+        userAgent:
+          type: string
+          description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.\n\n**Note**: This information is required when endpoints are behind a proxy.'
+          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
+      description: The user information.
+    HierarchicalValueModel:
+      required:
+      - value
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting facet values.
+        value:
           minLength: 1
           type: string
-          description: The URL used to retrieve the products. Used as `documentLocation` for analytics purposes, which indicates the URL of the resource where the request originated.
-          example: https://acme.com/summersale
-        referrer:
-          type:
-          - string
-          - 'null'
-          description: Typically the URL of the page that linked to the interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Used as `documentReferrer` for analytics purposes.
-          example: https://example.com/
-      description: 'A collection of data points describing the view. Note: The term ''view'' is used instead of ''page'' to accommodate usage in contexts such as mobile apps.'
+          description: This represents a single path segment.
+        children:
+          type: array
+          description: The children of this hierarchical facet value.
+          items:
+            $ref: '#/components/schemas/HierarchicalValueModel'
+        retrieveCount:
+          type: integer
+          description: The maximum number of children to retrieve for this hierarchical facet value. Ignored if retrieveChildren is false.
+          format: int32
+      description: The values displayed by the facet in the search interface at the moment of the request.
     ContextModel:
       required:
       - view
@@ -839,26 +782,83 @@ components:
             - sku_123
             - sku_456
       description: Contextual information about the query.
-    RangeDomain:
+    NumericalRangeValueModel:
       required:
-      - max
-      - min
+      - end
+      - start
       type: object
       properties:
-        min:
-          minimum: 0
-          type: integer
-          format: int32
-        max:
-          maximum: 1000000
-          type: integer
-          format: int32
-        increment:
-          maximum: 1000000
-          minimum: 0
-          type: integer
-          format: int32
-      description: Limits the range values to the specified domain.
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting facet values.
+        start:
+          type: number
+          description: The value to start the range at.
+        end:
+          type: number
+          description: The value to end the range at. Must be greater (or later) than the start value.
+        endInclusive:
+          type: boolean
+          description: Whether to include the end value in the range. It should typically be set to the value last received in the `endInclusive` property of the facet response.
+      description: The values displayed by the facet in the search interface at the moment of the request.
+    SortByFieldsRequestResponseModel:
+      required:
+      - fields
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AbstractSortRequestResponseModel'
+      - type: object
+        properties:
+          fields:
+            minItems: 1
+            type: array
+            description: Defines the fields and, optionally, their sort order.
+            items:
+              $ref: '#/components/schemas/SortByFieldRequestResponseModel'
+    RegularValueModel:
+      required:
+      - value
+      type: object
+      properties:
+        state:
+          type: string
+          description: The current facet value state in the search interface.
+          enum:
+          - idle
+          - selected
+        preventAutoSelect:
+          type: boolean
+          description: Whether to prevent Coveo ML from automatically selecting facet values.
+        value:
+          minLength: 1
+          type: string
+          description: The facet value name.
+      description: The values displayed by the facet in the search interface at the moment of the request.
+    SortByFieldRequestResponseModel:
+      required:
+      - field
+      type: object
+      properties:
+        field:
+          minLength: 1
+          type: string
+          description: The name of a field to sort by.
+        direction:
+          type: string
+          description: 'Sort order:<br/>Default: `ascending`<br/><ul><li>`asc` - Ascending, from A to Z</li><li>`desc` - Descending, from Z to A</li></ul>'
+          enum:
+          - asc
+          - desc
+        displayName:
+          type: string
+          description: The display name of a field.
+      description: Defines the fields and, optionally, their sort order.
   securitySchemes:
     oauth2:
       type: oauth2

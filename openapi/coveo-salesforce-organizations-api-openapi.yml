@@ -170,27 +170,67 @@ paths:
         - full
 components:
   schemas:
-    RelationshipDescription:
-      type: object
-      properties: {}
-    LegacyFieldInformation:
+    MappingDescription:
       type: object
       properties:
-        relationshipName:
+        extractionMethod:
           type: string
-        relationshipNameField:
+        content:
           type: string
-        polymorphic:
-          type: boolean
-        referenceTypes:
-          type: array
-          items:
-            type: string
+        fieldTypeHint:
+          type: string
       required:
-      - relationshipName
-      - relationshipNameField
-      - polymorphic
-      - referenceTypes
+      - extractionMethod
+      - content
+    FieldDescription:
+      type: object
+      properties:
+        name:
+          type: string
+        coveoName:
+          type: string
+        salesforceName:
+          type: string
+        label:
+          type: string
+        kind:
+          type: string
+        custom:
+          type: boolean
+        virtual:
+          type: boolean
+        retrievable:
+          type: boolean
+        filterable:
+          type: boolean
+        sortable:
+          type: boolean
+        multiValue:
+          type: boolean
+        mandatory:
+          type: boolean
+        shouldIndexByDefault:
+          type: boolean
+        dataCategoryGroup:
+          type: string
+        mapping:
+          $ref: '#/components/schemas/MappingDescription'
+        legacyFieldInformation:
+          $ref: '#/components/schemas/LegacyFieldInformation'
+      required:
+      - name
+      - coveoName
+      - salesforceName
+      - label
+      - kind
+      - custom
+      - virtual
+      - retrievable
+      - filterable
+      - sortable
+      - multiValue
+      - mandatory
+      - shouldIndexByDefault
     ObjectSummary:
       type: object
       properties:
@@ -258,67 +298,19 @@ components:
       - objects
       - knowledgeLanguages
       - dataCategoryGroups
-    FieldDescription:
+    RelationshipDescription:
+      type: object
+      properties: {}
+    DataCategoryValueDescription:
       type: object
       properties:
         name:
           type: string
-        coveoName:
-          type: string
-        salesforceName:
-          type: string
         label:
           type: string
-        kind:
-          type: string
-        custom:
-          type: boolean
-        virtual:
-          type: boolean
-        retrievable:
-          type: boolean
-        filterable:
-          type: boolean
-        sortable:
-          type: boolean
-        multiValue:
-          type: boolean
-        mandatory:
-          type: boolean
-        shouldIndexByDefault:
-          type: boolean
-        dataCategoryGroup:
-          type: string
-        mapping:
-          $ref: '#/components/schemas/MappingDescription'
-        legacyFieldInformation:
-          $ref: '#/components/schemas/LegacyFieldInformation'
       required:
       - name
-      - coveoName
-      - salesforceName
       - label
-      - kind
-      - custom
-      - virtual
-      - retrievable
-      - filterable
-      - sortable
-      - multiValue
-      - mandatory
-      - shouldIndexByDefault
-    MappingDescription:
-      type: object
-      properties:
-        extractionMethod:
-          type: string
-        content:
-          type: string
-        fieldTypeHint:
-          type: string
-      required:
-      - extractionMethod
-      - content
     LoadObjectsParams:
       type: object
       properties:
@@ -329,6 +321,24 @@ components:
             type: string
       required:
       - names
+    LegacyFieldInformation:
+      type: object
+      properties:
+        relationshipName:
+          type: string
+        relationshipNameField:
+          type: string
+        polymorphic:
+          type: boolean
+        referenceTypes:
+          type: array
+          items:
+            type: string
+      required:
+      - relationshipName
+      - relationshipNameField
+      - polymorphic
+      - referenceTypes
     ObjectDescription:
       type: object
       properties:
@@ -401,16 +411,6 @@ components:
       - fieldsByCoveoName
       - fieldsBySalesforceName
       - relationshipsByName
-    DataCategoryValueDescription:
-      type: object
-      properties:
-        name:
-          type: string
-        label:
-          type: string
-      required:
-      - name
-      - label
   securitySchemes:
     oauth2:
       type: oauth2

@@ -996,6 +996,14 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/extensions/page_get
 components:
   schemas:
+    ExtensionCompileResultModel:
+      type: object
+      properties:
+        successful:
+          type: boolean
+        error:
+          $ref: '#/components/schemas/ExtensionCompileErrorModel'
+      description: Details regarding the outcome of an extension script compilation.
     PermissionLevelModel:
       type: object
       properties:
@@ -1006,6 +1014,90 @@ components:
           items:
             $ref: '#/components/schemas/PermissionSetModel'
       description: The document permissions.
+    PermissionSetModel:
+      type: object
+      properties:
+        anonymousAllowed:
+          type: boolean
+        name:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SinglePermissionModel'
+    MetadataValueModel:
+      type: object
+      properties:
+        origin:
+          type: string
+          description: The [origin](https://docs.coveo.com/en/219/) of the medatada.<br />**Examples**:<br /> - `myTestInput`<br /> - `myExtensionName`
+        values:
+          type: object
+          additionalProperties:
+            type: object
+            description: A metadata key-value store.<br />**Example:** `{"author":["John Cook"], "clickUri":["https://example.recipe.com"], "tags":["soup","pasta"], [...]}`
+          description: A metadata key-value store.<br />**Example:** `{"author":["John Cook"], "clickUri":["https://example.recipe.com"], "tags":["soup","pasta"], [...]}`
+      description: Metadata for an [item](https://docs.coveo.com/en/210/).<br />**Default:** `[]`
+    SinglePermissionModel:
+      type: object
+      properties:
+        allowed:
+          type: boolean
+        identityType:
+          type: string
+          enum:
+          - USER
+          - GROUP
+          - VIRTUAL_GROUP
+          - UNKNOWN
+        identity:
+          type: string
+        securityProvider:
+          type: string
+        additionalInfo:
+          type: object
+          additionalProperties:
+            type: string
+        lastUpdateDate:
+          type: string
+          format: date-time
+        lastUpdateResult:
+          type: string
+          enum:
+          - NONE
+          - SUCCESS
+          - ACCESS_DENIED
+          - TIMED_OUT
+          - ENTITY_IS_INVALID
+          - ENTITY_IS_UNAVAILABLE
+          - SECURITY_PROVIDER_IS_UNAVAILABLE
+          - SECURITY_PROVIDER_IS_UNREACHABLE
+          - SECURITY_PROVIDER_IS_NOT_READY
+          - UNEXPECTED_ERROR
+        lastUpdateErrorDetail:
+          type: string
+        state:
+          type: string
+          enum:
+          - UNKNOWN
+          - UP_TO_DATE
+          - NOT_UPDATED
+          - OUT_OF_DATE
+          - IN_ERROR
+          - DISABLED
+    ExtensionDisabledStatusModel:
+      required:
+      - disabledDate
+      type: object
+      properties:
+        disabledDate:
+          type: string
+          description: The extension disablement date (in number of milliseconds since UNIX epoch).<br />**Example:** `1556034174000`
+          format: date-time
+        reason:
+          type: string
+          description: The reason why the extension was disabled.
+      description: Information regarding the disabled state of an extension, if applicable.
     DataStreamContentModel:
       required:
       - compressionType
@@ -1028,142 +1120,26 @@ components:
           - GZIP
           - LZMA
       description: A [data stream](https://docs.coveo.com/en/2891/) object.<br />**Allowed keys:**<br /> - `BODY_TEXT`<br /> - `BODY_HTML`<br /> - `THUMBNAIL`<br /> - `DOCUMENT_DATA`<br />**Example:**`"BODY_TEXT":{"id":"47ce8655-3d0e-43d8-a997-f85fc5ab9e95","compressionType":"UNCOMPRESSED"}<br />
-    ExtensionContentVersionModel:
+    ExtensionTestDataStreamUriModel:
       required:
-      - id
-      - lastModified
+      - requiredHeaders
+      - streamId
+      - uri
       type: object
       properties:
-        lastModified:
+        streamId:
           type: string
-          description: 'The date at which the extension version was created (in number of milliseconds since UNIX epoch), i.e., the date of the modification of the extension when this extension version was created.<br />**Example**: `1556308241000`'
-          format: date-time
-        id:
+          description: The unique identifier of the hosted data stream.<br />**Example:** `cdb87296-9790-4e70-8f71-46f1364fa83d`
+        uri:
           type: string
-          description: The unique identifier of the extension target version.<br />**Example**:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`
-      description: An [extension](https://docs.coveo.com/en/206/) version.
-    PermissionSetModel:
-      type: object
-      properties:
-        anonymousAllowed:
-          type: boolean
-        name:
-          type: string
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SinglePermissionModel'
-    ExtensionUsedByModel:
-      type: object
-      properties:
-        sourceId:
-          type: string
-          description: The unique identifier of the source.<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-tqv7hb5wfju45im3lnuvtw2moq`
-        sourceName:
-          type: string
-          description: The name of the [source](https://docs.coveo.com/en/246/).<br />**Example:** `mysource`
-      description: A [source](https://docs.coveo.com/en/246/) a given extension applies to.
-    ExtensionTestResultModel:
-      required:
-      - status
-      type: object
-      properties:
-        reason:
-          type: string
-          description: 'The explanation of the issue, if applicable.<br />**Example:** `Coveo::PythonScriptException: Traceback (most recent call last):\n  File \"mycoveocloudv2organizationg8tp8wu3--vwlyqfbtjkotxqkmrxqjcbcpoy\", line 9, in <module>\nNameError: name ''docment'' is not defined\n`'
-        status:
-          type: string
-          description: The status of the script execution.<br />**Allowed values:**<br /> - `DISABLED`<br /> - `EXECUTION_ERROR`<br /> - `REJECTED`<br /> - `SUCCESS`<br /> - `TIMEOUT`<br />
-          enum:
-          - DISABLED
-          - EXECUTION_ERROR
-          - REJECTED
-          - SUCCESS
-          - TIMEOUT
-      description: Details regarding the outcome of an extension script execution.
-    LogEntryModel:
-      required:
-      - severity
-      type: object
-      properties:
-        severity:
-          type: string
-          description: Log message type.<br />**Allowed values:**<br /> - `DEBUG`<br /> - `DETAIL`<br /> - `NORMAL`<br /> - `IMPORTANT`<br /> - `WARNING`<br /> - `ERROR`<br /> - `FATAL`<br /> - `NOTIFICATION`<br />
-          enum:
-          - DEBUG
-          - DETAIL
-          - NORMAL
-          - IMPORTANT
-          - WARNING
-          - ERROR
-          - FATAL
-          - NOTIFICATION
-        comment:
-          type: string
-          description: The log message, if applicable.
-        fields:
+          description: The data stream upload/download URI.<br />**Example:** `https://coveo-nprod-customerdata.s3.amazonaws.com/proda/blobstore/mycoveocloudv2organizationg8tp8wu3/cdb87296-9790-4e70-8f71-46f1364fa83d?X-Amz-Security-Token=FQoGZXIvYXd[...]`
+        requiredHeaders:
           type: object
           additionalProperties:
             type: string
-        date:
-          type: string
-        duration:
-          type: number
-          format: double
-      description: An extension test execution log.
-    ExtensionHealthModel:
-      required:
-      - healthIndicator
-      type: object
-      properties:
-        healthIndicator:
-          type: string
-          description: A qualitative health indicator.<br />**Allowed values:**<br /> - `GOOD`<br /> - `WARNING`<br /> - `PROBLEMATIC`<br /> - `UNKNOWN`<br />
-          enum:
-          - GOOD
-          - WARNING
-          - PROBLEMATIC
-          - UNKNOWN
-        reason:
-          type: string
-          description: Additional details if `healthIndicator` value is `Warning` or `Problematic`.
-      description: Information regarding a health characteristic of the extension.
-    ExtensionCompileResultModel:
-      type: object
-      properties:
-        successful:
-          type: boolean
-        error:
-          $ref: '#/components/schemas/ExtensionCompileErrorModel'
-      description: Details regarding the outcome of an extension script compilation.
-    ExtensionTestModel:
-      type: object
-      properties:
-        document:
-          $ref: '#/components/schemas/ExtensionTestDocumentModel'
-        parameters:
-          type: object
-          additionalProperties:
-            type: string
-            description: An object containing additional parameters to pass to the tested extension.<br />**Example:** `{"myparam":38}`<br />**Default:** `{}`
-          description: An object containing additional parameters to pass to the tested extension.<br />**Example:** `{"myparam":38}`<br />**Default:** `{}`
-        versionId:
-          type: string
-          description: The unique identifier of the extension version to test.<br />**Example**:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`<br />By default, the service uses the latest version.
-        language:
-          type: string
-          enum:
-          - PYTHON3
-      description: A mock document on which to test the extension.
-    ExtensionCompileModel:
-      type: object
-      properties:
-        code:
-          type: string
-        language:
-          type: string
-          enum:
-          - PYTHON3
+            description: "The required HTTP headers when uploading/downloading a data stream with the URI.<br />**Example:** \n`{\"x-amz-server-side-encryption\": \"AES256\",\n\"Content-Type\":\"application/octet-stream\"}`"
+          description: "The required HTTP headers when uploading/downloading a data stream with the URI.<br />**Example:** \n`{\"x-amz-server-side-encryption\": \"AES256\",\n\"Content-Type\":\"application/octet-stream\"}`"
+      description: Information regarding a [data stream](https://docs.coveo.com/en/2891/) upload/download URI.
     ExtensionTestExecutionReportModel:
       required:
       - dataStreamUris
@@ -1191,19 +1167,46 @@ components:
         result:
           $ref: '#/components/schemas/ExtensionTestResultModel'
       description: Test results of an [extension](https://docs.coveo.com/en/206/).
-    ExtensionCompileErrorModel:
+    ExtensionStatisticsModel:
+      required:
+      - averageDurationInSeconds
+      - numberOfErrors
+      - numberOfExecutions
+      - numberOfSkips
+      - numberOfTimeouts
       type: object
       properties:
-        type:
-          type: string
-        line:
+        averageDurationInSeconds:
+          type: number
+          description: The average extension execution duration in seconds.
+          format: double
+        numberOfErrors:
           type: integer
+          description: The number of extension executions for which the script returned an error.
           format: int32
-        offset:
+        numberOfExecutions:
           type: integer
+          description: The total number of executions of the extension.
           format: int32
-        message:
+        numberOfSkips:
+          type: integer
+          description: The number of times the extension was not executed due to any of the following reasons:<br />- The extension condition was evaluated to `false`.<br />- The extension timed out.<br />- The extension was disabled.
+          format: int32
+        numberOfTimeouts:
+          type: integer
+          description: The number of executions that reached the maximum execution time (default of 5 seconds).
+          format: int32
+      description: Execution statistics pertaining to an extension over the past 24 hours (for all items from all sources to which the extension applies).
+    ExtensionUsedByModel:
+      type: object
+      properties:
+        sourceId:
           type: string
+          description: The unique identifier of the source.<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-tqv7hb5wfju45im3lnuvtw2moq`
+        sourceName:
+          type: string
+          description: The name of the [source](https://docs.coveo.com/en/246/).<br />**Example:** `mysource`
+      description: A [source](https://docs.coveo.com/en/246/) a given extension applies to.
     ExtensionStatusModel:
       required:
       - dailyStatistics
@@ -1239,6 +1242,159 @@ components:
           format: date-time
           deprecated: true
       description: Status details of an [extension](https://docs.coveo.com/en/206/).
+    ExtensionTestDocumentModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: An identifier for the document.<br />**Example:** `42.29161$https://youtube.com/Playlist:PLSwAY_GuRbl1vrs7nkycdpKpTYbwFj6P2`
+        metadata:
+          type: array
+          description: The document metadata.
+          items:
+            $ref: '#/components/schemas/MetadataValueModel'
+        dataStreams:
+          type: array
+          description: The sets of [data streams](https://docs.coveo.com/en/2891/).
+          items:
+            $ref: '#/components/schemas/DataStreamValueModel'
+        permissions:
+          type: array
+          description: The document permissions.
+          items:
+            $ref: '#/components/schemas/PermissionLevelModel'
+      description: A mock document.<br />**Default:** `{"metadata":[],"dataStreams":[],"permissions":[]}`
+    ExtensionTestResultModel:
+      required:
+      - status
+      type: object
+      properties:
+        reason:
+          type: string
+          description: 'The explanation of the issue, if applicable.<br />**Example:** `Coveo::PythonScriptException: Traceback (most recent call last):\n  File \"mycoveocloudv2organizationg8tp8wu3--vwlyqfbtjkotxqkmrxqjcbcpoy\", line 9, in <module>\nNameError: name ''docment'' is not defined\n`'
+        status:
+          type: string
+          description: The status of the script execution.<br />**Allowed values:**<br /> - `DISABLED`<br /> - `EXECUTION_ERROR`<br /> - `REJECTED`<br /> - `SUCCESS`<br /> - `TIMEOUT`<br />
+          enum:
+          - DISABLED
+          - EXECUTION_ERROR
+          - REJECTED
+          - SUCCESS
+          - TIMEOUT
+      description: Details regarding the outcome of an extension script execution.
+    IdAndDisplayNameModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+    DataStreamValueModel:
+      required:
+      - values
+      type: object
+      properties:
+        origin:
+          type: string
+          description: The [origin](https://docs.coveo.com/en/219/) of the set of data streams.<br />**Examples**:<br /> - `myTestInput`<br /> - `myExtensionName`
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DataStreamContentModel'
+          description: The data streams in the set.
+      description: A set of [data streams](https://docs.coveo.com/en/2891/).
+    ExtensionHealthModel:
+      required:
+      - healthIndicator
+      type: object
+      properties:
+        healthIndicator:
+          type: string
+          description: A qualitative health indicator.<br />**Allowed values:**<br /> - `GOOD`<br /> - `WARNING`<br /> - `PROBLEMATIC`<br /> - `UNKNOWN`<br />
+          enum:
+          - GOOD
+          - WARNING
+          - PROBLEMATIC
+          - UNKNOWN
+        reason:
+          type: string
+          description: Additional details if `healthIndicator` value is `Warning` or `Problematic`.
+      description: Information regarding a health characteristic of the extension.
+    ExtensionDisableModel:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: The reason why the extension was disabled.
+      description: Information regarding the disablement of an extension.
+    ExtensionCompileErrorModel:
+      type: object
+      properties:
+        type:
+          type: string
+        line:
+          type: integer
+          format: int32
+        offset:
+          type: integer
+          format: int32
+        message:
+          type: string
+    EditExtensionModel:
+      required:
+      - content
+      - name
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        language:
+          type: string
+          description: 'The Python version.<br />**Allowed values:**<br /> - `PYTHON3`: Python 3. <br />'
+          enum:
+          - PYTHON3
+        apiVersion:
+          type: string
+          description: The api version.<br /> **Allowed values:** <br /> - `v1`, `v2`. <br /> **Default value:** `v1`<br />
+        content:
+          type: string
+          description: The body of the extension (user script), written in Python using the [document object](https://docs.coveo.com/en/34/).
+        description:
+          type: string
+          description: A description of the extension.
+        name:
+          type: string
+          description: A name for the extension.
+        requiredDataStreams:
+          type: array
+          description: 'The [data streams](https://docs.coveo.com/en/2891/) required by the extension.<br />**Example:** `["BODY_TEXT", "THUMBNAIL"]`
+
+            **Allowed values:**<br />- `BODY_TEXT`<br />- `BODY_HTML`<br />- `THUMBNAIL`<br />- `DOCUMENT_DATA`'
+          items:
+            type: string
+            description: 'The [data streams](https://docs.coveo.com/en/2891/) required by the extension.<br />**Example:** `["BODY_TEXT", "THUMBNAIL"]`
+
+              **Allowed values:**<br />- `BODY_TEXT`<br />- `BODY_HTML`<br />- `THUMBNAIL`<br />- `DOCUMENT_DATA`'
+            enum:
+            - BODY_TEXT
+            - BODY_HTML
+            - THUMBNAIL
+            - DOCUMENT_DATA
+            - BODY_MARKDOWN
+        useVault:
+          type: boolean
+          description: Whether the extension uses vault parameters or not.
+        enabled:
+          type: boolean
+      description: An [extension](https://docs.coveo.com/en/206/) to create or modify.
     ExtensionModel:
       required:
       - createdDate
@@ -1317,89 +1473,6 @@ components:
           items:
             type: string
       description: An [extension](https://docs.coveo.com/en/206/).
-    MetadataValueModel:
-      type: object
-      properties:
-        origin:
-          type: string
-          description: The [origin](https://docs.coveo.com/en/219/) of the medatada.<br />**Examples**:<br /> - `myTestInput`<br /> - `myExtensionName`
-        values:
-          type: object
-          additionalProperties:
-            type: object
-            description: A metadata key-value store.<br />**Example:** `{"author":["John Cook"], "clickUri":["https://example.recipe.com"], "tags":["soup","pasta"], [...]}`
-          description: A metadata key-value store.<br />**Example:** `{"author":["John Cook"], "clickUri":["https://example.recipe.com"], "tags":["soup","pasta"], [...]}`
-      description: Metadata for an [item](https://docs.coveo.com/en/210/).<br />**Default:** `[]`
-    ExtensionTestDataStreamUriModel:
-      required:
-      - requiredHeaders
-      - streamId
-      - uri
-      type: object
-      properties:
-        streamId:
-          type: string
-          description: The unique identifier of the hosted data stream.<br />**Example:** `cdb87296-9790-4e70-8f71-46f1364fa83d`
-        uri:
-          type: string
-          description: The data stream upload/download URI.<br />**Example:** `https://coveo-nprod-customerdata.s3.amazonaws.com/proda/blobstore/mycoveocloudv2organizationg8tp8wu3/cdb87296-9790-4e70-8f71-46f1364fa83d?X-Amz-Security-Token=FQoGZXIvYXd[...]`
-        requiredHeaders:
-          type: object
-          additionalProperties:
-            type: string
-            description: "The required HTTP headers when uploading/downloading a data stream with the URI.<br />**Example:** \n`{\"x-amz-server-side-encryption\": \"AES256\",\n\"Content-Type\":\"application/octet-stream\"}`"
-          description: "The required HTTP headers when uploading/downloading a data stream with the URI.<br />**Example:** \n`{\"x-amz-server-side-encryption\": \"AES256\",\n\"Content-Type\":\"application/octet-stream\"}`"
-      description: Information regarding a [data stream](https://docs.coveo.com/en/2891/) upload/download URI.
-    ExtensionDisabledStatusModel:
-      required:
-      - disabledDate
-      type: object
-      properties:
-        disabledDate:
-          type: string
-          description: The extension disablement date (in number of milliseconds since UNIX epoch).<br />**Example:** `1556034174000`
-          format: date-time
-        reason:
-          type: string
-          description: The reason why the extension was disabled.
-      description: Information regarding the disabled state of an extension, if applicable.
-    ExtensionStatisticsModel:
-      required:
-      - averageDurationInSeconds
-      - numberOfErrors
-      - numberOfExecutions
-      - numberOfSkips
-      - numberOfTimeouts
-      type: object
-      properties:
-        averageDurationInSeconds:
-          type: number
-          description: The average extension execution duration in seconds.
-          format: double
-        numberOfErrors:
-          type: integer
-          description: The number of extension executions for which the script returned an error.
-          format: int32
-        numberOfExecutions:
-          type: integer
-          description: The total number of executions of the extension.
-          format: int32
-        numberOfSkips:
-          type: integer
-          description: The number of times the extension was not executed due to any of the following reasons:<br />- The extension condition was evaluated to `false`.<br />- The extension timed out.<br />- The extension was disabled.
-          format: int32
-        numberOfTimeouts:
-          type: integer
-          description: The number of executions that reached the maximum execution time (default of 5 seconds).
-          format: int32
-      description: Execution statistics pertaining to an extension over the past 24 hours (for all items from all sources to which the extension applies).
-    ExtensionDisableModel:
-      type: object
-      properties:
-        reason:
-          type: string
-          description: The reason why the extension was disabled.
-      description: Information regarding the disablement of an extension.
     ExtensionTimeoutModel:
       type: object
       properties:
@@ -1409,20 +1482,59 @@ components:
           format: int32
           default: 5
       description: Timeout in seconds that are applicable for extensions.
-    DataStreamValueModel:
+    ExtensionContentVersionModel:
       required:
-      - values
+      - id
+      - lastModified
       type: object
       properties:
-        origin:
+        lastModified:
           type: string
-          description: The [origin](https://docs.coveo.com/en/219/) of the set of data streams.<br />**Examples**:<br /> - `myTestInput`<br /> - `myExtensionName`
-        values:
+          description: 'The date at which the extension version was created (in number of milliseconds since UNIX epoch), i.e., the date of the modification of the extension when this extension version was created.<br />**Example**: `1556308241000`'
+          format: date-time
+        id:
+          type: string
+          description: The unique identifier of the extension target version.<br />**Example**:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`
+      description: An [extension](https://docs.coveo.com/en/206/) version.
+    LogEntryModel:
+      required:
+      - severity
+      type: object
+      properties:
+        severity:
+          type: string
+          description: Log message type.<br />**Allowed values:**<br /> - `DEBUG`<br /> - `DETAIL`<br /> - `NORMAL`<br /> - `IMPORTANT`<br /> - `WARNING`<br /> - `ERROR`<br /> - `FATAL`<br /> - `NOTIFICATION`<br />
+          enum:
+          - DEBUG
+          - DETAIL
+          - NORMAL
+          - IMPORTANT
+          - WARNING
+          - ERROR
+          - FATAL
+          - NOTIFICATION
+        comment:
+          type: string
+          description: The log message, if applicable.
+        fields:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/DataStreamContentModel'
-          description: The data streams in the set.
-      description: A set of [data streams](https://docs.coveo.com/en/2891/).
+            type: string
+        date:
+          type: string
+        duration:
+          type: number
+          format: double
+      description: An extension test execution log.
+    ExtensionCompileModel:
+      type: object
+      properties:
+        code:
+          type: string
+        language:
+          type: string
+          enum:
+          - PYTHON3
     PageModelExtensionModel:
       type: object
       properties:
@@ -1436,137 +1548,25 @@ components:
         totalPages:
           type: integer
           format: int32
-    SinglePermissionModel:
+    ExtensionTestModel:
       type: object
       properties:
-        allowed:
-          type: boolean
-        identityType:
-          type: string
-          enum:
-          - USER
-          - GROUP
-          - VIRTUAL_GROUP
-          - UNKNOWN
-        identity:
-          type: string
-        securityProvider:
-          type: string
-        additionalInfo:
+        document:
+          $ref: '#/components/schemas/ExtensionTestDocumentModel'
+        parameters:
           type: object
           additionalProperties:
             type: string
-        lastUpdateDate:
+            description: An object containing additional parameters to pass to the tested extension.<br />**Example:** `{"myparam":38}`<br />**Default:** `{}`
+          description: An object containing additional parameters to pass to the tested extension.<br />**Example:** `{"myparam":38}`<br />**Default:** `{}`
+        versionId:
           type: string
-          format: date-time
-        lastUpdateResult:
-          type: string
-          enum:
-          - NONE
-          - SUCCESS
-          - ACCESS_DENIED
-          - TIMED_OUT
-          - ENTITY_IS_INVALID
-          - ENTITY_IS_UNAVAILABLE
-          - SECURITY_PROVIDER_IS_UNAVAILABLE
-          - SECURITY_PROVIDER_IS_UNREACHABLE
-          - SECURITY_PROVIDER_IS_NOT_READY
-          - UNEXPECTED_ERROR
-        lastUpdateErrorDetail:
-          type: string
-        state:
-          type: string
-          enum:
-          - UNKNOWN
-          - UP_TO_DATE
-          - NOT_UPDATED
-          - OUT_OF_DATE
-          - IN_ERROR
-          - DISABLED
-    ExtensionTestDocumentModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: An identifier for the document.<br />**Example:** `42.29161$https://youtube.com/Playlist:PLSwAY_GuRbl1vrs7nkycdpKpTYbwFj6P2`
-        metadata:
-          type: array
-          description: The document metadata.
-          items:
-            $ref: '#/components/schemas/MetadataValueModel'
-        dataStreams:
-          type: array
-          description: The sets of [data streams](https://docs.coveo.com/en/2891/).
-          items:
-            $ref: '#/components/schemas/DataStreamValueModel'
-        permissions:
-          type: array
-          description: The document permissions.
-          items:
-            $ref: '#/components/schemas/PermissionLevelModel'
-      description: A mock document.<br />**Default:** `{"metadata":[],"dataStreams":[],"permissions":[]}`
-    IdAndDisplayNameModel:
-      type: object
-      properties:
-        id:
-          type: string
-        displayName:
-          type: string
-    EditExtensionModel:
-      required:
-      - content
-      - name
-      type: object
-      properties:
-        groupsThatCanEdit:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        apiKeysThatCanEdit:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
+          description: The unique identifier of the extension version to test.<br />**Example**:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`<br />By default, the service uses the latest version.
         language:
           type: string
-          description: 'The Python version.<br />**Allowed values:**<br /> - `PYTHON3`: Python 3. <br />'
           enum:
           - PYTHON3
-        apiVersion:
-          type: string
-          description: The api version.<br /> **Allowed values:** <br /> - `v1`, `v2`. <br /> **Default value:** `v1`<br />
-        content:
-          type: string
-          description: The body of the extension (user script), written in Python using the [document object](https://docs.coveo.com/en/34/).
-        description:
-          type: string
-          description: A description of the extension.
-        name:
-          type: string
-          description: A name for the extension.
-        requiredDataStreams:
-          type: array
-          description: 'The [data streams](https://docs.coveo.com/en/2891/) required by the extension.<br />**Example:** `["BODY_TEXT", "THUMBNAIL"]`
-
-            **Allowed values:**<br />- `BODY_TEXT`<br />- `BODY_HTML`<br />- `THUMBNAIL`<br />- `DOCUMENT_DATA`'
-          items:
-            type: string
-            description: 'The [data streams](https://docs.coveo.com/en/2891/) required by the extension.<br />**Example:** `["BODY_TEXT", "THUMBNAIL"]`
-
-              **Allowed values:**<br />- `BODY_TEXT`<br />- `BODY_HTML`<br />- `THUMBNAIL`<br />- `DOCUMENT_DATA`'
-            enum:
-            - BODY_TEXT
-            - BODY_HTML
-            - THUMBNAIL
-            - DOCUMENT_DATA
-            - BODY_MARKDOWN
-        useVault:
-          type: boolean
-          description: Whether the extension uses vault parameters or not.
-        enabled:
-          type: boolean
-      description: An [extension](https://docs.coveo.com/en/206/) to create or modify.
+      description: A mock document on which to test the extension.
   securitySchemes:
     oauth2:
       type: oauth2

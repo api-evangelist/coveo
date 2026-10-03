@@ -662,9 +662,116 @@ paths:
                 $ref: '#/components/schemas/StatusResponse'
 components:
   schemas:
-    StatusResponse:
+    ExportEstimateResponseV15:
+      required:
+      - estimates
       type: object
-      description: Service's status information
+      properties:
+        estimates:
+          type: object
+          additionalProperties:
+            type: integer
+            description: The estimated number of rows by event
+            format: int64
+          description: The estimated number of rows by event
+      description: Export's number of row estimate
+    ExportScheduleModelV15:
+      required:
+      - frequency
+      - timezone
+      type: object
+      properties:
+        frequency:
+          type: string
+          description: The execution frequency of the export schedule
+          enum:
+          - DAILY
+          - MONTHLY
+          - WEEKLY
+        dayOfWeek:
+          type: string
+          description: The day of the week on which the export is executed (for weekly exports)
+          enum:
+          - MONDAY
+          - TUESDAY
+          - WEDNESDAY
+          - THURSDAY
+          - FRIDAY
+          - SATURDAY
+          - SUNDAY
+        timezone:
+          type: string
+          description: The timezone of the export schedule
+        dimensions:
+          type: array
+          description: The requested dimensions for the schedule's exports, if specified
+          items:
+            type: string
+            description: The requested dimensions for the schedule's exports, if specified
+        commonFilters:
+          type: array
+          description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+        searchesFilters:
+          type: array
+          description: The filter that will be applied to the search and click events dimensions. Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the search and click events dimensions. Multiple filter parameters are joined with the AND operator.
+        customEventsFilters:
+          type: array
+          description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+        description:
+          type: string
+          description: A description of this export schedule
+        tables:
+          type: array
+          description: The requested tables for the schedule's exports, if specified
+          items:
+            type: string
+            description: The requested tables for the schedule's exports, if specified
+            enum:
+            - SEARCHES
+            - CLICKS
+            - CUSTOM_EVENTS
+            - KEYWORDS
+            - GROUPS
+            - ALL_EVENTS
+        exportFormat:
+          type: string
+          description: The format of the generated CSV files.
+          enum:
+          - EXCEL
+          - NO_NEWLINE
+        usingDisplayNames:
+          type: boolean
+          description: Whether the generated export headers will be using display names.
+        notificationsEmails:
+          uniqueItems: true
+          type: array
+          description: The email addresses of the users that will be notified when an export is ready.
+          items:
+            type: string
+            description: The email addresses of the users that will be notified when an export is ready.
+      description: An export schedule.
+    ExportDownloadLinkResponseV15:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: The export's unique identifier
+        downloadLink:
+          type: string
+          description: The export download link. Only appears when export is ready
+          format: url
+      description: Export's download link
     ExportScheduleResponseV15:
       required:
       - author
@@ -735,19 +842,73 @@ components:
             type: string
             description: The email addresses of the users that will be notified when an export is ready.
       description: Information about the export schedule
-    ExportDownloadLinkResponseV15:
-      required:
-      - id
+    StatusResponse:
+      type: object
+      description: Service's status information
+    ExportModelV15:
       type: object
       properties:
-        id:
+        from:
           type: string
-          description: The export's unique identifier
-        downloadLink:
+          description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        to:
           type: string
-          description: The export download link. Only appears when export is ready
-          format: url
-      description: Export's download link
+          description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
+        commonFilters:
+          type: array
+          description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
+        searchesFilters:
+          type: array
+          description: The filter that will be applied to the click and search events dimensions. Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the click and search events dimensions. Multiple filter parameters are joined with the AND operator.
+        customEventsFilters:
+          type: array
+          description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+          items:
+            type: string
+            description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
+        filename:
+          type: string
+          description: A file name for the export. Can only contain US-ASCII characters. If none is supplied it will be set to the export's id.
+        description:
+          type: string
+          description: Export's description.
+        dimensions:
+          type: array
+          description: The dimensions that will be exported. If not provided, all dimensions will be exported.
+          items:
+            type: string
+            description: The dimensions that will be exported. If not provided, all dimensions will be exported.
+        tables:
+          type: array
+          description: The tables that will be exported. If not provided, all tables will be exported.
+          items:
+            type: string
+            description: The tables that will be exported. If not provided, all tables will be exported.
+            enum:
+            - SEARCHES
+            - CLICKS
+            - CUSTOM_EVENTS
+            - KEYWORDS
+            - GROUPS
+            - ALL_EVENTS
+        exportFormat:
+          type: string
+          description: The format of the generated CSV files.
+          enum:
+          - EXCEL
+          - NO_NEWLINE
+          default: EXCEL
+        useDisplayNames:
+          type: boolean
+          description: Whether to use the display names in the export's header. If false, the api names will be used.
+          default: false
+      description: An export.
     ExportResponseV15:
       required:
       - author
@@ -887,167 +1048,6 @@ components:
           description: Whether to order the rows by datetime in the export. If the number of rows exported is to great, this parameter will be ignored and data will be unsorted.
           default: true
       description: An export of visits.
-    ExportScheduleModelV15:
-      required:
-      - frequency
-      - timezone
-      type: object
-      properties:
-        frequency:
-          type: string
-          description: The execution frequency of the export schedule
-          enum:
-          - DAILY
-          - MONTHLY
-          - WEEKLY
-        dayOfWeek:
-          type: string
-          description: The day of the week on which the export is executed (for weekly exports)
-          enum:
-          - MONDAY
-          - TUESDAY
-          - WEDNESDAY
-          - THURSDAY
-          - FRIDAY
-          - SATURDAY
-          - SUNDAY
-        timezone:
-          type: string
-          description: The timezone of the export schedule
-        dimensions:
-          type: array
-          description: The requested dimensions for the schedule's exports, if specified
-          items:
-            type: string
-            description: The requested dimensions for the schedule's exports, if specified
-        commonFilters:
-          type: array
-          description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
-          items:
-            type: string
-            description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
-        searchesFilters:
-          type: array
-          description: The filter that will be applied to the search and click events dimensions. Multiple filter parameters are joined with the AND operator.
-          items:
-            type: string
-            description: The filter that will be applied to the search and click events dimensions. Multiple filter parameters are joined with the AND operator.
-        customEventsFilters:
-          type: array
-          description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
-          items:
-            type: string
-            description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
-        description:
-          type: string
-          description: A description of this export schedule
-        tables:
-          type: array
-          description: The requested tables for the schedule's exports, if specified
-          items:
-            type: string
-            description: The requested tables for the schedule's exports, if specified
-            enum:
-            - SEARCHES
-            - CLICKS
-            - CUSTOM_EVENTS
-            - KEYWORDS
-            - GROUPS
-            - ALL_EVENTS
-        exportFormat:
-          type: string
-          description: The format of the generated CSV files.
-          enum:
-          - EXCEL
-          - NO_NEWLINE
-        usingDisplayNames:
-          type: boolean
-          description: Whether the generated export headers will be using display names.
-        notificationsEmails:
-          uniqueItems: true
-          type: array
-          description: The email addresses of the users that will be notified when an export is ready.
-          items:
-            type: string
-            description: The email addresses of the users that will be notified when an export is ready.
-      description: An export schedule.
-    ExportEstimateResponseV15:
-      required:
-      - estimates
-      type: object
-      properties:
-        estimates:
-          type: object
-          additionalProperties:
-            type: integer
-            description: The estimated number of rows by event
-            format: int64
-          description: The estimated number of rows by event
-      description: Export's number of row estimate
-    ExportModelV15:
-      type: object
-      properties:
-        from:
-          type: string
-          description: The beginning date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
-        to:
-          type: string
-          description: The end date of the date range. ISO8601 format 'YYYY-MM-DDThh:mm:ss.sssZ'
-        commonFilters:
-          type: array
-          description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
-          items:
-            type: string
-            description: The filter that will be applied to the events common dimensions (shared by all types of events). Multiple filter parameters are joined with the AND operator.
-        searchesFilters:
-          type: array
-          description: The filter that will be applied to the click and search events dimensions. Multiple filter parameters are joined with the AND operator.
-          items:
-            type: string
-            description: The filter that will be applied to the click and search events dimensions. Multiple filter parameters are joined with the AND operator.
-        customEventsFilters:
-          type: array
-          description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
-          items:
-            type: string
-            description: The filter that will be applied to the custom events dimensions. Multiple filter parameters are joined with the AND operator.
-        filename:
-          type: string
-          description: A file name for the export. Can only contain US-ASCII characters. If none is supplied it will be set to the export's id.
-        description:
-          type: string
-          description: Export's description.
-        dimensions:
-          type: array
-          description: The dimensions that will be exported. If not provided, all dimensions will be exported.
-          items:
-            type: string
-            description: The dimensions that will be exported. If not provided, all dimensions will be exported.
-        tables:
-          type: array
-          description: The tables that will be exported. If not provided, all tables will be exported.
-          items:
-            type: string
-            description: The tables that will be exported. If not provided, all tables will be exported.
-            enum:
-            - SEARCHES
-            - CLICKS
-            - CUSTOM_EVENTS
-            - KEYWORDS
-            - GROUPS
-            - ALL_EVENTS
-        exportFormat:
-          type: string
-          description: The format of the generated CSV files.
-          enum:
-          - EXCEL
-          - NO_NEWLINE
-          default: EXCEL
-        useDisplayNames:
-          type: boolean
-          description: Whether to use the display names in the export's header. If false, the api names will be used.
-          default: false
-      description: An export.
     ExportRowCountLimitV15:
       type: object
       properties:

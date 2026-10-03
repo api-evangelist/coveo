@@ -217,22 +217,6 @@ paths:
       x-ui-operation-id: /rest/monitoring/global/organizations/paramId/endpoints/readiness_get
 components:
   schemas:
-    EndpointUsageModel:
-      type: object
-      properties:
-        organizationId:
-          type: string
-        customerEndpointUsageStatus:
-          $ref: '#/components/schemas/CustomerEndpointUsageStatusModel'
-        searchDetails:
-          $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
-        analyticsDetails:
-          $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
-    CustomerEndpointUsageStatusModel:
-      type: object
-      properties:
-        readyForSearch:
-          type: boolean
     EndpointUsageRequestDetailsModel:
       type: object
       properties:
@@ -242,56 +226,6 @@ components:
         blockedRequestPercentage:
           type: number
           format: double
-    RegionUsageModel:
-      type: object
-      properties:
-        organizationId:
-          type: string
-        regionUsageDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/RegionUsageDetailsModel'
-    WrongEndpointUsageDetailsModel:
-      type: object
-      properties:
-        hostname:
-          type: string
-        requestDetails:
-          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
-        reason:
-          type: string
-          enum:
-          - DEPRECATED_ENDPOINT
-          - USING_PLATFORM_ENDPOINT_FOR_ANALYTICS
-          - USING_SEARCH_ENDPOINT_FOR_ANALYTICS
-          - USING_ADMIN_CUSTOM_ENDPOINT_FOR_SEARCH
-          - WRONG_ORGANIZATION
-          - USING_SEARCH_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
-          - USING_ANALYTICS_ENDPOINT_FOR_SEARCH
-          - USING_ANALYTICS_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
-        blockedAfter:
-          type: string
-          format: date-time
-    EndpointUsageDetailsModel:
-      type: object
-      properties:
-        hostname:
-          type: string
-        requestDetails:
-          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
-    EndpointUsageDetailsPerServiceModel:
-      type: object
-      properties:
-        recommendedEndpointDetails:
-          $ref: '#/components/schemas/EndpointUsageDetailsModel'
-        wrongEndpointsDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/WrongEndpointUsageDetailsModel'
-        otherEndpointsDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/EndpointUsageDetailsModel'
     PageModelSearchHubUsageDetailsModel:
       type: object
       properties:
@@ -305,14 +239,6 @@ components:
         totalPages:
           type: integer
           format: int32
-    SearchHubUsageDetailsModel:
-      type: object
-      properties:
-        searchHub:
-          type: string
-        lastUsageDate:
-          type: string
-          format: date
     RegionUsageDetailsModel:
       type: object
       properties:
@@ -366,6 +292,80 @@ components:
         totalRequestPercentage:
           type: number
           format: double
+    CustomerEndpointUsageStatusModel:
+      type: object
+      properties:
+        readyForSearch:
+          type: boolean
+    RegionUsageModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        regionUsageDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegionUsageDetailsModel'
+    WrongEndpointUsageDetailsModel:
+      type: object
+      properties:
+        hostname:
+          type: string
+        requestDetails:
+          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
+        reason:
+          type: string
+          enum:
+          - DEPRECATED_ENDPOINT
+          - USING_PLATFORM_ENDPOINT_FOR_ANALYTICS
+          - USING_SEARCH_ENDPOINT_FOR_ANALYTICS
+          - USING_ADMIN_CUSTOM_ENDPOINT_FOR_SEARCH
+          - WRONG_ORGANIZATION
+          - USING_SEARCH_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
+          - USING_ANALYTICS_ENDPOINT_FOR_SEARCH
+          - USING_ANALYTICS_ENDPOINT_FOR_UNAUTHORIZED_SERVICE
+        blockedAfter:
+          type: string
+          format: date-time
+    EndpointUsageDetailsModel:
+      type: object
+      properties:
+        hostname:
+          type: string
+        requestDetails:
+          $ref: '#/components/schemas/EndpointUsageRequestDetailsModel'
+    SearchHubUsageDetailsModel:
+      type: object
+      properties:
+        searchHub:
+          type: string
+        lastUsageDate:
+          type: string
+          format: date
+    EndpointUsageModel:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        customerEndpointUsageStatus:
+          $ref: '#/components/schemas/CustomerEndpointUsageStatusModel'
+        searchDetails:
+          $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
+        analyticsDetails:
+          $ref: '#/components/schemas/EndpointUsageDetailsPerServiceModel'
+    EndpointUsageDetailsPerServiceModel:
+      type: object
+      properties:
+        recommendedEndpointDetails:
+          $ref: '#/components/schemas/EndpointUsageDetailsModel'
+        wrongEndpointsDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/WrongEndpointUsageDetailsModel'
+        otherEndpointsDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/EndpointUsageDetailsModel'
   securitySchemes:
     oauth2:
       type: oauth2

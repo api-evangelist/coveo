@@ -4117,6 +4117,108 @@ paths:
       description: Coveo public API endpoint
 components:
   schemas:
+    SchemaField:
+      type: object
+      properties:
+        displayName:
+          description: The display name of the entity field
+          type: string
+        id:
+          description: The entity field ID
+          type: string
+        type:
+          description: The field type of the entity in Coveo Cloud
+          type: string
+        reference:
+          description: The name of the entity that is optionally referenced by the field
+          type: string
+        isAlwaysIndexed:
+          description: A flag marking whether this field is indexed by the connector automatically
+          type: boolean
+      required:
+      - displayName
+      - id
+      - type
+    JValue:
+      type: object
+      properties: {}
+    SalesforcePolymorphicRelationships:
+      type: object
+      properties:
+        name:
+          description: The child relationship name
+          type: string
+        objectName:
+          description: The object name to match
+          type: string
+        fields:
+          description: The object fields to be indexed
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - objectName
+      - fields
+    SalesforceChildRelationships:
+      type: object
+      properties:
+        name:
+          description: The child relationship name
+          type: string
+        fields:
+          description: The child object fields to be indexed
+          type: array
+          items:
+            type: string
+        parentRelationships:
+          description: The fields from a parent objects that have a parent relationship with this object.
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceParentRelationships'
+      required:
+      - name
+      - fields
+    SchemaEntity:
+      type: object
+      properties:
+        displayName:
+          description: The display name of the entity
+          type: string
+        id:
+          description: The entity ID
+          type: string
+        recordCount:
+          description: The record count of the entity
+          type: integer
+          format: int32
+        fields:
+          description: The entity fields
+          type: array
+          items:
+            $ref: '#/components/schemas/SchemaField'
+        settings:
+          description: The entity settings
+          type: object
+          additionalProperties:
+            type: string
+      required:
+      - displayName
+      - id
+    SalesforceParentRelationships:
+      type: object
+      properties:
+        relationshipName:
+          description: The parent relationship name
+          type: string
+        fields:
+          description: The parent object fields to be indexed
+          type: array
+          items:
+            type: string
+      required:
+      - relationshipName
+      - fields
     GenericObject:
       type: object
       properties:
@@ -4146,66 +4248,6 @@ components:
       required:
       - ObjectName
       - Fields
-    SalesforceParentRelationships:
-      type: object
-      properties:
-        relationshipName:
-          description: The parent relationship name
-          type: string
-        fields:
-          description: The parent object fields to be indexed
-          type: array
-          items:
-            type: string
-      required:
-      - relationshipName
-      - fields
-    SlackTokenValidationStatus:
-      type: object
-      properties:
-        valid:
-          description: Whether or not the token id valid.
-          type: boolean
-        workspace:
-          description: Workspace linked to the token.
-          type: string
-        reason:
-          description: Invalid token reason code.
-          type: string
-        details:
-          description: Provides more details on status.
-          type: string
-      required:
-      - valid
-    SchemaEntity:
-      type: object
-      properties:
-        displayName:
-          description: The display name of the entity
-          type: string
-        id:
-          description: The entity ID
-          type: string
-        recordCount:
-          description: The record count of the entity
-          type: integer
-          format: int32
-        fields:
-          description: The entity fields
-          type: array
-          items:
-            $ref: '#/components/schemas/SchemaField'
-        settings:
-          description: The entity settings
-          type: object
-          additionalProperties:
-            type: string
-      required:
-      - displayName
-      - id
-    JValue:
-      type: object
-      properties: {}
     GenericObjectsToGet:
       type: object
       properties:
@@ -4228,148 +4270,726 @@ components:
             $ref: '#/components/schemas/SchemaEntity'
       required:
       - entities
-    SchemaField:
-      type: object
-      properties:
-        displayName:
-          description: The display name of the entity field
-          type: string
-        id:
-          description: The entity field ID
-          type: string
-        type:
-          description: The field type of the entity in Coveo Cloud
-          type: string
-        reference:
-          description: The name of the entity that is optionally referenced by the field
-          type: string
-        isAlwaysIndexed:
-          description: A flag marking whether this field is indexed by the connector automatically
-          type: boolean
-      required:
-      - displayName
-      - id
-      - type
-    SalesforceChildRelationships:
-      type: object
-      properties:
-        name:
-          description: The child relationship name
-          type: string
-        fields:
-          description: The child object fields to be indexed
-          type: array
-          items:
-            type: string
-        parentRelationships:
-          description: The fields from a parent objects that have a parent relationship with this object.
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceParentRelationships'
-      required:
-      - name
-      - fields
     SpecificObjectsToGet:
       type: object
       properties: {}
-    SalesforcePolymorphicRelationships:
+    SlackTokenValidationStatus:
       type: object
       properties:
-        name:
-          description: The child relationship name
+        valid:
+          description: Whether or not the token id valid.
+          type: boolean
+        workspace:
+          description: Workspace linked to the token.
           type: string
-        objectName:
-          description: The object name to match
+        reason:
+          description: Invalid token reason code.
           type: string
-        fields:
-          description: The object fields to be indexed
+        details:
+          description: Provides more details on status.
+          type: string
+      required:
+      - valid
+    RSSSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          urls:
+            type: array
+            items:
+              type: string
+    ExtendedConfig:
+      type: object
+      properties:
+        documentConsumerURI:
+          type: string
+        indexIdentifier:
+          type: string
+        dbConnectionString:
+          type: string
+        reportingServiceUri:
+          type: string
+        sourceInformation:
+          $ref: '#/components/schemas/SourceInformation'
+        sourceSecurityOption:
+          type: string
+          enum:
+          - Retrieve
+          - Specified
+          - Merge
+        startingAddresses:
           type: array
           items:
             type: string
-      required:
-      - name
-      - objectName
-      - fields
-    AddressPattern:
+        addressPatterns:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressPattern'
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionLevel'
+        parameters:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Parameter'
+        securityProviders:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SecurityProvider'
+        userIdentities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UserIdentity'
+        dataFiles:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DataFile'
+        caseSensitivePatterns:
+          type: boolean
+        documentConfig:
+          $ref: '#/components/schemas/DocumentConfig'
+        extendedDataFiles:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ExtendedDataFile'
+    SalesforceObject:
       type: object
       properties:
-        expression:
-          type: string
-        patternType:
+        type:
           type: string
           enum:
-          - Wildcard
-          - RegEx
-        allowed:
+          - SERVICE_CLOUD
+          - CHATTER
+          - CONTENT
+          - KNOWLEDGEBASE
+          - CUSTOM
+        name:
+          type: string
+        label:
+          type: string
+        indexed:
           type: boolean
-    MemoryLimits:
-      type: object
-      properties:
-        conversionLimit:
-          type: integer
-          format: int32
-        extensionLimit:
-          type: integer
-          format: int32
-        mappingLimit:
-          type: integer
-          format: int32
-    MicrosoftDynamicsConditions:
-      type: object
-      properties:
+        filesIndexed:
+          type: boolean
+        canHaveFiles:
+          type: boolean
+        custom:
+          type: boolean
+        hasCustomFiletype:
+          type: boolean
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceField'
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceRelationship'
         conditions:
           type: array
           items:
-            $ref: '#/components/schemas/MicrosoftDynamicsCondition'
+            $ref: '#/components/schemas/SalesforceCondition'
+        searchable:
+          type: boolean
+        categories:
+          type: array
+          items:
+            type: string
+            enum:
+            - SERVICE_CLOUD
+            - EXPERIENCE_CLOUD
+            - KNOWLEDGE
+            - CUSTOM_OBJECT
+            - STANDARD
+            - CHATTER
+    SourceConfigSnapshotMappingModel:
+      type: object
+      properties:
+        id:
+          type: string
+        sourceId:
+          type: string
+        type:
+          type: string
+        fieldName:
+          type: string
+        rules:
+          type: array
+          items:
+            type: string
+    FormInput:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        inputType:
+          type: string
+          enum:
+          - Input
+          - Username
+          - Password
+    ExtensionSetting:
+      type: object
+      properties:
+        customConverter:
+          $ref: '#/components/schemas/DocumentProcessor'
+        action:
+          type: string
+          enum:
+          - Retrieve
+          - Reference
+          - Ignore
+        actionOnError:
+          type: string
+          enum:
+          - Reference
+          - Ignore
+        converter:
+          type: string
+          enum:
+          - Detect
+          - Skip
+          - Html
+          - IFilter
+          - Wordperfect
+          - Rtf
+          - Excel
+          - Word
+          - Pdf
+          - Powerpoint
+          - PlainText
+          - Msg
+          - Mime
+          - Image
+        useContentType:
+          type: boolean
+        indexContainer:
+          type: boolean
+        fileTypeValue:
+          type: string
+        generateThumbnail:
+          type: boolean
+        useExternalHTMLGenerator:
+          type: boolean
+        convertDirectlyToHtml:
+          type: boolean
+        openResultWithQuickView:
+          type: boolean
+        summarizeDocument:
+          type: boolean
+        saveExcerptBlob:
+          type: boolean
+        excerptSource:
+          type: string
+          enum:
+          - Document
+          - Summary
+    PermissionModel:
+      type: object
+      properties:
+        permissionLevels:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionLevel'
+    CustomSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+    SalesforceCondition:
+      type: object
+      properties:
+        fieldName:
+          type: string
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - LESS_THAN
+          - LESS_OR_EQUAL_THAN
+          - GREATER_THAN
+          - GREATER_OR_EQUAL_THAN
+          - LIKE
+          - NOT_LIKE
+          - INCLUDES
+          - EXCLUDES
+          - IN
+          - NOT_IN
+        value:
+          type: string
+        inConditionValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceInConditionValue'
+    SalesforceInConditionValue:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - SOQL_STRING
+          - SOQL_ID
+          - SOQL_DATETIME
+          - SOQL_BOOLEAN
+          - SOQL_OTHER
+        value:
+          type: string
+    ScheduleModel:
+      type: object
+      properties:
+        id:
+          type: string
+        refreshType:
+          type: string
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        scheduleType:
+          type: string
+          enum:
+          - SECURITY_CACHE
+          - SECURITY_PROVIDER
+          - SOURCE
+        enabled:
+          type: boolean
+        frequency:
+          $ref: '#/components/schemas/ScheduleFrequency'
+        organizationId:
+          type: string
+        resourceId:
+          type: string
+        lastExecution:
+          type: string
+          format: date-time
+    FormAuthenticationConfig:
+      type: object
+      properties:
+        actionMethod:
+          type: string
+        formContentType:
+          type: string
+        actionUrl:
+          type: string
+        addFoundInputs:
+          type: boolean
+        authenticationFailed:
+          $ref: '#/components/schemas/AuthenticationFailedConfiguration'
+        inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormInput'
+        formId:
+          type: string
+        formUrl:
+          type: string
+        enableJavaScript:
+          type: boolean
+        forceLogin:
+          type: boolean
+        javaScriptLoadingDelayInMilliseconds:
+          type: integer
+          format: int32
+        customLoginSequence:
+          $ref: '#/components/schemas/CustomLoginSequence'
+        postLoginSequence:
+          $ref: '#/components/schemas/PostLoginSequence'
+        getCookiesFromWebDriverInsteadOfCache:
+          type: boolean
+    SAPSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          restConfiguration:
+            type: string
+          restPermissionConfiguration:
+            type: string
+          clientId:
+            type: string
+          clientSecret:
+            type: string
+          refreshToken:
+            type: string
+          apiKey:
+            type: string
+          hasApiKey:
+            type: boolean
+          hasClientSecret:
+            type: boolean
+          hasRefreshToken:
+            type: boolean
+          providerType:
+            type: string
+            enum:
+            - ACTIVE_DIRECTORY2
+            - BOX
+            - CLAIMS
+            - CLAIMS_TO_EMAIL
+            - CONFLUENCE
+            - CONFLUENCE2
+            - CUSTOM
+            - DATABASE
+            - DROPBOX_FOR_BUSINESS
+            - EMAIL
+            - EXPANDED
+            - FILE
+            - GOOGLE_DRIVE_DOMAIN_WIDE
+            - GENERIC_REST
+            - GRAPHQL
+            - JIRA2
+            - JIVE
+            - KHOROS_COMMUNITY
+            - MICROSOFT_DYNAMICS
+            - OFFICE365
+            - SALESFORCE
+            - SERVICENOW
+            - SHAREPOINT
+            - SHAREPOINT_ONLINE
+            - SITECORE
+            - SLACK
+            - ZENDESK
+    SourcePermissionsUpdateModel:
+      type: object
+      properties:
+        permissionBehavior:
+          type: string
+          enum:
+          - UseCrawler
+          - Override
+          - Merge
+        permissions:
+          $ref: '#/components/schemas/PermissionModel'
+    Confluence2SourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          urls:
+            type: array
+            items:
+              type: string
+          indexAttachments:
+            type: boolean
+          indexComments:
+            type: boolean
+          indexOnlyGlobalSpaces:
+            type: boolean
+          indexOnlyPersonalSpaces:
+            type: boolean
+          indexArchivedSpaces:
+            type: boolean
+          indexCurrentSpaces:
+            type: boolean
+          useRequestParametersAuth:
+            type: boolean
+          alwaysSendBasicAuthenticationHeaders:
+            type: boolean
+          useKerberosAuthentication:
+            type: boolean
+          rootSpaceRegex:
+            type: string
+          filterSpaceRegex:
+            type: string
+          useOAuth2Authentication:
+            type: boolean
+          crawlingAccount:
+            type: string
+          cloudId:
+            type: string
+          clientId:
+            type: string
+          hasOrganizationsApiKey:
+            type: boolean
+          organizationsApiKey:
+            type: string
+          atlassianOrganizationId:
+            type: string
+          useAtlassianOrganizationApi:
+            type: boolean
+          oauthRefreshTokenGuid:
+            type: string
+          oauthRefreshToken:
+            type: string
+    GraphQlSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          restConfiguration:
+            type: string
+          restPermissionConfiguration:
+            type: string
+          clientId:
+            type: string
+          clientSecret:
+            type: string
+          refreshToken:
+            type: string
+          apiKey:
+            type: string
+          hasApiKey:
+            type: boolean
+          hasClientSecret:
+            type: boolean
+          hasRefreshToken:
+            type: boolean
+          useGraphQl:
+            type: boolean
+          queries:
+            type: string
+          providerType:
+            type: string
+            enum:
+            - ACTIVE_DIRECTORY2
+            - BOX
+            - CLAIMS
+            - CLAIMS_TO_EMAIL
+            - CONFLUENCE
+            - CONFLUENCE2
+            - CUSTOM
+            - DATABASE
+            - DROPBOX_FOR_BUSINESS
+            - EMAIL
+            - EXPANDED
+            - FILE
+            - GOOGLE_DRIVE_DOMAIN_WIDE
+            - GENERIC_REST
+            - GRAPHQL
+            - JIRA2
+            - JIVE
+            - KHOROS_COMMUNITY
+            - MICROSOFT_DYNAMICS
+            - OFFICE365
+            - SALESFORCE
+            - SERVICENOW
+            - SHAREPOINT
+            - SHAREPOINT_ONLINE
+            - SITECORE
+            - SLACK
+            - ZENDESK
+    UrlFilter:
+      type: object
+      properties:
+        filter:
+          type: string
+        includeFilter:
+          type: boolean
+        filterType:
+          type: string
+          enum:
+          - WILDCARD
+          - REGEX
+    DataFile:
+      type: object
+      properties:
+        sensitive:
+          type: boolean
+        data:
+          type: string
     SitecoreSourceModel:
       type: object
       allOf:
       - $ref: '#/components/schemas/SourceModel'
-    PermissionSetModel:
+    MicrosoftDynamicsFetchXmlQuery:
       type: object
       properties:
-        anonymousAllowed:
-          type: boolean
+        id:
+          type: string
         name:
           type: string
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SinglePermissionModel'
-    MicrosoftDynamicsCondition:
+        queryXml:
+          type: string
+    MicrosoftDynamicsSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          discoveryServiceUrl:
+            type: string
+          enableS2SAuthentication:
+            type: boolean
+          objectsToGet:
+            type: array
+            items:
+              $ref: '#/components/schemas/MicrosoftDynamicsObject'
+          genericObjectsToGet:
+            type: string
+          organizationUniqueName:
+            type: string
+          recordsPageSize:
+            type: integer
+            format: int32
+            writeOnly: true
+          urls:
+            type: array
+            items:
+              type: string
+          fetchXmlQueries:
+            $ref: '#/components/schemas/MicrosoftDynamicsFetchXmlQueries'
+          oauthRefreshTokenGuid:
+            type: string
+          oauthResourceGuid:
+            type: string
+          oauthResource:
+            type: string
+          recordPageSize:
+            type: integer
+            format: int32
+    ScheduleFrequency:
       type: object
       properties:
-        attribute:
-          type: string
-        operator:
-          type: string
         type:
           type: string
           enum:
-          - STRING
-          - NUMBER
-          - DATE
-          - BOOLEAN
-          - UNARY
-        values:
+          - MINUTELY
+          - HOURLY
+          - DAILY
+          - WEEKLY
+          - MONTHLY
+        value:
+          type: integer
+          format: int32
+        hourMinute:
+          $ref: '#/components/schemas/HourMinutePair'
+        monthDay:
+          type: integer
+          format: int32
+        weekDays:
           type: array
           items:
             type: string
-    ExtensionSettings:
+            enum:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+            - SATURDAY
+            - SUNDAY
+        seed:
+          type: integer
+          format: int32
+    Web2SourceModel:
       type: object
-      properties:
-        noExtension:
-          $ref: '#/components/schemas/ExtensionSetting'
-        other:
-          $ref: '#/components/schemas/ExtensionSetting'
-        byExtensions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExtensionSettingByExtension'
-        byContentTypes:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExtensionSettingByExtension'
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          alwaysTrustCertificates:
+            type: boolean
+          enableJavaScript:
+            type: boolean
+          indexJsonLdMetadata:
+            type: boolean
+          formAuthenticationConfig:
+            $ref: '#/components/schemas/FormAuthenticationConfig'
+          includeShadowDom:
+            type: boolean
+          javaScriptLoadingDelayInMilliseconds:
+            type: integer
+            format: int32
+          requestsTimeoutInSeconds:
+            type: integer
+            format: int32
+          scrapingMatchingStrategy:
+            type: string
+          scrapingConfiguration:
+            type: string
+          userAgent:
+            type: string
+          urls:
+            type: array
+            items:
+              type: string
+          indexExternalPages:
+            type: boolean
+          indexExternalPagesLinks:
+            type: boolean
+          respectRobotsDotTxt:
+            type: boolean
+          respectAnchorNoFollow:
+            type: boolean
+          respectMetaNoFollow:
+            type: boolean
+          respectNoIndexTag:
+            type: boolean
+          respectUrlCasing:
+            type: boolean
+          indexSubdomains:
+            type: boolean
+          maxAutoRedirects:
+            type: integer
+            format: int32
+          maxCrawlDepth:
+            type: integer
+            format: int32
+          maxPageSizeInBytes:
+            type: integer
+            format: int32
+          maxRequestsRetryCount:
+            type: integer
+            format: int32
+          minCrawlDelayInMilliseconds:
+            type: integer
+            format: int32
+          requestsRetryDelayInMilliseconds:
+            type: integer
+            format: int32
+          queryParamsToIgnore:
+            type: array
+            items:
+              type: string
     MappingModel:
       type: object
       properties:
@@ -4403,45 +5023,48 @@ components:
           - DATE
           - STRING
           - VECTOR
-    ItemsModificationPeriod:
+    SitemapSourceModel:
       type: object
-      properties:
-        Amount:
-          type: integer
-          format: int64
-          writeOnly: true
-        TimeSpan:
-          type: string
-          writeOnly: true
-          enum:
-          - Day
-          - Week
-          - Month
-          - Year
-        amount:
-          type: integer
-          format: int64
-        timespan:
-          type: string
-          enum:
-          - Day
-          - Week
-          - Month
-          - Year
-    PageModelSourceFieldModel:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/SourceFieldModel'
-        totalPages:
-          type: integer
-          format: int32
-        totalEntries:
-          type: integer
-          format: int64
-    FileSourceModel:
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          alwaysTrustCertificates:
+            type: boolean
+          enableJavaScript:
+            type: boolean
+          indexJsonLdMetadata:
+            type: boolean
+          formAuthenticationConfig:
+            $ref: '#/components/schemas/FormAuthenticationConfig'
+          includeShadowDom:
+            type: boolean
+          javaScriptLoadingDelayInMilliseconds:
+            type: integer
+            format: int32
+          requestsTimeoutInSeconds:
+            type: integer
+            format: int32
+          scrapingMatchingStrategy:
+            type: string
+          scrapingConfiguration:
+            type: string
+          userAgent:
+            type: string
+          urls:
+            type: array
+            items:
+              type: string
+          requestsIntervalInMs:
+            type: integer
+            format: int32
+    JiveSourceModel:
       type: object
       allOf:
       - $ref: '#/components/schemas/SourceModel'
@@ -4473,37 +5096,861 @@ components:
             type: boolean
           hasExpandedSecurityProvider:
             type: boolean
-          expandBeforeFiltering:
+          instanceUrl:
+            type: string
+          startingSpaceUrl:
+            type: string
+          substitutionLocale:
+            type: string
+          substitutionTheme:
+            type: string
+          placesTitles:
+            type: string
+          ignoreItemsOfTypes:
+            type: string
+          localizedItemTypes:
+            type: string
+          indexSpaces:
             type: boolean
-          expandMailArchives:
+          indexProjects:
             type: boolean
-          indexSharePermissions:
+          indexGroups:
             type: boolean
-          startingAddresses:
+          indexSystemBlogs:
+            type: boolean
+          indexPeople:
+            type: boolean
+          indexPublishedOnly:
+            type: boolean
+          allowAnonymousAccess:
+            type: boolean
+          usersRegexMatch:
+            type: string
+          usersRegexReplacement:
+            type: string
+          metadataIndexers:
+            type: string
+    SalesforceField:
+      type: object
+      properties:
+        name:
+          type: string
+        label:
+          type: string
+        nestedLabel:
+          type: string
+        type:
+          type: string
+        indexed:
+          type: boolean
+        mandatory:
+          type: boolean
+        custom:
+          type: boolean
+        mappings:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/MappingModel'
+        values:
+          type: array
+          items:
+            type: string
+        referenceTypes:
+          type: array
+          items:
+            type: string
+        relationshipName:
+          type: string
+        relationshipNameField:
+          type: string
+        relationshipParent:
+          type: boolean
+        relationshipPolymorphic:
+          type: boolean
+    SalesforceSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          sandbox:
+            type: boolean
+          salesforceOrg:
+            type: string
+          getoAuthRefreshToken:
+            type: string
+          getoAuthRefreshTokenGuid:
+            type: string
+          urls:
             type: array
             items:
               type: string
-    FormInput:
+          salesforceUser:
+            type: string
+          salesforceUserId:
+            type: string
+          salesforceOrgName:
+            type: string
+          schemaVersion:
+            type: string
+            enum:
+            - CLOUDV1
+            - LEGACY
+            - EXPRESS
+          getoAuthAccessToken:
+            type: string
+          idUrl:
+            type: string
+          instanceUrl:
+            type: string
+          serviceCloudAvailable:
+            type: boolean
+          knowledgeAvailable:
+            type: boolean
+          contentAvailable:
+            type: boolean
+          chatterAvailable:
+            type: boolean
+          cloudCrazeProductsAvailable:
+            type: boolean
+          cloudCrazeOrdersAvailable:
+            type: boolean
+          organizationId:
+            type: string
+          serviceCloudIndexed:
+            type: boolean
+          knowledgeIndexed:
+            type: boolean
+          contentIndexed:
+            type: boolean
+          chatterIndexed:
+            type: boolean
+          cloudCrazeProductsIndexed:
+            type: boolean
+          cloudCrazeOrdersIndexed:
+            type: boolean
+          objectsToGet:
+            type: array
+            items:
+              $ref: '#/components/schemas/SalesforceObject'
+    MicrosoftDynamicsFetchXmlQueries:
+      type: object
+      properties:
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/MicrosoftDynamicsFetchXmlQuery'
+    ConditionNode:
+      type: object
+    ZendeskSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          accessToken:
+            type: string
+          accessTokenGuid:
+            type: string
+          refreshToken:
+            type: string
+          refreshTokenGuid:
+            type: string
+          indexAdministrationEntities:
+            type: boolean
+          indexArticles:
+            type: boolean
+          indexArticleTranslations:
+            type: boolean
+          indexComments:
+            type: boolean
+          indexTickets:
+            type: boolean
+          indexAttachments:
+            type: boolean
+          indexAgentsAndAdministratorsPermissionsOnly:
+            type: boolean
+          indexSpecificOrganizationsPermissions:
+            type: string
+          urls:
+            type: array
+            items:
+              type: string
+          indexArchivedTickets:
+            type: boolean
+          indexDeletedTickets:
+            type: boolean
+          zendeskLocale:
+            type: string
+          indexTicketsByOrganization:
+            type: string
+          indexTicketsByTags:
+            type: string
+          crawlingAccount:
+            type: string
+    UserIdentity:
       type: object
       properties:
         name:
           type: string
-        value:
-          type: string
-        inputType:
-          type: string
-          enum:
-          - Input
-          - Username
-          - Password
-    UserIdentityModel:
-      type: object
-      properties:
-        name:
-          type: string
-        username:
+        userName:
           type: string
         password:
+          type: string
+    KhorosSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          urls:
+            type: array
+            items:
+              type: string
+          fetchMessageAttachments:
+            type: boolean
+          fetchUsers:
+            type: boolean
+          fetchMessageTags:
+            type: boolean
+          ignoreMessagesOlderThan:
+            type: string
+          restApiUrl:
+            type: string
+          usernameForRoleSync:
+            type: string
+    DatabaseSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          activeDirectoryUsername:
+            type: string
+          activeDirectoryPassword:
+            type: string
+          hasActiveDirectoryPassword:
+            type: boolean
+          activeDirectoryEmailAttributes:
+            type: array
+            items:
+              type: string
+          activeDirectoryExpandTrustedDomains:
+            type: boolean
+          activeDirectoryExpandWellKnowns:
+            type: boolean
+          activeDirectoryTlsMode:
+            type: string
+          useActiveDirectoryPermissions:
+            type: boolean
+          hasExpandedSecurityProvider:
+            type: boolean
+          configFileContent:
+            type: string
+          connectionString:
+            type: string
+          driverType:
+            type: string
+          forceLastRefreshUTC:
+            type: boolean
+          itemType:
+            type: string
+          commandTimeout:
+            type: integer
+            format: int32
+          queryPageSize:
+            type: integer
+            format: int32
+    SlackSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          accessToken:
+            type: string
+          maskedAccessToken:
+            type: string
+          accessTokenWorkspace:
+            type: string
+          accessTokenGuid:
+            type: string
+          exportDataUrl:
+            type: string
+          oldestMessageInDays:
+            type: integer
+            format: int32
+          oldestMessageTimestampInSeconds:
+            type: integer
+            format: int64
+          indexChannels:
+            type: boolean
+          indexPrivateChannels:
+            type: boolean
+          includeDeletedAndDisabledUsers:
+            type: boolean
+          indexFilesAndAttachments:
+            type: boolean
+          indexUsers:
+            type: boolean
+          ignoreBotMessages:
+            type: boolean
+          channelsToGet:
+            type: string
+    LanguageHint:
+      type: object
+      properties:
+        language:
+          type: string
+        probability:
+          type: number
+          format: double
+    DocumentProcessorParameters:
+      type: object
+      properties:
+        values:
+          type: object
+          additionalProperties:
+            type: string
+        deleteOnError:
+          type: boolean
+        condition:
+          $ref: '#/components/schemas/ConditionNode'
+        streams:
+          type: array
+          items:
+            type: string
+        name:
+          type: string
+        memoryLimit:
+          type: integer
+          format: int32
+    AmazonS3SourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          urls:
+            type: array
+            items:
+              type: string
+          accessKey:
+            type: string
+          secretKey:
+            type: string
+          hasSecretKey:
+            type: boolean
+    Confluence2HostedSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          urls:
+            type: array
+            items:
+              type: string
+          indexAttachments:
+            type: boolean
+          indexComments:
+            type: boolean
+          indexOnlyGlobalSpaces:
+            type: boolean
+          indexOnlyPersonalSpaces:
+            type: boolean
+          indexArchivedSpaces:
+            type: boolean
+          indexCurrentSpaces:
+            type: boolean
+          useRequestParametersAuth:
+            type: boolean
+          alwaysSendBasicAuthenticationHeaders:
+            type: boolean
+          useKerberosAuthentication:
+            type: boolean
+          rootSpaceRegex:
+            type: string
+          filterSpaceRegex:
+            type: string
+          usePersonalAccessToken:
+            type: boolean
+          apiKey:
+            type: string
+          useApiKey:
+            type: boolean
+    MicrosoftDynamicsRelation:
+      type: object
+      properties:
+        alias:
+          type: string
+        attributes:
+          type: array
+          items:
+            type: string
+        fromAttribute:
+          type: string
+        toAttribute:
+          type: string
+        toEntity:
+          type: string
+    FieldMappingModel:
+      type: object
+      properties:
+        sourceId:
+          type: string
+        sourceName:
+          type: string
+        mappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/MappingModel'
+    PermissionLevel:
+      type: object
+      properties:
+        permissionSets:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionSet'
+        name:
+          type: string
+    ConfigurationError:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
+    MetafieldConfiguration:
+      type: object
+      properties:
+        namespace:
+          type: string
+        key:
+          type: string
+        name:
+          type: string
+    DropboxForBusinessSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          teamName:
+            type: string
+          accessToken:
+            type: string
+          accessTokenGuid:
+            type: string
+          refreshToken:
+            type: string
+          refreshTokenGuid:
+            type: string
+    HourMinutePair:
+      type: object
+      properties:
+        hour:
+          type: integer
+          format: int32
+        minute:
+          type: integer
+          format: int32
+    BoxEnterprise2SourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          boxEnterpriseSettingsData:
+            type: string
+          hasBoxEnterpriseSettingsData:
+            type: boolean
+          usersToCrawl:
+            type: string
+    IdAndDisplayNameModel:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+    PermissionModelStateRootCauseModel:
+      type: object
+      properties:
+        entityState:
+          type: string
+          enum:
+          - UNKNOWN
+          - UP_TO_DATE
+          - NOT_UPDATED
+          - OUT_OF_DATE
+          - IN_ERROR
+          - DISABLED
+        entityInformation:
+          $ref: '#/components/schemas/DetailedSecurityIdentityModel'
+    LightSourceModel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        sourceType:
+          type: string
+          enum:
+          - AMAZONS3
+          - BOX_ENTERPRISE2
+          - CATALOG
+          - CONFLUENCE2
+          - CONFLUENCE2_HOSTED
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - FILE
+          - GENERIC_REST
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GRAPHQL
+          - JIRA2
+          - JIRA2_HOSTED
+          - JIVE
+          - JIVE_HOSTED
+          - LITHIUM
+          - KHOROS
+          - MICROSOFT_DYNAMICS
+          - PUSH
+          - RSS
+          - SALESFORCE
+          - SALESFORCE_SITES
+          - SAP
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE2
+          - SHOPIFY
+          - SITECORE
+          - SITEMAP
+          - SLACK
+          - WEB2
+          - YOUTUBE
+          - ZENDESK
+          - ADOBE_EXPERIENCE_MANAGER
+          - BOX
+          - BOX_ENTERPRISE
+          - CONFLUENCE
+          - DROPBOX
+          - GMAIL
+          - GMAIL_DOMAIN_WIDE
+          - SHAREPOINT_ONLINE
+        crawlerInstanceType:
+          type: string
+        pushEnabled:
+          type: boolean
+        onPremisesEnabled:
+          type: boolean
+        streamEnabled:
+          type: boolean
+    MicrosoftDynamicsConditions:
+      type: object
+      properties:
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MicrosoftDynamicsCondition'
+    AuthenticationFailedConfiguration:
+      type: object
+      properties:
+        method:
+          type: string
+          enum:
+          - RedirectedToUrl
+          - PageDoesNotContain
+          - PageContains
+          - CookieNotSet
+          - UrlMatch
+          - UrlDoesNotMatch
+        values:
+          type: array
+          items:
+            type: string
+    RawSourceConfig:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        apiKeysThatCanEdit:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IdAndDisplayNameModel'
+        id:
+          type: string
+        name:
+          type: string
+        owner:
+          type: string
+        lastModifier:
+          type: string
+        lastModifiedDate:
+          type: string
+          format: date-time
+        createdDate:
+          type: string
+          format: date-time
+        sourceType:
+          type: string
+          enum:
+          - AMAZONS3
+          - BOX_ENTERPRISE2
+          - CATALOG
+          - CONFLUENCE2
+          - CONFLUENCE2_HOSTED
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - FILE
+          - GENERIC_REST
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GRAPHQL
+          - JIRA2
+          - JIRA2_HOSTED
+          - JIVE
+          - JIVE_HOSTED
+          - LITHIUM
+          - KHOROS
+          - MICROSOFT_DYNAMICS
+          - PUSH
+          - RSS
+          - SALESFORCE
+          - SALESFORCE_SITES
+          - SAP
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE2
+          - SHOPIFY
+          - SITECORE
+          - SITEMAP
+          - SLACK
+          - WEB2
+          - YOUTUBE
+          - ZENDESK
+          - ADOBE_EXPERIENCE_MANAGER
+          - BOX
+          - BOX_ENTERPRISE
+          - CONFLUENCE
+          - DROPBOX
+          - GMAIL
+          - GMAIL_DOMAIN_WIDE
+          - SHAREPOINT_ONLINE
+        crawlerInstanceType:
+          type: string
+        additionalInfos:
+          type: object
+          additionalProperties:
+            type: object
+        configuration:
+          $ref: '#/components/schemas/ExtendedConfig'
+        preConversionExtensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceExtensionModel'
+        postConversionExtensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceExtensionModel'
+        mappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/MappingModel'
+        securityProviders:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityProviderModel'
+        securityProviderReferences:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        additionalComments:
+          type: string
+        crawlingModuleId:
+          type: string
+        fromRaw:
+          type: boolean
+        pushEnabled:
+          type: boolean
+        onPremisesEnabled:
+          type: boolean
+        streamEnabled:
+          type: boolean
+        logicalIndex:
+          type: string
+        performFieldMappingUsingAllOrigins:
+          type: boolean
+        resourceId:
+          type: string
+    SharePointSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          activeDirectoryUsername:
+            type: string
+          activeDirectoryPassword:
+            type: string
+          hasActiveDirectoryPassword:
+            type: boolean
+          activeDirectoryEmailAttributes:
+            type: array
+            items:
+              type: string
+          activeDirectoryExpandTrustedDomains:
+            type: boolean
+          activeDirectoryExpandWellKnowns:
+            type: boolean
+          activeDirectoryTlsMode:
+            type: string
+          useActiveDirectoryPermissions:
+            type: boolean
+          hasExpandedSecurityProvider:
+            type: boolean
+          urls:
+            type: array
+            items:
+              type: string
+          crawlScope:
+            type: string
+          authenticationType:
+            type: string
+          loadUserProfiles:
+            type: boolean
+          loadPersonalSites:
+            type: boolean
+          indexListFolders:
+            type: boolean
+          adfsServerUrl:
+            type: string
+          sharePointTrustIdentifier:
+            type: string
+          oktaRealm:
+            type: string
+          oktaSignInUrl:
+            type: string
+          ignoreUnchangedSiteCollections:
+            type: boolean
+          reindexOnUpdateShallow:
+            type: boolean
+          useEnhancedIncrementalRefresh:
+            type: boolean
+          useCommonClaimsProvider:
+            type: boolean
+    SecurityProviderModel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        displayName:
+          type: string
+        organizationId:
+          type: string
+        type:
+          type: string
+          enum:
+          - ACTIVE_DIRECTORY2
+          - BOX
+          - CLAIMS
+          - CLAIMS_TO_EMAIL
+          - CONFLUENCE
+          - CONFLUENCE2
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - EMAIL
+          - EXPANDED
+          - FILE
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GENERIC_REST
+          - GRAPHQL
+          - JIRA2
+          - JIVE
+          - KHOROS_COMMUNITY
+          - MICROSOFT_DYNAMICS
+          - OFFICE365
+          - SALESFORCE
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE
+          - SITECORE
+          - SLACK
+          - ZENDESK
+        nodeTypeName:
+          type: string
+        sourceTypeName:
+          type: string
+        nodeRequired:
+          type: boolean
+        onPremisesEnabled:
+          type: boolean
+        projectIds:
+          type: array
+          items:
+            type: string
+        crawlingModuleId:
+          type: string
+        caseSensitive:
+          type: boolean
+        userIdentities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UserIdentityModel'
+        parameters:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ParameterModel'
+        cascadingSecurityProviders:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CascadingSecurityProvider'
+        referencedBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityProviderReferenceModel'
+        instanceId:
           type: string
     JiveHostedSourceModel:
       type: object
@@ -4571,506 +6018,20 @@ components:
             type: string
           metadataIndexers:
             type: string
-    DocumentConfig:
+    PageModelSourceFieldModel:
       type: object
       properties:
-        indexUri:
-          type: string
-        indexLogicalId:
-          type: string
-        documentProcessorConfig:
-          $ref: '#/components/schemas/DocumentProcessorConfig'
-        preConversions:
+        items:
           type: array
           items:
-            $ref: '#/components/schemas/DocumentProcessor'
-        postConversions:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentProcessor'
-        parameters:
-          type: object
-          additionalProperties:
-            type: string
-        sourceConfigTag:
-          type: string
-        fieldConfigTag:
-          type: string
-    CatalogSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-    RSSSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          urls:
-            type: array
-            items:
-              type: string
-    SourceModel:
-      type: object
-      properties:
-        groupsThatCanEdit:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        apiKeysThatCanEdit:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/IdAndDisplayNameModel'
-        projectIds:
-          type: array
-          items:
-            type: string
-        sourceType:
-          type: string
-          enum:
-          - AMAZONS3
-          - BOX_ENTERPRISE2
-          - CATALOG
-          - CONFLUENCE2
-          - CONFLUENCE2_HOSTED
-          - CUSTOM
-          - DATABASE
-          - DROPBOX_FOR_BUSINESS
-          - FILE
-          - GENERIC_REST
-          - GOOGLE_DRIVE_DOMAIN_WIDE
-          - GRAPHQL
-          - JIRA2
-          - JIRA2_HOSTED
-          - JIVE
-          - JIVE_HOSTED
-          - LITHIUM
-          - KHOROS
-          - MICROSOFT_DYNAMICS
-          - PUSH
-          - RSS
-          - SALESFORCE
-          - SALESFORCE_SITES
-          - SAP
-          - SERVICENOW
-          - SHAREPOINT
-          - SHAREPOINT_ONLINE2
-          - SHOPIFY
-          - SITECORE
-          - SITEMAP
-          - SLACK
-          - WEB2
-          - YOUTUBE
-          - ZENDESK
-          - ADOBE_EXPERIENCE_MANAGER
-          - BOX
-          - BOX_ENTERPRISE
-          - CONFLUENCE
-          - DROPBOX
-          - GMAIL
-          - GMAIL_DOMAIN_WIDE
-          - SHAREPOINT_ONLINE
-        id:
-          type: string
-        name:
-          type: string
-        owner:
-          type: string
-        lastModifier:
-          type: string
-        lastModifiedDate:
-          type: string
-          format: date-time
-        createdDate:
-          type: string
-          format: date-time
-        sourceVisibility:
-          type: string
-          enum:
-          - PRIVATE
-          - SECURED
-          - SHARED
-        customParameters:
-          type: object
-          additionalProperties:
-            type: string
-        mappings:
-          type: array
-          items:
-            $ref: '#/components/schemas/MappingModel'
-        documentConfig:
-          $ref: '#/components/schemas/DocumentConfig'
-        information:
-          $ref: '#/components/schemas/SourceInformation'
-        configurationError:
-          $ref: '#/components/schemas/ConfigurationError'
-        pushEnabled:
-          type: boolean
-        onPremisesEnabled:
-          type: boolean
-        streamEnabled:
-          type: boolean
-        logicalIndex:
-          type: string
-        crawlingModuleId:
-          type: string
-        pendingCrawlingModuleId:
-          type: string
-        securityProviderReferences:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        preConversionExtensions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SourceExtensionModel'
-        postConversionExtensions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SourceExtensionModel'
-        permissions:
-          $ref: '#/components/schemas/DocumentPermissionModel'
-        urlFilters:
-          type: array
-          items:
-            $ref: '#/components/schemas/UrlFilter'
-        ocrFileTypes:
-          type: array
-          items:
-            type: string
-        resourceId:
-          type: string
-      discriminator:
-        propertyName: sourceType
-    KhorosSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          urls:
-            type: array
-            items:
-              type: string
-          fetchMessageAttachments:
-            type: boolean
-          fetchUsers:
-            type: boolean
-          fetchMessageTags:
-            type: boolean
-          ignoreMessagesOlderThan:
-            type: string
-          restApiUrl:
-            type: string
-          usernameForRoleSync:
-            type: string
-    NextOperation:
-      type: object
-      properties:
-        operationType:
-          type: string
-          enum:
-          - REBUILD
-          - FULL_REFRESH
-          - INCREMENTAL_REFRESH
-          - SECURITY_PROVIDER_REFRESH
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
-          - SECURITY_CACHE_REFRESH
-          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
-        timestamp:
-          type: string
-          format: date-time
-    ExtendedConfig:
-      type: object
-      properties:
-        documentConsumerURI:
-          type: string
-        indexIdentifier:
-          type: string
-        dbConnectionString:
-          type: string
-        reportingServiceUri:
-          type: string
-        sourceInformation:
-          $ref: '#/components/schemas/SourceInformation'
-        sourceSecurityOption:
-          type: string
-          enum:
-          - Retrieve
-          - Specified
-          - Merge
-        startingAddresses:
-          type: array
-          items:
-            type: string
-        addressPatterns:
-          type: array
-          items:
-            $ref: '#/components/schemas/AddressPattern'
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionLevel'
-        parameters:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/Parameter'
-        securityProviders:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/SecurityProvider'
-        userIdentities:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UserIdentity'
-        dataFiles:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/DataFile'
-        caseSensitivePatterns:
-          type: boolean
-        documentConfig:
-          $ref: '#/components/schemas/DocumentConfig'
-        extendedDataFiles:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/ExtendedDataFile'
-    MicrosoftDynamicsFetchXmlQuery:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        queryXml:
-          type: string
-    SalesforceSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          sandbox:
-            type: boolean
-          salesforceOrg:
-            type: string
-          getoAuthRefreshToken:
-            type: string
-          getoAuthRefreshTokenGuid:
-            type: string
-          urls:
-            type: array
-            items:
-              type: string
-          salesforceUser:
-            type: string
-          salesforceUserId:
-            type: string
-          salesforceOrgName:
-            type: string
-          schemaVersion:
-            type: string
-            enum:
-            - CLOUDV1
-            - LEGACY
-            - EXPRESS
-          getoAuthAccessToken:
-            type: string
-          idUrl:
-            type: string
-          instanceUrl:
-            type: string
-          serviceCloudAvailable:
-            type: boolean
-          knowledgeAvailable:
-            type: boolean
-          contentAvailable:
-            type: boolean
-          chatterAvailable:
-            type: boolean
-          cloudCrazeProductsAvailable:
-            type: boolean
-          cloudCrazeOrdersAvailable:
-            type: boolean
-          organizationId:
-            type: string
-          serviceCloudIndexed:
-            type: boolean
-          knowledgeIndexed:
-            type: boolean
-          contentIndexed:
-            type: boolean
-          chatterIndexed:
-            type: boolean
-          cloudCrazeProductsIndexed:
-            type: boolean
-          cloudCrazeOrdersIndexed:
-            type: boolean
-          objectsToGet:
-            type: array
-            items:
-              $ref: '#/components/schemas/SalesforceObject'
-    GetSourcesOutArgs:
-      type: object
-      properties:
-        sourceModels:
-          type: array
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/SourceModel'
-            - $ref: '#/components/schemas/AmazonS3SourceModel'
-            - $ref: '#/components/schemas/BoxEnterprise2SourceModel'
-            - $ref: '#/components/schemas/CatalogSourceModel'
-            - $ref: '#/components/schemas/Confluence2HostedSourceModel'
-            - $ref: '#/components/schemas/Confluence2SourceModel'
-            - $ref: '#/components/schemas/CustomSourceModel'
-            - $ref: '#/components/schemas/DatabaseSourceModel'
-            - $ref: '#/components/schemas/DropboxForBusinessSourceModel'
-            - $ref: '#/components/schemas/FileSourceModel'
-            - $ref: '#/components/schemas/GenericRestSourceModel'
-            - $ref: '#/components/schemas/GoogleDriveDomainWideSourceModel'
-            - $ref: '#/components/schemas/GraphQlSourceModel'
-            - $ref: '#/components/schemas/Jira2HostedSourceModel'
-            - $ref: '#/components/schemas/Jira2SourceModel'
-            - $ref: '#/components/schemas/JiveHostedSourceModel'
-            - $ref: '#/components/schemas/JiveSourceModel'
-            - $ref: '#/components/schemas/KhorosSourceModel'
-            - $ref: '#/components/schemas/MicrosoftDynamicsSourceModel'
-            - $ref: '#/components/schemas/PushSourceModel'
-            - $ref: '#/components/schemas/RSSSourceModel'
-            - $ref: '#/components/schemas/SAPSourceModel'
-            - $ref: '#/components/schemas/SalesforceSitesSourceModel'
-            - $ref: '#/components/schemas/SalesforceSourceModel'
-            - $ref: '#/components/schemas/ServiceNowSourceModel'
-            - $ref: '#/components/schemas/SharePointOnline2SourceModel'
-            - $ref: '#/components/schemas/SharePointSourceModel'
-            - $ref: '#/components/schemas/ShopifySourceModel'
-            - $ref: '#/components/schemas/SitecoreSourceModel'
-            - $ref: '#/components/schemas/SitemapSourceModel'
-            - $ref: '#/components/schemas/SlackSourceModel'
-            - $ref: '#/components/schemas/Web2SourceModel'
-            - $ref: '#/components/schemas/YouTubeSourceModel'
-            - $ref: '#/components/schemas/ZendeskSourceModel'
-        totalEntries:
-          type: integer
-          format: int64
+            $ref: '#/components/schemas/SourceFieldModel'
         totalPages:
           type: integer
           format: int32
-    GoogleDriveDomainWideSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          googleAppsDomain:
-            type: string
-          serviceAccountEmail:
-            type: string
-          privateKeyFile:
-            type: string
-          usersToCrawl:
-            type: string
-          domainAdminEmail:
-            type: string
-          crawlTrashedItems:
-            type: boolean
-          crawlCustomProperties:
-            type: boolean
-          indexSharedDrives:
-            type: boolean
-          indexUserDrives:
-            type: boolean
-          crawlFolders:
-            type: boolean
-          mimeTypesToIgnore:
-            type: string
-          itemsModificationPeriod:
-            $ref: '#/components/schemas/ItemsModificationPeriod'
-    SecurityProvider:
-      type: object
-      properties:
-        name:
-          type: string
-        typeName:
-          type: string
-    LightSourceModel:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        sourceType:
-          type: string
-          enum:
-          - AMAZONS3
-          - BOX_ENTERPRISE2
-          - CATALOG
-          - CONFLUENCE2
-          - CONFLUENCE2_HOSTED
-          - CUSTOM
-          - DATABASE
-          - DROPBOX_FOR_BUSINESS
-          - FILE
-          - GENERIC_REST
-          - GOOGLE_DRIVE_DOMAIN_WIDE
-          - GRAPHQL
-          - JIRA2
-          - JIRA2_HOSTED
-          - JIVE
-          - JIVE_HOSTED
-          - LITHIUM
-          - KHOROS
-          - MICROSOFT_DYNAMICS
-          - PUSH
-          - RSS
-          - SALESFORCE
-          - SALESFORCE_SITES
-          - SAP
-          - SERVICENOW
-          - SHAREPOINT
-          - SHAREPOINT_ONLINE2
-          - SHOPIFY
-          - SITECORE
-          - SITEMAP
-          - SLACK
-          - WEB2
-          - YOUTUBE
-          - ZENDESK
-          - ADOBE_EXPERIENCE_MANAGER
-          - BOX
-          - BOX_ENTERPRISE
-          - CONFLUENCE
-          - DROPBOX
-          - GMAIL
-          - GMAIL_DOMAIN_WIDE
-          - SHAREPOINT_ONLINE
-        crawlerInstanceType:
-          type: string
-        pushEnabled:
-          type: boolean
-        onPremisesEnabled:
-          type: boolean
-        streamEnabled:
-          type: boolean
-    Jira2HostedSourceModel:
+        totalEntries:
+          type: integer
+          format: int64
+    SalesforceSitesSourceModel:
       type: object
       allOf:
       - $ref: '#/components/schemas/SourceModel'
@@ -5082,113 +6043,89 @@ components:
             type: string
           hasPassword:
             type: boolean
+          alwaysTrustCertificates:
+            type: boolean
+          enableJavaScript:
+            type: boolean
+          indexJsonLdMetadata:
+            type: boolean
+          formAuthenticationConfig:
+            $ref: '#/components/schemas/FormAuthenticationConfig'
+          includeShadowDom:
+            type: boolean
+          javaScriptLoadingDelayInMilliseconds:
+            type: integer
+            format: int32
+          requestsTimeoutInSeconds:
+            type: integer
+            format: int32
+          scrapingMatchingStrategy:
+            type: string
+          scrapingConfiguration:
+            type: string
+          userAgent:
+            type: string
           urls:
             type: array
             items:
               type: string
-          serverUrl:
+          indexExternalPages:
+            type: boolean
+          indexExternalPagesLinks:
+            type: boolean
+          respectRobotsDotTxt:
+            type: boolean
+          respectAnchorNoFollow:
+            type: boolean
+          respectMetaNoFollow:
+            type: boolean
+          respectNoIndexTag:
+            type: boolean
+          respectUrlCasing:
+            type: boolean
+          indexSubdomains:
+            type: boolean
+          maxAutoRedirects:
+            type: integer
+            format: int32
+          maxCrawlDepth:
+            type: integer
+            format: int32
+          maxPageSizeInBytes:
+            type: integer
+            format: int32
+          maxRequestsRetryCount:
+            type: integer
+            format: int32
+          minCrawlDelayInMilliseconds:
+            type: integer
+            format: int32
+          requestsRetryDelayInMilliseconds:
+            type: integer
+            format: int32
+          queryParamsToIgnore:
+            type: array
+            items:
+              type: string
+          salesforceOrg:
             type: string
-          indexAttachments:
-            type: boolean
-          indexComments:
-            type: boolean
-          indexWorkLogs:
-            type: boolean
-          usePersonalAccessToken:
-            type: boolean
-          supportCommentPermissions:
-            type: boolean
-          apiKey:
+          salesforceUser:
             type: string
-          useApiKey:
+          sandbox:
             type: boolean
-    SalesforceInConditionValue:
+          oauthRefreshTokenGuid:
+            type: string
+          oauthRefreshToken:
+            type: string
+    FormElementIdentifier:
       type: object
       properties:
+        identifier:
+          type: string
         type:
           type: string
-          enum:
-          - SOQL_STRING
-          - SOQL_ID
-          - SOQL_DATETIME
-          - SOQL_BOOLEAN
-          - SOQL_OTHER
-        value:
+        findType:
           type: string
-    SharePointSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          activeDirectoryUsername:
-            type: string
-          activeDirectoryPassword:
-            type: string
-          hasActiveDirectoryPassword:
-            type: boolean
-          activeDirectoryEmailAttributes:
-            type: array
-            items:
-              type: string
-          activeDirectoryExpandTrustedDomains:
-            type: boolean
-          activeDirectoryExpandWellKnowns:
-            type: boolean
-          activeDirectoryTlsMode:
-            type: string
-          useActiveDirectoryPermissions:
-            type: boolean
-          hasExpandedSecurityProvider:
-            type: boolean
-          urls:
-            type: array
-            items:
-              type: string
-          crawlScope:
-            type: string
-          authenticationType:
-            type: string
-          loadUserProfiles:
-            type: boolean
-          loadPersonalSites:
-            type: boolean
-          indexListFolders:
-            type: boolean
-          adfsServerUrl:
-            type: string
-          sharePointTrustIdentifier:
-            type: string
-          oktaRealm:
-            type: string
-          oktaSignInUrl:
-            type: string
-          ignoreUnchangedSiteCollections:
-            type: boolean
-          reindexOnUpdateShallow:
-            type: boolean
-          useEnhancedIncrementalRefresh:
-            type: boolean
-          useCommonClaimsProvider:
-            type: boolean
-    UrlFilter:
-      type: object
-      properties:
-        filter:
-          type: string
-        includeFilter:
-          type: boolean
-        filterType:
-          type: string
-          enum:
-          - WILDCARD
-          - REGEX
     SourceStatus:
       type: object
       properties:
@@ -5329,28 +6266,287 @@ components:
           type: integer
           format: int64
           deprecated: true
-    ExtensionSettingByExtension:
+    PermissionSetModel:
       type: object
       properties:
-        extensions:
+        anonymousAllowed:
+          type: boolean
+        name:
+          type: string
+        permissions:
           type: array
           items:
+            $ref: '#/components/schemas/SinglePermissionModel'
+    DocumentConfig:
+      type: object
+      properties:
+        indexUri:
+          type: string
+        indexLogicalId:
+          type: string
+        documentProcessorConfig:
+          $ref: '#/components/schemas/DocumentProcessorConfig'
+        preConversions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentProcessor'
+        postConversions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentProcessor'
+        parameters:
+          type: object
+          additionalProperties:
             type: string
-        extensionSetting:
-          $ref: '#/components/schemas/ExtensionSetting'
-    SecurityProviderModel:
+        sourceConfigTag:
+          type: string
+        fieldConfigTag:
+          type: string
+    SinglePermissionModel:
+      type: object
+      properties:
+        allowed:
+          type: boolean
+        identityType:
+          type: string
+          enum:
+          - USER
+          - GROUP
+          - VIRTUAL_GROUP
+          - UNKNOWN
+        identity:
+          type: string
+        securityProvider:
+          type: string
+        additionalInfo:
+          type: object
+          additionalProperties:
+            type: string
+        lastUpdateDate:
+          type: string
+          format: date-time
+        lastUpdateResult:
+          type: string
+          enum:
+          - NONE
+          - SUCCESS
+          - ACCESS_DENIED
+          - TIMED_OUT
+          - ENTITY_IS_INVALID
+          - ENTITY_IS_UNAVAILABLE
+          - SECURITY_PROVIDER_IS_UNAVAILABLE
+          - SECURITY_PROVIDER_IS_UNREACHABLE
+          - SECURITY_PROVIDER_IS_NOT_READY
+          - UNEXPECTED_ERROR
+        lastUpdateErrorDetail:
+          type: string
+        state:
+          type: string
+          enum:
+          - UNKNOWN
+          - UP_TO_DATE
+          - NOT_UPDATED
+          - OUT_OF_DATE
+          - IN_ERROR
+          - DISABLED
+    DocumentProcessorConfig:
+      type: object
+      properties:
+        maxHTMLOutputSize:
+          type: integer
+          format: int32
+        maxTextOutputSize:
+          type: integer
+          format: int32
+        excelFloatingPointPrecision:
+          type: integer
+          format: int32
+        imageMinimumSize:
+          type: integer
+          format: int32
+        timeout:
+          type: integer
+          format: int32
+        indexExcelNumbers:
+          type: boolean
+        styleSheet:
+          type: string
+        languagesSettings:
+          type: string
+        maximumDocumentSize:
+          type: integer
+          format: int64
+        maximumNumberOfPermissions:
+          type: integer
+          format: int32
+        maximumMetaSize:
+          type: integer
+          format: int32
+        maximumTotalMetaSize:
+          type: integer
+          format: int32
+        maximumNumberOfMeta:
+          type: integer
+          format: int32
+        maximumIdentityNameSize:
+          type: integer
+          format: int32
+        maximumIdentityTotalSize:
+          type: integer
+          format: int32
+        memoryLimits:
+          $ref: '#/components/schemas/MemoryLimits'
+        pipelineStateTtl:
+          type: integer
+          format: int32
+        pipelineStateSizeLimit:
+          type: integer
+          format: int32
+        titleGrammaticalScoreWeight:
+          type: number
+          format: double
+        titleLengthProbabilityWeight:
+          type: number
+          format: double
+        titlePercentageOfCapsFirstLettersWeight:
+          type: number
+          format: double
+        titlePositionScoreWeight:
+          type: number
+          format: double
+        fieldMappingOrigin:
+          type: string
+        summarySize:
+          type: integer
+          format: int32
+        maximumNumberOfPagesToConvert:
+          type: integer
+          format: int32
+        generateHTML:
+          type: boolean
+        useClickableUriAsBasePath:
+          type: boolean
+        addRawTextDataStream:
+          type: boolean
+        beautifyDocuments:
+          type: boolean
+        indexMeta:
+          type: boolean
+        saveTextDataStream:
+          type: boolean
+        openResultWithQuickView:
+          type: boolean
+        summarizeDocument:
+          type: boolean
+        saveExcerptBlob:
+          type: boolean
+        excerptSource:
+          type: string
+          enum:
+          - Document
+          - Summary
+        charsetDetectionHint:
+          $ref: '#/components/schemas/CharsetDetectionHint'
+        languageHints:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageHint'
+        extensionSettings:
+          $ref: '#/components/schemas/ExtensionSettings'
+        generateMarkdown:
+          type: boolean
+        markdownTimeout:
+          type: integer
+          format: int32
+        sourceInformation:
+          $ref: '#/components/schemas/SourceInformation'
+        uniqueTermsPerDocument:
+          type: integer
+          format: int32
+    ServiceNowSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          instanceUrl:
+            type: string
+          clientId:
+            type: string
+          clientSecret:
+            type: string
+          clientSecretGuid:
+            type: string
+          passwordGuid:
+            type: string
+          objectsToGetConfiguration:
+            type: string
+          genericObjectsToGetConfiguration:
+            type: string
+          oauthRefreshTokenGuid:
+            type: string
+          oauthRefreshToken:
+            type: string
+    ParameterModel:
+      type: object
+      properties:
+        value:
+          type: string
+        sensitive:
+          type: boolean
+    ItemsModificationPeriod:
+      type: object
+      properties:
+        Amount:
+          type: integer
+          format: int64
+          writeOnly: true
+        TimeSpan:
+          type: string
+          writeOnly: true
+          enum:
+          - Day
+          - Week
+          - Month
+          - Year
+        amount:
+          type: integer
+          format: int64
+        timespan:
+          type: string
+          enum:
+          - Day
+          - Week
+          - Month
+          - Year
+    FormAction:
+      type: object
+      properties:
+        type:
+          type: string
+        value:
+          type: string
+        elementIdentifier:
+          $ref: '#/components/schemas/FormElementIdentifier'
+        waitDelayInMilliseconds:
+          type: integer
+          format: int32
+    CascadingSecurityProvider:
       type: object
       properties:
         id:
           type: string
         name:
           type: string
-        displayName:
-          type: string
-        organizationId:
-          type: string
         type:
           type: string
+          deprecated: true
           enum:
           - ACTIVE_DIRECTORY2
           - BOX
@@ -5379,543 +6575,14 @@ components:
           - SITECORE
           - SLACK
           - ZENDESK
-        nodeTypeName:
+        typeName:
           type: string
-        sourceTypeName:
-          type: string
-        nodeRequired:
-          type: boolean
-        onPremisesEnabled:
-          type: boolean
-        projectIds:
-          type: array
-          items:
-            type: string
-        crawlingModuleId:
-          type: string
-        caseSensitive:
-          type: boolean
-        userIdentities:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UserIdentityModel'
-        parameters:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/ParameterModel'
-        cascadingSecurityProviders:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CascadingSecurityProvider'
-        referencedBy:
-          type: array
-          items:
-            $ref: '#/components/schemas/SecurityProviderReferenceModel'
-        instanceId:
-          type: string
-    FieldMappingModel:
-      type: object
-      properties:
-        sourceId:
-          type: string
-        sourceName:
-          type: string
-        mappings:
-          type: array
-          items:
-            $ref: '#/components/schemas/MappingModel'
-    Config:
-      type: object
-      properties:
-        documentConsumerURI:
-          type: string
-        indexIdentifier:
-          type: string
-        dbConnectionString:
-          type: string
-        reportingServiceUri:
-          type: string
-        sourceInformation:
-          $ref: '#/components/schemas/SourceInformation'
-        sourceSecurityOption:
-          type: string
-          enum:
-          - Retrieve
-          - Specified
-          - Merge
-        startingAddresses:
-          type: array
-          items:
-            type: string
-        addressPatterns:
-          type: array
-          items:
-            $ref: '#/components/schemas/AddressPattern'
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionLevel'
-        parameters:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/Parameter'
-        securityProviders:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/SecurityProvider'
-        userIdentities:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UserIdentity'
-        dataFiles:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/DataFile'
-        caseSensitivePatterns:
-          type: boolean
-        documentConfig:
-          $ref: '#/components/schemas/DocumentConfig'
-    AmazonS3SourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          urls:
-            type: array
-            items:
-              type: string
-          accessKey:
-            type: string
-          secretKey:
-            type: string
-          hasSecretKey:
-            type: boolean
-    MicrosoftDynamicsSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          discoveryServiceUrl:
-            type: string
-          enableS2SAuthentication:
-            type: boolean
-          objectsToGet:
-            type: array
-            items:
-              $ref: '#/components/schemas/MicrosoftDynamicsObject'
-          genericObjectsToGet:
-            type: string
-          organizationUniqueName:
-            type: string
-          recordsPageSize:
-            type: integer
-            format: int32
-            writeOnly: true
-          urls:
-            type: array
-            items:
-              type: string
-          fetchXmlQueries:
-            $ref: '#/components/schemas/MicrosoftDynamicsFetchXmlQueries'
-          oauthRefreshTokenGuid:
-            type: string
-          oauthResourceGuid:
-            type: string
-          oauthResource:
-            type: string
-          recordPageSize:
-            type: integer
-            format: int32
-    AuthenticationFailedConfiguration:
-      type: object
-      properties:
-        method:
-          type: string
-          enum:
-          - RedirectedToUrl
-          - PageDoesNotContain
-          - PageContains
-          - CookieNotSet
-          - UrlMatch
-          - UrlDoesNotMatch
-        values:
-          type: array
-          items:
-            type: string
-    Parameter:
-      type: object
-      properties:
-        sensitive:
-          type: boolean
-        value:
-          type: string
-    SlackSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          accessToken:
-            type: string
-          maskedAccessToken:
-            type: string
-          accessTokenWorkspace:
-            type: string
-          accessTokenGuid:
-            type: string
-          exportDataUrl:
-            type: string
-          oldestMessageInDays:
-            type: integer
-            format: int32
-          oldestMessageTimestampInSeconds:
-            type: integer
-            format: int64
-          indexChannels:
-            type: boolean
-          indexPrivateChannels:
-            type: boolean
-          includeDeletedAndDisabledUsers:
-            type: boolean
-          indexFilesAndAttachments:
-            type: boolean
-          indexUsers:
-            type: boolean
-          ignoreBotMessages:
-            type: boolean
-          channelsToGet:
-            type: string
-    PermissionModelStateRootCauseModel:
-      type: object
-      properties:
-        entityState:
-          type: string
-          enum:
-          - UNKNOWN
-          - UP_TO_DATE
-          - NOT_UPDATED
-          - OUT_OF_DATE
-          - IN_ERROR
-          - DISABLED
-        entityInformation:
-          $ref: '#/components/schemas/DetailedSecurityIdentityModel'
-    DocumentProcessorParameters:
-      type: object
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            type: string
-        deleteOnError:
-          type: boolean
-        condition:
-          $ref: '#/components/schemas/ConditionNode'
-        streams:
-          type: array
-          items:
-            type: string
-        name:
-          type: string
-        memoryLimit:
-          type: integer
-          format: int32
-    ConditionNode:
-      type: object
-    Permission:
-      type: object
-      properties:
-        identityType:
-          type: string
-          enum:
-          - Unknown
-          - User
-          - Group
-          - VirtualGroup
-        securityProvider:
-          type: string
-        identity:
-          type: string
-        additionalInfo:
-          type: object
-          additionalProperties:
-            type: string
-    SalesforceField:
+    SecurityProvider:
       type: object
       properties:
         name:
           type: string
-        label:
-          type: string
-        nestedLabel:
-          type: string
-        type:
-          type: string
-        indexed:
-          type: boolean
-        mandatory:
-          type: boolean
-        custom:
-          type: boolean
-        mappings:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/MappingModel'
-        values:
-          type: array
-          items:
-            type: string
-        referenceTypes:
-          type: array
-          items:
-            type: string
-        relationshipName:
-          type: string
-        relationshipNameField:
-          type: string
-        relationshipParent:
-          type: boolean
-        relationshipPolymorphic:
-          type: boolean
-    HourMinutePair:
-      type: object
-      properties:
-        hour:
-          type: integer
-          format: int32
-        minute:
-          type: integer
-          format: int32
-    SalesforceSitesSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          alwaysTrustCertificates:
-            type: boolean
-          enableJavaScript:
-            type: boolean
-          indexJsonLdMetadata:
-            type: boolean
-          formAuthenticationConfig:
-            $ref: '#/components/schemas/FormAuthenticationConfig'
-          includeShadowDom:
-            type: boolean
-          javaScriptLoadingDelayInMilliseconds:
-            type: integer
-            format: int32
-          requestsTimeoutInSeconds:
-            type: integer
-            format: int32
-          scrapingMatchingStrategy:
-            type: string
-          scrapingConfiguration:
-            type: string
-          userAgent:
-            type: string
-          urls:
-            type: array
-            items:
-              type: string
-          indexExternalPages:
-            type: boolean
-          indexExternalPagesLinks:
-            type: boolean
-          respectRobotsDotTxt:
-            type: boolean
-          respectAnchorNoFollow:
-            type: boolean
-          respectMetaNoFollow:
-            type: boolean
-          respectNoIndexTag:
-            type: boolean
-          respectUrlCasing:
-            type: boolean
-          indexSubdomains:
-            type: boolean
-          maxAutoRedirects:
-            type: integer
-            format: int32
-          maxCrawlDepth:
-            type: integer
-            format: int32
-          maxPageSizeInBytes:
-            type: integer
-            format: int32
-          maxRequestsRetryCount:
-            type: integer
-            format: int32
-          minCrawlDelayInMilliseconds:
-            type: integer
-            format: int32
-          requestsRetryDelayInMilliseconds:
-            type: integer
-            format: int32
-          queryParamsToIgnore:
-            type: array
-            items:
-              type: string
-          salesforceOrg:
-            type: string
-          salesforceUser:
-            type: string
-          sandbox:
-            type: boolean
-          oauthRefreshTokenGuid:
-            type: string
-          oauthRefreshToken:
-            type: string
-    SAPSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          restConfiguration:
-            type: string
-          restPermissionConfiguration:
-            type: string
-          clientId:
-            type: string
-          clientSecret:
-            type: string
-          refreshToken:
-            type: string
-          apiKey:
-            type: string
-          hasApiKey:
-            type: boolean
-          hasClientSecret:
-            type: boolean
-          hasRefreshToken:
-            type: boolean
-          providerType:
-            type: string
-            enum:
-            - ACTIVE_DIRECTORY2
-            - BOX
-            - CLAIMS
-            - CLAIMS_TO_EMAIL
-            - CONFLUENCE
-            - CONFLUENCE2
-            - CUSTOM
-            - DATABASE
-            - DROPBOX_FOR_BUSINESS
-            - EMAIL
-            - EXPANDED
-            - FILE
-            - GOOGLE_DRIVE_DOMAIN_WIDE
-            - GENERIC_REST
-            - GRAPHQL
-            - JIRA2
-            - JIVE
-            - KHOROS_COMMUNITY
-            - MICROSOFT_DYNAMICS
-            - OFFICE365
-            - SALESFORCE
-            - SERVICENOW
-            - SHAREPOINT
-            - SHAREPOINT_ONLINE
-            - SITECORE
-            - SLACK
-            - ZENDESK
-    IdAndDisplayNameModel:
-      type: object
-      properties:
-        id:
-          type: string
-        displayName:
-          type: string
-    ExtendedDataFile:
-      type: object
-      properties:
-        sensitive:
-          type: boolean
-        data:
-          type: string
-        extendedData:
-          type: object
-    DatabaseSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          activeDirectoryUsername:
-            type: string
-          activeDirectoryPassword:
-            type: string
-          hasActiveDirectoryPassword:
-            type: boolean
-          activeDirectoryEmailAttributes:
-            type: array
-            items:
-              type: string
-          activeDirectoryExpandTrustedDomains:
-            type: boolean
-          activeDirectoryExpandWellKnowns:
-            type: boolean
-          activeDirectoryTlsMode:
-            type: string
-          useActiveDirectoryPermissions:
-            type: boolean
-          hasExpandedSecurityProvider:
-            type: boolean
-          configFileContent:
-            type: string
-          connectionString:
-            type: string
-          driverType:
-            type: string
-          forceLastRefreshUTC:
-            type: boolean
-          itemType:
-            type: string
-          commandTimeout:
-            type: integer
-            format: int32
-          queryPageSize:
-            type: integer
-            format: int32
-    ConfigurationError:
-      type: object
-      properties:
-        errorCode:
-          type: string
-        message:
+        typeName:
           type: string
     SourceFieldModel:
       type: object
@@ -6067,32 +6734,183 @@ components:
           items:
             $ref: '#/components/schemas/LightSourceModel'
       description: A [field](https://docs.coveo.com/en/200/).
-    SalesforceCondition:
+    NextOperation:
       type: object
       properties:
-        fieldName:
+        operationType:
+          type: string
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        timestamp:
+          type: string
+          format: date-time
+    FileSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          activeDirectoryUsername:
+            type: string
+          activeDirectoryPassword:
+            type: string
+          hasActiveDirectoryPassword:
+            type: boolean
+          activeDirectoryEmailAttributes:
+            type: array
+            items:
+              type: string
+          activeDirectoryExpandTrustedDomains:
+            type: boolean
+          activeDirectoryExpandWellKnowns:
+            type: boolean
+          activeDirectoryTlsMode:
+            type: string
+          useActiveDirectoryPermissions:
+            type: boolean
+          hasExpandedSecurityProvider:
+            type: boolean
+          expandBeforeFiltering:
+            type: boolean
+          expandMailArchives:
+            type: boolean
+          indexSharePermissions:
+            type: boolean
+          startingAddresses:
+            type: array
+            items:
+              type: string
+    CharsetDetectionHint:
+      type: object
+      properties:
+        charset:
+          type: string
+        confidence:
+          type: number
+          format: double
+    SecurityIdentityInfoModel:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+    MicrosoftDynamicsCondition:
+      type: object
+      properties:
+        attribute:
           type: string
         operator:
           type: string
-          enum:
-          - EQUALS
-          - NOT_EQUALS
-          - LESS_THAN
-          - LESS_OR_EQUAL_THAN
-          - GREATER_THAN
-          - GREATER_OR_EQUAL_THAN
-          - LIKE
-          - NOT_LIKE
-          - INCLUDES
-          - EXCLUDES
-          - IN
-          - NOT_IN
-        value:
+        type:
           type: string
-        inConditionValues:
+          enum:
+          - STRING
+          - NUMBER
+          - DATE
+          - BOOLEAN
+          - UNARY
+        values:
           type: array
           items:
-            $ref: '#/components/schemas/SalesforceInConditionValue'
+            type: string
+    ExtendedDataFile:
+      type: object
+      properties:
+        sensitive:
+          type: boolean
+        data:
+          type: string
+        extendedData:
+          type: object
+    MicrosoftDynamicsObject:
+      type: object
+      properties:
+        attachment:
+          type: string
+        attributes:
+          type: array
+          items:
+            type: string
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MicrosoftDynamicsConditions'
+        name:
+          type: string
+        relations:
+          type: array
+          items:
+            $ref: '#/components/schemas/MicrosoftDynamicsRelation'
+    SourceInformation:
+      type: object
+      properties:
+        sourceStatus:
+          $ref: '#/components/schemas/SourceStatus'
+        lastOperation:
+          $ref: '#/components/schemas/SourceLastOperation'
+        nextOperation:
+          $ref: '#/components/schemas/NextOperation'
+        rebuildRequired:
+          type: boolean
+        rebuildRequiredReasons:
+          type: array
+          items:
+            type: string
+            enum:
+            - SOURCE_CONFIGURATION_UPDATED
+            - FIELD_CONFIGURATION_UPDATED
+        numberOfDocuments:
+          type: integer
+          format: int64
+          deprecated: true
+        documentsTotalSize:
+          type: integer
+          format: int64
+        lastRefreshEndDate:
+          type: string
+          format: date-time
+        lastRebuildEndDate:
+          type: string
+          format: date-time
+        lastFullRefreshEndDate:
+          type: string
+          format: date-time
+        lastIncrementalRefreshEndDate:
+          type: string
+          format: date-time
+    SecurityProviderReferenceModel:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - SOURCE
+          - SECURITY_PROVIDER
+        id:
+          type: string
+        attributes:
+          type: object
+    Parameter:
+      type: object
+      properties:
+        sensitive:
+          type: boolean
+        value:
+          type: string
     DocumentPermissionModel:
       type: object
       properties:
@@ -6118,133 +6936,26 @@ components:
         permissionModelStateRootCauseModel:
           $ref: '#/components/schemas/PermissionModelStateRootCauseModel'
       description: The item [permission model](https://docs.coveo.com/en/225/).</br>See [Permission Details Tab](https://docs.coveo.com/en/1712/#permission-details-tab).
-    PermissionLevel:
+    PermissionSet:
       type: object
       properties:
-        permissionSets:
+        allowAnonymous:
+          type: boolean
+        allowedPermissions:
           type: array
           items:
-            $ref: '#/components/schemas/PermissionSet'
+            $ref: '#/components/schemas/Permission'
+        deniedPermissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
         name:
           type: string
-    SalesforceObject:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - SERVICE_CLOUD
-          - CHATTER
-          - CONTENT
-          - KNOWLEDGEBASE
-          - CUSTOM
-        name:
-          type: string
-        label:
-          type: string
-        indexed:
-          type: boolean
-        filesIndexed:
-          type: boolean
-        canHaveFiles:
-          type: boolean
-        custom:
-          type: boolean
-        hasCustomFiletype:
-          type: boolean
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceField'
-        relationships:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceRelationship'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceCondition'
-        searchable:
-          type: boolean
-        categories:
-          type: array
-          items:
-            type: string
-            enum:
-            - SERVICE_CLOUD
-            - EXPERIENCE_CLOUD
-            - KNOWLEDGE
-            - CUSTOM_OBJECT
-            - STANDARD
-            - CHATTER
-    Confluence2SourceModel:
+    CatalogSourceModel:
       type: object
       allOf:
       - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          urls:
-            type: array
-            items:
-              type: string
-          indexAttachments:
-            type: boolean
-          indexComments:
-            type: boolean
-          indexOnlyGlobalSpaces:
-            type: boolean
-          indexOnlyPersonalSpaces:
-            type: boolean
-          indexArchivedSpaces:
-            type: boolean
-          indexCurrentSpaces:
-            type: boolean
-          useRequestParametersAuth:
-            type: boolean
-          alwaysSendBasicAuthenticationHeaders:
-            type: boolean
-          useKerberosAuthentication:
-            type: boolean
-          rootSpaceRegex:
-            type: string
-          filterSpaceRegex:
-            type: string
-          useOAuth2Authentication:
-            type: boolean
-          crawlingAccount:
-            type: string
-          cloudId:
-            type: string
-          clientId:
-            type: string
-          hasOrganizationsApiKey:
-            type: boolean
-          organizationsApiKey:
-            type: string
-          atlassianOrganizationId:
-            type: string
-          useAtlassianOrganizationApi:
-            type: boolean
-          oauthRefreshTokenGuid:
-            type: string
-          oauthRefreshToken:
-            type: string
-    MetafieldConfiguration:
-      type: object
-      properties:
-        namespace:
-          type: string
-        key:
-          type: string
-        name:
-          type: string
-    RawSourceConfig:
+    SourceModel:
       type: object
       properties:
         groupsThatCanEdit:
@@ -6257,20 +6968,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/IdAndDisplayNameModel'
-        id:
-          type: string
-        name:
-          type: string
-        owner:
-          type: string
-        lastModifier:
-          type: string
-        lastModifiedDate:
-          type: string
-          format: date-time
-        createdDate:
-          type: string
-          format: date-time
+        projectIds:
+          type: array
+          items:
+            type: string
         sourceType:
           type: string
           enum:
@@ -6316,41 +7017,40 @@ components:
           - GMAIL
           - GMAIL_DOMAIN_WIDE
           - SHAREPOINT_ONLINE
-        crawlerInstanceType:
+        id:
           type: string
-        additionalInfos:
+        name:
+          type: string
+        owner:
+          type: string
+        lastModifier:
+          type: string
+        lastModifiedDate:
+          type: string
+          format: date-time
+        createdDate:
+          type: string
+          format: date-time
+        sourceVisibility:
+          type: string
+          enum:
+          - PRIVATE
+          - SECURED
+          - SHARED
+        customParameters:
           type: object
           additionalProperties:
-            type: object
-        configuration:
-          $ref: '#/components/schemas/ExtendedConfig'
-        preConversionExtensions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SourceExtensionModel'
-        postConversionExtensions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SourceExtensionModel'
+            type: string
         mappings:
           type: array
           items:
             $ref: '#/components/schemas/MappingModel'
-        securityProviders:
-          type: array
-          items:
-            $ref: '#/components/schemas/SecurityProviderModel'
-        securityProviderReferences:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        additionalComments:
-          type: string
-        crawlingModuleId:
-          type: string
-        fromRaw:
-          type: boolean
+        documentConfig:
+          $ref: '#/components/schemas/DocumentConfig'
+        information:
+          $ref: '#/components/schemas/SourceInformation'
+        configurationError:
+          $ref: '#/components/schemas/ConfigurationError'
         pushEnabled:
           type: boolean
         onPremisesEnabled:
@@ -6359,460 +7059,67 @@ components:
           type: boolean
         logicalIndex:
           type: string
-        performFieldMappingUsingAllOrigins:
-          type: boolean
+        crawlingModuleId:
+          type: string
+        pendingCrawlingModuleId:
+          type: string
+        securityProviderReferences:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        preConversionExtensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceExtensionModel'
+        postConversionExtensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceExtensionModel'
+        permissions:
+          $ref: '#/components/schemas/DocumentPermissionModel'
+        urlFilters:
+          type: array
+          items:
+            $ref: '#/components/schemas/UrlFilter'
+        ocrFileTypes:
+          type: array
+          items:
+            type: string
         resourceId:
           type: string
-    SourceExtensionModel:
+      discriminator:
+        propertyName: sourceType
+    FormAuthStep:
       type: object
       properties:
-        actionOnError:
+        url:
           type: string
-          description: 'The action to carry out when the [extension](https://docs.coveo.com/en/206/) returns an error.<br />See [Action on error](https://docs.coveo.com/en/1943/#actionOnError).<br />**Allowed values:** <br /> - `REJECT_DOCUMENT`: The item is rejected (i.e., it is not indexed).<br /> - `SKIP_EXTENSION`: The item continues to be processed in the indexing pipeline, as if the extension had never been applied.<br /><br /> **Default:** `SKIP_EXTENSION`<br />'
-          enum:
-          - REJECT_DOCUMENT
-          - SKIP_EXTENSION
-        condition:
+        pageContainsValue:
           type: string
-          description: The condition the [item](https://docs.coveo.com/en/210/) must meet for the [extension](https://docs.coveo.com/en/206/) to apply to it.<br />See [Indexing Pipeline Extension Condition Syntax Reference](https://docs.coveo.com/en/64/).<br />**Example:** `%[ytlikecount] OR %[ytdislikecount]`<br />**Default:** `""`
-        extensionId:
-          type: string
-          description: The unique identifier of the [extension](https://docs.coveo.com/en/206/) to apply.<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
-        itemType:
-          type: string
-          description: The type of item to apply the [extension](https://docs.coveo.com/en/206/) to, in the case of an extension only applying to a specific item type.<br />**Note:** Typically matches the key of the extension configuration.<br />**Example:** `Video`
-        parameters:
-          type: object
-          additionalProperties:
-            type: string
-            description: Additional parameters to pass to the [extension](https://docs.coveo.com/en/206/).<br />See [Pass parameters](https://docs.coveo.com/en/1943/#Parameters).<br />**Example:** `{"myparam":38}`<br />**Default:** `{}`
-          description: Additional parameters to pass to the [extension](https://docs.coveo.com/en/206/).<br />See [Pass parameters](https://docs.coveo.com/en/1943/#Parameters).<br />**Example:** `{"myparam":38}`<br />**Default:** `{}`
-        versionId:
-          type: string
-          description: The unique identifier of the [extension](https://docs.coveo.com/en/206/) version to execute.<br />See [Execute a specific extension version](https://docs.coveo.com/en/1943/#Version).<br />**Example**:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`<br />By default, the latest extension version is used.
-      description: An [extension](https://docs.coveo.com/en/206/) configuration.
-    SalesforceRelationship:
-      type: object
-      properties:
-        relationshipName:
-          type: string
-        relationshipType:
-          type: string
-          enum:
-          - NON_POLYMORPHIC_PARENT
-          - POLYMORPHIC_PARENT
-          - CHILD
-        referenceField:
-          type: string
-        referencesTo:
-          type: array
-          items:
-            type: string
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceField'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesforceCondition'
-        createRecord:
-          type: boolean
-    PermissionModel:
-      type: object
-      properties:
-        permissionLevels:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionLevel'
-    DetailedSecurityIdentityModel:
-      type: object
-      properties:
-        name:
-          type: string
-        provider:
-          type: string
-        type:
-          type: string
-        infos:
-          type: array
-          items:
-            $ref: '#/components/schemas/SecurityIdentityInfoModel'
-        declaration:
-          type: string
-        state:
-          type: string
-          enum:
-          - UNKNOWN
-          - UP_TO_DATE
-          - NOT_UPDATED
-          - OUT_OF_DATE
-          - IN_ERROR
-          - DISABLED
-        createdDate:
-          type: string
-          format: date-time
-        lastEnabledDate:
-          type: string
-          format: date-time
-        lastUpdateDate:
-          type: string
-          format: date-time
-        lastSuccessfulUpdateDate:
-          type: string
-          format: date-time
-        lastStoredDate:
-          type: string
-          format: date-time
-        orderingID:
-          type: integer
-          format: int64
-        lastUpdateResult:
-          type: string
-          enum:
-          - NONE
-          - SUCCESS
-          - ACCESS_DENIED
-          - TIMED_OUT
-          - ENTITY_IS_INVALID
-          - ENTITY_IS_UNAVAILABLE
-          - SECURITY_PROVIDER_IS_UNAVAILABLE
-          - SECURITY_PROVIDER_IS_UNREACHABLE
-          - SECURITY_PROVIDER_IS_NOT_READY
-          - UNEXPECTED_ERROR
-        lastUpdateErrorDetail:
-          type: string
-    CascadingSecurityProvider:
-      type: object
-      properties:
-        id:
+        urlContainsValue:
           type: string
         name:
           type: string
-        type:
-          type: string
-          deprecated: true
-          enum:
-          - ACTIVE_DIRECTORY2
-          - BOX
-          - CLAIMS
-          - CLAIMS_TO_EMAIL
-          - CONFLUENCE
-          - CONFLUENCE2
-          - CUSTOM
-          - DATABASE
-          - DROPBOX_FOR_BUSINESS
-          - EMAIL
-          - EXPANDED
-          - FILE
-          - GOOGLE_DRIVE_DOMAIN_WIDE
-          - GENERIC_REST
-          - GRAPHQL
-          - JIRA2
-          - JIVE
-          - KHOROS_COMMUNITY
-          - MICROSOFT_DYNAMICS
-          - OFFICE365
-          - SALESFORCE
-          - SERVICENOW
-          - SHAREPOINT
-          - SHAREPOINT_ONLINE
-          - SITECORE
-          - SLACK
-          - ZENDESK
-        typeName:
-          type: string
-    Web2SourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          alwaysTrustCertificates:
-            type: boolean
-          enableJavaScript:
-            type: boolean
-          indexJsonLdMetadata:
-            type: boolean
-          formAuthenticationConfig:
-            $ref: '#/components/schemas/FormAuthenticationConfig'
-          includeShadowDom:
-            type: boolean
-          javaScriptLoadingDelayInMilliseconds:
-            type: integer
-            format: int32
-          requestsTimeoutInSeconds:
-            type: integer
-            format: int32
-          scrapingMatchingStrategy:
-            type: string
-          scrapingConfiguration:
-            type: string
-          userAgent:
-            type: string
-          urls:
-            type: array
-            items:
-              type: string
-          indexExternalPages:
-            type: boolean
-          indexExternalPagesLinks:
-            type: boolean
-          respectRobotsDotTxt:
-            type: boolean
-          respectAnchorNoFollow:
-            type: boolean
-          respectMetaNoFollow:
-            type: boolean
-          respectNoIndexTag:
-            type: boolean
-          respectUrlCasing:
-            type: boolean
-          indexSubdomains:
-            type: boolean
-          maxAutoRedirects:
-            type: integer
-            format: int32
-          maxCrawlDepth:
-            type: integer
-            format: int32
-          maxPageSizeInBytes:
-            type: integer
-            format: int32
-          maxRequestsRetryCount:
-            type: integer
-            format: int32
-          minCrawlDelayInMilliseconds:
-            type: integer
-            format: int32
-          requestsRetryDelayInMilliseconds:
-            type: integer
-            format: int32
-          queryParamsToIgnore:
-            type: array
-            items:
-              type: string
-    FormAction:
-      type: object
-      properties:
-        type:
-          type: string
-        value:
-          type: string
-        elementIdentifier:
-          $ref: '#/components/schemas/FormElementIdentifier'
         waitDelayInMilliseconds:
           type: integer
           format: int32
-    ZendeskSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          accessToken:
-            type: string
-          accessTokenGuid:
-            type: string
-          refreshToken:
-            type: string
-          refreshTokenGuid:
-            type: string
-          indexAdministrationEntities:
-            type: boolean
-          indexArticles:
-            type: boolean
-          indexArticleTranslations:
-            type: boolean
-          indexComments:
-            type: boolean
-          indexTickets:
-            type: boolean
-          indexAttachments:
-            type: boolean
-          indexAgentsAndAdministratorsPermissionsOnly:
-            type: boolean
-          indexSpecificOrganizationsPermissions:
-            type: string
-          urls:
-            type: array
-            items:
-              type: string
-          indexArchivedTickets:
-            type: boolean
-          indexDeletedTickets:
-            type: boolean
-          zendeskLocale:
-            type: string
-          indexTicketsByOrganization:
-            type: string
-          indexTicketsByTags:
-            type: string
-          crawlingAccount:
-            type: string
-    SinglePermissionModel:
-      type: object
-      properties:
-        allowed:
-          type: boolean
-        identityType:
-          type: string
-          enum:
-          - USER
-          - GROUP
-          - VIRTUAL_GROUP
-          - UNKNOWN
-        identity:
-          type: string
-        securityProvider:
-          type: string
-        additionalInfo:
-          type: object
-          additionalProperties:
-            type: string
-        lastUpdateDate:
-          type: string
-          format: date-time
-        lastUpdateResult:
-          type: string
-          enum:
-          - NONE
-          - SUCCESS
-          - ACCESS_DENIED
-          - TIMED_OUT
-          - ENTITY_IS_INVALID
-          - ENTITY_IS_UNAVAILABLE
-          - SECURITY_PROVIDER_IS_UNAVAILABLE
-          - SECURITY_PROVIDER_IS_UNREACHABLE
-          - SECURITY_PROVIDER_IS_NOT_READY
-          - UNEXPECTED_ERROR
-        lastUpdateErrorDetail:
-          type: string
-        state:
-          type: string
-          enum:
-          - UNKNOWN
-          - UP_TO_DATE
-          - NOT_UPDATED
-          - OUT_OF_DATE
-          - IN_ERROR
-          - DISABLED
-    ShopifySourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          shopId:
-            type: string
-          productFeedId:
-            type: string
-          fullSyncId:
-            type: string
-          accessToken:
-            type: string
-          shopDomain:
-            type: string
-          productMetafields:
-            type: array
-            items:
-              $ref: '#/components/schemas/MetafieldConfiguration'
-          variantMetafields:
-            type: array
-            items:
-              $ref: '#/components/schemas/MetafieldConfiguration'
-          fetchUnitCost:
-            type: boolean
-    DropboxForBusinessSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          teamName:
-            type: string
-          accessToken:
-            type: string
-          accessTokenGuid:
-            type: string
-          refreshToken:
-            type: string
-          refreshTokenGuid:
-            type: string
-    SourceLastOperation:
-      type: object
-      properties:
-        id:
-          type: string
-        operationType:
-          type: string
-          enum:
-          - REBUILD
-          - FULL_REFRESH
-          - INCREMENTAL_REFRESH
-          - SECURITY_PROVIDER_REFRESH
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
-          - SECURITY_CACHE_REFRESH
-          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
-        timestamp:
-          type: string
-          format: date-time
-        result:
-          type: string
-        errorCode:
-          type: string
-        initialBuild:
-          type: boolean
-        numberOfDocuments:
-          type: integer
-          format: int64
-        numberOfAddedDocuments:
-          type: integer
-          format: int64
-        numberOfFilteredDocuments:
-          type: integer
-          format: int64
-        numberOfRemovedDocuments:
-          type: integer
-          format: int64
-        numberOfUnchangedDocuments:
-          type: integer
-          format: int64
-        numberOfUpdatedDocuments:
-          type: integer
-          format: int64
-        startedDate:
-          type: string
-          format: date-time
-    DocumentProcessor:
-      type: object
-      properties:
-        type:
-          type: string
-        parameters:
-          $ref: '#/components/schemas/DocumentProcessorParameters'
-    MicrosoftDynamicsRelation:
-      type: object
-      properties:
-        alias:
-          type: string
-        attributes:
+        actions:
           type: array
           items:
-            type: string
-        fromAttribute:
+            $ref: '#/components/schemas/FormAction'
+    AddressPattern:
+      type: object
+      properties:
+        expression:
           type: string
-        toAttribute:
+        patternType:
           type: string
-        toEntity:
-          type: string
+          enum:
+          - Wildcard
+          - RegEx
+        allowed:
+          type: boolean
     GenericRestSourceModel:
       type: object
       allOf:
@@ -6873,28 +7180,63 @@ components:
             - SITECORE
             - SLACK
             - ZENDESK
-    PermissionSet:
+    DetailedSecurityIdentityModel:
       type: object
       properties:
-        allowAnonymous:
-          type: boolean
-        allowedPermissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Permission'
-        deniedPermissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Permission'
         name:
           type: string
-    MicrosoftDynamicsFetchXmlQueries:
-      type: object
-      properties:
-        queries:
+        provider:
+          type: string
+        type:
+          type: string
+        infos:
           type: array
           items:
-            $ref: '#/components/schemas/MicrosoftDynamicsFetchXmlQuery'
+            $ref: '#/components/schemas/SecurityIdentityInfoModel'
+        declaration:
+          type: string
+        state:
+          type: string
+          enum:
+          - UNKNOWN
+          - UP_TO_DATE
+          - NOT_UPDATED
+          - OUT_OF_DATE
+          - IN_ERROR
+          - DISABLED
+        createdDate:
+          type: string
+          format: date-time
+        lastEnabledDate:
+          type: string
+          format: date-time
+        lastUpdateDate:
+          type: string
+          format: date-time
+        lastSuccessfulUpdateDate:
+          type: string
+          format: date-time
+        lastStoredDate:
+          type: string
+          format: date-time
+        orderingID:
+          type: integer
+          format: int64
+        lastUpdateResult:
+          type: string
+          enum:
+          - NONE
+          - SUCCESS
+          - ACCESS_DENIED
+          - TIMED_OUT
+          - ENTITY_IS_INVALID
+          - ENTITY_IS_UNAVAILABLE
+          - SECURITY_PROVIDER_IS_UNAVAILABLE
+          - SECURITY_PROVIDER_IS_UNREACHABLE
+          - SECURITY_PROVIDER_IS_NOT_READY
+          - UNEXPECTED_ERROR
+        lastUpdateErrorDetail:
+          type: string
     PermissionLevelModel:
       type: object
       properties:
@@ -6905,582 +7247,13 @@ components:
           items:
             $ref: '#/components/schemas/PermissionSetModel'
       description: The [permission levels](https://docs.coveo.com/en/225/).
-    FormElementIdentifier:
-      type: object
-      properties:
-        identifier:
-          type: string
-        type:
-          type: string
-        findType:
-          type: string
-    ScheduleFrequency:
+    DocumentProcessor:
       type: object
       properties:
         type:
           type: string
-          enum:
-          - MINUTELY
-          - HOURLY
-          - DAILY
-          - WEEKLY
-          - MONTHLY
-        value:
-          type: integer
-          format: int32
-        hourMinute:
-          $ref: '#/components/schemas/HourMinutePair'
-        monthDay:
-          type: integer
-          format: int32
-        weekDays:
-          type: array
-          items:
-            type: string
-            enum:
-            - MONDAY
-            - TUESDAY
-            - WEDNESDAY
-            - THURSDAY
-            - FRIDAY
-            - SATURDAY
-            - SUNDAY
-        seed:
-          type: integer
-          format: int32
-    PushSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-    UserIdentity:
-      type: object
-      properties:
-        name:
-          type: string
-        userName:
-          type: string
-        password:
-          type: string
-    ServiceNowSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          instanceUrl:
-            type: string
-          clientId:
-            type: string
-          clientSecret:
-            type: string
-          clientSecretGuid:
-            type: string
-          passwordGuid:
-            type: string
-          objectsToGetConfiguration:
-            type: string
-          genericObjectsToGetConfiguration:
-            type: string
-          oauthRefreshTokenGuid:
-            type: string
-          oauthRefreshToken:
-            type: string
-    CustomLoginSequence:
-      type: object
-      properties:
-        url:
-          type: string
-        pageContainsValue:
-          type: string
-        urlContainsValue:
-          type: string
-        name:
-          type: string
-        steps:
-          type: array
-          items:
-            $ref: '#/components/schemas/FormAuthStep'
-    YouTubeSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          urls:
-            type: array
-            items:
-              type: string
-          indexPlaylists:
-            type: boolean
-    ParameterModel:
-      type: object
-      properties:
-        value:
-          type: string
-        sensitive:
-          type: boolean
-    SourcePermissionsUpdateModel:
-      type: object
-      properties:
-        permissionBehavior:
-          type: string
-          enum:
-          - UseCrawler
-          - Override
-          - Merge
-        permissions:
-          $ref: '#/components/schemas/PermissionModel'
-    BoxEnterprise2SourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          boxEnterpriseSettingsData:
-            type: string
-          hasBoxEnterpriseSettingsData:
-            type: boolean
-          usersToCrawl:
-            type: string
-    DocumentProcessorConfig:
-      type: object
-      properties:
-        maxHTMLOutputSize:
-          type: integer
-          format: int32
-        maxTextOutputSize:
-          type: integer
-          format: int32
-        excelFloatingPointPrecision:
-          type: integer
-          format: int32
-        imageMinimumSize:
-          type: integer
-          format: int32
-        timeout:
-          type: integer
-          format: int32
-        indexExcelNumbers:
-          type: boolean
-        styleSheet:
-          type: string
-        languagesSettings:
-          type: string
-        maximumDocumentSize:
-          type: integer
-          format: int64
-        maximumNumberOfPermissions:
-          type: integer
-          format: int32
-        maximumMetaSize:
-          type: integer
-          format: int32
-        maximumTotalMetaSize:
-          type: integer
-          format: int32
-        maximumNumberOfMeta:
-          type: integer
-          format: int32
-        maximumIdentityNameSize:
-          type: integer
-          format: int32
-        maximumIdentityTotalSize:
-          type: integer
-          format: int32
-        memoryLimits:
-          $ref: '#/components/schemas/MemoryLimits'
-        pipelineStateTtl:
-          type: integer
-          format: int32
-        pipelineStateSizeLimit:
-          type: integer
-          format: int32
-        titleGrammaticalScoreWeight:
-          type: number
-          format: double
-        titleLengthProbabilityWeight:
-          type: number
-          format: double
-        titlePercentageOfCapsFirstLettersWeight:
-          type: number
-          format: double
-        titlePositionScoreWeight:
-          type: number
-          format: double
-        fieldMappingOrigin:
-          type: string
-        summarySize:
-          type: integer
-          format: int32
-        maximumNumberOfPagesToConvert:
-          type: integer
-          format: int32
-        generateHTML:
-          type: boolean
-        useClickableUriAsBasePath:
-          type: boolean
-        addRawTextDataStream:
-          type: boolean
-        beautifyDocuments:
-          type: boolean
-        indexMeta:
-          type: boolean
-        saveTextDataStream:
-          type: boolean
-        openResultWithQuickView:
-          type: boolean
-        summarizeDocument:
-          type: boolean
-        saveExcerptBlob:
-          type: boolean
-        excerptSource:
-          type: string
-          enum:
-          - Document
-          - Summary
-        charsetDetectionHint:
-          $ref: '#/components/schemas/CharsetDetectionHint'
-        languageHints:
-          type: array
-          items:
-            $ref: '#/components/schemas/LanguageHint'
-        extensionSettings:
-          $ref: '#/components/schemas/ExtensionSettings'
-        generateMarkdown:
-          type: boolean
-        markdownTimeout:
-          type: integer
-          format: int32
-        sourceInformation:
-          $ref: '#/components/schemas/SourceInformation'
-        uniqueTermsPerDocument:
-          type: integer
-          format: int32
-    LanguageHint:
-      type: object
-      properties:
-        language:
-          type: string
-        probability:
-          type: number
-          format: double
-    GraphQlSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          restConfiguration:
-            type: string
-          restPermissionConfiguration:
-            type: string
-          clientId:
-            type: string
-          clientSecret:
-            type: string
-          refreshToken:
-            type: string
-          apiKey:
-            type: string
-          hasApiKey:
-            type: boolean
-          hasClientSecret:
-            type: boolean
-          hasRefreshToken:
-            type: boolean
-          useGraphQl:
-            type: boolean
-          queries:
-            type: string
-          providerType:
-            type: string
-            enum:
-            - ACTIVE_DIRECTORY2
-            - BOX
-            - CLAIMS
-            - CLAIMS_TO_EMAIL
-            - CONFLUENCE
-            - CONFLUENCE2
-            - CUSTOM
-            - DATABASE
-            - DROPBOX_FOR_BUSINESS
-            - EMAIL
-            - EXPANDED
-            - FILE
-            - GOOGLE_DRIVE_DOMAIN_WIDE
-            - GENERIC_REST
-            - GRAPHQL
-            - JIRA2
-            - JIVE
-            - KHOROS_COMMUNITY
-            - MICROSOFT_DYNAMICS
-            - OFFICE365
-            - SALESFORCE
-            - SERVICENOW
-            - SHAREPOINT
-            - SHAREPOINT_ONLINE
-            - SITECORE
-            - SLACK
-            - ZENDESK
-    JiveSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          activeDirectoryUsername:
-            type: string
-          activeDirectoryPassword:
-            type: string
-          hasActiveDirectoryPassword:
-            type: boolean
-          activeDirectoryEmailAttributes:
-            type: array
-            items:
-              type: string
-          activeDirectoryExpandTrustedDomains:
-            type: boolean
-          activeDirectoryExpandWellKnowns:
-            type: boolean
-          activeDirectoryTlsMode:
-            type: string
-          useActiveDirectoryPermissions:
-            type: boolean
-          hasExpandedSecurityProvider:
-            type: boolean
-          instanceUrl:
-            type: string
-          startingSpaceUrl:
-            type: string
-          substitutionLocale:
-            type: string
-          substitutionTheme:
-            type: string
-          placesTitles:
-            type: string
-          ignoreItemsOfTypes:
-            type: string
-          localizedItemTypes:
-            type: string
-          indexSpaces:
-            type: boolean
-          indexProjects:
-            type: boolean
-          indexGroups:
-            type: boolean
-          indexSystemBlogs:
-            type: boolean
-          indexPeople:
-            type: boolean
-          indexPublishedOnly:
-            type: boolean
-          allowAnonymousAccess:
-            type: boolean
-          usersRegexMatch:
-            type: string
-          usersRegexReplacement:
-            type: string
-          metadataIndexers:
-            type: string
-    SourceConfigSnapshotMappingModel:
-      type: object
-      properties:
-        id:
-          type: string
-        sourceId:
-          type: string
-        type:
-          type: string
-        fieldName:
-          type: string
-        rules:
-          type: array
-          items:
-            type: string
-    DataFile:
-      type: object
-      properties:
-        sensitive:
-          type: boolean
-        data:
-          type: string
-    ExtensionSetting:
-      type: object
-      properties:
-        customConverter:
-          $ref: '#/components/schemas/DocumentProcessor'
-        action:
-          type: string
-          enum:
-          - Retrieve
-          - Reference
-          - Ignore
-        actionOnError:
-          type: string
-          enum:
-          - Reference
-          - Ignore
-        converter:
-          type: string
-          enum:
-          - Detect
-          - Skip
-          - Html
-          - IFilter
-          - Wordperfect
-          - Rtf
-          - Excel
-          - Word
-          - Pdf
-          - Powerpoint
-          - PlainText
-          - Msg
-          - Mime
-          - Image
-        useContentType:
-          type: boolean
-        indexContainer:
-          type: boolean
-        fileTypeValue:
-          type: string
-        generateThumbnail:
-          type: boolean
-        useExternalHTMLGenerator:
-          type: boolean
-        convertDirectlyToHtml:
-          type: boolean
-        openResultWithQuickView:
-          type: boolean
-        summarizeDocument:
-          type: boolean
-        saveExcerptBlob:
-          type: boolean
-        excerptSource:
-          type: string
-          enum:
-          - Document
-          - Summary
-    FormAuthStep:
-      type: object
-      properties:
-        url:
-          type: string
-        pageContainsValue:
-          type: string
-        urlContainsValue:
-          type: string
-        name:
-          type: string
-        waitDelayInMilliseconds:
-          type: integer
-          format: int32
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/FormAction'
-    SitemapSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          alwaysTrustCertificates:
-            type: boolean
-          enableJavaScript:
-            type: boolean
-          indexJsonLdMetadata:
-            type: boolean
-          formAuthenticationConfig:
-            $ref: '#/components/schemas/FormAuthenticationConfig'
-          includeShadowDom:
-            type: boolean
-          javaScriptLoadingDelayInMilliseconds:
-            type: integer
-            format: int32
-          requestsTimeoutInSeconds:
-            type: integer
-            format: int32
-          scrapingMatchingStrategy:
-            type: string
-          scrapingConfiguration:
-            type: string
-          userAgent:
-            type: string
-          urls:
-            type: array
-            items:
-              type: string
-          requestsIntervalInMs:
-            type: integer
-            format: int32
-    Jira2SourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          urls:
-            type: array
-            items:
-              type: string
-          serverUrl:
-            type: string
-          indexAttachments:
-            type: boolean
-          indexComments:
-            type: boolean
-          indexWorkLogs:
-            type: boolean
-          useOAuth2Authentication:
-            type: boolean
-          crawlingAccount:
-            type: string
-          cloudId:
-            type: string
-          clientId:
-            type: string
-          hasOrganizationsApiKey:
-            type: boolean
-          organizationsApiKey:
-            type: string
-          atlassianOrganizationId:
-            type: string
-          useAtlassianOrganizationApi:
-            type: boolean
-          oauthRefreshTokenGuid:
-            type: string
-          oauthRefreshToken:
-            type: string
+        parameters:
+          $ref: '#/components/schemas/DocumentProcessorParameters'
     SharePointOnline2SourceModel:
       type: object
       allOf:
@@ -7541,170 +7314,6 @@ components:
             $ref: '#/components/schemas/ItemsModificationPeriod'
           excludeDisabledUserProfiles:
             type: boolean
-    FormAuthenticationConfig:
-      type: object
-      properties:
-        actionMethod:
-          type: string
-        formContentType:
-          type: string
-        actionUrl:
-          type: string
-        addFoundInputs:
-          type: boolean
-        authenticationFailed:
-          $ref: '#/components/schemas/AuthenticationFailedConfiguration'
-        inputs:
-          type: array
-          items:
-            $ref: '#/components/schemas/FormInput'
-        formId:
-          type: string
-        formUrl:
-          type: string
-        enableJavaScript:
-          type: boolean
-        forceLogin:
-          type: boolean
-        javaScriptLoadingDelayInMilliseconds:
-          type: integer
-          format: int32
-        customLoginSequence:
-          $ref: '#/components/schemas/CustomLoginSequence'
-        postLoginSequence:
-          $ref: '#/components/schemas/PostLoginSequence'
-        getCookiesFromWebDriverInsteadOfCache:
-          type: boolean
-    SourceInformation:
-      type: object
-      properties:
-        sourceStatus:
-          $ref: '#/components/schemas/SourceStatus'
-        lastOperation:
-          $ref: '#/components/schemas/SourceLastOperation'
-        nextOperation:
-          $ref: '#/components/schemas/NextOperation'
-        rebuildRequired:
-          type: boolean
-        rebuildRequiredReasons:
-          type: array
-          items:
-            type: string
-            enum:
-            - SOURCE_CONFIGURATION_UPDATED
-            - FIELD_CONFIGURATION_UPDATED
-        numberOfDocuments:
-          type: integer
-          format: int64
-          deprecated: true
-        documentsTotalSize:
-          type: integer
-          format: int64
-        lastRefreshEndDate:
-          type: string
-          format: date-time
-        lastRebuildEndDate:
-          type: string
-          format: date-time
-        lastFullRefreshEndDate:
-          type: string
-          format: date-time
-        lastIncrementalRefreshEndDate:
-          type: string
-          format: date-time
-    Confluence2HostedSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-      - type: object
-        properties:
-          username:
-            type: string
-          password:
-            type: string
-          hasPassword:
-            type: boolean
-          urls:
-            type: array
-            items:
-              type: string
-          indexAttachments:
-            type: boolean
-          indexComments:
-            type: boolean
-          indexOnlyGlobalSpaces:
-            type: boolean
-          indexOnlyPersonalSpaces:
-            type: boolean
-          indexArchivedSpaces:
-            type: boolean
-          indexCurrentSpaces:
-            type: boolean
-          useRequestParametersAuth:
-            type: boolean
-          alwaysSendBasicAuthenticationHeaders:
-            type: boolean
-          useKerberosAuthentication:
-            type: boolean
-          rootSpaceRegex:
-            type: string
-          filterSpaceRegex:
-            type: string
-          usePersonalAccessToken:
-            type: boolean
-          apiKey:
-            type: string
-          useApiKey:
-            type: boolean
-    ScheduleModel:
-      type: object
-      properties:
-        id:
-          type: string
-        refreshType:
-          type: string
-          enum:
-          - REBUILD
-          - FULL_REFRESH
-          - INCREMENTAL_REFRESH
-          - SECURITY_PROVIDER_REFRESH
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
-          - SECURITY_CACHE_REFRESH
-          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
-        scheduleType:
-          type: string
-          enum:
-          - SECURITY_CACHE
-          - SECURITY_PROVIDER
-          - SOURCE
-        enabled:
-          type: boolean
-        frequency:
-          $ref: '#/components/schemas/ScheduleFrequency'
-        organizationId:
-          type: string
-        resourceId:
-          type: string
-        lastExecution:
-          type: string
-          format: date-time
-    CustomSourceModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/SourceModel'
-    SecurityProviderReferenceModel:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - SOURCE
-          - SECURITY_PROVIDER
-        id:
-          type: string
-        attributes:
-          type: object
     SourceConfigSnapshotModel:
       type: object
       properties:
@@ -7714,21 +7323,53 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SourceConfigSnapshotMappingModel'
-    SecurityIdentityInfoModel:
+    GetSourcesOutArgs:
       type: object
       properties:
-        key:
-          type: string
-        value:
-          type: string
-    CharsetDetectionHint:
-      type: object
-      properties:
-        charset:
-          type: string
-        confidence:
-          type: number
-          format: double
+        sourceModels:
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/SourceModel'
+            - $ref: '#/components/schemas/AmazonS3SourceModel'
+            - $ref: '#/components/schemas/BoxEnterprise2SourceModel'
+            - $ref: '#/components/schemas/CatalogSourceModel'
+            - $ref: '#/components/schemas/Confluence2HostedSourceModel'
+            - $ref: '#/components/schemas/Confluence2SourceModel'
+            - $ref: '#/components/schemas/CustomSourceModel'
+            - $ref: '#/components/schemas/DatabaseSourceModel'
+            - $ref: '#/components/schemas/DropboxForBusinessSourceModel'
+            - $ref: '#/components/schemas/FileSourceModel'
+            - $ref: '#/components/schemas/GenericRestSourceModel'
+            - $ref: '#/components/schemas/GoogleDriveDomainWideSourceModel'
+            - $ref: '#/components/schemas/GraphQlSourceModel'
+            - $ref: '#/components/schemas/Jira2HostedSourceModel'
+            - $ref: '#/components/schemas/Jira2SourceModel'
+            - $ref: '#/components/schemas/JiveHostedSourceModel'
+            - $ref: '#/components/schemas/JiveSourceModel'
+            - $ref: '#/components/schemas/KhorosSourceModel'
+            - $ref: '#/components/schemas/MicrosoftDynamicsSourceModel'
+            - $ref: '#/components/schemas/PushSourceModel'
+            - $ref: '#/components/schemas/RSSSourceModel'
+            - $ref: '#/components/schemas/SAPSourceModel'
+            - $ref: '#/components/schemas/SalesforceSitesSourceModel'
+            - $ref: '#/components/schemas/SalesforceSourceModel'
+            - $ref: '#/components/schemas/ServiceNowSourceModel'
+            - $ref: '#/components/schemas/SharePointOnline2SourceModel'
+            - $ref: '#/components/schemas/SharePointSourceModel'
+            - $ref: '#/components/schemas/ShopifySourceModel'
+            - $ref: '#/components/schemas/SitecoreSourceModel'
+            - $ref: '#/components/schemas/SitemapSourceModel'
+            - $ref: '#/components/schemas/SlackSourceModel'
+            - $ref: '#/components/schemas/Web2SourceModel'
+            - $ref: '#/components/schemas/YouTubeSourceModel'
+            - $ref: '#/components/schemas/ZendeskSourceModel'
+        totalEntries:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
     PostLoginSequence:
       type: object
       properties:
@@ -7744,25 +7385,384 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FormAuthStep'
-    MicrosoftDynamicsObject:
+    CustomLoginSequence:
       type: object
       properties:
-        attachment:
+        url:
           type: string
-        attributes:
+        pageContainsValue:
+          type: string
+        urlContainsValue:
+          type: string
+        name:
+          type: string
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormAuthStep'
+    SourceExtensionModel:
+      type: object
+      properties:
+        actionOnError:
+          type: string
+          description: 'The action to carry out when the [extension](https://docs.coveo.com/en/206/) returns an error.<br />See [Action on error](https://docs.coveo.com/en/1943/#actionOnError).<br />**Allowed values:** <br /> - `REJECT_DOCUMENT`: The item is rejected (i.e., it is not indexed).<br /> - `SKIP_EXTENSION`: The item continues to be processed in the indexing pipeline, as if the extension had never been applied.<br /><br /> **Default:** `SKIP_EXTENSION`<br />'
+          enum:
+          - REJECT_DOCUMENT
+          - SKIP_EXTENSION
+        condition:
+          type: string
+          description: The condition the [item](https://docs.coveo.com/en/210/) must meet for the [extension](https://docs.coveo.com/en/206/) to apply to it.<br />See [Indexing Pipeline Extension Condition Syntax Reference](https://docs.coveo.com/en/64/).<br />**Example:** `%[ytlikecount] OR %[ytdislikecount]`<br />**Default:** `""`
+        extensionId:
+          type: string
+          description: The unique identifier of the [extension](https://docs.coveo.com/en/206/) to apply.<br />**Example:** `mycoveocloudv2organizationg8tp8wu3-vwlyqfbtjkotxqkmrxqjcbcpoy`
+        itemType:
+          type: string
+          description: The type of item to apply the [extension](https://docs.coveo.com/en/206/) to, in the case of an extension only applying to a specific item type.<br />**Note:** Typically matches the key of the extension configuration.<br />**Example:** `Video`
+        parameters:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional parameters to pass to the [extension](https://docs.coveo.com/en/206/).<br />See [Pass parameters](https://docs.coveo.com/en/1943/#Parameters).<br />**Example:** `{"myparam":38}`<br />**Default:** `{}`
+          description: Additional parameters to pass to the [extension](https://docs.coveo.com/en/206/).<br />See [Pass parameters](https://docs.coveo.com/en/1943/#Parameters).<br />**Example:** `{"myparam":38}`<br />**Default:** `{}`
+        versionId:
+          type: string
+          description: The unique identifier of the [extension](https://docs.coveo.com/en/206/) version to execute.<br />See [Execute a specific extension version](https://docs.coveo.com/en/1943/#Version).<br />**Example**:`hdJSDb4hTkdnsCynNtF.d657FgLSDydcj`<br />By default, the latest extension version is used.
+      description: An [extension](https://docs.coveo.com/en/206/) configuration.
+    GoogleDriveDomainWideSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          googleAppsDomain:
+            type: string
+          serviceAccountEmail:
+            type: string
+          privateKeyFile:
+            type: string
+          usersToCrawl:
+            type: string
+          domainAdminEmail:
+            type: string
+          crawlTrashedItems:
+            type: boolean
+          crawlCustomProperties:
+            type: boolean
+          indexSharedDrives:
+            type: boolean
+          indexUserDrives:
+            type: boolean
+          crawlFolders:
+            type: boolean
+          mimeTypesToIgnore:
+            type: string
+          itemsModificationPeriod:
+            $ref: '#/components/schemas/ItemsModificationPeriod'
+    PushSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+    SalesforceRelationship:
+      type: object
+      properties:
+        relationshipName:
+          type: string
+        relationshipType:
+          type: string
+          enum:
+          - NON_POLYMORPHIC_PARENT
+          - POLYMORPHIC_PARENT
+          - CHILD
+        referenceField:
+          type: string
+        referencesTo:
           type: array
           items:
             type: string
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesforceField'
         conditions:
           type: array
           items:
-            $ref: '#/components/schemas/MicrosoftDynamicsConditions'
-        name:
-          type: string
-        relations:
+            $ref: '#/components/schemas/SalesforceCondition'
+        createRecord:
+          type: boolean
+    ExtensionSettingByExtension:
+      type: object
+      properties:
+        extensions:
           type: array
           items:
-            $ref: '#/components/schemas/MicrosoftDynamicsRelation'
+            type: string
+        extensionSetting:
+          $ref: '#/components/schemas/ExtensionSetting'
+    ExtensionSettings:
+      type: object
+      properties:
+        noExtension:
+          $ref: '#/components/schemas/ExtensionSetting'
+        other:
+          $ref: '#/components/schemas/ExtensionSetting'
+        byExtensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtensionSettingByExtension'
+        byContentTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtensionSettingByExtension'
+    SourceLastOperation:
+      type: object
+      properties:
+        id:
+          type: string
+        operationType:
+          type: string
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        timestamp:
+          type: string
+          format: date-time
+        result:
+          type: string
+        errorCode:
+          type: string
+        initialBuild:
+          type: boolean
+        numberOfDocuments:
+          type: integer
+          format: int64
+        numberOfAddedDocuments:
+          type: integer
+          format: int64
+        numberOfFilteredDocuments:
+          type: integer
+          format: int64
+        numberOfRemovedDocuments:
+          type: integer
+          format: int64
+        numberOfUnchangedDocuments:
+          type: integer
+          format: int64
+        numberOfUpdatedDocuments:
+          type: integer
+          format: int64
+        startedDate:
+          type: string
+          format: date-time
+    Jira2SourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          urls:
+            type: array
+            items:
+              type: string
+          serverUrl:
+            type: string
+          indexAttachments:
+            type: boolean
+          indexComments:
+            type: boolean
+          indexWorkLogs:
+            type: boolean
+          useOAuth2Authentication:
+            type: boolean
+          crawlingAccount:
+            type: string
+          cloudId:
+            type: string
+          clientId:
+            type: string
+          hasOrganizationsApiKey:
+            type: boolean
+          organizationsApiKey:
+            type: string
+          atlassianOrganizationId:
+            type: string
+          useAtlassianOrganizationApi:
+            type: boolean
+          oauthRefreshTokenGuid:
+            type: string
+          oauthRefreshToken:
+            type: string
+    MemoryLimits:
+      type: object
+      properties:
+        conversionLimit:
+          type: integer
+          format: int32
+        extensionLimit:
+          type: integer
+          format: int32
+        mappingLimit:
+          type: integer
+          format: int32
+    ShopifySourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          shopId:
+            type: string
+          productFeedId:
+            type: string
+          fullSyncId:
+            type: string
+          accessToken:
+            type: string
+          shopDomain:
+            type: string
+          productMetafields:
+            type: array
+            items:
+              $ref: '#/components/schemas/MetafieldConfiguration'
+          variantMetafields:
+            type: array
+            items:
+              $ref: '#/components/schemas/MetafieldConfiguration'
+          fetchUnitCost:
+            type: boolean
+    Config:
+      type: object
+      properties:
+        documentConsumerURI:
+          type: string
+        indexIdentifier:
+          type: string
+        dbConnectionString:
+          type: string
+        reportingServiceUri:
+          type: string
+        sourceInformation:
+          $ref: '#/components/schemas/SourceInformation'
+        sourceSecurityOption:
+          type: string
+          enum:
+          - Retrieve
+          - Specified
+          - Merge
+        startingAddresses:
+          type: array
+          items:
+            type: string
+        addressPatterns:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressPattern'
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionLevel'
+        parameters:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Parameter'
+        securityProviders:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SecurityProvider'
+        userIdentities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UserIdentity'
+        dataFiles:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DataFile'
+        caseSensitivePatterns:
+          type: boolean
+        documentConfig:
+          $ref: '#/components/schemas/DocumentConfig'
+    Jira2HostedSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+          hasPassword:
+            type: boolean
+          urls:
+            type: array
+            items:
+              type: string
+          serverUrl:
+            type: string
+          indexAttachments:
+            type: boolean
+          indexComments:
+            type: boolean
+          indexWorkLogs:
+            type: boolean
+          usePersonalAccessToken:
+            type: boolean
+          supportCommentPermissions:
+            type: boolean
+          apiKey:
+            type: string
+          useApiKey:
+            type: boolean
+    UserIdentityModel:
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+    YouTubeSourceModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SourceModel'
+      - type: object
+        properties:
+          urls:
+            type: array
+            items:
+              type: string
+          indexPlaylists:
+            type: boolean
+    Permission:
+      type: object
+      properties:
+        identityType:
+          type: string
+          enum:
+          - Unknown
+          - User
+          - Group
+          - VirtualGroup
+        securityProvider:
+          type: string
+        identity:
+          type: string
+        additionalInfo:
+          type: object
+          additionalProperties:
+            type: string
   securitySchemes:
     oauth2:
       type: oauth2
