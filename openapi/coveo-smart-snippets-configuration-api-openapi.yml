@@ -165,18 +165,6 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/smartsnippets/contentfields_post
 components:
   schemas:
-    ContentFieldsResponse:
-      type: object
-      properties:
-        query:
-          type: string
-          description: The query used to retrieve item information.
-          example: '@language="English" AND @documenttype=="SupportArticle"'
-        fields:
-          type: array
-          description: The list of non-empty fields for at least one item.
-          items:
-            $ref: '#/components/schemas/FieldCandidateModel'
     FieldCandidateModel:
       required:
       - name
@@ -210,16 +198,6 @@ components:
           description: The query that determines the documents to extract. Cannot be used with other document extraction parameters, e.g. sources, filter conditions, etc.<br />**Example:** `@source==("My source") AND @permanentid AND @language="English"`
           example: '@source==("My source") AND @permanentid AND @language="English"'
       description: The configuration for the Smart Snippets preview.
-    DocumentTypeResponse:
-      required:
-      - documentType
-      type: object
-      properties:
-        documentType:
-          type: string
-          description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
-          example: SupportArticle
-      description: List of available document types
     SmartSnippetsPreviewResponse:
       type: object
       properties:
@@ -251,6 +229,30 @@ components:
           - INSUFFICIENT_DOCUMENTS
           - NB_OF_DOCUMENTS_OVER_LIMIT
       description: The Smart Snippets preview response.
+    FilterConditionModel:
+      required:
+      - field
+      - operator
+      - value
+      type: object
+      properties:
+        field:
+          type: string
+          description: The field to use for the filter.<br />**Example:** `author`
+          example: author
+        operator:
+          type: string
+          description: The operator to use for the condition.<br />**Example:** `EQUALS`
+          example: EQUALS
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - EQUALS, NOT_EQUALS
+        value:
+          type: string
+          description: The value to use for the filter.<br />**Example:** `John Smith`
+          example: John Smith
+      description: A custom filter condition.
     SmartSnippetsContentFieldsRequest:
       type: object
       properties:
@@ -278,6 +280,18 @@ components:
           description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
           example: SupportArticle
       description: The configuration for the Smart Snippets content fields request.
+    ContentFieldsResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The query used to retrieve item information.
+          example: '@language="English" AND @documenttype=="SupportArticle"'
+        fields:
+          type: array
+          description: The list of non-empty fields for at least one item.
+          items:
+            $ref: '#/components/schemas/FieldCandidateModel'
     SmartSnippetsDocumentTypesResponse:
       type: object
       properties:
@@ -290,30 +304,16 @@ components:
           description: List of available document types
           items:
             $ref: '#/components/schemas/DocumentTypeResponse'
-    FilterConditionModel:
+    DocumentTypeResponse:
       required:
-      - field
-      - operator
-      - value
+      - documentType
       type: object
       properties:
-        field:
+        documentType:
           type: string
-          description: The field to use for the filter.<br />**Example:** `author`
-          example: author
-        operator:
-          type: string
-          description: The operator to use for the condition.<br />**Example:** `EQUALS`
-          example: EQUALS
-          enum:
-          - EQUALS
-          - NOT_EQUALS
-          - EQUALS, NOT_EQUALS
-        value:
-          type: string
-          description: The value to use for the filter.<br />**Example:** `John Smith`
-          example: John Smith
-      description: A custom filter condition.
+          description: The document types for which content is in custom index fields.<br />**Example:** `SupportArticle`
+          example: SupportArticle
+      description: List of available document types
   securitySchemes:
     oauth2:
       type: oauth2

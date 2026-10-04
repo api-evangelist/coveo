@@ -68,15 +68,30 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/machinelearning/configuration/modeldetailedinfo/paramId_get
 components:
   schemas:
-    FacetPerformanceDetails:
+    ModelAssociationModel:
       type: object
       properties:
-        hit1:
-          type: number
-          format: float
-        hit3:
-          type: number
-          format: float
+        parentId:
+          type: string
+          description: The unique identifier of the query pipeline to which the model is associated.
+          example: 38b08160-d7d4-4626-8e03-53587c23415d
+        id:
+          type: string
+          description: The unique identifier of the model association.
+          example: 917af358-13fd-4c8e-94af-7cf649bddc48
+        name:
+          type: string
+          description: The name of the query pipeline or case assist configuration the model is associated with.
+          example: association name
+        associationType:
+          type: string
+          description: The type of the association.
+          example: QUERY_PIPELINE
+          enum:
+          - QUERY_PIPELINE
+          - CASE_ASSIST
+      description: The associations related to this model
+      example: "[\n  {\n      \"parentId\": \"38b08160-d7d4-4626-8e03-53587c23415d\",\n      \"id\": \"917af358-13fd-4c8e-94af-7cf649bddc48,\n      \"name\": \"test pipeline\",\n      \"associationType\": \"QUERY_PIPELINE\"\n  }\n]"
     ModelDetailedLanguagesModel:
       type: object
       properties:
@@ -103,6 +118,88 @@ components:
           additionalProperties:
             type: integer
             format: int32
+    ModelDetailedSubModelsModel:
+      type: object
+      properties:
+        numOfItems:
+          type: integer
+          format: int64
+        candidates:
+          type: array
+          items:
+            type: object
+        numOfUsers:
+          type: integer
+          format: int64
+    DatasetFieldDetails:
+      type: object
+      properties:
+        numSamples:
+          type: integer
+          format: int32
+        labelsDistribution:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+    ModelDetailedInfoModel:
+      type: object
+      properties:
+        modelDisplayName:
+          type: string
+          description: The name of the model configuration.
+          example: My model
+        modelAssociations:
+          type: array
+          description: The associations related to this model
+          example: "[\n  {\n      \"parentId\": \"38b08160-d7d4-4626-8e03-53587c23415d\",\n      \"id\": \"917af358-13fd-4c8e-94af-7cf649bddc48,\n      \"name\": \"test pipeline\",\n      \"associationType\": \"QUERY_PIPELINE\"\n  }\n]"
+          items:
+            $ref: '#/components/schemas/ModelAssociationModel'
+        modelStatusInfo:
+          $ref: '#/components/schemas/ModelStatusInfoModel'
+        modelId:
+          type: string
+          description: The unique identifier of the target machine learning model.<br />**Example:** `My_Model_ID`
+          example: My_Model_ID
+        engineId:
+          type: string
+          description: The id of the engine.<br />**Example:** `topclicks`
+          example: topclicks
+        estimatedPreviousModelUpdateTime:
+          type: integer
+          description: The date and time the model was last updated.
+          format: int64
+          example: 1691762520000
+        nextModelUpdateTime:
+          type: integer
+          description: The date and time the model is scheduled to start its next update.
+          format: int64
+          example: 1691762520000
+        modelIssues:
+          type: array
+          description: The description and troubleshooting messages for a model error or limitation.
+          items:
+            $ref: '#/components/schemas/ModelErrorDescriptionModel'
+        modelDetails:
+          $ref: '#/components/schemas/ModelDetailedServingInfoModel'
+        requiresAssociation:
+          type: boolean
+          description: Indicates if the model requires association.
+        isLicensed:
+          type: boolean
+          description: Indicates if a license is required to create the model.
+    ChunksPerDocumentModel:
+      type: object
+      properties:
+        min:
+          type: number
+          format: float
+        max:
+          type: number
+          format: float
+        mean:
+          type: number
+          format: float
     ModelStatusInfoModel:
       type: object
       properties:
@@ -143,6 +240,38 @@ components:
           - INACTIVE
       description: The current status of the model..
       example: "{\n \"modelStatus\": \"BUILDING\",\n \"daysUntilArchival\" : 3\n }"
+    ModelErrorDescriptionModel:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A description of an error or limitation present in the model.
+        troubleshoot:
+          type: string
+          description: The recommended action to perform to resolve the error or limitation.
+      description: The description and troubleshooting messages for a model error or limitation.
+    SnippetsPerDocumentModel:
+      type: object
+      properties:
+        min:
+          type: number
+          format: float
+        max:
+          type: number
+          format: float
+        mean:
+          type: number
+          format: float
+    DatasetDetails:
+      type: object
+      properties:
+        numRows:
+          type: integer
+          format: int32
+        dataDetails:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DatasetFieldDetails'
     ModelDetailedCommerceEventsModel:
       type: object
       properties:
@@ -158,30 +287,15 @@ components:
         detailView:
           type: integer
           format: int32
-    ModelAssociationModel:
+    FacetsDetails:
       type: object
       properties:
-        parentId:
-          type: string
-          description: The unique identifier of the query pipeline to which the model is associated.
-          example: 38b08160-d7d4-4626-8e03-53587c23415d
-        id:
-          type: string
-          description: The unique identifier of the model association.
-          example: 917af358-13fd-4c8e-94af-7cf649bddc48
-        name:
-          type: string
-          description: The name of the query pipeline or case assist configuration the model is associated with.
-          example: association name
-        associationType:
-          type: string
-          description: The type of the association.
-          example: QUERY_PIPELINE
-          enum:
-          - QUERY_PIPELINE
-          - CASE_ASSIST
-      description: The associations related to this model
-      example: "[\n  {\n      \"parentId\": \"38b08160-d7d4-4626-8e03-53587c23415d\",\n      \"id\": \"917af358-13fd-4c8e-94af-7cf649bddc48,\n      \"name\": \"test pipeline\",\n      \"associationType\": \"QUERY_PIPELINE\"\n  }\n]"
+        facetLabels:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
     ModelDetailedBuildingStatsModel:
       type: object
       properties:
@@ -300,80 +414,6 @@ components:
           $ref: '#/components/schemas/SnippetsPerDocumentModel'
         chunksPerDocument:
           $ref: '#/components/schemas/ChunksPerDocumentModel'
-    DatasetFieldDetails:
-      type: object
-      properties:
-        numSamples:
-          type: integer
-          format: int32
-        labelsDistribution:
-          type: object
-          additionalProperties:
-            type: number
-            format: float
-    SnippetsPerDocumentModel:
-      type: object
-      properties:
-        min:
-          type: number
-          format: float
-        max:
-          type: number
-          format: float
-        mean:
-          type: number
-          format: float
-    ModelDetailedPreparationDetailsModel:
-      type: object
-      properties:
-        trainDatasetsDetails:
-          $ref: '#/components/schemas/DatasetDetails'
-        testDatasetsDetails:
-          $ref: '#/components/schemas/DatasetDetails'
-        facetsDetails:
-          $ref: '#/components/schemas/FacetsDetails'
-    ModelDetailedTrainingDetailsModel:
-      type: object
-      properties:
-        performanceDetails:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/FacetPerformanceDetails'
-    ModelErrorDescriptionModel:
-      type: object
-      properties:
-        description:
-          type: string
-          description: A description of an error or limitation present in the model.
-        troubleshoot:
-          type: string
-          description: The recommended action to perform to resolve the error or limitation.
-      description: The description and troubleshooting messages for a model error or limitation.
-    ModelDetailedSubModelsModel:
-      type: object
-      properties:
-        numOfItems:
-          type: integer
-          format: int64
-        candidates:
-          type: array
-          items:
-            type: object
-        numOfUsers:
-          type: integer
-          format: int64
-    ChunksPerDocumentModel:
-      type: object
-      properties:
-        min:
-          type: number
-          format: float
-        max:
-          type: number
-          format: float
-        mean:
-          type: number
-          format: float
     ModelDetailedServingInfoModel:
       type: object
       properties:
@@ -436,71 +476,31 @@ components:
         modelDetailedPreparationDetails:
           $ref: '#/components/schemas/ModelDetailedPreparationDetailsModel'
       description: The detailed information about the model.
-    ModelDetailedInfoModel:
+    ModelDetailedPreparationDetailsModel:
       type: object
       properties:
-        modelDisplayName:
-          type: string
-          description: The name of the model configuration.
-          example: My model
-        modelAssociations:
-          type: array
-          description: The associations related to this model
-          example: "[\n  {\n      \"parentId\": \"38b08160-d7d4-4626-8e03-53587c23415d\",\n      \"id\": \"917af358-13fd-4c8e-94af-7cf649bddc48,\n      \"name\": \"test pipeline\",\n      \"associationType\": \"QUERY_PIPELINE\"\n  }\n]"
-          items:
-            $ref: '#/components/schemas/ModelAssociationModel'
-        modelStatusInfo:
-          $ref: '#/components/schemas/ModelStatusInfoModel'
-        modelId:
-          type: string
-          description: The unique identifier of the target machine learning model.<br />**Example:** `My_Model_ID`
-          example: My_Model_ID
-        engineId:
-          type: string
-          description: The id of the engine.<br />**Example:** `topclicks`
-          example: topclicks
-        estimatedPreviousModelUpdateTime:
-          type: integer
-          description: The date and time the model was last updated.
-          format: int64
-          example: 1691762520000
-        nextModelUpdateTime:
-          type: integer
-          description: The date and time the model is scheduled to start its next update.
-          format: int64
-          example: 1691762520000
-        modelIssues:
-          type: array
-          description: The description and troubleshooting messages for a model error or limitation.
-          items:
-            $ref: '#/components/schemas/ModelErrorDescriptionModel'
-        modelDetails:
-          $ref: '#/components/schemas/ModelDetailedServingInfoModel'
-        requiresAssociation:
-          type: boolean
-          description: Indicates if the model requires association.
-        isLicensed:
-          type: boolean
-          description: Indicates if a license is required to create the model.
-    DatasetDetails:
+        trainDatasetsDetails:
+          $ref: '#/components/schemas/DatasetDetails'
+        testDatasetsDetails:
+          $ref: '#/components/schemas/DatasetDetails'
+        facetsDetails:
+          $ref: '#/components/schemas/FacetsDetails'
+    ModelDetailedTrainingDetailsModel:
       type: object
       properties:
-        numRows:
-          type: integer
-          format: int32
-        dataDetails:
+        performanceDetails:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/DatasetFieldDetails'
-    FacetsDetails:
+            $ref: '#/components/schemas/FacetPerformanceDetails'
+    FacetPerformanceDetails:
       type: object
       properties:
-        facetLabels:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
+        hit1:
+          type: number
+          format: float
+        hit3:
+          type: number
+          format: float
   securitySchemes:
     oauth2:
       type: oauth2

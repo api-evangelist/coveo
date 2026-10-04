@@ -260,35 +260,57 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/listings/pages_get
 components:
   schemas:
-    RangeModel:
+    DecimalValueModel:
+      required:
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          value:
+            type: number
+            format: double
+    FieldValueModel:
+      required:
+      - type
       type: object
       properties:
-        from:
-          type: number
-          format: double
-        to:
-          type: number
-          format: double
-    RuleLocaleModel:
-      type: object
-      properties:
-        language:
+        type:
           type: string
-          description: An ISO 639-1 language code.
-          example: en
-        country:
-          type: string
-          description: An ISO 3166-1 alpha-2 country code.
-          example: US
-        currency:
-          type: string
-          description: An ISO 4217 currency code.
-          example: USD
-      description: The list of locales the synonym applies to. When empty, the synonym applies to all locales.
+      description: The value to apply the operator on.
       example:
-      - language: en
-        country: US
-        currency: USD
+        type: string
+        value: Blue
+      discriminator:
+        propertyName: type
+    MultipleStringValuesModel:
+      required:
+      - values
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          values:
+            minItems: 1
+            type: array
+            items:
+              maxLength: 255
+              minLength: 0
+              type: string
+    HierarchicMultiValueModel:
+      required:
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          value:
+            maxLength: 255
+            minLength: 0
+            type: string
     StringValueModel:
       required:
       - value
@@ -301,6 +323,73 @@ components:
             maxLength: 255
             minLength: 0
             type: string
+    MatchingConfigurationModel:
+      required:
+      - url
+      type: object
+      properties:
+        url:
+          maxLength: 1024
+          minLength: 1
+          type: string
+          description: URL associated to a listing configuration used for pattern matching.
+      description: Possible patterns matching values associated to a listing configuration.
+      example:
+      - url: https://sports.barca.group/plp/clothing/pants
+    SeedRelativeValueModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+    QueryFilterModel:
+      required:
+      - fieldName
+      - operator
+      type: object
+      properties:
+        fieldName:
+          pattern: '[a-z][a-z0-9_]*'
+          type: string
+          description: The name of the field to apply the filter on.
+          example: name
+        operator:
+          type: string
+          description: The operator to apply on the field.
+          example: isExactly
+          enum:
+          - isExactly
+          - isExactlyNot
+          - contains
+          - doesNotContain
+          - isAnyOf
+          - isDefined
+          - isNotDefined
+          - isBetween
+          - isGreaterThan
+          - isGreaterThanOrEqualTo
+          - isLessThan
+          - isLessThanOrEqualTo
+        value:
+          oneOf:
+          - $ref: '#/components/schemas/DecimalValueModel'
+          - $ref: '#/components/schemas/HierarchicMultiValueModel'
+          - $ref: '#/components/schemas/InclusiveRangeModel'
+          - $ref: '#/components/schemas/MultipleStringValuesModel'
+          - $ref: '#/components/schemas/SeedRelativeValueModel'
+          - $ref: '#/components/schemas/StringValueModel'
+      description: A list of filters.
+      example:
+      - fieldName: price
+        operator: isExactly
+        value:
+          type: decimal
+          value: 99.99
+      - fieldName: item_count
+        operator: isBetween
+        value:
+          type: range
+          range:
+            from: 1000
+            to: 3000
     PublicListingPageRequestModel:
       required:
       - name
@@ -355,54 +444,6 @@ components:
           description: The unique identifier of the tracking target.
           example: acmecorporation_ca
       description: PublicListingPageRequestModel
-    CommercePageModelPublicListingPageResponseModel:
-      required:
-      - items
-      - totalEntries
-      - totalPages
-      type: object
-      properties:
-        items:
-          type: array
-          description: The retrieved page of items.
-          items:
-            $ref: '#/components/schemas/PublicListingPageResponseModel'
-        totalEntries:
-          type: integer
-          description: The total number of results that match the query.
-          format: int64
-        totalPages:
-          type: integer
-          description: The total number of pages of items available.
-          format: int32
-      description: Page
-    SeedRelativeValueModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel'
-    InclusiveRangeModel:
-      required:
-      - range
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel'
-      - type: object
-        properties:
-          range:
-            $ref: '#/components/schemas/RangeModel'
-    MatchingConfigurationModel:
-      required:
-      - url
-      type: object
-      properties:
-        url:
-          maxLength: 1024
-          minLength: 1
-          type: string
-          description: URL associated to a listing configuration used for pattern matching.
-      description: Possible patterns matching values associated to a listing configuration.
-      example:
-      - url: https://sports.barca.group/plp/clothing/pants
     ListingPageApiPageRuleModel:
       required:
       - filters
@@ -458,92 +499,56 @@ components:
             type: array
             values:
             - canoes-kayaks/kayaks/sports-kayaks
-    HierarchicMultiValueModel:
-      required:
-      - value
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel'
-      - type: object
-        properties:
-          value:
-            maxLength: 255
-            minLength: 0
-            type: string
-    FieldValueModel:
-      required:
-      - type
+    RuleLocaleModel:
       type: object
       properties:
-        type:
+        language:
           type: string
-      description: The value to apply the operator on.
+          description: An ISO 639-1 language code.
+          example: en
+        country:
+          type: string
+          description: An ISO 3166-1 alpha-2 country code.
+          example: US
+        currency:
+          type: string
+          description: An ISO 4217 currency code.
+          example: USD
+      description: The list of locales the synonym applies to. When empty, the synonym applies to all locales.
       example:
-        type: string
-        value: Blue
-      discriminator:
-        propertyName: type
-    QueryFilterModel:
-      required:
-      - fieldName
-      - operator
+      - language: en
+        country: US
+        currency: USD
+    RangeModel:
       type: object
       properties:
-        fieldName:
-          pattern: '[a-z][a-z0-9_]*'
-          type: string
-          description: The name of the field to apply the filter on.
-          example: name
-        operator:
-          type: string
-          description: The operator to apply on the field.
-          example: isExactly
-          enum:
-          - isExactly
-          - isExactlyNot
-          - contains
-          - doesNotContain
-          - isAnyOf
-          - isDefined
-          - isNotDefined
-          - isBetween
-          - isGreaterThan
-          - isGreaterThanOrEqualTo
-          - isLessThan
-          - isLessThanOrEqualTo
-        value:
-          oneOf:
-          - $ref: '#/components/schemas/DecimalValueModel'
-          - $ref: '#/components/schemas/HierarchicMultiValueModel'
-          - $ref: '#/components/schemas/InclusiveRangeModel'
-          - $ref: '#/components/schemas/MultipleStringValuesModel'
-          - $ref: '#/components/schemas/SeedRelativeValueModel'
-          - $ref: '#/components/schemas/StringValueModel'
-      description: A list of filters.
-      example:
-      - fieldName: price
-        operator: isExactly
-        value:
-          type: decimal
-          value: 99.99
-      - fieldName: item_count
-        operator: isBetween
-        value:
-          type: range
-          range:
-            from: 1000
-            to: 3000
-    DecimalValueModel:
+        from:
+          type: number
+          format: double
+        to:
+          type: number
+          format: double
+    CommercePageModelPublicListingPageResponseModel:
       required:
-      - value
+      - items
+      - totalEntries
+      - totalPages
       type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel'
-      - type: object
-        properties:
-          value:
-            type: number
-            format: double
+      properties:
+        items:
+          type: array
+          description: The retrieved page of items.
+          items:
+            $ref: '#/components/schemas/PublicListingPageResponseModel'
+        totalEntries:
+          type: integer
+          description: The total number of results that match the query.
+          format: int64
+        totalPages:
+          type: integer
+          description: The total number of pages of items available.
+          format: int32
+      description: Page
     PublicListingPageResponseModel:
       required:
       - pageRules
@@ -601,21 +606,16 @@ components:
           format: int64
           readOnly: true
       description: PublicListingPageResponseModel
-    MultipleStringValuesModel:
+    InclusiveRangeModel:
       required:
-      - values
+      - range
       type: object
       allOf:
       - $ref: '#/components/schemas/FieldValueModel'
       - type: object
         properties:
-          values:
-            minItems: 1
-            type: array
-            items:
-              maxLength: 255
-              minLength: 0
-              type: string
+          range:
+            $ref: '#/components/schemas/RangeModel'
   securitySchemes:
     oauth2:
       type: oauth2

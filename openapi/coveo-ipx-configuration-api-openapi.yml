@@ -324,31 +324,48 @@ paths:
           description: Not Found
 components:
   schemas:
-    UpdatedChangeInfo:
-      allOf:
-      - $ref: '#/components/schemas/ChangeInfo'
-      - type: object
-        description: Information about the most recent version update.
+    pipeline-status:
+      type: object
+      description: The status of a pipeline.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the pipeline.
+          example: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+        name:
+          type: string
+          description: The name of the pipeline.
+          example: My pipeline
+        pipelineType:
+          type: string
+          description: The type of the pipeline.
+          example: search
+        conditionId:
+          type: string
+          description: The unique identifier of the associated condition.
+          example: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
+        models:
+          type: array
+          items:
+            description: The list of models used by the pipeline.
+            properties:
+              id:
+                type: string
+                description: The unique identifier of the model.
+                example: cccccccc-cccc-cccc-cccc-cccccccccccc
+              modelStatus:
+                type: string
+                description: The status of the model.
+                example: ACTIVE
+              modelEngine:
+                type: string
+                description: The type of the model.
+                example: genqa
     CreatedChangeInfo:
       allOf:
       - $ref: '#/components/schemas/ChangeInfo'
       - type: object
         description: Information about the version creation.
-    ChangeInfo:
-      type: object
-      properties:
-        by:
-          type: string
-          description: The identity of the user who performed the change.
-        date:
-          type: string
-          description: The date and time at which the change was performed, in ISO-8601 format.
-        firstName:
-          type: string
-          description: The first name of the user who performed the change.
-        lastName:
-          type: string
-          description: The last name of the user who performed the change.
     ipx-interface-config:
       type: object
       properties:
@@ -588,36 +605,11 @@ components:
               $ref: '#/components/schemas/associated-pipeline'
       required:
       - name
-    VersionLabelParams:
-      type: object
-      properties:
-        label:
-          type: string
-          description: The label to set on the version. This value can be empty.
-          required: true
-    InterfaceVersionInfo:
-      type: object
-      properties:
-        version:
-          type: integer
-          description: The sequential number attributed to the version.
-        label:
-          type: string
-          description: An optional label describing the version changes.
-          required: false
-        created:
-          type: object
-          $ref: '#/components/schemas/CreatedChangeInfo'
-        updated:
-          type: object
-          $ref: '#/components/schemas/UpdatedChangeInfo'
-        isPublished:
-          type: boolean
-          description: Indicates whether the version is currently published.
-        restoredFromVersion:
-          type: integer
-          description: Indicates the origin of the current version, if it was restored.
-          required: false
+    UpdatedChangeInfo:
+      allOf:
+      - $ref: '#/components/schemas/ChangeInfo'
+      - type: object
+        description: Information about the most recent version update.
     associated-pipeline:
       type: object
       description: The associated pipeline.
@@ -681,58 +673,21 @@ components:
                     properties:
                       enabled:
                         type: boolean
-    pipeline-status:
+    ChangeInfo:
       type: object
-      description: The status of a pipeline.
       properties:
-        id:
+        by:
           type: string
-          description: The unique identifier of the pipeline.
-          example: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
-        name:
+          description: The identity of the user who performed the change.
+        date:
           type: string
-          description: The name of the pipeline.
-          example: My pipeline
-        pipelineType:
+          description: The date and time at which the change was performed, in ISO-8601 format.
+        firstName:
           type: string
-          description: The type of the pipeline.
-          example: search
-        conditionId:
+          description: The first name of the user who performed the change.
+        lastName:
           type: string
-          description: The unique identifier of the associated condition.
-          example: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
-        models:
-          type: array
-          items:
-            description: The list of models used by the pipeline.
-            properties:
-              id:
-                type: string
-                description: The unique identifier of the model.
-                example: cccccccc-cccc-cccc-cccc-cccccccccccc
-              modelStatus:
-                type: string
-                description: The status of the model.
-                example: ACTIVE
-              modelEngine:
-                type: string
-                description: The type of the model.
-                example: genqa
-    InterfaceVersionInfoPage:
-      allOf:
-      - $ref: '#/components/schemas/Page'
-      - type: object
-        properties:
-          items:
-            type: array
-            description: The list of interface versions.
-            items:
-              $ref: '#/components/schemas/InterfaceVersionInfo'
-    pipelines-status:
-      type: array
-      description: A list containing the pipeline(s) used by the interface.
-      items:
-        $ref: '#/components/schemas/pipeline-status'
+          description: The last name of the user who performed the change.
     ipx-interface-config-id:
       type: object
       properties:
@@ -999,6 +954,28 @@ components:
       required:
       - id
       - name
+    InterfaceVersionInfoPage:
+      allOf:
+      - $ref: '#/components/schemas/Page'
+      - type: object
+        properties:
+          items:
+            type: array
+            description: The list of interface versions.
+            items:
+              $ref: '#/components/schemas/InterfaceVersionInfo'
+    VersionLabelParams:
+      type: object
+      properties:
+        label:
+          type: string
+          description: The label to set on the version. This value can be empty.
+          required: true
+    pipelines-status:
+      type: array
+      description: A list containing the pipeline(s) used by the interface.
+      items:
+        $ref: '#/components/schemas/pipeline-status'
     Page:
       type: object
       properties:
@@ -1008,7 +985,66 @@ components:
         totalEntries:
           type: integer
           description: The total number of items.
+    InterfaceVersionInfo:
+      type: object
+      properties:
+        version:
+          type: integer
+          description: The sequential number attributed to the version.
+        label:
+          type: string
+          description: An optional label describing the version changes.
+          required: false
+        created:
+          type: object
+          $ref: '#/components/schemas/CreatedChangeInfo'
+        updated:
+          type: object
+          $ref: '#/components/schemas/UpdatedChangeInfo'
+        isPublished:
+          type: boolean
+          description: Indicates whether the version is currently published.
+        restoredFromVersion:
+          type: integer
+          description: Indicates the origin of the current version, if it was restored.
+          required: false
   parameters:
+    versions-order:
+      name: order
+      description: 'The sort direction of the versions based on the version number.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        default: desc
+    versions-filter:
+      name: filter
+      description: A substring that must appear in a version label for this version to appear in results.
+      in: query
+      schema:
+        type: string
+    projectId:
+      name: projectId
+      description: The id of the project to which the resource belongs.
+      in: query
+      schema:
+        type: string
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
+      schema:
+        type: string
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
     versions-per-page:
       name: perPage
       description: The number of versions to include per page.
@@ -1026,31 +1062,26 @@ components:
         type: integer
         minimum: 0
         maximum: 20
-    projectId:
-      name: projectId
-      description: The id of the project to which the resource belongs.
+    page:
+      name: page
+      description: The 0-based number of the page of configurations to list.
       in: query
       schema:
-        type: string
-    order:
-      name: order
-      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
-      in: query
+        type: integer
+        minimum: 0
+        maximum: 100
+    interface-id:
+      name: interfaceId
+      description: The unique identifier of the target search interface.
+      example: 123e4567-e89b-12d3-a456-426614174000
+      in: path
+      required: true
       schema:
         type: string
-        enum:
-        - asc
-        - desc
     filter:
       name: filter
       description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
       example: Store
-      in: query
-      schema:
-        type: string
-    versions-filter:
-      name: filter
-      description: A substring that must appear in a version label for this version to appear in results.
       in: query
       schema:
         type: string
@@ -1063,21 +1094,6 @@ components:
         default: 0
         minimum: 0
         maximum: 100
-    page:
-      name: page
-      description: The 0-based number of the page of configurations to list.
-      in: query
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 100
-    versions-order:
-      name: order
-      description: 'The sort direction of the versions based on the version number.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
-      in: query
-      schema:
-        type: string
-        default: desc
     version-number:
       name: versionNumber
       description: The sequential number identifying a version.
@@ -1086,22 +1102,6 @@ components:
       schema:
         type: integer
         minimum: 1
-    organization-id:
-      name: organizationId
-      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
-      example: mycoveocloudv2organizationg8tp8wu3
-      in: path
-      required: true
-      schema:
-        type: string
-    interface-id:
-      name: interfaceId
-      description: The unique identifier of the target search interface.
-      example: 123e4567-e89b-12d3-a456-426614174000
-      in: path
-      required: true
-      schema:
-        type: string
   securitySchemes:
     oauth2:
       type: oauth2

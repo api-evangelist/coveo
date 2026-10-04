@@ -773,51 +773,66 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    swaggermodels.searchTokenConfigurationResponseModel:
+    swaggermodels.ResponseApplicationErrorBadRequest:
       type: object
-      required:
-      - pipeline
-      - searchHub
       properties:
-        filter:
-          description: The [constant query expression ('cq')](https://docs.coveo.com/en/179/) to apply when executing search requests with the token.
-          type: string
-          example: '@source==KnowledgeBase'
-        pipeline:
-          description: The name of the [query pipeline](https://docs.coveo.com/en/180/) to enforce when executing search requests with the token.
-          type: string
-          example: InternalSearch
-        searchHub:
-          description: The name of the [search hub](https://docs.coveo.com/en/1342/) / [origin level 1](https://docs.coveo.com/en/1337/) to pass when executing search requests and logging usage analytics events with the token.
-          type: string
-          example: SupportHub
-        userDisplayName:
-          description: The userDisplayName to pass when logging usage analytics search events.
-          type: string
-          default: Anonymous
-          example: Alice Smith
-        userGroups:
-          description: The userGroups to passed when logging usage analytics search events.
-          type: array
-          items:
-            type: string
-          example:
-          - Tech support agents
-          - Employees
-        userIds:
-          description: 'The security identities impersonated when authenticating this query.
-
-            By default, the service uses a single security identity representing an anonymous user.'
-          type: array
-          items:
-            $ref: '#/components/schemas/swaggermodels.userIDResponseModel'
-        validFor:
-          description: The number of milliseconds the search token will remain valid for once it has been created.
+        errorCode:
           type: integer
-          default: 86400000
-          maximum: 86400000
-          minimum: 900000
-          example: 3600000
+          example: 400
+        message:
+          type: string
+    swaggermodels.ResponseApplicationErrorUnauthorized:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 401
+        message:
+          type: string
+    swaggermodels.buttonJavaScriptResponseModel:
+      type: object
+      properties:
+        inlineContent:
+          description: The content of the header "script" tag.
+          type: string
+          example: window.location = 'about:blank';
+        name:
+          description: The identifier of the header "script" tag.
+          type: string
+          example: CoveoSearchUI
+        url:
+          description: The URL of the JavaScript source file.
+          type: string
+          example: https://code.jquery.com/jquery-3.4.1.min.js
+    swaggermodels.userIDResponseModel:
+      type: object
+      properties:
+        name:
+          description: The [security identity](https://docs.coveo.com/en/240/) name.
+          type: string
+          default: anonymous@coveo.com
+          example: johndoe@coveo.com
+        provider:
+          description: The [security identity provider](https://docs.coveo.com/en/242/) the [identity](https://docs.coveo.com/en/240/) is defined in.
+          type: string
+          default: Email Security Provider
+          example: Email Security Provider
+    swaggermodels.ResponseApplicationErrorNotFound:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 404
+        message:
+          type: string
+    swaggermodels.ResponseApplicationErrorForbidden:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 403
+        message:
+          type: string
     swaggermodels.InAppWidgetCreateResponseBody:
       type: object
       required:
@@ -929,7 +944,7 @@ components:
           description: The [search token](https://docs.coveo.com/en/1346/) to request when initializing the InAppWidget.
           allOf:
           - $ref: '#/components/schemas/swaggermodels.searchTokenConfigurationResponseModel'
-    swaggermodels.buttonJavaScriptResponseModel:
+    swaggermodels.JavaScriptResourceSharedModel:
       type: object
       properties:
         inlineContent:
@@ -944,35 +959,6 @@ components:
           description: The URL of the JavaScript source file.
           type: string
           example: https://code.jquery.com/jquery-3.4.1.min.js
-    swaggermodels.ResponseApplicationErrorBadRequest:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 400
-        message:
-          type: string
-    swaggermodels.ResponseApplicationErrorUnauthorized:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 401
-        message:
-          type: string
-    swaggermodels.userIDResponseModel:
-      type: object
-      properties:
-        name:
-          description: The [security identity](https://docs.coveo.com/en/240/) name.
-          type: string
-          default: anonymous@coveo.com
-          example: johndoe@coveo.com
-        provider:
-          description: The [security identity provider](https://docs.coveo.com/en/242/) the [identity](https://docs.coveo.com/en/240/) is defined in.
-          type: string
-          default: Email Security Provider
-          example: Email Security Provider
     swaggermodels.CSSResourceSharedModel:
       type: object
       properties:
@@ -1003,6 +989,59 @@ components:
           description: The URL of CSS stylesheet.
           type: string
           example: https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css
+    swaggermodels.ResponseApplicationErrorInternalServerError:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          example: 500
+        message:
+          type: string
+    swaggermodels.searchTokenConfigurationResponseModel:
+      type: object
+      required:
+      - pipeline
+      - searchHub
+      properties:
+        filter:
+          description: The [constant query expression ('cq')](https://docs.coveo.com/en/179/) to apply when executing search requests with the token.
+          type: string
+          example: '@source==KnowledgeBase'
+        pipeline:
+          description: The name of the [query pipeline](https://docs.coveo.com/en/180/) to enforce when executing search requests with the token.
+          type: string
+          example: InternalSearch
+        searchHub:
+          description: The name of the [search hub](https://docs.coveo.com/en/1342/) / [origin level 1](https://docs.coveo.com/en/1337/) to pass when executing search requests and logging usage analytics events with the token.
+          type: string
+          example: SupportHub
+        userDisplayName:
+          description: The userDisplayName to pass when logging usage analytics search events.
+          type: string
+          default: Anonymous
+          example: Alice Smith
+        userGroups:
+          description: The userGroups to passed when logging usage analytics search events.
+          type: array
+          items:
+            type: string
+          example:
+          - Tech support agents
+          - Employees
+        userIds:
+          description: 'The security identities impersonated when authenticating this query.
+
+            By default, the service uses a single security identity representing an anonymous user.'
+          type: array
+          items:
+            $ref: '#/components/schemas/swaggermodels.userIDResponseModel'
+        validFor:
+          description: The number of milliseconds the search token will remain valid for once it has been created.
+          type: integer
+          default: 86400000
+          maximum: 86400000
+          minimum: 900000
+          example: 3600000
     swaggermodels.FullInAppWidgetRequestModel:
       type: object
       required:
@@ -1102,45 +1141,6 @@ components:
           maximum: 86400000
           minimum: 900000
           example: 3600000
-    swaggermodels.ResponseApplicationErrorNotFound:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 404
-        message:
-          type: string
-    swaggermodels.ResponseApplicationErrorInternalServerError:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 500
-        message:
-          type: string
-    swaggermodels.JavaScriptResourceSharedModel:
-      type: object
-      properties:
-        inlineContent:
-          description: The content of the header "script" tag.
-          type: string
-          example: window.location = 'about:blank';
-        name:
-          description: The identifier of the header "script" tag.
-          type: string
-          example: CoveoSearchUI
-        url:
-          description: The URL of the JavaScript source file.
-          type: string
-          example: https://code.jquery.com/jquery-3.4.1.min.js
-    swaggermodels.ResponseApplicationErrorForbidden:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 403
-        message:
-          type: string
   securitySchemes:
     OAuth2:
       type: oauth2

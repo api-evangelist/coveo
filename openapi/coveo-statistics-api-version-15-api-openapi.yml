@@ -712,73 +712,6 @@ paths:
           description: No content
 components:
   schemas:
-    VisitStatisticsResponseV15:
-      required:
-      - visitId
-      type: object
-      properties:
-        visitId:
-          type: string
-          description: The visit id
-        events:
-          type: array
-          description: The visit's events
-          items:
-            $ref: '#/components/schemas/EventPojo'
-        numberOfEvents:
-          type: integer
-          description: The number of events
-          format: int32
-      description: The visit matching the specified criteria
-    EventPojo:
-      type: object
-      properties: {}
-      description: The visit's events
-    GlobalAggregatedDataResponseV15:
-      required:
-      - globalDatas
-      type: object
-      properties:
-        globalDatas:
-          type: object
-          additionalProperties:
-            type: object
-            additionalProperties:
-              type: number
-              description: The global values by metrics. Usually a unique count, a daily count or daily average
-            description: The global values by metrics. Usually a unique count, a daily count or daily average
-          description: The global values by metrics. Usually a unique count, a daily count or daily average
-      description: The global aggregated values by metrics
-    SummaryStatisticsPojo:
-      type: object
-      properties: {}
-      description: The sum, average, max and min for the requested metrics.
-    GraphAggregatedDataResponseV15:
-      required:
-      - dataPoints
-      - totals
-      type: object
-      properties:
-        dataPoints:
-          type: array
-          description: A collection of data points
-          items:
-            $ref: '#/components/schemas/DataPoint'
-        totals:
-          type: object
-          additionalProperties:
-            type: number
-            description: The totals for the requested metrics.
-          description: The totals for the requested metrics.
-        stats:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/SummaryStatisticsPojo'
-          description: The sum, average, max and min for the requested metrics.
-      description: The data points to be used in a graph, aggregated by the specified time interval.
-    StatusResponse:
-      type: object
-      description: Service's status information
     CombinedDataResponseV15:
       required:
       - combinations
@@ -804,6 +737,51 @@ components:
           description: The total number of combinations available
           format: int32
       description: The values of the metrics combined by dimensions
+    SummaryStatisticsPojo:
+      type: object
+      properties: {}
+      description: The sum, average, max and min for the requested metrics.
+    StatusResponse:
+      type: object
+      description: Service's status information
+    GraphAggregatedDataResponseV15:
+      required:
+      - dataPoints
+      - totals
+      type: object
+      properties:
+        dataPoints:
+          type: array
+          description: A collection of data points
+          items:
+            $ref: '#/components/schemas/DataPoint'
+        totals:
+          type: object
+          additionalProperties:
+            type: number
+            description: The totals for the requested metrics.
+          description: The totals for the requested metrics.
+        stats:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SummaryStatisticsPojo'
+          description: The sum, average, max and min for the requested metrics.
+      description: The data points to be used in a graph, aggregated by the specified time interval.
+    VisitsStatisticsResponseV15:
+      required:
+      - visits
+      type: object
+      properties:
+        visits:
+          type: array
+          description: The visits matching the specified criteria
+          items:
+            $ref: '#/components/schemas/VisitStatisticsResponseV15'
+        totalNumberOfVisits:
+          type: integer
+          description: The total number of visits matching
+          format: int32
+      description: The visits matching the specified criteria
     DataPoint:
       required:
       - datas
@@ -821,21 +799,43 @@ components:
             description: The metric values
           description: The metric values
       description: A collection of data points
-    VisitsStatisticsResponseV15:
+    GlobalAggregatedDataResponseV15:
       required:
-      - visits
+      - globalDatas
       type: object
       properties:
-        visits:
+        globalDatas:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: number
+              description: The global values by metrics. Usually a unique count, a daily count or daily average
+            description: The global values by metrics. Usually a unique count, a daily count or daily average
+          description: The global values by metrics. Usually a unique count, a daily count or daily average
+      description: The global aggregated values by metrics
+    EventPojo:
+      type: object
+      properties: {}
+      description: The visit's events
+    VisitStatisticsResponseV15:
+      required:
+      - visitId
+      type: object
+      properties:
+        visitId:
+          type: string
+          description: The visit id
+        events:
           type: array
-          description: The visits matching the specified criteria
+          description: The visit's events
           items:
-            $ref: '#/components/schemas/VisitStatisticsResponseV15'
-        totalNumberOfVisits:
+            $ref: '#/components/schemas/EventPojo'
+        numberOfEvents:
           type: integer
-          description: The total number of visits matching
+          description: The number of events
           format: int32
-      description: The visits matching the specified criteria
+      description: The visit matching the specified criteria
   securitySchemes:
     v8:
       type: oauth2

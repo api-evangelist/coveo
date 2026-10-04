@@ -49,27 +49,6 @@ paths:
         - full
 components:
   schemas:
-    GenericField:
-      type: object
-      properties:
-        facet:
-          description: Whether Group By operations and Facet requests can be performed on the field.
-          type: boolean
-        multiValueFacet:
-          description: Whether the field contains multiple values (see also the multiValueFacetTokenizers property).
-          type: boolean
-        name:
-          description: The name of the field, also referred to as the field identifier, or fieldId.
-          type: string
-        sort:
-          description: Whether query results can be sorted based on the value of the field.
-          type: boolean
-        type:
-          description: WThe data type of the field. ("LONG", "LONG_64", "DOUBLE", "DATE" or "STRING")
-          type: string
-      required:
-      - name
-      - type
     GenericMapping:
       type: object
       properties:
@@ -93,24 +72,6 @@ components:
       - fieldName
       - extractionMethod
       - content
-    SalesforcePolymorphicRelationships:
-      type: object
-      properties:
-        name:
-          description: The child relationship name
-          type: string
-        objectName:
-          description: The object name to match
-          type: string
-        fields:
-          description: The object fields to be indexed
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - objectName
-      - fields
     SalesforceChildRelationships:
       type: object
       properties:
@@ -129,20 +90,6 @@ components:
             $ref: '#/components/schemas/SalesforceParentRelationships'
       required:
       - name
-      - fields
-    SalesforceParentRelationships:
-      type: object
-      properties:
-        relationshipName:
-          description: The parent relationship name
-          type: string
-        fields:
-          description: The parent object fields to be indexed
-          type: array
-          items:
-            type: string
-      required:
-      - relationshipName
       - fields
     GenericObject:
       type: object
@@ -173,6 +120,20 @@ components:
       required:
       - ObjectName
       - Fields
+    SalesforceParentRelationships:
+      type: object
+      properties:
+        relationshipName:
+          description: The parent relationship name
+          type: string
+        fields:
+          description: The parent object fields to be indexed
+          type: array
+          items:
+            type: string
+      required:
+      - relationshipName
+      - fields
     SalesforceObjectToGet:
       type: object
       properties:
@@ -190,6 +151,45 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/GenericField'
+    GenericField:
+      type: object
+      properties:
+        facet:
+          description: Whether Group By operations and Facet requests can be performed on the field.
+          type: boolean
+        multiValueFacet:
+          description: Whether the field contains multiple values (see also the multiValueFacetTokenizers property).
+          type: boolean
+        name:
+          description: The name of the field, also referred to as the field identifier, or fieldId.
+          type: string
+        sort:
+          description: Whether query results can be sorted based on the value of the field.
+          type: boolean
+        type:
+          description: WThe data type of the field. ("LONG", "LONG_64", "DOUBLE", "DATE" or "STRING")
+          type: string
+      required:
+      - name
+      - type
+    SalesforcePolymorphicRelationships:
+      type: object
+      properties:
+        name:
+          description: The child relationship name
+          type: string
+        objectName:
+          description: The object name to match
+          type: string
+        fields:
+          description: The object fields to be indexed
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - objectName
+      - fields
   securitySchemes:
     oauth2:
       type: oauth2

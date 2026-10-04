@@ -820,6 +820,86 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    IndexingPipelineLogTasks:
+      description: The _task_ filter value.
+      enum:
+      - CONSUMING
+      - CONSUMING_BATCH
+      - CRAWLING
+      - STREAMING_EXTENSION
+      - EXTENSION
+      - INDEXING
+      - MAPPING
+      - PROCESSING
+      - STREAMING
+      - STREAMING_BATCH
+      - PREINDEXING
+      - VALIDATION
+      type: string
+    IndexingPipelineLogOperations:
+      description: The _operation_ filter value.
+      enum:
+      - ADD
+      - ADD_BY_REFERENCE
+      - BATCH_FILE
+      - DELETE
+      - DELETE_AND_CHILDREN
+      - DELETE_OLDER_THAN
+      - UPDATE
+      type: string
+    GetLogsOrFacetsRequestBodyModel:
+      properties:
+        excludeOperations:
+          description: The _operation_ values to filter out from the response. Entries matching other _operation_ values will be included.
+          items:
+            $ref: '#/components/schemas/IndexingPipelineLogOperations'
+          type: array
+        excludeResourceIds:
+          description: The _resourceId_ values to filter out from the response. Entries matching other _resourceId_ values will be included.
+          items:
+            type: string
+          type: array
+        excludeResults:
+          description: The _result_ values to filter out from the response. Entries matching other _result_ values will be included.
+          items:
+            $ref: '#/components/schemas/IndexingPipelineLogResults'
+          type: array
+        excludeSourceIds:
+          description: The _sourceId_ values to filter out from the response. Entries matching other _sourceId_ values will be included.
+          items:
+            type: string
+          type: array
+        excludeTasks:
+          description: The _task_ values to filter out from the response. Entries matching other _task_ values will be included.
+          items:
+            $ref: '#/components/schemas/IndexingPipelineLogTasks'
+          type: array
+        operations:
+          description: The _operation_ values to allow in the response. Entries matching other _operation_ values will be filtered out (has priority over `excludeOperations`).
+          items:
+            $ref: '#/components/schemas/IndexingPipelineLogOperations'
+          type: array
+        resourceIds:
+          description: The _resourceId_ values to allow in the response. Entries matching other _resourceId_ values will be filtered out (has priority over `excludeResourceIds`).
+          items:
+            type: string
+          type: array
+        results:
+          description: The _result_ values to allow in the response. Entries matching other _result_ values will be filtered out (has priority over `excludeResults`).
+          items:
+            $ref: '#/components/schemas/IndexingPipelineLogResults'
+          type: array
+        sourcesIds:
+          description: The _sourceId_ values to allow in the response. Entries matching other _sourceId_ values will be filtered out (has priority over `excludeSourceIds`).
+          items:
+            type: string
+          type: array
+        tasks:
+          description: The _task_ values to allow in the response. Entries matching other _task_ values will be filtered out (has priority over `excludeTasks`).
+          items:
+            $ref: '#/components/schemas/IndexingPipelineLogTasks'
+          type: array
+      type: object
     GetFacetsWithCountsResponseBodyModel:
       description: The retrieved values/counts for each type of indexing pipeline log entry facet.
       properties:
@@ -888,93 +968,6 @@ components:
             $ref: '#/components/schemas/IndexingPipelineLogTasks'
           type: array
       type: object
-    IndexingPipelineLogTasks:
-      description: The _task_ filter value.
-      enum:
-      - CONSUMING
-      - CONSUMING_BATCH
-      - CRAWLING
-      - STREAMING_EXTENSION
-      - EXTENSION
-      - INDEXING
-      - MAPPING
-      - PROCESSING
-      - STREAMING
-      - STREAMING_BATCH
-      - PREINDEXING
-      - VALIDATION
-      type: string
-    GetLogsOrFacetsRequestBodyModel:
-      properties:
-        excludeOperations:
-          description: The _operation_ values to filter out from the response. Entries matching other _operation_ values will be included.
-          items:
-            $ref: '#/components/schemas/IndexingPipelineLogOperations'
-          type: array
-        excludeResourceIds:
-          description: The _resourceId_ values to filter out from the response. Entries matching other _resourceId_ values will be included.
-          items:
-            type: string
-          type: array
-        excludeResults:
-          description: The _result_ values to filter out from the response. Entries matching other _result_ values will be included.
-          items:
-            $ref: '#/components/schemas/IndexingPipelineLogResults'
-          type: array
-        excludeSourceIds:
-          description: The _sourceId_ values to filter out from the response. Entries matching other _sourceId_ values will be included.
-          items:
-            type: string
-          type: array
-        excludeTasks:
-          description: The _task_ values to filter out from the response. Entries matching other _task_ values will be included.
-          items:
-            $ref: '#/components/schemas/IndexingPipelineLogTasks'
-          type: array
-        operations:
-          description: The _operation_ values to allow in the response. Entries matching other _operation_ values will be filtered out (has priority over `excludeOperations`).
-          items:
-            $ref: '#/components/schemas/IndexingPipelineLogOperations'
-          type: array
-        resourceIds:
-          description: The _resourceId_ values to allow in the response. Entries matching other _resourceId_ values will be filtered out (has priority over `excludeResourceIds`).
-          items:
-            type: string
-          type: array
-        results:
-          description: The _result_ values to allow in the response. Entries matching other _result_ values will be filtered out (has priority over `excludeResults`).
-          items:
-            $ref: '#/components/schemas/IndexingPipelineLogResults'
-          type: array
-        sourcesIds:
-          description: The _sourceId_ values to allow in the response. Entries matching other _sourceId_ values will be filtered out (has priority over `excludeSourceIds`).
-          items:
-            type: string
-          type: array
-        tasks:
-          description: The _task_ values to allow in the response. Entries matching other _task_ values will be filtered out (has priority over `excludeTasks`).
-          items:
-            $ref: '#/components/schemas/IndexingPipelineLogTasks'
-          type: array
-      type: object
-    IndexingPipelineLogOperations:
-      description: The _operation_ filter value.
-      enum:
-      - ADD
-      - ADD_BY_REFERENCE
-      - BATCH_FILE
-      - DELETE
-      - DELETE_AND_CHILDREN
-      - DELETE_OLDER_THAN
-      - UPDATE
-      type: string
-    Error:
-      properties:
-        errorCode:
-          type: string
-        message:
-          type: string
-      type: object
     IndexingPipelineLogResults:
       description: The _result_ filter value.
       enum:
@@ -984,6 +977,13 @@ components:
       - SKIPPED
       - WARNING
       type: string
+    Error:
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
+      type: object
   securitySchemes:
     oauth2:
       type: oauth2

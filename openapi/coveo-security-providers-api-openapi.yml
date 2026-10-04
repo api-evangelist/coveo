@@ -453,24 +453,21 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/securityproviders/page_get
 components:
   schemas:
-    SecurityProviderReferenceModel:
+    CurrentStatusModel:
       type: object
       properties:
         type:
           type: string
           enum:
-          - SOURCE
-          - SECURITY_PROVIDER
-        id:
-          type: string
-        attributes:
-          type: object
-    LastRefreshOperationModel:
-      type: object
-      properties:
-        id:
-          type: string
-        operationType:
+          - CREATING
+          - DISABLED
+          - REFRESHING
+          - PAUSED
+          - PAUSED_ON_ERROR
+          - IDLE
+          - ERROR
+          - PUSH_READY
+        refreshType:
           type: string
           enum:
           - REBUILD
@@ -481,160 +478,21 @@ components:
           - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
           - SECURITY_CACHE_REFRESH
           - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
-        timestamp:
-          type: string
-          format: date-time
-        result:
-          type: string
-        errorCode:
-          type: string
+        numberOfEntitiesInError:
+          type: integer
+          format: int32
         numberOfEntitiesProcessed:
           type: integer
           format: int32
-    SecurityProviderModel:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-          deprecated: true
-        displayName:
-          type: string
-        organizationId:
-          type: string
-        type:
-          type: string
-          enum:
-          - ACTIVE_DIRECTORY2
-          - BOX
-          - CLAIMS
-          - CLAIMS_TO_EMAIL
-          - CONFLUENCE
-          - CONFLUENCE2
-          - CUSTOM
-          - DATABASE
-          - DROPBOX_FOR_BUSINESS
-          - EMAIL
-          - EXPANDED
-          - FILE
-          - GOOGLE_DRIVE_DOMAIN_WIDE
-          - GENERIC_REST
-          - GRAPHQL
-          - JIRA2
-          - JIVE
-          - KHOROS_COMMUNITY
-          - MICROSOFT_DYNAMICS
-          - OFFICE365
-          - SALESFORCE
-          - SERVICENOW
-          - SHAREPOINT
-          - SHAREPOINT_ONLINE
-          - SITECORE
-          - SLACK
-          - ZENDESK
-        nodeTypeName:
-          type: string
-        sourceTypeName:
-          type: string
-        nodeRequired:
-          type: boolean
-        onPremisesEnabled:
-          type: boolean
-        projectIds:
-          type: array
-          items:
-            type: string
-        crawlingModuleId:
-          type: string
-        caseSensitive:
-          type: boolean
-        userIdentities:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UserIdentityModel'
-        parameters:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/ParameterModel'
-        cascadingSecurityProviders:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CascadingSecurityProvider'
-        referencedBy:
-          type: array
-          items:
-            $ref: '#/components/schemas/SecurityProviderReferenceModel'
-        instanceId:
-          type: string
-    Parameter:
+        totalNumberOfEntities:
+          type: integer
+          format: int32
+    DataFile:
       type: object
       properties:
         sensitive:
           type: boolean
-        value:
-          type: string
-    PageModelSecurityProviderModelWithStatus:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/SecurityProviderModelWithStatus'
-        totalEntries:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-    UserIdentityModel:
-      type: object
-      properties:
-        name:
-          type: string
-        username:
-          type: string
-        password:
-          type: string
-    CascadingSecurityProvider:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-          deprecated: true
-          enum:
-          - ACTIVE_DIRECTORY2
-          - BOX
-          - CLAIMS
-          - CLAIMS_TO_EMAIL
-          - CONFLUENCE
-          - CONFLUENCE2
-          - CUSTOM
-          - DATABASE
-          - DROPBOX_FOR_BUSINESS
-          - EMAIL
-          - EXPANDED
-          - FILE
-          - GOOGLE_DRIVE_DOMAIN_WIDE
-          - GENERIC_REST
-          - GRAPHQL
-          - JIRA2
-          - JIVE
-          - KHOROS_COMMUNITY
-          - MICROSOFT_DYNAMICS
-          - OFFICE365
-          - SALESFORCE
-          - SERVICENOW
-          - SHAREPOINT
-          - SHAREPOINT_ONLINE
-          - SITECORE
-          - SLACK
-          - ZENDESK
-        typeName:
+        data:
           type: string
     RawSecurityProviderConfig:
       type: object
@@ -723,13 +581,197 @@ components:
           type: string
         typeName:
           type: string
-    DataFile:
+    Parameter:
       type: object
       properties:
         sensitive:
           type: boolean
-        data:
+        value:
           type: string
+    SecurityProviderModel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          deprecated: true
+        displayName:
+          type: string
+        organizationId:
+          type: string
+        type:
+          type: string
+          enum:
+          - ACTIVE_DIRECTORY2
+          - BOX
+          - CLAIMS
+          - CLAIMS_TO_EMAIL
+          - CONFLUENCE
+          - CONFLUENCE2
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - EMAIL
+          - EXPANDED
+          - FILE
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GENERIC_REST
+          - GRAPHQL
+          - JIRA2
+          - JIVE
+          - KHOROS_COMMUNITY
+          - MICROSOFT_DYNAMICS
+          - OFFICE365
+          - SALESFORCE
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE
+          - SITECORE
+          - SLACK
+          - ZENDESK
+        nodeTypeName:
+          type: string
+        sourceTypeName:
+          type: string
+        nodeRequired:
+          type: boolean
+        onPremisesEnabled:
+          type: boolean
+        projectIds:
+          type: array
+          items:
+            type: string
+        crawlingModuleId:
+          type: string
+        caseSensitive:
+          type: boolean
+        userIdentities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UserIdentityModel'
+        parameters:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ParameterModel'
+        cascadingSecurityProviders:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CascadingSecurityProvider'
+        referencedBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityProviderReferenceModel'
+        instanceId:
+          type: string
+    LastRefreshOperationModel:
+      type: object
+      properties:
+        id:
+          type: string
+        operationType:
+          type: string
+          enum:
+          - REBUILD
+          - FULL_REFRESH
+          - INCREMENTAL_REFRESH
+          - SECURITY_PROVIDER_REFRESH
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
+          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
+          - SECURITY_CACHE_REFRESH
+          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
+        timestamp:
+          type: string
+          format: date-time
+        result:
+          type: string
+        errorCode:
+          type: string
+        numberOfEntitiesProcessed:
+          type: integer
+          format: int32
+    SecurityProviderReferenceModel:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - SOURCE
+          - SECURITY_PROVIDER
+        id:
+          type: string
+        attributes:
+          type: object
+    ParameterModel:
+      type: object
+      properties:
+        value:
+          type: string
+        sensitive:
+          type: boolean
+    UserIdentityModel:
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+    CascadingSecurityProvider:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+          deprecated: true
+          enum:
+          - ACTIVE_DIRECTORY2
+          - BOX
+          - CLAIMS
+          - CLAIMS_TO_EMAIL
+          - CONFLUENCE
+          - CONFLUENCE2
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - EMAIL
+          - EXPANDED
+          - FILE
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GENERIC_REST
+          - GRAPHQL
+          - JIRA2
+          - JIVE
+          - KHOROS_COMMUNITY
+          - MICROSOFT_DYNAMICS
+          - OFFICE365
+          - SALESFORCE
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE
+          - SITECORE
+          - SLACK
+          - ZENDESK
+        typeName:
+          type: string
+    SecurityProviderStatisticsModel:
+      type: object
+      properties:
+        numberOfEntitiesByState:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        totalNumberOfEntities:
+          type: integer
+          format: int32
+        numberOfEntitiesInError:
+          type: integer
+          format: int32
     SecurityProviderModelWithStatus:
       type: object
       properties:
@@ -812,38 +854,17 @@ components:
           $ref: '#/components/schemas/LastRefreshOperationModel'
         currentStatus:
           $ref: '#/components/schemas/CurrentStatusModel'
-    CurrentStatusModel:
+    PageModelSecurityProviderModelWithStatus:
       type: object
       properties:
-        type:
-          type: string
-          enum:
-          - CREATING
-          - DISABLED
-          - REFRESHING
-          - PAUSED
-          - PAUSED_ON_ERROR
-          - IDLE
-          - ERROR
-          - PUSH_READY
-        refreshType:
-          type: string
-          enum:
-          - REBUILD
-          - FULL_REFRESH
-          - INCREMENTAL_REFRESH
-          - SECURITY_PROVIDER_REFRESH
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_IN_ERROR
-          - SECURITY_PROVIDER_REFRESH_ENTITIES_NOT_UPDATED
-          - SECURITY_CACHE_REFRESH
-          - SECURITY_CACHE_REFRESH_ENTITIES_IN_ERROR
-        numberOfEntitiesInError:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityProviderModelWithStatus'
+        totalEntries:
           type: integer
-          format: int32
-        numberOfEntitiesProcessed:
-          type: integer
-          format: int32
-        totalNumberOfEntities:
+          format: int64
+        totalPages:
           type: integer
           format: int32
     UserIdentity:
@@ -855,27 +876,6 @@ components:
           type: string
         password:
           type: string
-    ParameterModel:
-      type: object
-      properties:
-        value:
-          type: string
-        sensitive:
-          type: boolean
-    SecurityProviderStatisticsModel:
-      type: object
-      properties:
-        numberOfEntitiesByState:
-          type: object
-          additionalProperties:
-            type: integer
-            format: int32
-        totalNumberOfEntities:
-          type: integer
-          format: int32
-        numberOfEntitiesInError:
-          type: integer
-          format: int32
   securitySchemes:
     oauth2:
       type: oauth2

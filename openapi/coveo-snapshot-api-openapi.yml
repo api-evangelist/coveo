@@ -842,182 +842,41 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/content_get
 components:
   schemas:
-    UrlWithExpirationModel:
-      type: object
-      properties:
-        url:
-          type: string
-        urlExpiration:
-          type: string
-          format: date-time
-    ReportModel:
+    DiffGenerationReportModel:
       type: object
       properties:
         id:
           type: string
           description: The unique identifier of the report.
           example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
-        startDate:
+        snapshotId:
           type: string
-          description: The report start date in number of milliseconds since UNIX epoch.
-          format: date-time
+          description: The unique identifier of the snapshot.
+        relativeReportId:
+          type: string
+          description: The unique identifier of the dry-run report that triggered the current diff generation.
         updatedDate:
           type: string
           description: The report last update date in number of milliseconds since UNIX epoch.
           format: date-time
-        type:
-          type: string
-          description: The type of snapshot event.
-          enum:
-          - CREATE_SNAPSHOT
-          - DRY_RUN
-          - APPLY
-          - CREATE_SYNCHRONIZATION_PLAN
-          - APPLY_SYNCHRONIZATION_PLAN
-          - GENERATE_DIFF
         status:
           type: string
-          description: The status of the snapshot.
+          description: The status of the operation.
           enum:
           - PENDING
           - IN_PROGRESS
           - COMPLETED
           - ABORTED
-        stagesToExecute:
-          type: array
-          description: The ordered stages the migration operation has to go through in order to complete.
-          items:
-            type: string
-            description: The ordered stages the migration operation has to go through in order to complete.
-            enum:
-            - CREATING_SNAPSHOT
-            - INITIAL_PROCESSING
-            - SYNCHRONIZING
-            - COMPUTING_OPERATIONS
-            - VALIDATING_OPERATIONS
-            - PERFORMING_OPERATIONS
-        currentStage:
-          $ref: '#/components/schemas/CurrentStage'
-        resultCode:
-          type: string
-          description: The result code of the snapshot event, if applicable.
-          enum:
-          - AUTO_SYNCHRONIZATION_FAILURE
-          - EXTERNAL_SERVICE_COMMUNICATION_ERROR
-          - RESOURCE_DEPENDENCY_CYCLE
-          - RESOURCES_IN_ERROR
-          - SUCCESS
-          - UNABLE_TO_PUSH_TO_ORGANIZATION
-          - UNABLE_TO_RETRIEVE_RESOURCES
-          - UNEXPECTED_ERROR
-          - UNSUPPORTED_RESOURCE
-        resourcesProcessed:
-          type: integer
-          description: The number of resources processed by the event.
-          format: int32
-        resourceOperations:
+        files:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/ReportResourceOperationsModel'
-          description: For each type of resource, a breakdown of the number of resources per operation.
-        resourceOperationResults:
+            $ref: '#/components/schemas/UrlWithExpirationAndNumberOfLinesModel'
+          description: The generated files, separated by resource type.
+        contentPatchFiles:
           type: object
           additionalProperties:
-            type: object
-            additionalProperties:
-              type: array
-              description: For each type of resource, an object containing failure details, if applicable.
-              items:
-                $ref: '#/components/schemas/ResultInformation'
-            description: For each type of resource, an object containing failure details, if applicable.
-          description: For each type of resource, an object containing failure details, if applicable.
-      description: A snapshot event report.
-    SynchronizationReportModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the synchronization operation.
-          example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
-        updatedDate:
-          type: string
-          description: The date at which the report was created in number of milliseconds since UNIX epoch.
-          format: date-time
-        synchronizationPlanId:
-          type: string
-          description: The unique identifier of the synchronization plan.
-          example: '`startingorganizationg8tp8wu3-xqtzk7c2lnskasagcxy75xkgp`'
-        type:
-          type: string
-          description: The synchronization operation type.
-          enum:
-          - CREATE_SNAPSHOT
-          - DRY_RUN
-          - APPLY
-          - CREATE_SYNCHRONIZATION_PLAN
-          - APPLY_SYNCHRONIZATION_PLAN
-          - GENERATE_DIFF
-        status:
-          type: string
-          description: The synchronization operation status.
-          enum:
-          - PENDING
-          - IN_PROGRESS
-          - COMPLETED
-          - ABORTED
-        resultCode:
-          type: string
-          description: The synchronization operation result code at the end of the operation, if applicable.
-          enum:
-          - AUTO_SYNCHRONIZATION_FAILURE
-          - EXTERNAL_SERVICE_COMMUNICATION_ERROR
-          - RESOURCE_DEPENDENCY_CYCLE
-          - RESOURCES_IN_ERROR
-          - SUCCESS
-          - UNABLE_TO_PUSH_TO_ORGANIZATION
-          - UNABLE_TO_RETRIEVE_RESOURCES
-          - UNEXPECTED_ERROR
-          - UNSUPPORTED_RESOURCE
-        resourcesProcessed:
-          type: integer
-          description: The number of resources processed by the synchronization.
-          format: int32
-        linkOperations:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/SynchronizationReportLinkOperationsModel'
-          description: The summaries of the outcome of the link operations for the different resource types.
-        linkOperationDetails:
-          type: object
-          additionalProperties:
-            type: object
-            additionalProperties:
-              type: string
-              description: An object containing details about link operation failures, if applicable.
-            description: An object containing details about link operation failures, if applicable.
-          description: An object containing details about link operation failures, if applicable.
-      description: A snapshot synchronization report.
-    SnapshotMetadataModel:
-      type: object
-      properties:
-        schemaVersion:
-          type: string
-          description: The schema version used to specify the snapshot content.
-          enum:
-          - v1
-      description: Metadata about the snapshot.
-    UrlWithExpirationAndNumberOfLinesModel:
-      type: object
-      properties:
-        url:
-          type: string
-        urlExpiration:
-          type: string
-          format: date-time
-        numberOfLines:
-          type: integer
-          format: int32
-      description: The generated content patch files, separated by resource type.
+            $ref: '#/components/schemas/UrlWithExpirationAndNumberOfLinesModel'
+          description: The generated content patch files, separated by resource type.
     ResultInformation:
       type: object
       properties:
@@ -1121,6 +980,20 @@ components:
             type: string
             description: The `resourceName`s of the resources unchanged by the operation.
       description: A summary of the outcome of the link operations.
+    StreamingResponseBody:
+      type: object
+    UrlWithExpirationAndNumberOfLinesModel:
+      type: object
+      properties:
+        url:
+          type: string
+        urlExpiration:
+          type: string
+          format: date-time
+        numberOfLines:
+          type: integer
+          format: int32
+      description: The generated content patch files, separated by resource type.
     SnapshotResourceModel:
       type: object
       properties:
@@ -1141,6 +1014,161 @@ components:
             description: The JSON configuration of the resource.
           description: The JSON configuration of the resource.
       description: The snapshot of a resource.
+    SynchronizationReportModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the synchronization operation.
+          example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
+        updatedDate:
+          type: string
+          description: The date at which the report was created in number of milliseconds since UNIX epoch.
+          format: date-time
+        synchronizationPlanId:
+          type: string
+          description: The unique identifier of the synchronization plan.
+          example: '`startingorganizationg8tp8wu3-xqtzk7c2lnskasagcxy75xkgp`'
+        type:
+          type: string
+          description: The synchronization operation type.
+          enum:
+          - CREATE_SNAPSHOT
+          - DRY_RUN
+          - APPLY
+          - CREATE_SYNCHRONIZATION_PLAN
+          - APPLY_SYNCHRONIZATION_PLAN
+          - GENERATE_DIFF
+        status:
+          type: string
+          description: The synchronization operation status.
+          enum:
+          - PENDING
+          - IN_PROGRESS
+          - COMPLETED
+          - ABORTED
+        resultCode:
+          type: string
+          description: The synchronization operation result code at the end of the operation, if applicable.
+          enum:
+          - AUTO_SYNCHRONIZATION_FAILURE
+          - EXTERNAL_SERVICE_COMMUNICATION_ERROR
+          - RESOURCE_DEPENDENCY_CYCLE
+          - RESOURCES_IN_ERROR
+          - SUCCESS
+          - UNABLE_TO_PUSH_TO_ORGANIZATION
+          - UNABLE_TO_RETRIEVE_RESOURCES
+          - UNEXPECTED_ERROR
+          - UNSUPPORTED_RESOURCE
+        resourcesProcessed:
+          type: integer
+          description: The number of resources processed by the synchronization.
+          format: int32
+        linkOperations:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SynchronizationReportLinkOperationsModel'
+          description: The summaries of the outcome of the link operations for the different resource types.
+        linkOperationDetails:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+              description: An object containing details about link operation failures, if applicable.
+            description: An object containing details about link operation failures, if applicable.
+          description: An object containing details about link operation failures, if applicable.
+      description: A snapshot synchronization report.
+    ReportModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the report.
+          example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
+        startDate:
+          type: string
+          description: The report start date in number of milliseconds since UNIX epoch.
+          format: date-time
+        updatedDate:
+          type: string
+          description: The report last update date in number of milliseconds since UNIX epoch.
+          format: date-time
+        type:
+          type: string
+          description: The type of snapshot event.
+          enum:
+          - CREATE_SNAPSHOT
+          - DRY_RUN
+          - APPLY
+          - CREATE_SYNCHRONIZATION_PLAN
+          - APPLY_SYNCHRONIZATION_PLAN
+          - GENERATE_DIFF
+        status:
+          type: string
+          description: The status of the snapshot.
+          enum:
+          - PENDING
+          - IN_PROGRESS
+          - COMPLETED
+          - ABORTED
+        stagesToExecute:
+          type: array
+          description: The ordered stages the migration operation has to go through in order to complete.
+          items:
+            type: string
+            description: The ordered stages the migration operation has to go through in order to complete.
+            enum:
+            - CREATING_SNAPSHOT
+            - INITIAL_PROCESSING
+            - SYNCHRONIZING
+            - COMPUTING_OPERATIONS
+            - VALIDATING_OPERATIONS
+            - PERFORMING_OPERATIONS
+        currentStage:
+          $ref: '#/components/schemas/CurrentStage'
+        resultCode:
+          type: string
+          description: The result code of the snapshot event, if applicable.
+          enum:
+          - AUTO_SYNCHRONIZATION_FAILURE
+          - EXTERNAL_SERVICE_COMMUNICATION_ERROR
+          - RESOURCE_DEPENDENCY_CYCLE
+          - RESOURCES_IN_ERROR
+          - SUCCESS
+          - UNABLE_TO_PUSH_TO_ORGANIZATION
+          - UNABLE_TO_RETRIEVE_RESOURCES
+          - UNEXPECTED_ERROR
+          - UNSUPPORTED_RESOURCE
+        resourcesProcessed:
+          type: integer
+          description: The number of resources processed by the event.
+          format: int32
+        resourceOperations:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ReportResourceOperationsModel'
+          description: For each type of resource, a breakdown of the number of resources per operation.
+        resourceOperationResults:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: array
+              description: For each type of resource, an object containing failure details, if applicable.
+              items:
+                $ref: '#/components/schemas/ResultInformation'
+            description: For each type of resource, an object containing failure details, if applicable.
+          description: For each type of resource, an object containing failure details, if applicable.
+      description: A snapshot event report.
+    UrlWithExpirationModel:
+      type: object
+      properties:
+        url:
+          type: string
+        urlExpiration:
+          type: string
+          format: date-time
     SnapshotContentModel:
       type: object
       properties:
@@ -1155,22 +1183,6 @@ components:
               $ref: '#/components/schemas/SnapshotResourceModel'
           description: The snapshot resources.
       description: The snapshot content.
-    SynchronizationReportLinkOperationsModel:
-      type: object
-      properties:
-        linksCreated:
-          type: integer
-          description: The number of synchronization links created.
-          format: int32
-        linksOverridden:
-          type: integer
-          description: The number of synchronization links overridden.
-          format: int32
-        linksInError:
-          type: integer
-          description: The number of synchronization links in error.
-          format: int32
-      description: A summary of the outcome of the link operations.
     SnapshotModel:
       type: object
       properties:
@@ -1222,43 +1234,6 @@ components:
         snapshotContentModel:
           $ref: '#/components/schemas/SnapshotContentModel'
       description: The snapshot configuration.
-    DiffGenerationReportModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the report.
-          example: '`startingorganizationg8tp8wu3-upxq6zdy5lueuidcksoadlsl3e`'
-        snapshotId:
-          type: string
-          description: The unique identifier of the snapshot.
-        relativeReportId:
-          type: string
-          description: The unique identifier of the dry-run report that triggered the current diff generation.
-        updatedDate:
-          type: string
-          description: The report last update date in number of milliseconds since UNIX epoch.
-          format: date-time
-        status:
-          type: string
-          description: The status of the operation.
-          enum:
-          - PENDING
-          - IN_PROGRESS
-          - COMPLETED
-          - ABORTED
-        files:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UrlWithExpirationAndNumberOfLinesModel'
-          description: The generated files, separated by resource type.
-        contentPatchFiles:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UrlWithExpirationAndNumberOfLinesModel'
-          description: The generated content patch files, separated by resource type.
-    StreamingResponseBody:
-      type: object
     ExportConfigurationModel:
       type: object
       properties:
@@ -1272,6 +1247,31 @@ components:
               description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:** `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
           description: The export configuration model that specifies the resources to include in the snapshot.<br/>**Example:** `{"FIELD":null,"EXTENSION":["startingorganizationg8tp8wu3-re77u4uytfgsolmnsliomx2elu"],"QUERY_PIPELINE":["*"]}`
       description: The export configuration model that specifies the resources to include in the snapshot.
+    SnapshotMetadataModel:
+      type: object
+      properties:
+        schemaVersion:
+          type: string
+          description: The schema version used to specify the snapshot content.
+          enum:
+          - v1
+      description: Metadata about the snapshot.
+    SynchronizationReportLinkOperationsModel:
+      type: object
+      properties:
+        linksCreated:
+          type: integer
+          description: The number of synchronization links created.
+          format: int32
+        linksOverridden:
+          type: integer
+          description: The number of synchronization links overridden.
+          format: int32
+        linksInError:
+          type: integer
+          description: The number of synchronization links in error.
+          format: int32
+      description: A summary of the outcome of the link operations.
   securitySchemes:
     oauth2:
       type: oauth2

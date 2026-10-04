@@ -486,296 +486,20 @@ paths:
       - oauth2:
         - full
 components:
-  parameters:
-    Filter:
-      name: filter
-      in: query
-      description: 'The query filter to match.
-
-
-        This allows you to search within query pipeline statement definitions and descriptions.
-
-
-        By default, results are not required to match a specific query filter.'
-      schema:
-        type: string
-    ExcludeAbTestTargets:
-      name: excludeAbTestTargets
-      in: query
-      description: Whether to exclude the A/B test targets from the result.
-      schema:
-        type: boolean
-        default: false
-    Feature:
-      name: feature
-      in: query
-      description: 'The query pipeline feature to match.
-
-
-        **Allowed values:** `when`, `filter`, `trigger`, `stop`, `thesaurus`, `topClicks`, `querySuggest`, `rankingweight`, `recommendation`, and `queryParamOverride`.
-
-
-        By default, results are not required to match a specific query pipeline feature.'
-      schema:
-        type: string
-    PipelineIdPath:
-      name: pipelineId
-      in: path
-      description: The unique identifier of the target query pipeline.
-      required: true
-      schema:
-        type: string
-    Page:
-      name: page
-      in: query
-      description: The 0-based number of the page of results to get.
-      schema:
-        type: integer
-        format: int32
-        default: 0
-        minimum: 0
-    OrganizationIdQuery:
-      name: organizationId
-      in: query
-      description: 'The unique identifier of the target Coveo Cloud organization.
-
-
-        Specifying a value for this parameter is only necessary when you are authenticating the API call with an OAuth2 token.'
-      example: mycoveocloudv2organization
-      schema:
-        type: string
-    SortBy:
-      name: sortBy
-      in: query
-      description: 'The sort criteria to apply on the results.
-
-
-        **Allowed values:** `definition`, `description`, and `position`.
-
-
-        **Default:** `position`'
-      schema:
-        type: string
-    IsOrderAscending:
-      name: isOrderAscending
-      in: query
-      description: Whether to sort the results in ascending order.
-      schema:
-        type: boolean
-        default: true
   schemas:
-    RestSingleOperationValidationResponse:
-      required:
-      - result
-      type: object
-      properties:
-        result:
-          $ref: '#/components/schemas/RestOperationValidationResponse'
-    RestBulkGetRequest:
-      type: object
-      properties:
-        ids:
-          type: array
-          description: A list of resource identifiers to get. A maximum of **1000** can be sent.
-          items:
-            type: string
-            maxItems: 1000
-    IsBetweenOperator:
-      type: object
-      required:
-      - operator
-      - left
-      - from
-      - to
-      properties:
-        operator:
-          type: string
-          enum:
-          - isBetween
-        left:
-          $ref: '#/components/schemas/OperatorLeftHandSide'
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-    BooleanExpression:
+    OutgoingConditionFeature:
+      type: string
+      description: '> This property is exposed for backward compatibility reasons.'
+      deprecated: true
+      enum:
+      - when
+    OperatorRightHandSide:
       oneOf:
-      - $ref: '#/components/schemas/CompoundBooleanExpression'
-      - $ref: '#/components/schemas/OperatorExpression'
-      - $ref: '#/components/schemas/IsBetweenOperator'
+      - type: string
+      - type: number
+      - type: integer
+        format: int32
       - type: boolean
-    RestSingleOperationValidationRequestIncomingPipeline:
-      required:
-      - operation
-      type: object
-      properties:
-        operation:
-          $ref: '#/components/schemas/RestOperationValidationRequestIncomingPipeline'
-    CompoundBooleanExpression:
-      type: object
-      required:
-      - operator
-      - left
-      properties:
-        operator:
-          type: string
-        left:
-          $ref: '#/components/schemas/BooleanExpression'
-        right:
-          $ref: '#/components/schemas/BooleanExpression'
-    PipelineInterfaceUrls:
-      type: array
-      maxItems: 20
-      description: 'This option helps better understand the pages where this query pipeline is intended to be used. It won''t affect query routing in any way but may be used by Coveo to help you manage your configuration properly.
-
-        '
-      items:
-        $ref: '#/components/schemas/PipelineInterfaceUrl'
-    OutgoingConditionBase:
-      required:
-      - childrenCount
-      - definition
-      - detailed
-      - feature
-      - id
-      - position
-      - ready
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of this statement.
-          example: 45a7892e-a63f-4c8e-8795-ab38c8c18d7e
-        description:
-          type: string
-          description: The intended purpose of this statement in an actual implementation.
-          example: If the query originates from the community site...
-        definition:
-          type: string
-          description: The query pipeline language expression that defines this statement (see [Query Pipeline Language (QPL)](https://docs.coveo.com/en/1449/)).
-          example: when $searchhub is "community"
-        detailed:
-          $ref: '#/components/schemas/ConditionDetailed'
-        modifiedBy:
-          type: string
-          description: The identifier of the Coveo Cloud platform user who last modified this.
-          example: bjones@example.com
-        modifiedAt:
-          type: string
-          format: date-time
-          description: The last time this was modified.
-          example: '2021-02-16T15:15:17Z'
-        childrenCount:
-          type: integer
-          description: '> This property is exposed for backward compatibility reasons.'
-          format: int32
-          deprecated: true
-        feature:
-          $ref: '#/components/schemas/OutgoingConditionFeature'
-        parent:
-          type: string
-          description: '> This property is exposed for backward compatibility reasons.'
-          deprecated: true
-        condition:
-          type: string
-          description: '> This property is exposed for backward compatibility reasons.'
-          deprecated: true
-        position:
-          type: integer
-          description: '> This property is exposed for backward compatibility reasons.'
-          format: int32
-          deprecated: true
-        ready:
-          type: boolean
-          description: '> This property is exposed for backward compatibility reasons.'
-          deprecated: true
-    IncomingConditionReference:
-      required:
-      - id
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of this condition.
-          example: 45a7892e-a63f-4c8e-8795-ab38c8c18d7e
-    OperatorLeftHandSide:
-      type: object
-      required:
-      - object
-      properties:
-        object:
-          type: string
-        key:
-          type: string
-        keys:
-          type: array
-          items:
-            type: string
-    RestOperationValidationRequestIncomingPipeline:
-      required:
-      - operationType
-      type: object
-      properties:
-        operationType:
-          $ref: '#/components/schemas/ValidationOperationType'
-        model:
-          $ref: '#/components/schemas/IncomingPipeline'
-        resourceId:
-          type: string
-          description: 'The identifier of the resource. '
-          example: id
-    PipelineInterfaceUrl:
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          type: string
-          maxLength: 255
-          description: 'Url of the pages affected by this query pipeline.
-
-            '
-          example: www.acme.com
-    PipelineAduiConfiguration:
-      type: object
-      properties:
-        tooltipsDismissed:
-          type: array
-          maxItems: 20
-          description: 'A list of tooltips that were dismissed by the user.
-
-            '
-          items:
-            $ref: '#/components/schemas/PipelineAduiConfigurationTooltipsDismissed'
-    OutgoingPipelines:
-      type: object
-      required:
-      - items
-      - totalEntries
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutgoingPipeline'
-        totalEntries:
-          type: integer
-          format: int32
-          description: The total number of pipelines matching the listing parameters.
-    ErrorMessage:
-      type: object
-      additionalProperties: true
-      properties:
-        statusCode:
-          type: number
-          example: 404
-        errorCode:
-          type: string
-          example: ORGANIZATION_DOES_NOT_EXIST
-        message:
-          type: string
-          example: The organization does not exist in the search api.
     RestOperationValidationError:
       required:
       - message
@@ -783,6 +507,9 @@ components:
       properties:
         message:
           type: string
+    OutgoingCondition:
+      allOf:
+      - $ref: '#/components/schemas/OutgoingConditionBase'
     OutgoingPipeline:
       required:
       - id
@@ -896,12 +623,135 @@ components:
           $ref: '#/components/schemas/PipelineInterfaceUrls'
         aduiConfig:
           $ref: '#/components/schemas/PipelineAduiConfiguration'
-    OutgoingConditionFeature:
+    CompoundBooleanExpression:
+      type: object
+      required:
+      - operator
+      - left
+      properties:
+        operator:
+          type: string
+        left:
+          $ref: '#/components/schemas/BooleanExpression'
+        right:
+          $ref: '#/components/schemas/BooleanExpression'
+    OutgoingPipelineDetailed:
+      allOf:
+      - $ref: '#/components/schemas/OutgoingPipeline'
+      - $ref: '#/components/schemas/OutgoingPipelineDetailedBase'
+    RestBulkGetRequest:
+      type: object
+      properties:
+        ids:
+          type: array
+          description: A list of resource identifiers to get. A maximum of **1000** can be sent.
+          items:
+            type: string
+            maxItems: 1000
+    IncomingConditionReference:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of this condition.
+          example: 45a7892e-a63f-4c8e-8795-ab38c8c18d7e
+    IncomingDuplicatePipelinePermissions:
+      type: object
+      properties:
+        groupsThatCanEdit:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentifiedResource'
+        apiKeysThatCanEdit:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentifiedResource'
+    PipelineInterfaceUrls:
+      type: array
+      maxItems: 20
+      description: 'This option helps better understand the pages where this query pipeline is intended to be used. It won''t affect query routing in any way but may be used by Coveo to help you manage your configuration properly.
+
+        '
+      items:
+        $ref: '#/components/schemas/PipelineInterfaceUrl'
+    IsBetweenOperator:
+      type: object
+      required:
+      - operator
+      - left
+      - from
+      - to
+      properties:
+        operator:
+          type: string
+          enum:
+          - isBetween
+        left:
+          $ref: '#/components/schemas/OperatorLeftHandSide'
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+    OperatorLeftHandSide:
+      type: object
+      required:
+      - object
+      properties:
+        object:
+          type: string
+        key:
+          type: string
+        keys:
+          type: array
+          items:
+            type: string
+    ValidationOperationType:
       type: string
-      description: '> This property is exposed for backward compatibility reasons.'
-      deprecated: true
+      description: 'The type of operation to validate. Each operation type has specific validation rules.
+
+
+        Additional request parameters are required based on the type of operation to validate:
+
+        - `CREATE`: You must provide a `model`.
+
+        - `UPDATE`: You must provide a `model` and a `resourceId`.
+
+        - `DELETE`: You must provide a `resourceId`.
+
+        '
+      example: CREATE
       enum:
-      - when
+      - CREATE
+      - UPDATE
+      - DELETE
+    PipelineAduiConfiguration:
+      type: object
+      properties:
+        tooltipsDismissed:
+          type: array
+          maxItems: 20
+          description: 'A list of tooltips that were dismissed by the user.
+
+            '
+          items:
+            $ref: '#/components/schemas/PipelineAduiConfigurationTooltipsDismissed'
+    ErrorMessage:
+      type: object
+      additionalProperties: true
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        errorCode:
+          type: string
+          example: ORGANIZATION_DOES_NOT_EXIST
+        message:
+          type: string
+          example: The organization does not exist in the search api.
     RestBatchOperationValidationRequestIncomingPipeline:
       required:
       - operations
@@ -920,84 +770,51 @@ components:
             resourceId: resource-id
           items:
             $ref: '#/components/schemas/RestOperationValidationRequestIncomingPipeline'
-    OutgoingBulkGetPipelines:
-      required:
-      - pipelines
-      - totalEntries
+    OutgoingPipelines:
       type: object
+      required:
+      - items
+      - totalEntries
       properties:
-        pipelines:
+        items:
           type: array
-          description: Sorted page of query pipelines matching certain criteria.
           items:
             $ref: '#/components/schemas/OutgoingPipeline'
         totalEntries:
           type: integer
           format: int32
           description: The total number of pipelines matching the listing parameters.
-    OutgoingPipelineDetailed:
-      allOf:
-      - $ref: '#/components/schemas/OutgoingPipeline'
-      - $ref: '#/components/schemas/OutgoingPipelineDetailedBase'
-    IdentifiedResource:
+    RestBatchOperationValidationResponse:
       required:
-      - id
+      - results
       type: object
       properties:
-        id:
-          type: string
-    PipelineAduiConfigurationTooltipsDismissed:
+        results:
+          type: array
+          description: The list of operation validation results.
+          items:
+            $ref: '#/components/schemas/RestOperationValidationResponse'
+    RestSingleOperationValidationRequestIncomingPipeline:
+      required:
+      - operation
+      type: object
+      properties:
+        operation:
+          $ref: '#/components/schemas/RestOperationValidationRequestIncomingPipeline'
+    ConditionDetailed:
       type: object
       required:
-      - id
+      - condition
       properties:
-        id:
-          type: string
-          maxLength: 255
-          description: 'The identifier of the tooltip that was dismissed.
-
-            '
-    OperatorExpression:
-      type: object
+        condition:
+          $ref: '#/components/schemas/BooleanExpression'
+    RestSingleOperationValidationResponse:
       required:
-      - operator
-      - left
-      properties:
-        operator:
-          type: string
-        left:
-          $ref: '#/components/schemas/OperatorLeftHandSide'
-        right:
-          $ref: '#/components/schemas/OperatorRightHandSide'
-    OperatorRightHandSide:
-      oneOf:
-      - type: string
-      - type: number
-      - type: integer
-        format: int32
-      - type: boolean
-    OutgoingPipelineDetailedBase:
+      - result
       type: object
-      required:
-      - statementComposition
       properties:
-        splitTestOriginalPipeline:
-          type: string
-          description: 'The unique identifier of query pipeline A in the A/B test.
-
-
-            See also the `splitTestName`, `splitTestRatio`, and `splitTestEnabled` properties.'
-        statementComposition:
-          type: object
-          required:
-          - totalCount
-          properties:
-            totalCount:
-              type: integer
-              format: int32
-              description: 'The total count of statement rules in this pipeline.
-
-                '
+        result:
+          $ref: '#/components/schemas/RestOperationValidationResponse'
     RestOperationValidationResponse:
       required:
       - operationType
@@ -1024,56 +841,131 @@ components:
               $ref: '#/components/schemas/RestOperationValidationError'
           description: If the operation failed, the `validationError` will contains the error message.
           example: Access Denied. You don't have the required privileges to perform  this operation.
-    OutgoingCondition:
-      allOf:
-      - $ref: '#/components/schemas/OutgoingConditionBase'
-    ConditionDetailed:
+    OutgoingPipelineDetailedBase:
       type: object
       required:
-      - condition
+      - statementComposition
       properties:
+        splitTestOriginalPipeline:
+          type: string
+          description: 'The unique identifier of query pipeline A in the A/B test.
+
+
+            See also the `splitTestName`, `splitTestRatio`, and `splitTestEnabled` properties.'
+        statementComposition:
+          type: object
+          required:
+          - totalCount
+          properties:
+            totalCount:
+              type: integer
+              format: int32
+              description: 'The total count of statement rules in this pipeline.
+
+                '
+    IdentifiedResource:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+    PipelineAduiConfigurationTooltipsDismissed:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          maxLength: 255
+          description: 'The identifier of the tooltip that was dismissed.
+
+            '
+    PipelineInterfaceUrl:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          maxLength: 255
+          description: 'Url of the pages affected by this query pipeline.
+
+            '
+          example: www.acme.com
+    OutgoingConditionBase:
+      required:
+      - childrenCount
+      - definition
+      - detailed
+      - feature
+      - id
+      - position
+      - ready
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of this statement.
+          example: 45a7892e-a63f-4c8e-8795-ab38c8c18d7e
+        description:
+          type: string
+          description: The intended purpose of this statement in an actual implementation.
+          example: If the query originates from the community site...
+        definition:
+          type: string
+          description: The query pipeline language expression that defines this statement (see [Query Pipeline Language (QPL)](https://docs.coveo.com/en/1449/)).
+          example: when $searchhub is "community"
+        detailed:
+          $ref: '#/components/schemas/ConditionDetailed'
+        modifiedBy:
+          type: string
+          description: The identifier of the Coveo Cloud platform user who last modified this.
+          example: bjones@example.com
+        modifiedAt:
+          type: string
+          format: date-time
+          description: The last time this was modified.
+          example: '2021-02-16T15:15:17Z'
+        childrenCount:
+          type: integer
+          description: '> This property is exposed for backward compatibility reasons.'
+          format: int32
+          deprecated: true
+        feature:
+          $ref: '#/components/schemas/OutgoingConditionFeature'
+        parent:
+          type: string
+          description: '> This property is exposed for backward compatibility reasons.'
+          deprecated: true
         condition:
-          $ref: '#/components/schemas/BooleanExpression'
-    ValidationOperationType:
-      type: string
-      description: 'The type of operation to validate. Each operation type has specific validation rules.
-
-
-        Additional request parameters are required based on the type of operation to validate:
-
-        - `CREATE`: You must provide a `model`.
-
-        - `UPDATE`: You must provide a `model` and a `resourceId`.
-
-        - `DELETE`: You must provide a `resourceId`.
-
-        '
-      example: CREATE
-      enum:
-      - CREATE
-      - UPDATE
-      - DELETE
-    RestBatchOperationValidationResponse:
+          type: string
+          description: '> This property is exposed for backward compatibility reasons.'
+          deprecated: true
+        position:
+          type: integer
+          description: '> This property is exposed for backward compatibility reasons.'
+          format: int32
+          deprecated: true
+        ready:
+          type: boolean
+          description: '> This property is exposed for backward compatibility reasons.'
+          deprecated: true
+    OutgoingBulkGetPipelines:
       required:
-      - results
+      - pipelines
+      - totalEntries
       type: object
       properties:
-        results:
+        pipelines:
           type: array
-          description: The list of operation validation results.
+          description: Sorted page of query pipelines matching certain criteria.
           items:
-            $ref: '#/components/schemas/RestOperationValidationResponse'
-    IncomingDuplicatePipelinePermissions:
-      type: object
-      properties:
-        groupsThatCanEdit:
-          type: array
-          items:
-            $ref: '#/components/schemas/IdentifiedResource'
-        apiKeysThatCanEdit:
-          type: array
-          items:
-            $ref: '#/components/schemas/IdentifiedResource'
+            $ref: '#/components/schemas/OutgoingPipeline'
+        totalEntries:
+          type: integer
+          format: int32
+          description: The total number of pipelines matching the listing parameters.
     IncomingPipeline:
       required:
       - name
@@ -1145,7 +1037,162 @@ components:
           $ref: '#/components/schemas/PipelineInterfaceUrls'
         aduiConfig:
           $ref: '#/components/schemas/PipelineAduiConfiguration'
+    OperatorExpression:
+      type: object
+      required:
+      - operator
+      - left
+      properties:
+        operator:
+          type: string
+        left:
+          $ref: '#/components/schemas/OperatorLeftHandSide'
+        right:
+          $ref: '#/components/schemas/OperatorRightHandSide'
+    BooleanExpression:
+      oneOf:
+      - $ref: '#/components/schemas/CompoundBooleanExpression'
+      - $ref: '#/components/schemas/OperatorExpression'
+      - $ref: '#/components/schemas/IsBetweenOperator'
+      - type: boolean
+    RestOperationValidationRequestIncomingPipeline:
+      required:
+      - operationType
+      type: object
+      properties:
+        operationType:
+          $ref: '#/components/schemas/ValidationOperationType'
+        model:
+          $ref: '#/components/schemas/IncomingPipeline'
+        resourceId:
+          type: string
+          description: 'The identifier of the resource. '
+          example: id
+  parameters:
+    ExcludeAbTestTargets:
+      name: excludeAbTestTargets
+      in: query
+      description: Whether to exclude the A/B test targets from the result.
+      schema:
+        type: boolean
+        default: false
+    IsOrderAscending:
+      name: isOrderAscending
+      in: query
+      description: Whether to sort the results in ascending order.
+      schema:
+        type: boolean
+        default: true
+    Page:
+      name: page
+      in: query
+      description: The 0-based number of the page of results to get.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+    Filter:
+      name: filter
+      in: query
+      description: 'The query filter to match.
+
+
+        This allows you to search within query pipeline statement definitions and descriptions.
+
+
+        By default, results are not required to match a specific query filter.'
+      schema:
+        type: string
+    SortBy:
+      name: sortBy
+      in: query
+      description: 'The sort criteria to apply on the results.
+
+
+        **Allowed values:** `definition`, `description`, and `position`.
+
+
+        **Default:** `position`'
+      schema:
+        type: string
+    PipelineIdPath:
+      name: pipelineId
+      in: path
+      description: The unique identifier of the target query pipeline.
+      required: true
+      schema:
+        type: string
+    OrganizationIdQuery:
+      name: organizationId
+      in: query
+      description: 'The unique identifier of the target Coveo Cloud organization.
+
+
+        Specifying a value for this parameter is only necessary when you are authenticating the API call with an OAuth2 token.'
+      example: mycoveocloudv2organization
+      schema:
+        type: string
+    Feature:
+      name: feature
+      in: query
+      description: 'The query pipeline feature to match.
+
+
+        **Allowed values:** `when`, `filter`, `trigger`, `stop`, `thesaurus`, `topClicks`, `querySuggest`, `rankingweight`, `recommendation`, and `queryParamOverride`.
+
+
+        By default, results are not required to match a specific query pipeline feature.'
+      schema:
+        type: string
   responses:
+    ServiceUnavailable:
+      description: 'Service Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#5xx)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            ServiceUnavailable:
+              summary: 'Server Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-server_unavailable)'
+              value:
+                statusCode: 503
+                message: The server is currently unavailable due to overload or index unavailability.
+                errorCode: SERVER_UNAVAILABLE
+            OrganizationPaused:
+              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-organization_paused)'
+              value:
+                statusCode: 503
+                message: The organization is paused due to inactivity.
+                errorCode: ORGANIZATION_PAUSED
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 422
+            message: Unprocessable entity.
+    Forbidden:
+      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 403
+            message: Access denied. API key does not have sufficient privileges.
+            errorCode: FORBIDDEN
+    TooManyRequests:
+      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 429
+            message: Too many requests.
     BadRequest:
       description: Bad Request
       content:
@@ -1170,43 +1217,6 @@ components:
                 statusCode: 400
                 message: Failed to evaluate your query as some conditions in your pipeline took too much time.
                 errorCode: QUERY_PIPELINE_INTERRUPTED
-    AuthenticationTimeout:
-      description: Authentication Timeout
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 419
-            message: Authentication timeout.
-    UnprocessableEntity:
-      description: Unprocessable Entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 422
-            message: Unprocessable entity.
-    ServiceUnavailable:
-      description: 'Service Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#5xx)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          examples:
-            ServiceUnavailable:
-              summary: 'Server Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-server_unavailable)'
-              value:
-                statusCode: 503
-                message: The server is currently unavailable due to overload or index unavailability.
-                errorCode: SERVER_UNAVAILABLE
-            OrganizationPaused:
-              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-organization_paused)'
-              value:
-                statusCode: 503
-                message: The organization is paused due to inactivity.
-                errorCode: ORGANIZATION_PAUSED
     Unauthorized:
       description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
       content:
@@ -1217,25 +1227,15 @@ components:
             statusCode: 401
             message: Invalid access token.
             errorCode: UNAUTHORIZED
-    Forbidden:
-      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+    AuthenticationTimeout:
+      description: Authentication Timeout
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorMessage'
           example:
-            statusCode: 403
-            message: Access denied. API key does not have sufficient privileges.
-            errorCode: FORBIDDEN
-    TooManyRequests:
-      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 429
-            message: Too many requests.
+            statusCode: 419
+            message: Authentication timeout.
   securitySchemes:
     oauth2:
       type: oauth2

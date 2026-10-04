@@ -377,26 +377,27 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/search/synonyms_post
 components:
   schemas:
-    RuleLocaleModel:
+    CommercePageModelSynonymModel:
+      required:
+      - items
+      - totalEntries
+      - totalPages
       type: object
       properties:
-        language:
-          type: string
-          description: An ISO 639-1 language code.
-          example: en
-        country:
-          type: string
-          description: An ISO 3166-1 alpha-2 country code.
-          example: US
-        currency:
-          type: string
-          description: An ISO 4217 currency code.
-          example: USD
-      description: The list of locales the synonym applies to. When empty, the synonym applies to all locales.
-      example:
-      - language: en
-        country: US
-        currency: USD
+        items:
+          type: array
+          description: The retrieved page of items.
+          items:
+            $ref: '#/components/schemas/SynonymModel'
+        totalEntries:
+          type: integer
+          description: The total number of results that match the query.
+          format: int64
+        totalPages:
+          type: integer
+          description: The total number of pages of items available.
+          format: int32
+      description: Page
     SynonymModel:
       required:
       - action
@@ -452,27 +453,26 @@ components:
           type: string
           description: The date and time at which the synonym was last updated.
       description: The synonym rule to persist.
-    CommercePageModelSynonymModel:
-      required:
-      - items
-      - totalEntries
-      - totalPages
+    RuleLocaleModel:
       type: object
       properties:
-        items:
-          type: array
-          description: The retrieved page of items.
-          items:
-            $ref: '#/components/schemas/SynonymModel'
-        totalEntries:
-          type: integer
-          description: The total number of results that match the query.
-          format: int64
-        totalPages:
-          type: integer
-          description: The total number of pages of items available.
-          format: int32
-      description: Page
+        language:
+          type: string
+          description: An ISO 639-1 language code.
+          example: en
+        country:
+          type: string
+          description: An ISO 3166-1 alpha-2 country code.
+          example: US
+        currency:
+          type: string
+          description: An ISO 4217 currency code.
+          example: USD
+      description: The list of locales the synonym applies to. When empty, the synonym applies to all locales.
+      example:
+      - language: en
+        country: US
+        currency: USD
   securitySchemes:
     oauth2:
       type: oauth2

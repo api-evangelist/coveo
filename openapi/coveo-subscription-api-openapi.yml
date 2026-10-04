@@ -851,41 +851,6 @@ components:
           description: The response message from the most recent service request.
           example: '`200 OK`'
       description: The [status of the subscription](https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#subscription-status).</br>See [Review the usage statistics of an organization notification](https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#review-the-usage-statistics-of-an-organization-notification).
-    EditSubscriptionModel:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: Whether the subscription can send [notifications](https://docs.coveo.com/en/221/).
-        name:
-          type: string
-          description: The display name for the subscription.
-          example: Refresh Notifications
-        description:
-          type: string
-          description: A brief description for the subscription.
-          example: Sends a POST HTTP request to http://www.example.com/myendpoint when a refresh operation fails on a specific source.
-        pattern:
-          $ref: '#/components/schemas/SubscriptionPatternModel'
-        type:
-          type: string
-          description: 'The way the [subscription](https://docs.coveo.com/en/248/) sends notifications.</br>**Allowed values:**</br>- `EMAIL`: Send user-friendly, HTML formatted emails whose content includes only the most vital activity event information.</br>- `EMAIL_JSON`: Send un-formatted emails whose content includes the entire activity event data.</br>- `WEB_HOOK`: Send HTTP POST requests to the URL you specify as the `serviceUrl` property value of the `parameters` object.'
-          enum:
-          - EMAIL
-          - EMAIL_JSON
-          - WEB_HOOK
-          - HOME_PAGE
-        frequency:
-          type: string
-          description: 'The frequency at which the [subscription](https://docs.coveo.com/en/248/) sends notifications.</br>**Allowed values:**</br>- `LIVE`: Send notifications as soon as possible when a matching activity event occurs.</br>- `HOURLY`: Send periodical notifications including all matching activity events that occurred within the hour.</br>- `DAILY`: Send periodical notifications including all matching activity events that occurred within the day.</br>- `WEEKLY`: Send periodical notifications including all matching activity events that occurred within the week.'
-          enum:
-          - LIVE
-          - HOURLY
-          - DAILY
-          - WEEKLY
-        parameters:
-          $ref: '#/components/schemas/SubscriptionParametersModel'
-      description: The new configuration to update the [subscription](https://docs.coveo.com/en/248/) to.
     SubscriptionModel:
       type: object
       properties:
@@ -956,6 +921,68 @@ components:
             type: string
             description: The list of unsubscribed emails of the given subscription.
       description: A [subscription](https://docs.coveo.com/en/248/).
+    SubscriptionParametersModel:
+      type: object
+      properties:
+        groupId:
+          type: string
+          description: The unique identifier of the [group](https://docs.coveo.com/en/2867/) the subscription is intended for.
+        emailRecipients:
+          type: array
+          description: A list of email addresses to send notifications to.
+          example: '[`jsmith@example.com`]'
+          items:
+            type: string
+            description: A list of email addresses to send notifications to.
+            example: '[`jsmith@example.com`]'
+        serviceUrl:
+          type: string
+          description: The URL the subscription sends its HTTP POST requests to.</br>**Note:** Only relevant for subscriptions of type `WEB_HOOK`.
+          example: http://www.example.com/myendpoint
+        fromDisplayName:
+          type: string
+          description: The display name to use for the `from` field of the email.</br>**Note:** Only relevant for subscriptions of type `EMAIL` or `EMAIL_JSON`.
+          example: My Coveo Cloud Organization Notification
+        emailSubject:
+          type: string
+          description: The subject of the email notification to be sent.</br>**Note:** Only relevant for subscriptions of type `EMAIL` or `EMAIL_JSON`.
+          example: Refresh failed on "My Coveo Cloud Organization"
+      description: Parameters specifying the [notification](https://docs.coveo.com/en/221/) sent by the [subscription](https://docs.coveo.com/en/248/).
+    EditSubscriptionModel:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Whether the subscription can send [notifications](https://docs.coveo.com/en/221/).
+        name:
+          type: string
+          description: The display name for the subscription.
+          example: Refresh Notifications
+        description:
+          type: string
+          description: A brief description for the subscription.
+          example: Sends a POST HTTP request to http://www.example.com/myendpoint when a refresh operation fails on a specific source.
+        pattern:
+          $ref: '#/components/schemas/SubscriptionPatternModel'
+        type:
+          type: string
+          description: 'The way the [subscription](https://docs.coveo.com/en/248/) sends notifications.</br>**Allowed values:**</br>- `EMAIL`: Send user-friendly, HTML formatted emails whose content includes only the most vital activity event information.</br>- `EMAIL_JSON`: Send un-formatted emails whose content includes the entire activity event data.</br>- `WEB_HOOK`: Send HTTP POST requests to the URL you specify as the `serviceUrl` property value of the `parameters` object.'
+          enum:
+          - EMAIL
+          - EMAIL_JSON
+          - WEB_HOOK
+          - HOME_PAGE
+        frequency:
+          type: string
+          description: 'The frequency at which the [subscription](https://docs.coveo.com/en/248/) sends notifications.</br>**Allowed values:**</br>- `LIVE`: Send notifications as soon as possible when a matching activity event occurs.</br>- `HOURLY`: Send periodical notifications including all matching activity events that occurred within the hour.</br>- `DAILY`: Send periodical notifications including all matching activity events that occurred within the day.</br>- `WEEKLY`: Send periodical notifications including all matching activity events that occurred within the week.'
+          enum:
+          - LIVE
+          - HOURLY
+          - DAILY
+          - WEEKLY
+        parameters:
+          $ref: '#/components/schemas/SubscriptionParametersModel'
+      description: The new configuration to update the [subscription](https://docs.coveo.com/en/248/) to.
     SubscriptionPatternModel:
       type: object
       properties:
@@ -1044,33 +1071,6 @@ components:
       externalDocs:
         description: Review the usage statistics of an organization notification
         url: https://docs.coveo.com/en/1583/manage-an-organization/manage-organization-notifications#review-the-usage-statistics-of-an-organization-notification
-    SubscriptionParametersModel:
-      type: object
-      properties:
-        groupId:
-          type: string
-          description: The unique identifier of the [group](https://docs.coveo.com/en/2867/) the subscription is intended for.
-        emailRecipients:
-          type: array
-          description: A list of email addresses to send notifications to.
-          example: '[`jsmith@example.com`]'
-          items:
-            type: string
-            description: A list of email addresses to send notifications to.
-            example: '[`jsmith@example.com`]'
-        serviceUrl:
-          type: string
-          description: The URL the subscription sends its HTTP POST requests to.</br>**Note:** Only relevant for subscriptions of type `WEB_HOOK`.
-          example: http://www.example.com/myendpoint
-        fromDisplayName:
-          type: string
-          description: The display name to use for the `from` field of the email.</br>**Note:** Only relevant for subscriptions of type `EMAIL` or `EMAIL_JSON`.
-          example: My Coveo Cloud Organization Notification
-        emailSubject:
-          type: string
-          description: The subject of the email notification to be sent.</br>**Note:** Only relevant for subscriptions of type `EMAIL` or `EMAIL_JSON`.
-          example: Refresh failed on "My Coveo Cloud Organization"
-      description: Parameters specifying the [notification](https://docs.coveo.com/en/221/) sent by the [subscription](https://docs.coveo.com/en/248/).
   securitySchemes:
     oauth2:
       type: oauth2

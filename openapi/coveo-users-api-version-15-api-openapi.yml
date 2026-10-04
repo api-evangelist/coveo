@@ -211,9 +211,30 @@ components:
           type: string
           description: The actual filter.
       description: A filter.
-    StatusResponse:
+    UserResponseV15:
       type: object
-      description: Service's status information
+      properties:
+        userId:
+          type: string
+          description: The user id.
+        account:
+          type: string
+          description: The user account.
+        filters:
+          uniqueItems: true
+          type: array
+          description: The filters that are applied to the user
+          items:
+            type: string
+            description: The filters that are applied to the user
+        reports:
+          uniqueItems: true
+          type: array
+          description: The reports the user can view.
+          items:
+            type: string
+            description: The reports the user can view.
+      description: A user.
     ReportsResponseV15:
       type: object
       properties:
@@ -224,6 +245,15 @@ components:
           items:
             $ref: '#/components/schemas/ReportResponseV15'
       description: The reports the user can view.
+    FiltersResponseV15:
+      type: object
+      properties:
+        filters:
+          type: array
+          description: The filters that are applied to the user
+          items:
+            $ref: '#/components/schemas/FilterResponseV15'
+      description: The filters that are applied to the user
     ReportResponseV15:
       type: object
       properties:
@@ -256,30 +286,9 @@ components:
             type: string
             description: List of associated filters.
       description: A report configuration.
-    UserResponseV15:
+    StatusResponse:
       type: object
-      properties:
-        userId:
-          type: string
-          description: The user id.
-        account:
-          type: string
-          description: The user account.
-        filters:
-          uniqueItems: true
-          type: array
-          description: The filters that are applied to the user
-          items:
-            type: string
-            description: The filters that are applied to the user
-        reports:
-          uniqueItems: true
-          type: array
-          description: The reports the user can view.
-          items:
-            type: string
-            description: The reports the user can view.
-      description: A user.
+      description: Service's status information
     FilterValueModelV15:
       required:
       - id
@@ -293,15 +302,6 @@ components:
           type: boolean
           description: Whether the value is a persisted filter ID or a filter value
       description: A filter value.
-    FiltersResponseV15:
-      type: object
-      properties:
-        filters:
-          type: array
-          description: The filters that are applied to the user
-          items:
-            $ref: '#/components/schemas/FilterResponseV15'
-      description: The filters that are applied to the user
   securitySchemes:
     v8:
       type: oauth2

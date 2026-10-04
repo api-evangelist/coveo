@@ -1362,6 +1362,43 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/sources/paramId/mappings/batch/create_post
 components:
   schemas:
+    TypedMappingSettingsModel:
+      type: object
+      properties:
+        rules:
+          type: array
+          description: The [mapping](https://docs.coveo.com/en/217/) rules.<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+          items:
+            $ref: '#/components/schemas/RuleModel'
+        type:
+          type: string
+          description: The type of [item](https://docs.coveo.com/en/210/) for which the mapping applies.<br />**Example:** `Video`
+        id:
+          type: string
+          description: The unique identifier of the mapping.<br />**Note:** Typically matches the `type` value.<br />**Example:** `Video`
+      description: A specific [mapping](https://docs.coveo.com/en/217/) (i.e., a mapping that applies only to a specified [item](https://docs.coveo.com/en/210/) type).
+    BaseRuleModel:
+      type: object
+      properties:
+        field:
+          type: string
+          description: The name of the target [field](https://docs.coveo.com/en/200/) to populate with the first non-null value yielded by a mapping rule statement from the `content` array.<br />**Example:** `rating`
+        content:
+          type: array
+          description: The mapping rule statements.<br />**Example:** `["%[internal_rating]"]`<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+          items:
+            type: string
+            description: The mapping rule statements.<br />**Example:** `["%[internal_rating]"]`<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+      description: The common [mapping](https://docs.coveo.com/en/217/) rule to create.
+    CommonMappingSettingsModel:
+      type: object
+      properties:
+        rules:
+          type: array
+          description: The [mapping](https://docs.coveo.com/en/217/) rules.<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
+          items:
+            $ref: '#/components/schemas/RuleModel'
+      description: A JSON describing the common [mappings](https://docs.coveo.com/en/217/) to update.
     BatchOperationProgressModelTypedMappingSettingsModel:
       type: object
       properties:
@@ -1376,15 +1413,43 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BatchOperationResourceStatusModelTypedMappingSettingsModel'
-    CommonMappingSettingsModel:
+    BaseTypedMappingSettingsModelBaseRuleModel:
       type: object
       properties:
         rules:
           type: array
           description: The [mapping](https://docs.coveo.com/en/217/) rules.<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
           items:
-            $ref: '#/components/schemas/RuleModel'
-      description: A JSON describing the common [mappings](https://docs.coveo.com/en/217/) to update.
+            $ref: '#/components/schemas/BaseRuleModel'
+        type:
+          type: string
+          description: The type of [item](https://docs.coveo.com/en/210/) for which the mapping applies.<br />**Example:** `Video`
+      description: A JSON describing the specific [mapping](https://docs.coveo.com/en/217/) to create.
+    BatchOperationResourceStatusModelTypedMappingSettingsModel:
+      type: object
+      properties:
+        resourceModel:
+          $ref: '#/components/schemas/TypedMappingSettingsModel'
+        operationResult:
+          type: string
+          enum:
+          - SUCCESS
+          - ERROR
+        errorDetails:
+          type: string
+        successful:
+          type: boolean
+    MappingsConfigurationModel:
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/CommonMappingSettingsModel'
+        types:
+          type: array
+          description: The specific [mappings](https://docs.coveo.com/en/217/) (i.e., the mappings that apply only to specified [item](https://docs.coveo.com/en/210/) types).
+          items:
+            $ref: '#/components/schemas/TypedMappingSettingsModel'
+      description: A JSON describing the [mapping](https://docs.coveo.com/en/217/) configuration to add or update.
     RuleModel:
       type: object
       properties:
@@ -1403,71 +1468,6 @@ components:
       description: 'A [mapping](https://docs.coveo.com/en/217/) rule.
 
         See [Mapping Definition Examples](https://docs.coveo.com/en/66/).'
-    BaseTypedMappingSettingsModelBaseRuleModel:
-      type: object
-      properties:
-        rules:
-          type: array
-          description: The [mapping](https://docs.coveo.com/en/217/) rules.<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
-          items:
-            $ref: '#/components/schemas/BaseRuleModel'
-        type:
-          type: string
-          description: The type of [item](https://docs.coveo.com/en/210/) for which the mapping applies.<br />**Example:** `Video`
-      description: A JSON describing the specific [mapping](https://docs.coveo.com/en/217/) to create.
-    MappingsConfigurationModel:
-      type: object
-      properties:
-        common:
-          $ref: '#/components/schemas/CommonMappingSettingsModel'
-        types:
-          type: array
-          description: The specific [mappings](https://docs.coveo.com/en/217/) (i.e., the mappings that apply only to specified [item](https://docs.coveo.com/en/210/) types).
-          items:
-            $ref: '#/components/schemas/TypedMappingSettingsModel'
-      description: A JSON describing the [mapping](https://docs.coveo.com/en/217/) configuration to add or update.
-    BatchOperationResourceStatusModelTypedMappingSettingsModel:
-      type: object
-      properties:
-        resourceModel:
-          $ref: '#/components/schemas/TypedMappingSettingsModel'
-        operationResult:
-          type: string
-          enum:
-          - SUCCESS
-          - ERROR
-        errorDetails:
-          type: string
-        successful:
-          type: boolean
-    BaseRuleModel:
-      type: object
-      properties:
-        field:
-          type: string
-          description: The name of the target [field](https://docs.coveo.com/en/200/) to populate with the first non-null value yielded by a mapping rule statement from the `content` array.<br />**Example:** `rating`
-        content:
-          type: array
-          description: The mapping rule statements.<br />**Example:** `["%[internal_rating]"]`<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
-          items:
-            type: string
-            description: The mapping rule statements.<br />**Example:** `["%[internal_rating]"]`<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
-      description: The common [mapping](https://docs.coveo.com/en/217/) rule to create.
-    TypedMappingSettingsModel:
-      type: object
-      properties:
-        rules:
-          type: array
-          description: The [mapping](https://docs.coveo.com/en/217/) rules.<br />See [Mapping Rule Syntax Reference](https://docs.coveo.com/en/1839/).
-          items:
-            $ref: '#/components/schemas/RuleModel'
-        type:
-          type: string
-          description: The type of [item](https://docs.coveo.com/en/210/) for which the mapping applies.<br />**Example:** `Video`
-        id:
-          type: string
-          description: The unique identifier of the mapping.<br />**Note:** Typically matches the `type` value.<br />**Example:** `Video`
-      description: A specific [mapping](https://docs.coveo.com/en/217/) (i.e., a mapping that applies only to a specified [item](https://docs.coveo.com/en/210/) type).
   securitySchemes:
     oauth2:
       type: oauth2

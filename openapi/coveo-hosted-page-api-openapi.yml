@@ -145,7 +145,70 @@ paths:
                 text/html:
                   contentType: text/html
 components:
+  parameters:
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
+      schema:
+        type: string
+    perPage:
+      name: perPage
+      description: The maximum number of configurations to include per page.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 20
+    page:
+      name: page
+      description: The 0-based number of the page of configurations to list.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+    projectId:
+      name: projectId
+      description: The id of the project to which the resource belongs.
+      in: query
+      schema:
+        type: string
+    filter:
+      name: filter
+      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
+      example: Store
+      in: query
+      schema:
+        type: string
   schemas:
+    hostedpage-file-javascript:
+      type: object
+      description: JavaScript resource appended to the header of a specific hosted page in the target Coveo organization.
+      properties:
+        isModule:
+          type: boolean
+          description: Whether the inline code should be treated as a JavaScript module. If this property is `true`, the `type` property will be set to `module` on the `script` tag.
+          required: true
+        inlineContent:
+          type: string
+          description: The content of the header `script` tag. If this property is defined, the `url` property should not be specified.
+          example: window.location = 'about:blank';
+        url:
+          type: string
+          description: The URL of the JavaScript source file. If this property is defined, the `inlineContent` property should not be specified.
+          example: https://static.cloud.coveo.com/atomic/v2/index.esm.js
     hostedpage-id:
       type: object
       properties:
@@ -193,22 +256,6 @@ components:
       - id
       - name
       - html
-    hostedpage-file-javascript:
-      type: object
-      description: JavaScript resource appended to the header of a specific hosted page in the target Coveo organization.
-      properties:
-        isModule:
-          type: boolean
-          description: Whether the inline code should be treated as a JavaScript module. If this property is `true`, the `type` property will be set to `module` on the `script` tag.
-          required: true
-        inlineContent:
-          type: string
-          description: The content of the header `script` tag. If this property is defined, the `url` property should not be specified.
-          example: window.location = 'about:blank';
-        url:
-          type: string
-          description: The URL of the JavaScript source file. If this property is defined, the `inlineContent` property should not be specified.
-          example: https://static.cloud.coveo.com/atomic/v2/index.esm.js
     hostedpage-file-css:
       type: object
       description: CSS resource appended in the header, pertaining to a specific hosted page in the target Coveo organization.
@@ -243,53 +290,6 @@ components:
       required:
       - name
       - html
-  parameters:
-    perPage:
-      name: perPage
-      description: The maximum number of configurations to include per page.
-      in: query
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 20
-    page:
-      name: page
-      description: The 0-based number of the page of configurations to list.
-      in: query
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 100
-    organization-id:
-      name: organizationId
-      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
-      example: mycoveocloudv2organizationg8tp8wu3
-      in: path
-      required: true
-      schema:
-        type: string
-    projectId:
-      name: projectId
-      description: The id of the project to which the resource belongs.
-      in: query
-      schema:
-        type: string
-    order:
-      name: order
-      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
-      in: query
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-    filter:
-      name: filter
-      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
-      example: Store
-      in: query
-      schema:
-        type: string
   securitySchemes:
     oauth2:
       type: oauth2

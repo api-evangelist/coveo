@@ -404,6 +404,95 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/snapshots/paramId/synchronization_post
 components:
   schemas:
+    SynchronizationPlanModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the snapshot synchronization plan.
+          example: destinationorganizationg7dg3gd-vfjwjnn6shwxjjd5vujhu22k5u
+        snapshotId:
+          type: string
+          description: The unique identifier of the target snapshot.
+          example: destinationorganizationg7dg3gd-wbbkq2fg6zprmdsegcqfbocdwq
+        status:
+          type: string
+          description: The status of the snapshot synchronization plan.
+          enum:
+          - CREATING
+          - CREATED
+          - IN_ERROR
+        alreadyLinkedResources:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            description: For each resource type, the pre-existing links, if applicable.
+            items:
+              $ref: '#/components/schemas/ReportResourceAlreadyLinkedModel'
+          description: For each resource type, the pre-existing links, if applicable.
+        resourceSynchronizationOperations:
+          type: object
+          additionalProperties:
+            type: array
+            description: The link operations performed when applying the synchronization plan.
+            items:
+              $ref: '#/components/schemas/ReportResourceSynchronizationOperationsModel'
+          description: The link operations performed when applying the synchronization plan.
+      description: The updated synchronization plan.
+    LinkModel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the link, if it already exists.
+          example: tngt45tayqj6op3zt22rf22ek
+        organizationId:
+          type: string
+          description: The unique identifier of the destination organization.
+          example: '`destinationorganizationg7dg3gd`'
+        resourceName:
+          type: string
+          description: The unique identifier of the resource in the snapshot that allows tracking across organizations.
+          example: myextension_aAePCD
+        resourceType:
+          type: string
+          description: The type of the resource.
+          enum:
+          - CATALOG_CONFIG
+          - CATALOG
+          - EXTENSION
+          - FIELD
+          - FILTER
+          - INSIGHT_PANEL_INTERFACE
+          - INSIGHT_PANEL_CONFIGURATION
+          - MAPPING
+          - ML_MODEL
+          - ML_MODEL_ASSOCIATION
+          - QUERY_PARAMETER
+          - QUERY_PIPELINE
+          - QUERY_PIPELINE_CONDITION
+          - RANKING_EXPRESSION
+          - RANKING_WEIGHT
+          - RESULT_RANKING
+          - FEATURED_RESULT
+          - SEARCH_PAGE
+          - SECURITY_PROVIDER
+          - SOURCE
+          - STATEMENT_GROUP
+          - SETTING
+          - STOP_WORD
+          - STOREFRONT_ASSOCIATION
+          - SUBSCRIPTION
+          - THESAURUS
+          - TRACKING_ID
+          - TRIGGER
+          - UNKNOWN
+        resourceId:
+          type: string
+          description: The unique identifier of the resource in the destination organization.
+          example: destinationorganizationg7dg3gd-qvml6dkyvouchhehsjhxxbkgqq
+      description: The link definition.
     ReportResourceAlreadyLinkedModel:
       type: object
       properties:
@@ -497,111 +586,6 @@ components:
           description: The human-readable name of the resource in the target organization.
           example: myextension
       description: The matches of the resource.
-    SynchronizationReportLinkOperationsModel:
-      type: object
-      properties:
-        linksCreated:
-          type: integer
-          description: The number of synchronization links created.
-          format: int32
-        linksOverridden:
-          type: integer
-          description: The number of synchronization links overridden.
-          format: int32
-        linksInError:
-          type: integer
-          description: The number of synchronization links in error.
-          format: int32
-      description: A summary of the outcome of the link operations.
-    SynchronizationPlanModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the snapshot synchronization plan.
-          example: destinationorganizationg7dg3gd-vfjwjnn6shwxjjd5vujhu22k5u
-        snapshotId:
-          type: string
-          description: The unique identifier of the target snapshot.
-          example: destinationorganizationg7dg3gd-wbbkq2fg6zprmdsegcqfbocdwq
-        status:
-          type: string
-          description: The status of the snapshot synchronization plan.
-          enum:
-          - CREATING
-          - CREATED
-          - IN_ERROR
-        alreadyLinkedResources:
-          type: object
-          additionalProperties:
-            uniqueItems: true
-            type: array
-            description: For each resource type, the pre-existing links, if applicable.
-            items:
-              $ref: '#/components/schemas/ReportResourceAlreadyLinkedModel'
-          description: For each resource type, the pre-existing links, if applicable.
-        resourceSynchronizationOperations:
-          type: object
-          additionalProperties:
-            type: array
-            description: The link operations performed when applying the synchronization plan.
-            items:
-              $ref: '#/components/schemas/ReportResourceSynchronizationOperationsModel'
-          description: The link operations performed when applying the synchronization plan.
-      description: The updated synchronization plan.
-    LinkModel:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the link, if it already exists.
-          example: tngt45tayqj6op3zt22rf22ek
-        organizationId:
-          type: string
-          description: The unique identifier of the destination organization.
-          example: '`destinationorganizationg7dg3gd`'
-        resourceName:
-          type: string
-          description: The unique identifier of the resource in the snapshot that allows tracking across organizations.
-          example: myextension_aAePCD
-        resourceType:
-          type: string
-          description: The type of the resource.
-          enum:
-          - CATALOG_CONFIG
-          - CATALOG
-          - EXTENSION
-          - FIELD
-          - FILTER
-          - INSIGHT_PANEL_INTERFACE
-          - INSIGHT_PANEL_CONFIGURATION
-          - MAPPING
-          - ML_MODEL
-          - ML_MODEL_ASSOCIATION
-          - QUERY_PARAMETER
-          - QUERY_PIPELINE
-          - QUERY_PIPELINE_CONDITION
-          - RANKING_EXPRESSION
-          - RANKING_WEIGHT
-          - RESULT_RANKING
-          - FEATURED_RESULT
-          - SEARCH_PAGE
-          - SECURITY_PROVIDER
-          - SOURCE
-          - STATEMENT_GROUP
-          - SETTING
-          - STOP_WORD
-          - STOREFRONT_ASSOCIATION
-          - SUBSCRIPTION
-          - THESAURUS
-          - TRACKING_ID
-          - TRIGGER
-          - UNKNOWN
-        resourceId:
-          type: string
-          description: The unique identifier of the resource in the destination organization.
-          example: destinationorganizationg7dg3gd-qvml6dkyvouchhehsjhxxbkgqq
-      description: The link definition.
     ReportResourceSynchronizationOperationsModel:
       type: object
       properties:
@@ -623,6 +607,22 @@ components:
           items:
             $ref: '#/components/schemas/MatchModel'
       description: The links of the resource.
+    SynchronizationReportLinkOperationsModel:
+      type: object
+      properties:
+        linksCreated:
+          type: integer
+          description: The number of synchronization links created.
+          format: int32
+        linksOverridden:
+          type: integer
+          description: The number of synchronization links overridden.
+          format: int32
+        linksInError:
+          type: integer
+          description: The number of synchronization links in error.
+          format: int32
+      description: A summary of the outcome of the link operations.
   securitySchemes:
     oauth2:
       type: oauth2

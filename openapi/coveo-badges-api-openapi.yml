@@ -73,42 +73,45 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/tracking-ids/paramId/badges_post
 components:
   schemas:
-    NonPaginatedProductResponseProductBadgeViewModel:
+    ProductItemModel:
       type: object
       properties:
-        products:
+        productId:
+          type: string
+          description: The id of the product.
+          example: shoe-a1-red
+      description: The product ID used to generate the recommendations.
+    BadgePlacementViewModel:
+      type: object
+      properties:
+        placementId:
+          type: string
+          description: The placement unique identifier.
+          format: uuid
+          example: 36164bca-b489-4c42-8574-e1325d56d0be
+        badges:
           type: array
-          description: The list of products
+          description: The list of badges associated with this placement
           items:
-            $ref: '#/components/schemas/ProductBadgeViewModel'
-    UserModel:
+            $ref: '#/components/schemas/BadgeViewModel'
+      description: The list of badge placements associated with this product.
+    ViewModel:
+      required:
+      - url
       type: object
       properties:
-        userAgent:
+        url:
+          minLength: 1
           type: string
-          description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.\n\n**Note**: This information is required when endpoints are behind a proxy.'
-          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
-      description: The user information.
-    BadgeViewModel:
-      type: object
-      properties:
-        text:
-          type: string
-          description: The localized text displayed on the badge.
-          example: Bestseller!
-        backgroundColor:
-          type: string
-          description: The badge background color in the format `#RRGGBB`.
-          example: '#FFFFFF'
-        textColor:
-          type: string
-          description: The badge text color in the format `#RRGGBB`.
-          example: '#000000'
-        iconUrl:
-          type: string
-          description: The url of an icon to render with the badge text.
-          example: https://example.com/icon.png
-      description: The list of badges associated with this placement
+          description: The URL used to retrieve the products. Used as `documentLocation` for analytics purposes, which indicates the URL of the resource where the request originated.
+          example: https://acme.com/summersale
+        referrer:
+          type:
+          - string
+          - 'null'
+          description: Typically the URL of the page that linked to the interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Used as `documentReferrer` for analytics purposes.
+          example: https://example.com/
+      description: 'A collection of data points describing the view. Note: The term ''view'' is used instead of ''page'' to accommodate usage in contexts such as mobile apps.'
     BadgingContextModel:
       required:
       - view
@@ -166,45 +169,27 @@ components:
         product:
           $ref: '#/components/schemas/ProductItemModel'
       description: Contextual information about the query.
-    ProductItemModel:
+    NonPaginatedProductResponseProductBadgeViewModel:
+      type: object
+      properties:
+        products:
+          type: array
+          description: The list of products
+          items:
+            $ref: '#/components/schemas/ProductBadgeViewModel'
+    CartItemModel:
       type: object
       properties:
         productId:
           type: string
           description: The id of the product.
           example: shoe-a1-red
-      description: The product ID used to generate the recommendations.
-    ViewModel:
-      required:
-      - url
-      type: object
-      properties:
-        url:
-          minLength: 1
-          type: string
-          description: The URL used to retrieve the products. Used as `documentLocation` for analytics purposes, which indicates the URL of the resource where the request originated.
-          example: https://acme.com/summersale
-        referrer:
-          type:
-          - string
-          - 'null'
-          description: Typically the URL of the page that linked to the interface from which the request originates (e.g., in JavaScript, this would correspond to the `document.referrer` value).\n\nCoveo Machine Learning models may use this information to provide contextually relevant output. Used as `documentReferrer` for analytics purposes.
-          example: https://example.com/
-      description: 'A collection of data points describing the view. Note: The term ''view'' is used instead of ''page'' to accommodate usage in contexts such as mobile apps.'
-    BadgePlacementViewModel:
-      type: object
-      properties:
-        placementId:
-          type: string
-          description: The placement unique identifier.
-          format: uuid
-          example: 36164bca-b489-4c42-8574-e1325d56d0be
-        badges:
-          type: array
-          description: The list of badges associated with this placement
-          items:
-            $ref: '#/components/schemas/BadgeViewModel'
-      description: The list of badge placements associated with this product.
+        quantity:
+          type: integer
+          description: The product quantity.
+          format: int32
+          example: 2
+      description: A cart item.
     BadgeRequestModel:
       required:
       - context
@@ -245,6 +230,34 @@ components:
         context:
           $ref: '#/components/schemas/BadgingContextModel'
       description: The badge request containing placement identifiers and context information to retrieve badges for products.
+    UserModel:
+      type: object
+      properties:
+        userAgent:
+          type: string
+          description: 'The user agent of the request. If not present, the user agent is obtained from the [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header.\n\n**Note**: This information is required when endpoints are behind a proxy.'
+          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36
+      description: The user information.
+    BadgeViewModel:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The localized text displayed on the badge.
+          example: Bestseller!
+        backgroundColor:
+          type: string
+          description: The badge background color in the format `#RRGGBB`.
+          example: '#FFFFFF'
+        textColor:
+          type: string
+          description: The badge text color in the format `#RRGGBB`.
+          example: '#000000'
+        iconUrl:
+          type: string
+          description: The url of an icon to render with the badge text.
+          example: https://example.com/icon.png
+      description: The list of badges associated with this placement
     ProductBadgeViewModel:
       type: object
       properties:
@@ -258,19 +271,6 @@ components:
           items:
             $ref: '#/components/schemas/BadgePlacementViewModel'
       description: The list of products
-    CartItemModel:
-      type: object
-      properties:
-        productId:
-          type: string
-          description: The id of the product.
-          example: shoe-a1-red
-        quantity:
-          type: integer
-          description: The product quantity.
-          format: int32
-          example: 2
-      description: A cart item.
   securitySchemes:
     oauth2:
       type: oauth2

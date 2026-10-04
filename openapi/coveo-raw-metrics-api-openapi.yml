@@ -177,38 +177,6 @@ paths:
         - full
 components:
   schemas:
-    RestListOfSearchHubMetrics:
-      type: object
-      properties:
-        searchHubs:
-          description: The list of search hubs
-          type: array
-          items:
-            $ref: '#/components/schemas/RestSearchHubMetrics'
-      required:
-      - searchHubs
-    RestMetric:
-      type: object
-      properties:
-        id:
-          example: '"queries"'
-          description: The ID of the metric
-          type: string
-        label:
-          example: '"Normal Queries"'
-          description: The display name of the metric
-          type: string
-        productId:
-          example: '"01t0d000001abCdEFG"'
-          description: The productId associated to a metric
-          type: string
-        slidingWindowInMonths:
-          example: 3
-          description: The size of the sliding window to use, in months.
-          type: integer
-          format: int32
-      required:
-      - id
     RestListOfMetricValues:
       type: object
       properties:
@@ -219,31 +187,16 @@ components:
             $ref: '#/components/schemas/RestMetricValueforDate'
       required:
       - values
-    RestMetricValueforDate:
+    RestListOfSearchHubMetrics:
       type: object
       properties:
-        date:
-          example: '"2019-01-01"'
-          description: The date for the usage metric value
-          type: string
-        value:
-          example: 123
-          description: The numeric metric value
-          type: integer
-          format: int64
-      required:
-      - date
-      - value
-    RestListOfMetrics:
-      type: object
-      properties:
-        metrics:
-          description: The list of metrics
+        searchHubs:
+          description: The list of search hubs
           type: array
           items:
-            $ref: '#/components/schemas/RestMetric'
+            $ref: '#/components/schemas/RestSearchHubMetrics'
       required:
-      - metrics
+      - searchHubs
     RestSearchHubMetrics:
       type: object
       properties:
@@ -288,6 +241,53 @@ components:
       - users
       - staticQueries
       - productListingQueries
+    RestMetricValueforDate:
+      type: object
+      properties:
+        date:
+          example: '"2019-01-01"'
+          description: The date for the usage metric value
+          type: string
+        value:
+          example: 123
+          description: The numeric metric value
+          type: integer
+          format: int64
+      required:
+      - date
+      - value
+    RestMetric:
+      type: object
+      properties:
+        id:
+          example: '"queries"'
+          description: The ID of the metric
+          type: string
+        label:
+          example: '"Normal Queries"'
+          description: The display name of the metric
+          type: string
+        productId:
+          example: '"01t0d000001abCdEFG"'
+          description: The productId associated to a metric
+          type: string
+        slidingWindowInMonths:
+          example: 3
+          description: The size of the sliding window to use, in months.
+          type: integer
+          format: int32
+      required:
+      - id
+    RestListOfMetrics:
+      type: object
+      properties:
+        metrics:
+          description: The list of metrics
+          type: array
+          items:
+            $ref: '#/components/schemas/RestMetric'
+      required:
+      - metrics
   securitySchemes:
     oauth2:
       type: oauth2

@@ -1025,6 +1025,15 @@ components:
           example: 400
         message:
           type: string
+    coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasJavaScript:
+      type: object
+      properties:
+        InlineContent:
+          type: string
+        Name:
+          type: string
+        URL:
+          type: string
     swaggermodels.ResponseApplicationErrorUnauthorized:
       type: object
       properties:
@@ -1033,26 +1042,13 @@ components:
           example: 401
         message:
           type: string
-    swaggermodels.ResponsePage:
+    swaggermodels.ResponseApplicationErrorNotFound:
       type: object
       properties:
-        css:
-          type: array
-          items:
-            $ref: '#/components/schemas/coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasCSS'
-        html:
-          type: string
-        id:
-          type: string
-        javascript:
-          type: array
-          items:
-            $ref: '#/components/schemas/coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasJavaScript'
-        lastModified:
-          type: string
-        name:
-          type: string
-        title:
+        errorCode:
+          type: integer
+          example: 404
+        message:
           type: string
     swaggermodels.ResponseSearchUIVersion:
       type: object
@@ -1061,25 +1057,21 @@ components:
           type: string
         minor:
           type: string
-    swaggermodels.UpdateHeaderResourcesModel:
+    swaggermodels.JavaScriptResourceSharedModel:
       type: object
       properties:
-        css:
-          description: The name identifiers of all CSS resources in the search page header, in the desired order.
-          type: array
-          items:
-            type: string
-          example:
-          - myfirstCSS
-          - mysecondCSS
-        javascript:
-          description: The name identifiers of all JavaScript resources in the search page header, in the desired order.
-          type: array
-          items:
-            type: string
-          example:
-          - myfirstJS
-          - mysecondJS
+        inlineContent:
+          description: The content of the header "script" tag.
+          type: string
+          example: window.location = 'about:blank';
+        name:
+          description: The identifier of the header "script" tag.
+          type: string
+          example: CoveoSearchUI
+        url:
+          description: The URL of the JavaScript source file.
+          type: string
+          example: https://code.jquery.com/jquery-3.4.1.min.js
     swaggermodels.CSSResourceSharedModel:
       type: object
       properties:
@@ -1106,14 +1098,45 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/swaggermodels.JavaScriptResourceSharedModel'
-    coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasJavaScript:
+    swaggermodels.UpdateHeaderResourcesModel:
       type: object
       properties:
-        InlineContent:
+        css:
+          description: The name identifiers of all CSS resources in the search page header, in the desired order.
+          type: array
+          items:
+            type: string
+          example:
+          - myfirstCSS
+          - mysecondCSS
+        javascript:
+          description: The name identifiers of all JavaScript resources in the search page header, in the desired order.
+          type: array
+          items:
+            type: string
+          example:
+          - myfirstJS
+          - mysecondJS
+    swaggermodels.ResponsePage:
+      type: object
+      properties:
+        css:
+          type: array
+          items:
+            $ref: '#/components/schemas/coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasCSS'
+        html:
           type: string
-        Name:
+        id:
           type: string
-        URL:
+        javascript:
+          type: array
+          items:
+            $ref: '#/components/schemas/coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasJavaScript'
+        lastModified:
+          type: string
+        name:
+          type: string
+        title:
           type: string
     coveo_com_searchpages_pkg_http_rest_viewroutes_hostedsearchpages.aliasCSS:
       type: object
@@ -1124,23 +1147,14 @@ components:
           type: string
         URL:
           type: string
-    swaggermodels.RequestUpdatePageMetadata:
+    swaggermodels.ResponseApplicationErrorInternalServerError:
       type: object
       properties:
-        html:
+        errorCode:
+          type: integer
+          example: 500
+        message:
           type: string
-        name:
-          description: A human-readable unique name for this search page. Can contain up to 50 alphanumeric, underscore, and hyphen characters.
-          type: string
-          maxLength: 50
-          minLength: 1
-          example: My-Search-Page_name
-        title:
-          description: A human-readable HTML title for this search page. Can contain up to 200 characters.
-          type: string
-          maxLength: 200
-          minLength: 1
-          example: My Search Page title
     swaggermodels.ResponseSearchUIUpgradeInfo:
       type: object
       properties:
@@ -1160,40 +1174,26 @@ components:
         upgradable:
           description: Upgradable indicates whether this search page can be upgraded to a newer JavaScript Search Framework version.
           type: boolean
-    swaggermodels.ResponseApplicationErrorNotFound:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 404
-        message:
-          type: string
-    swaggermodels.ResponseApplicationErrorInternalServerError:
-      type: object
-      properties:
-        errorCode:
-          type: integer
-          example: 500
-        message:
-          type: string
-    swaggermodels.JavaScriptResourceSharedModel:
-      type: object
-      properties:
-        inlineContent:
-          description: The content of the header "script" tag.
-          type: string
-          example: window.location = 'about:blank';
-        name:
-          description: The identifier of the header "script" tag.
-          type: string
-          example: CoveoSearchUI
-        url:
-          description: The URL of the JavaScript source file.
-          type: string
-          example: https://code.jquery.com/jquery-3.4.1.min.js
     swaggermodels.RequestCreateEmptyPage:
       type: object
       properties:
+        name:
+          description: A human-readable unique name for this search page. Can contain up to 50 alphanumeric, underscore, and hyphen characters.
+          type: string
+          maxLength: 50
+          minLength: 1
+          example: My-Search-Page_name
+        title:
+          description: A human-readable HTML title for this search page. Can contain up to 200 characters.
+          type: string
+          maxLength: 200
+          minLength: 1
+          example: My Search Page title
+    swaggermodels.RequestUpdatePageMetadata:
+      type: object
+      properties:
+        html:
+          type: string
         name:
           description: A human-readable unique name for this search page. Can contain up to 50 alphanumeric, underscore, and hyphen characters.
           type: string

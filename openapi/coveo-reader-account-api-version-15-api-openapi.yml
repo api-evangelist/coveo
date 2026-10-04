@@ -468,6 +468,28 @@ paths:
           description: OK
 components:
   schemas:
+    SnowflakeCreditUsageResponseV15:
+      type: object
+      properties:
+        creditsUsed:
+          type: number
+          description: The total number of warehouse compute credits used.
+          format: double
+      description: The compute credit usage for a Snowflake account over a date range.
+    SnowflakeUserResponseV15:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The user login name.
+        email:
+          type: string
+          description: The e-mail address currently associated with the user.
+        daysToExpiry:
+          type: number
+          description: The number of days before the user expires.
+          format: double
+      description: A user from a Snowflake account
     SnowflakeNetworkPolicyModelV15:
       required:
       - allowedIpAddresses
@@ -488,6 +510,23 @@ components:
             type: string
             description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
       description: Details required when creating a new Snowflake network policy
+    CreateSnowflakeUserModelV15:
+      required:
+      - email
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username, which will be used when logging into the Snowflake account
+        email:
+          type: string
+          description: The user's e-mail, where password setup and reset URLs will be sent
+        daysToExpiry:
+          type: integer
+          description: The number of days before the user expiration, if not defined, the user will never expire.
+          format: int32
+      description: Details required when creating a new Snowflake user
     SnowflakeNetworkPolicyResponseV15:
       type: object
       properties:
@@ -506,27 +545,6 @@ components:
             type: string
             description: The set of IPv4 addresses (with optional subnets) that are denied access to the Snowflake account.
       description: The policy that specifies options for managing network configurations to the Snowflake service.
-    SnowflakeReaderAccountEndpointResponseV15:
-      type: object
-      properties:
-        endpoint:
-          type: string
-          description: The endpoint of the account
-      description: A snowflake reader account's endpoint
-    SnowflakeUserResponseV15:
-      type: object
-      properties:
-        username:
-          type: string
-          description: The user login name.
-        email:
-          type: string
-          description: The e-mail address currently associated with the user.
-        daysToExpiry:
-          type: number
-          description: The number of days before the user expires.
-          format: double
-      description: A user from a Snowflake account
     SnowflakeReaderAccountStateResponseV15:
       type: object
       properties:
@@ -536,31 +554,13 @@ components:
           enum:
           - AVAILABLE
       description: A snowflake reader account's state
-    SnowflakeCreditUsageResponseV15:
+    SnowflakeReaderAccountEndpointResponseV15:
       type: object
       properties:
-        creditsUsed:
-          type: number
-          description: The total number of warehouse compute credits used.
-          format: double
-      description: The compute credit usage for a Snowflake account over a date range.
-    CreateSnowflakeUserModelV15:
-      required:
-      - email
-      - username
-      type: object
-      properties:
-        username:
+        endpoint:
           type: string
-          description: The username, which will be used when logging into the Snowflake account
-        email:
-          type: string
-          description: The user's e-mail, where password setup and reset URLs will be sent
-        daysToExpiry:
-          type: integer
-          description: The number of days before the user expiration, if not defined, the user will never expire.
-          format: int32
-      description: Details required when creating a new Snowflake user
+          description: The endpoint of the account
+      description: A snowflake reader account's endpoint
     UpdateSnowflakeUserExpirationRequestModelV15:
       type: object
       properties:

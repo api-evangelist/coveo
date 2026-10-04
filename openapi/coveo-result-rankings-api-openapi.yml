@@ -653,6 +653,515 @@ paths:
         - full
 components:
   schemas:
+    ResultRankingRuleAssociatedGroupWithStatus:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the associated statement group.
+          example: 679adb80-444e-11ea-b77f-2e728ce88125
+        name:
+          type: string
+          description: The unique name of the associated statement group.
+          example: Community
+        status:
+          $ref: '#/components/schemas/StatementGroupStatus'
+    ResultRankingRuleListResponseBase:
+      allOf:
+      - $ref: '#/components/schemas/ResultRankingRuleResponseBase'
+      - type: object
+        properties:
+          condition:
+            $ref: '#/components/schemas/ResultRankingRuleConditionListResponse'
+    IsBetweenOperator:
+      type: object
+      required:
+      - operator
+      - left
+      - from
+      - to
+      properties:
+        operator:
+          type: string
+          enum:
+          - isBetween
+        left:
+          $ref: '#/components/schemas/OperatorLeftHandSide'
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+    ResultRankingRuleCondition:
+      type: object
+      properties:
+        reference:
+          type: string
+          description: The ID of a mandatory condition to satisfy.
+          example: 3896e64f-2132-463a-81c8-26f2e9f89e0a
+    ResultRankingRuleListResponse:
+      oneOf:
+      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsListResponse'
+      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionListResponse'
+      discriminator:
+        propertyName: kind
+        mapping:
+          featured_result: '#/components/schemas/ResultRankingRuleFeaturedResultsListResponse'
+          ranking_expression: '#/components/schemas/ResultRankingRuleRankingExpressionListResponse'
+    ErrorMessage:
+      type: object
+      additionalProperties: true
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        errorCode:
+          type: string
+          example: ORGANIZATION_DOES_NOT_EXIST
+        message:
+          type: string
+          example: The organization does not exist in the search api.
+    ResultRankingBulkGetResponse:
+      required:
+      - resultRankings
+      - totalCount
+      - totalPages
+      - groupedBy
+      type: object
+      properties:
+        resultRankings:
+          type: array
+          items:
+            $ref: '#/components/schemas/BulkGetResultRankingRuleIdentifiedWithGroupStatusResponse'
+        totalCount:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        groupedBy:
+          $ref: '#/components/schemas/ResultRankingGroupByResponse'
+    ResultRankingRuleStatus:
+      type: string
+      enum:
+      - active
+      - inactive
+    RestSingleOperationValidationResponse:
+      required:
+      - result
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/RestOperationValidationResponse'
+    ResultRankingRuleRankingExpressionGetResponse:
+      allOf:
+      - $ref: '#/components/schemas/ResultRankingRuleResponseBase'
+      - $ref: '#/components/schemas/ResultRankingRuleGetBaseResponse'
+      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionBase'
+    ResultRankingRuleTargetUniqueId:
+      type: object
+      required:
+      - uniqueId
+      properties:
+        uniqueId:
+          type: string
+          description: Select a document by unique id (@urihash value).
+          example:
+            uniqueId: d4248b95a27
+    BulkGetResultRankingRuleIdentifiedWithGroupStatusResponse:
+      type: object
+      required:
+      - id
+      - resultRanking
+      properties:
+        id:
+          type: string
+          description: The identifier of the result ranking rule
+        resultRanking:
+          $ref: '#/components/schemas/ResultRankingRuleResponse'
+        associatedGroup:
+          $ref: '#/components/schemas/ResultRankingRuleAssociatedGroupWithStatus'
+    ResultRankingRuleLocalizedContent:
+      required:
+      - familyId
+      - familyIdField
+      - locale
+      - localeField
+      type: object
+      properties:
+        familyId:
+          type: string
+          description: The ID of the KB article to show.
+          example: '112233'
+        locale:
+          $ref: '#/components/schemas/ResultRankingRuleLocalizedContentLocale'
+        familyIdField:
+          type: string
+          description: Field that identifies the knowledge article.
+          example: '@sfarticlenumber'
+        localeField:
+          type: string
+          description: Field that identifies the locale of the document.
+          example: '@locale'
+    ResultRankingListResponse:
+      required:
+      - resultRankings
+      - totalCount
+      - totalPages
+      - groupedBy
+      type: object
+      properties:
+        resultRankings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResultRankingRuleIdentifiedWithGroupStatusListResponse'
+        totalCount:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        groupedBy:
+          $ref: '#/components/schemas/ResultRankingGroupByResponse'
+    Predicate:
+      oneOf:
+      - $ref: '#/components/schemas/PredicateBasicExpression'
+      - $ref: '#/components/schemas/PredicateQpl'
+      discriminator:
+        propertyName: kind
+        mapping:
+          basicExpressionAndLocalePredicate: '#/components/schemas/PredicateBasicExpression'
+          qplPredicate: '#/components/schemas/PredicateQpl'
+    ResultRankingRuleConditionListResponse:
+      type: object
+      properties:
+        reference:
+          type: string
+          description: The ID of a mandatory condition to satisfy.
+          example: 3896e64f-2132-463a-81c8-26f2e9f89e0a
+        detailed:
+          $ref: '#/components/schemas/ConditionDetailed'
+    ResultRankingValidationRequest:
+      oneOf:
+      - $ref: '#/components/schemas/ResultRankingRuleOperationValidateCreate'
+      - $ref: '#/components/schemas/ResultRankingRuleOperationValidateUpdate'
+      - $ref: '#/components/schemas/OperationValidateDelete'
+      discriminator:
+        propertyName: operationType
+        mapping:
+          CREATE: '#/components/schemas/ResultRankingRuleOperationValidateCreate'
+          UPDATE: '#/components/schemas/ResultRankingRuleOperationValidateUpdate'
+          DELETE: '#/components/schemas/OperationValidateDelete'
+    ResultRankingRuleGetResponse:
+      oneOf:
+      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsGetResponse'
+      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionGetResponse'
+      discriminator:
+        propertyName: kind
+        mapping:
+          featured_result: '#/components/schemas/ResultRankingRuleFeaturedResultsGetResponse'
+          ranking_expression: '#/components/schemas/ResultRankingRuleRankingExpressionGetResponse'
+    ResultRankingBatchOperationValidate:
+      required:
+      - operations
+      type: object
+      properties:
+        operations:
+          type: array
+          description: A list of operations to validate.
+          items:
+            $ref: '#/components/schemas/ResultRankingValidationRequest'
+    ResultRankingRuleRankingExpressionResponse:
+      allOf:
+      - $ref: '#/components/schemas/ResultRankingRuleResponseBase'
+      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionBase'
+    ResultRankingGroupByResponse:
+      required:
+      - groups
+      - status
+      - type
+      type: object
+      properties:
+        groups:
+          $ref: '#/components/schemas/ByGroup'
+        status:
+          $ref: '#/components/schemas/ByStatus'
+        type:
+          $ref: '#/components/schemas/ByType'
+    ResultRankingRuleOperationValidateCreate:
+      type: object
+      required:
+      - operationType
+      - model
+      properties:
+        operationType:
+          type: string
+          enum:
+          - CREATE
+          description: 'Validate the creation of a ResultRanking rule.
+
+            '
+        model:
+          $ref: '#/components/schemas/ResultRankingRuleCreateRequest'
+    ResultRankingRuleOperationValidateUpdate:
+      type: object
+      required:
+      - operationType
+      - resourceId
+      - model
+      properties:
+        operationType:
+          type: string
+          enum:
+          - UPDATE
+          description: 'Validate the update of a ResultRanking rule.
+
+            '
+        model:
+          $ref: '#/components/schemas/ResultRankingRuleUpdateRequest'
+        resourceId:
+          type: string
+          description: 'The identifier of the resource. '
+          example: id
+    CopyResultRankingRulesRequest:
+      required:
+      - destinationPipelineId
+      - resultRankingIds
+      type: object
+      properties:
+        destinationPipelineId:
+          type: string
+          description: The unique identifier of the query pipeline to copy the statements to.
+          example: 120deecf-7822-4d7b-885f-53f184a3a76
+        resultRankingIds:
+          type: array
+          maxItems: 15
+          description: The unique identifiers of the result ranking rules to copy.
+          example:
+          - 4f0a9531-4fab-45fd-a1e3-eb07a5aceccb
+          items:
+            type: string
+          minItems: 1
+    ResultRankingRuleCreateRequest:
+      oneOf:
+      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsCreateRequest'
+      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionCreateRequest'
+      discriminator:
+        propertyName: kind
+        mapping:
+          featured_result: '#/components/schemas/ResultRankingRuleFeaturedResultsCreateRequest'
+          ranking_expression: '#/components/schemas/ResultRankingRuleRankingExpressionCreateRequest'
+    ResultRankingRuleUpdateRequest:
+      oneOf:
+      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsCreateRequest'
+      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionCreateRequest'
+      discriminator:
+        propertyName: kind
+        mapping:
+          featured_result: '#/components/schemas/ResultRankingRuleFeaturedResultsCreateRequest'
+          ranking_expression: '#/components/schemas/ResultRankingRuleRankingExpressionCreateRequest'
+    ByGroup:
+      required:
+      - associated
+      - orphaned
+      type: object
+      properties:
+        associated:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        orphaned:
+          type: integer
+          format: int32
+    ResultRankingRuleIdentifiedResponse:
+      type: object
+      required:
+      - id
+      - resultRanking
+      properties:
+        id:
+          type: string
+          description: The identifier of the result ranking rule
+        resultRanking:
+          $ref: '#/components/schemas/ResultRankingRuleResponse'
+    ResultRankingRuleFeaturedResultsGetResponse:
+      allOf:
+      - $ref: '#/components/schemas/ResultRankingRuleResponseBase'
+      - $ref: '#/components/schemas/ResultRankingRuleGetBaseResponse'
+      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsBase'
+    ResultRankingRuleFeaturedResultsBase:
+      type: object
+      required:
+      - kind
+      - targets
+      properties:
+        kind:
+          type: string
+          description: The kind of result ranking.
+          enum:
+          - featured_result
+        targets:
+          type: array
+          description: Documents that will show up when conditions and predicates are met.
+          example:
+          - uniqueId: 2228d0a698fd
+          - localizedContent:
+              familyId: '112233'
+              locale:
+                auto:
+                  default: en-US
+              familyIdField: '@sfarticlenumber'
+              localeField: '@locale'
+          - queryExpression: '@permanentid="6cdw9d02d17"'
+          items:
+            $ref: '#/components/schemas/ResultRankingRuleTargetFeaturedResults'
+        matchQuery:
+          type: boolean
+          description: When set to true, a featured result item must match the basic part (q) of the query expression, meaning it will only appear if it matches the search request provided by the user.
+          example: true
+          default: false
+        matchAdvancedQuery:
+          type: boolean
+          description: When set to true, a featured result item must match the advanced part (aq) of the query expression, meaning it will only appear if it matches the selected filters in the search interface.
+          example: true
+          default: true
+        includeInFacets:
+          type: boolean
+          example: true
+          default: true
+    RestBatchOperationValidationResponse:
+      required:
+      - results
+      type: object
+      properties:
+        results:
+          type: array
+          description: The list of operation validation results.
+          items:
+            $ref: '#/components/schemas/RestOperationValidationResponse'
+    ResultRankingRuleIdentifiedWithGroupStatusListResponse:
+      type: object
+      required:
+      - id
+      - resultRanking
+      properties:
+        id:
+          type: string
+          description: The identifier of the result ranking rule
+        resultRanking:
+          $ref: '#/components/schemas/ResultRankingRuleListResponse'
+        associatedGroup:
+          $ref: '#/components/schemas/ResultRankingRuleAssociatedGroupWithStatus'
+    RestOperationValidationResponse:
+      required:
+      - operationType
+      - operationValid
+      type: object
+      properties:
+        operationType:
+          type: string
+          description: The type of operation that has been validated.
+          example: CREATE
+        operationValid:
+          type: boolean
+          description: Whether the operation to validate was successful or not.
+          example: true
+        resourceId:
+          type: string
+          description: 'The identifier of the resource. '
+          example: id
+        validationErrors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/RestOperationValidationError'
+          description: If the operation failed, the `validationError` will contains the error message.
+          example: Access Denied. You don't have the required privileges to perform  this operation.
+    ResultRankingRuleRankingExpressionCreateRequest:
+      allOf:
+      - $ref: '#/components/schemas/ResultRankingRuleBase'
+      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionBase'
+    BulkDeleteResultRankingRulesRequest:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
+          type: array
+          description: A list of resource identifiers to delete. A maximum of **100** can be sent.
+          maxItems: 100
+          items:
+            type: string
+            maxLength: 38
+    PredicateQpl:
+      type: object
+      required:
+      - kind
+      - code
+      properties:
+        kind:
+          type: string
+          enum:
+          - qplPredicate
+        code:
+          type: string
+          description: The [query pipeline language (QPL)](https://docs.coveo.com/en/1449/) definition of the condition.
+          example: when $query doesn''t end with `gaming laptop`
+    BulkDeleteResultRankingRulesResponse:
+      type: object
+    ResultRankingRuleTargetFeaturedResults:
+      oneOf:
+      - $ref: '#/components/schemas/ResultRankingRuleTargetUniqueId'
+      - $ref: '#/components/schemas/ResultRankingRuleTargetLocalizedContent'
+      - $ref: '#/components/schemas/ResultRankingRuleTargetQueryExpression'
+    ResultRankingRuleTargetLocalizedContent:
+      type: object
+      required:
+      - localizedContent
+      properties:
+        localizedContent:
+          $ref: '#/components/schemas/ResultRankingRuleLocalizedContent'
+    ResultRankingRuleRankingExpressionListResponse:
+      allOf:
+      - $ref: '#/components/schemas/ResultRankingRuleListResponseBase'
+      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionBase'
+    PredicateBasicExpression:
+      type: object
+      required:
+      - kind
+      properties:
+        kind:
+          type: string
+          enum:
+          - basicExpressionAndLocalePredicate
+        basicQueryExpression:
+          type: string
+          description: The value to compare with the search query’s actual `q` value.
+          example: gaming laptop
+        matchOperator:
+          $ref: '#/components/schemas/PredicateMatchOperator'
+        locale:
+          $ref: '#/components/schemas/PredicateLocale'
+    OperatorRightHandSide:
+      oneOf:
+      - type: string
+      - type: number
+      - type: integer
+        format: int32
+      - type: boolean
+    RestOperationValidationError:
+      required:
+      - message
+      type: object
+      properties:
+        message:
+          type: string
     ResultRankingRuleRankingExpressionBase:
       type: object
       required:
@@ -700,572 +1209,10 @@ components:
           - simple
           - advanced
           description: Define whether rules are simple or advanced. It will influence how it will be loaded in the AdminUI.
-    RestSingleOperationValidationResponse:
-      required:
-      - result
-      type: object
-      properties:
-        result:
-          $ref: '#/components/schemas/RestOperationValidationResponse'
-    IsBetweenOperator:
-      type: object
-      required:
-      - operator
-      - left
-      - from
-      - to
-      properties:
-        operator:
-          type: string
-          enum:
-          - isBetween
-        left:
-          $ref: '#/components/schemas/OperatorLeftHandSide'
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-    CompoundBooleanExpression:
-      type: object
-      required:
-      - operator
-      - left
-      properties:
-        operator:
-          type: string
-        left:
-          $ref: '#/components/schemas/BooleanExpression'
-        right:
-          $ref: '#/components/schemas/BooleanExpression'
-    PredicateLocale:
-      type: object
-      properties:
-        kind:
-          type: string
-          description: The kind of locale.
-          example: all
-          enum:
-          - all
-          - unspecified
-          - specific
-        code:
-          type: string
-          description: An additional condition expressed with the [Query Pipeline Language (QPL)](https://docs.coveo.com/1449/).
-          example: when $browser is "firefox"
-    ResultRankingRuleListResponse:
-      oneOf:
-      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsListResponse'
-      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionListResponse'
-      discriminator:
-        propertyName: kind
-        mapping:
-          featured_result: '#/components/schemas/ResultRankingRuleFeaturedResultsListResponse'
-          ranking_expression: '#/components/schemas/ResultRankingRuleRankingExpressionListResponse'
-    ResultRankingRuleFeaturedResultsListResponse:
+    ResultRankingRuleFeaturedResultsCreateRequest:
       allOf:
-      - $ref: '#/components/schemas/ResultRankingRuleListResponseBase'
+      - $ref: '#/components/schemas/ResultRankingRuleBase'
       - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsBase'
-    ResultRankingValidationRequest:
-      oneOf:
-      - $ref: '#/components/schemas/ResultRankingRuleOperationValidateCreate'
-      - $ref: '#/components/schemas/ResultRankingRuleOperationValidateUpdate'
-      - $ref: '#/components/schemas/OperationValidateDelete'
-      discriminator:
-        propertyName: operationType
-        mapping:
-          CREATE: '#/components/schemas/ResultRankingRuleOperationValidateCreate'
-          UPDATE: '#/components/schemas/ResultRankingRuleOperationValidateUpdate'
-          DELETE: '#/components/schemas/OperationValidateDelete'
-    ByStatus:
-      required:
-      - active
-      - inactive
-      type: object
-      properties:
-        active:
-          type: integer
-          format: int32
-        inactive:
-          type: integer
-          format: int32
-    RestOperationValidationError:
-      required:
-      - message
-      type: object
-      properties:
-        message:
-          type: string
-    ResultRankingRuleIdentifiedResponse:
-      type: object
-      required:
-      - id
-      - resultRanking
-      properties:
-        id:
-          type: string
-          description: The identifier of the result ranking rule
-        resultRanking:
-          $ref: '#/components/schemas/ResultRankingRuleResponse'
-    ResultRankingRuleLocalizedContent:
-      required:
-      - familyId
-      - familyIdField
-      - locale
-      - localeField
-      type: object
-      properties:
-        familyId:
-          type: string
-          description: The ID of the KB article to show.
-          example: '112233'
-        locale:
-          $ref: '#/components/schemas/ResultRankingRuleLocalizedContentLocale'
-        familyIdField:
-          type: string
-          description: Field that identifies the knowledge article.
-          example: '@sfarticlenumber'
-        localeField:
-          type: string
-          description: Field that identifies the locale of the document.
-          example: '@locale'
-    OperatorExpression:
-      type: object
-      required:
-      - operator
-      - left
-      properties:
-        operator:
-          type: string
-        left:
-          $ref: '#/components/schemas/OperatorLeftHandSide'
-        right:
-          $ref: '#/components/schemas/OperatorRightHandSide'
-    PredicateMatchOperator:
-      type: object
-      properties:
-        kind:
-          type: string
-          description: The kind of match operator.
-          example: is
-          enum:
-          - is
-          - contains
-          - matches
-    ResultRankingRuleListResponseBase:
-      allOf:
-      - $ref: '#/components/schemas/ResultRankingRuleResponseBase'
-      - type: object
-        properties:
-          condition:
-            $ref: '#/components/schemas/ResultRankingRuleConditionListResponse'
-    ResultRankingRuleOperationValidateUpdate:
-      type: object
-      required:
-      - operationType
-      - resourceId
-      - model
-      properties:
-        operationType:
-          type: string
-          enum:
-          - UPDATE
-          description: 'Validate the update of a ResultRanking rule.
-
-            '
-        model:
-          $ref: '#/components/schemas/ResultRankingRuleUpdateRequest'
-        resourceId:
-          type: string
-          description: 'The identifier of the resource. '
-          example: id
-    ConditionDetailed:
-      type: object
-      required:
-      - condition
-      properties:
-        condition:
-          $ref: '#/components/schemas/BooleanExpression'
-    ResultRankingRuleRankingExpressionResponse:
-      allOf:
-      - $ref: '#/components/schemas/ResultRankingRuleResponseBase'
-      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionBase'
-    PredicateBasicExpression:
-      type: object
-      required:
-      - kind
-      properties:
-        kind:
-          type: string
-          enum:
-          - basicExpressionAndLocalePredicate
-        basicQueryExpression:
-          type: string
-          description: The value to compare with the search query’s actual `q` value.
-          example: gaming laptop
-        matchOperator:
-          $ref: '#/components/schemas/PredicateMatchOperator'
-        locale:
-          $ref: '#/components/schemas/PredicateLocale'
-    ResultRankingRuleRankingExpressionListResponse:
-      allOf:
-      - $ref: '#/components/schemas/ResultRankingRuleListResponseBase'
-      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionBase'
-    RestBulkGetRequest:
-      type: object
-      properties:
-        ids:
-          type: array
-          description: A list of resource identifiers to get. A maximum of **1000** can be sent.
-          items:
-            type: string
-            maxItems: 1000
-    Predicate:
-      oneOf:
-      - $ref: '#/components/schemas/PredicateBasicExpression'
-      - $ref: '#/components/schemas/PredicateQpl'
-      discriminator:
-        propertyName: kind
-        mapping:
-          basicExpressionAndLocalePredicate: '#/components/schemas/PredicateBasicExpression'
-          qplPredicate: '#/components/schemas/PredicateQpl'
-    ResultRankingRuleOperationValidateCreate:
-      type: object
-      required:
-      - operationType
-      - model
-      properties:
-        operationType:
-          type: string
-          enum:
-          - CREATE
-          description: 'Validate the creation of a ResultRanking rule.
-
-            '
-        model:
-          $ref: '#/components/schemas/ResultRankingRuleCreateRequest'
-    ResultRankingRuleAssociatedGroupWithStatus:
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the associated statement group.
-          example: 679adb80-444e-11ea-b77f-2e728ce88125
-        name:
-          type: string
-          description: The unique name of the associated statement group.
-          example: Community
-        status:
-          $ref: '#/components/schemas/StatementGroupStatus'
-    ResultRankingRuleLocalizedContentLocale:
-      type: object
-      properties:
-        auto:
-          $ref: '#/components/schemas/ResultRankingRuleLocalizedContentLocaleAuto'
-        specific:
-          type: string
-          description: The locale code of the KB article to show.
-          example:
-            code: en-US
-      description: Exactly one field should be defined.
-    ResultRankingRuleUpdateRequest:
-      oneOf:
-      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsCreateRequest'
-      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionCreateRequest'
-      discriminator:
-        propertyName: kind
-        mapping:
-          featured_result: '#/components/schemas/ResultRankingRuleFeaturedResultsCreateRequest'
-          ranking_expression: '#/components/schemas/ResultRankingRuleRankingExpressionCreateRequest'
-    ResultRankingRuleType:
-      type: string
-      enum:
-      - featuredResults
-      - rankingExpressions
-    ResultRankingRuleIdentifiedWithGroupStatusResponse:
-      type: object
-      required:
-      - id
-      - resultRanking
-      properties:
-        id:
-          type: string
-          description: The identifier of the result ranking rule
-        resultRanking:
-          $ref: '#/components/schemas/ResultRankingRuleResponse'
-        associatedGroup:
-          $ref: '#/components/schemas/ResultRankingRuleAssociatedGroupWithStatus'
-    BulkGetResultRankingRuleIdentifiedWithGroupStatusResponse:
-      type: object
-      required:
-      - id
-      - resultRanking
-      properties:
-        id:
-          type: string
-          description: The identifier of the result ranking rule
-        resultRanking:
-          $ref: '#/components/schemas/ResultRankingRuleResponse'
-        associatedGroup:
-          $ref: '#/components/schemas/ResultRankingRuleAssociatedGroupWithStatus'
-    ResultRankingListResponse:
-      required:
-      - resultRankings
-      - totalCount
-      - totalPages
-      - groupedBy
-      type: object
-      properties:
-        resultRankings:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResultRankingRuleIdentifiedWithGroupStatusListResponse'
-        totalCount:
-          type: integer
-          format: int32
-        totalPages:
-          type: integer
-          format: int32
-        groupedBy:
-          $ref: '#/components/schemas/ResultRankingGroupByResponse'
-    ResultRankingRuleCreateRequest:
-      oneOf:
-      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsCreateRequest'
-      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionCreateRequest'
-      discriminator:
-        propertyName: kind
-        mapping:
-          featured_result: '#/components/schemas/ResultRankingRuleFeaturedResultsCreateRequest'
-          ranking_expression: '#/components/schemas/ResultRankingRuleRankingExpressionCreateRequest'
-    ErrorMessage:
-      type: object
-      additionalProperties: true
-      properties:
-        statusCode:
-          type: number
-          example: 404
-        errorCode:
-          type: string
-          example: ORGANIZATION_DOES_NOT_EXIST
-        message:
-          type: string
-          example: The organization does not exist in the search api.
-    ResultRankingRuleIdOnlyResponse:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          description: The identifier of the result ranking rule
-    ResultRankingBatchOperationValidate:
-      required:
-      - operations
-      type: object
-      properties:
-        operations:
-          type: array
-          description: A list of operations to validate.
-          items:
-            $ref: '#/components/schemas/ResultRankingValidationRequest'
-    BulkDeleteResultRankingRulesRequest:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          description: A list of resource identifiers to delete. A maximum of **100** can be sent.
-          maxItems: 100
-          items:
-            type: string
-            maxLength: 38
-    ResultRankingRuleTargetLocalizedContent:
-      type: object
-      required:
-      - localizedContent
-      properties:
-        localizedContent:
-          $ref: '#/components/schemas/ResultRankingRuleLocalizedContent'
-    ResultRankingGroupByResponse:
-      required:
-      - groups
-      - status
-      - type
-      type: object
-      properties:
-        groups:
-          $ref: '#/components/schemas/ByGroup'
-        status:
-          $ref: '#/components/schemas/ByStatus'
-        type:
-          $ref: '#/components/schemas/ByType'
-    OperatorRightHandSide:
-      oneOf:
-      - type: string
-      - type: number
-      - type: integer
-        format: int32
-      - type: boolean
-    ResultRankingRuleTargetUniqueId:
-      type: object
-      required:
-      - uniqueId
-      properties:
-        uniqueId:
-          type: string
-          description: Select a document by unique id (@urihash value).
-          example:
-            uniqueId: d4248b95a27
-    ResultRankingRuleFeaturedResultsGetResponse:
-      allOf:
-      - $ref: '#/components/schemas/ResultRankingRuleResponseBase'
-      - $ref: '#/components/schemas/ResultRankingRuleGetBaseResponse'
-      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsBase'
-    PredicateQpl:
-      type: object
-      required:
-      - kind
-      - code
-      properties:
-        kind:
-          type: string
-          enum:
-          - qplPredicate
-        code:
-          type: string
-          description: The [query pipeline language (QPL)](https://docs.coveo.com/en/1449/) definition of the condition.
-          example: when $query doesn''t end with `gaming laptop`
-    RestBatchOperationValidationResponse:
-      required:
-      - results
-      type: object
-      properties:
-        results:
-          type: array
-          description: The list of operation validation results.
-          items:
-            $ref: '#/components/schemas/RestOperationValidationResponse'
-    ByGroup:
-      required:
-      - associated
-      - orphaned
-      type: object
-      properties:
-        associated:
-          type: object
-          additionalProperties:
-            type: integer
-            format: int32
-        orphaned:
-          type: integer
-          format: int32
-    ResultRankingRuleLocalizedContentLocaleAuto:
-      required:
-      - default
-      type: object
-      properties:
-        default:
-          type: string
-          description: The default locale of the Knowledge Article to default to if it's not available in the user's locale.
-          example: en-US
-    ResultRankingRuleResponse:
-      oneOf:
-      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsResponse'
-      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionResponse'
-      discriminator:
-        propertyName: kind
-        mapping:
-          featured_result: '#/components/schemas/ResultRankingRuleFeaturedResultsResponse'
-          ranking_expression: '#/components/schemas/ResultRankingRuleRankingExpressionResponse'
-    OperatorLeftHandSide:
-      type: object
-      required:
-      - object
-      properties:
-        object:
-          type: string
-        key:
-          type: string
-        keys:
-          type: array
-          items:
-            type: string
-    ByType:
-      required:
-      - featuredResults
-      - rankingExpressions
-      type: object
-      properties:
-        rankingExpressions:
-          type: integer
-          format: int32
-        featuredResults:
-          type: integer
-          format: int32
-    ResultRankingRuleFeaturedResultsResponse:
-      allOf:
-      - $ref: '#/components/schemas/ResultRankingRuleResponseBase'
-      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsBase'
-    StatementGroupStatus:
-      type: string
-      description: The status of the campaign.
-      enum:
-      - active
-      - inactive
-      - expired
-      - notStarted
-    CopyResultRankingRulesRequest:
-      required:
-      - destinationPipelineId
-      - resultRankingIds
-      type: object
-      properties:
-        destinationPipelineId:
-          type: string
-          description: The unique identifier of the query pipeline to copy the statements to.
-          example: 120deecf-7822-4d7b-885f-53f184a3a76
-        resultRankingIds:
-          type: array
-          maxItems: 15
-          description: The unique identifiers of the result ranking rules to copy.
-          example:
-          - 4f0a9531-4fab-45fd-a1e3-eb07a5aceccb
-          items:
-            type: string
-          minItems: 1
-    CopyResultRankingRulesResponse:
-      type: object
-      required:
-      - resultRankings
-      properties:
-        resultRankings:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResultRankingRuleIdentifiedResponse'
-    ResultRankingRuleGetBaseResponse:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          description: The identifier of the result ranking rule.
-        associatedGroup:
-          $ref: '#/components/schemas/ResultRankingRuleAssociatedGroupWithStatus'
-    ResultRankingSingleOperationValidate:
-      required:
-      - operation
-      type: object
-      properties:
-        operation:
-          $ref: '#/components/schemas/ResultRankingValidationRequest'
-    BulkDeleteResultRankingRulesResponse:
-      type: object
     OperationValidateDelete:
       required:
       - operationType
@@ -1281,52 +1228,64 @@ components:
           type: string
           description: The identifier of the resource.
           example: id
-    ResultRankingRuleTargetFeaturedResults:
-      oneOf:
-      - $ref: '#/components/schemas/ResultRankingRuleTargetUniqueId'
-      - $ref: '#/components/schemas/ResultRankingRuleTargetLocalizedContent'
-      - $ref: '#/components/schemas/ResultRankingRuleTargetQueryExpression'
-    RestOperationValidationResponse:
-      required:
-      - operationType
-      - operationValid
+    RestBulkGetRequest:
       type: object
       properties:
-        operationType:
-          type: string
-          description: The type of operation that has been validated.
-          example: CREATE
-        operationValid:
-          type: boolean
-          description: Whether the operation to validate was successful or not.
-          example: true
-        resourceId:
-          type: string
-          description: 'The identifier of the resource. '
-          example: id
-        validationErrors:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              $ref: '#/components/schemas/RestOperationValidationError'
-          description: If the operation failed, the `validationError` will contains the error message.
-          example: Access Denied. You don't have the required privileges to perform  this operation.
-    ResultRankingRuleStatus:
-      type: string
-      enum:
-      - active
-      - inactive
-    ResultRankingRuleTargetQueryExpression:
+        ids:
+          type: array
+          description: A list of resource identifiers to get. A maximum of **1000** can be sent.
+          items:
+            type: string
+            maxItems: 1000
+    ByType:
+      required:
+      - featuredResults
+      - rankingExpressions
+      type: object
+      properties:
+        rankingExpressions:
+          type: integer
+          format: int32
+        featuredResults:
+          type: integer
+          format: int32
+    OperatorLeftHandSide:
       type: object
       required:
-      - queryExpression
+      - object
       properties:
-        queryExpression:
+        object:
           type: string
-          description: Select documents using a query expression.
-          example:
-            queryExpression: '@source==TopSource'
+        key:
+          type: string
+        keys:
+          type: array
+          items:
+            type: string
+    CopyResultRankingRulesResponse:
+      type: object
+      required:
+      - resultRankings
+      properties:
+        resultRankings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResultRankingRuleIdentifiedResponse'
+    PredicateLocale:
+      type: object
+      properties:
+        kind:
+          type: string
+          description: The kind of locale.
+          example: all
+          enum:
+          - all
+          - unspecified
+          - specific
+        code:
+          type: string
+          description: An additional condition expressed with the [Query Pipeline Language (QPL)](https://docs.coveo.com/1449/).
+          example: when $browser is "firefox"
     ResultRankingRuleResponseBase:
       type: object
       required:
@@ -1364,49 +1323,70 @@ components:
           description: Whether this result ranking uses the latest features and is not managed by a legacy client.
           example: true
           default: true
-    ResultRankingRuleCondition:
+    ResultRankingSingleOperationValidate:
+      required:
+      - operation
       type: object
       properties:
-        reference:
+        operation:
+          $ref: '#/components/schemas/ResultRankingValidationRequest'
+    StatementGroupStatus:
+      type: string
+      description: The status of the campaign.
+      enum:
+      - active
+      - inactive
+      - expired
+      - notStarted
+    ResultRankingRuleTargetQueryExpression:
+      type: object
+      required:
+      - queryExpression
+      properties:
+        queryExpression:
           type: string
-          description: The ID of a mandatory condition to satisfy.
-          example: 3896e64f-2132-463a-81c8-26f2e9f89e0a
+          description: Select documents using a query expression.
+          example:
+            queryExpression: '@source==TopSource'
+    ResultRankingRuleType:
+      type: string
+      enum:
+      - featuredResults
+      - rankingExpressions
+    ResultRankingRuleLocalizedContentLocale:
+      type: object
+      properties:
+        auto:
+          $ref: '#/components/schemas/ResultRankingRuleLocalizedContentLocaleAuto'
+        specific:
+          type: string
+          description: The locale code of the KB article to show.
+          example:
+            code: en-US
+      description: Exactly one field should be defined.
+    ResultRankingRuleFeaturedResultsResponse:
+      allOf:
+      - $ref: '#/components/schemas/ResultRankingRuleResponseBase'
+      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsBase'
     BooleanExpression:
       oneOf:
       - $ref: '#/components/schemas/CompoundBooleanExpression'
       - $ref: '#/components/schemas/OperatorExpression'
       - $ref: '#/components/schemas/IsBetweenOperator'
       - type: boolean
-    ResultRankingRuleGetResponse:
-      oneOf:
-      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsGetResponse'
-      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionGetResponse'
-      discriminator:
-        propertyName: kind
-        mapping:
-          featured_result: '#/components/schemas/ResultRankingRuleFeaturedResultsGetResponse'
-          ranking_expression: '#/components/schemas/ResultRankingRuleRankingExpressionGetResponse'
-    ResultRankingBulkGetResponse:
-      required:
-      - resultRankings
-      - totalCount
-      - totalPages
-      - groupedBy
+    CompoundBooleanExpression:
       type: object
+      required:
+      - operator
+      - left
       properties:
-        resultRankings:
-          type: array
-          items:
-            $ref: '#/components/schemas/BulkGetResultRankingRuleIdentifiedWithGroupStatusResponse'
-        totalCount:
-          type: integer
-          format: int32
-        totalPages:
-          type: integer
-          format: int32
-        groupedBy:
-          $ref: '#/components/schemas/ResultRankingGroupByResponse'
-    ResultRankingRuleIdentifiedWithGroupStatusListResponse:
+        operator:
+          type: string
+        left:
+          $ref: '#/components/schemas/BooleanExpression'
+        right:
+          $ref: '#/components/schemas/BooleanExpression'
+    ResultRankingRuleIdentifiedWithGroupStatusResponse:
       type: object
       required:
       - id
@@ -1416,17 +1396,91 @@ components:
           type: string
           description: The identifier of the result ranking rule
         resultRanking:
-          $ref: '#/components/schemas/ResultRankingRuleListResponse'
+          $ref: '#/components/schemas/ResultRankingRuleResponse'
         associatedGroup:
           $ref: '#/components/schemas/ResultRankingRuleAssociatedGroupWithStatus'
-    ResultRankingRuleRankingExpressionCreateRequest:
+    ResultRankingRuleLocalizedContentLocaleAuto:
+      required:
+      - default
+      type: object
+      properties:
+        default:
+          type: string
+          description: The default locale of the Knowledge Article to default to if it's not available in the user's locale.
+          example: en-US
+    ConditionDetailed:
+      type: object
+      required:
+      - condition
+      properties:
+        condition:
+          $ref: '#/components/schemas/BooleanExpression'
+    ByStatus:
+      required:
+      - active
+      - inactive
+      type: object
+      properties:
+        active:
+          type: integer
+          format: int32
+        inactive:
+          type: integer
+          format: int32
+    ResultRankingRuleFeaturedResultsListResponse:
       allOf:
-      - $ref: '#/components/schemas/ResultRankingRuleBase'
-      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionBase'
-    ResultRankingRuleFeaturedResultsCreateRequest:
-      allOf:
-      - $ref: '#/components/schemas/ResultRankingRuleBase'
+      - $ref: '#/components/schemas/ResultRankingRuleListResponseBase'
       - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsBase'
+    ResultRankingRuleIdOnlyResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The identifier of the result ranking rule
+    ResultRankingRuleGetBaseResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The identifier of the result ranking rule.
+        associatedGroup:
+          $ref: '#/components/schemas/ResultRankingRuleAssociatedGroupWithStatus'
+    PredicateMatchOperator:
+      type: object
+      properties:
+        kind:
+          type: string
+          description: The kind of match operator.
+          example: is
+          enum:
+          - is
+          - contains
+          - matches
+    OperatorExpression:
+      type: object
+      required:
+      - operator
+      - left
+      properties:
+        operator:
+          type: string
+        left:
+          $ref: '#/components/schemas/OperatorLeftHandSide'
+        right:
+          $ref: '#/components/schemas/OperatorRightHandSide'
+    ResultRankingRuleResponse:
+      oneOf:
+      - $ref: '#/components/schemas/ResultRankingRuleFeaturedResultsResponse'
+      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionResponse'
+      discriminator:
+        propertyName: kind
+        mapping:
+          featured_result: '#/components/schemas/ResultRankingRuleFeaturedResultsResponse'
+          ranking_expression: '#/components/schemas/ResultRankingRuleRankingExpressionResponse'
     ResultRankingRuleBase:
       type: object
       required:
@@ -1463,61 +1517,117 @@ components:
           type: string
           description: The unique identifier of the statement group.
           example: 679adb80-444e-11ea-b77f-2e728ce88125
-    ResultRankingRuleRankingExpressionGetResponse:
-      allOf:
-      - $ref: '#/components/schemas/ResultRankingRuleResponseBase'
-      - $ref: '#/components/schemas/ResultRankingRuleGetBaseResponse'
-      - $ref: '#/components/schemas/ResultRankingRuleRankingExpressionBase'
-    ResultRankingRuleConditionListResponse:
-      type: object
-      properties:
-        reference:
-          type: string
-          description: The ID of a mandatory condition to satisfy.
-          example: 3896e64f-2132-463a-81c8-26f2e9f89e0a
-        detailed:
-          $ref: '#/components/schemas/ConditionDetailed'
-    ResultRankingRuleFeaturedResultsBase:
-      type: object
-      required:
-      - kind
-      - targets
-      properties:
-        kind:
-          type: string
-          description: The kind of result ranking.
-          enum:
-          - featured_result
-        targets:
-          type: array
-          description: Documents that will show up when conditions and predicates are met.
+  responses:
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
           example:
-          - uniqueId: 2228d0a698fd
-          - localizedContent:
-              familyId: '112233'
-              locale:
-                auto:
-                  default: en-US
-              familyIdField: '@sfarticlenumber'
-              localeField: '@locale'
-          - queryExpression: '@permanentid="6cdw9d02d17"'
-          items:
-            $ref: '#/components/schemas/ResultRankingRuleTargetFeaturedResults'
-        matchQuery:
-          type: boolean
-          description: When set to true, a featured result item must match the basic part (q) of the query expression, meaning it will only appear if it matches the search request provided by the user.
-          example: true
-          default: false
-        matchAdvancedQuery:
-          type: boolean
-          description: When set to true, a featured result item must match the advanced part (aq) of the query expression, meaning it will only appear if it matches the selected filters in the search interface.
-          example: true
-          default: true
-        includeInFacets:
-          type: boolean
-          example: true
-          default: true
+            statusCode: 422
+            message: Unprocessable entity.
+    Forbidden:
+      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 403
+            message: Access denied. API key does not have sufficient privileges.
+            errorCode: FORBIDDEN
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            BadRequest:
+              summary: 'Bad Request (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-bad_request)'
+              value:
+                statusCode: 400
+                message: Invalid JSON format in request body.
+            NoRegisteredEndpoint:
+              summary: 'No Registered Endpoint (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-no_registered_endpoint)'
+              value:
+                statusCode: 400
+                message: No registered endpoint found for this organization.
+                errorCode: NO_REGISTERED_ENDPOINT
+            QueryPipelineInterrupted:
+              summary: 'Query Pipeline Interrupted (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-query_pipeline_interrupted)'
+              value:
+                statusCode: 400
+                message: Failed to evaluate your query as some conditions in your pipeline took too much time.
+                errorCode: QUERY_PIPELINE_INTERRUPTED
+    Unauthorized:
+      description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 401
+            message: Invalid access token.
+            errorCode: UNAUTHORIZED
+    ServiceUnavailable:
+      description: 'Service Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#5xx)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            ServiceUnavailable:
+              summary: 'Server Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-server_unavailable)'
+              value:
+                statusCode: 503
+                message: The server is currently unavailable due to overload or index unavailability.
+                errorCode: SERVER_UNAVAILABLE
+            OrganizationPaused:
+              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-organization_paused)'
+              value:
+                statusCode: 503
+                message: The organization is paused due to inactivity.
+                errorCode: ORGANIZATION_PAUSED
+    TooManyRequests:
+      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 429
+            message: Too many requests.
+    AuthenticationTimeout:
+      description: Authentication Timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 419
+            message: Authentication timeout.
   parameters:
+    Page:
+      name: page
+      in: query
+      description: The 0-based number of the page of results to get.
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+    PerPage:
+      name: perPage
+      in: query
+      description: The number of results to include per page.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 200
+        default: 20
     PipelineIdPath:
       name: pipelineId
       in: path
@@ -1554,116 +1664,6 @@ components:
         By default, results are not required to match a specific query filter.'
       schema:
         type: string
-    PerPage:
-      name: perPage
-      in: query
-      description: The number of results to include per page.
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        maximum: 200
-        default: 20
-    Page:
-      name: page
-      in: query
-      description: The 0-based number of the page of results to get.
-      schema:
-        type: integer
-        format: int32
-        default: 0
-        minimum: 0
-  responses:
-    UnprocessableEntity:
-      description: Unprocessable Entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 422
-            message: Unprocessable entity.
-    ServiceUnavailable:
-      description: 'Service Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#5xx)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          examples:
-            ServiceUnavailable:
-              summary: 'Server Unavailable (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-server_unavailable)'
-              value:
-                statusCode: 503
-                message: The server is currently unavailable due to overload or index unavailability.
-                errorCode: SERVER_UNAVAILABLE
-            OrganizationPaused:
-              summary: 'Organization Paused (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#503-organization_paused)'
-              value:
-                statusCode: 503
-                message: The organization is paused due to inactivity.
-                errorCode: ORGANIZATION_PAUSED
-    Unauthorized:
-      description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 401
-            message: Invalid access token.
-            errorCode: UNAUTHORIZED
-    Forbidden:
-      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 403
-            message: Access denied. API key does not have sufficient privileges.
-            errorCode: FORBIDDEN
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          examples:
-            BadRequest:
-              summary: 'Bad Request (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-bad_request)'
-              value:
-                statusCode: 400
-                message: Invalid JSON format in request body.
-            NoRegisteredEndpoint:
-              summary: 'No Registered Endpoint (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-no_registered_endpoint)'
-              value:
-                statusCode: 400
-                message: No registered endpoint found for this organization.
-                errorCode: NO_REGISTERED_ENDPOINT
-            QueryPipelineInterrupted:
-              summary: 'Query Pipeline Interrupted (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-query_pipeline_interrupted)'
-              value:
-                statusCode: 400
-                message: Failed to evaluate your query as some conditions in your pipeline took too much time.
-                errorCode: QUERY_PIPELINE_INTERRUPTED
-    TooManyRequests:
-      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 429
-            message: Too many requests.
-    AuthenticationTimeout:
-      description: Authentication Timeout
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 419
-            message: Authentication timeout.
   securitySchemes:
     oauth2:
       type: oauth2

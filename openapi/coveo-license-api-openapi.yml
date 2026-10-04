@@ -160,68 +160,6 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/license/entitlements_get
 components:
   schemas:
-    EntitlementModel:
-      type: object
-      properties:
-        id:
-          type: string
-        productId:
-          type: string
-        pricingUnit:
-          type: string
-        displayName:
-          type: string
-        productName:
-          type: string
-        useCase:
-          type: string
-        status:
-          type: string
-        itemLimit:
-          type: integer
-          format: int64
-        semanticSearchDocumentLimit:
-          type: integer
-          format: int64
-        semanticSearchQPMLimit:
-          type: integer
-          format: int64
-        lrpmLimit:
-          type: integer
-          format: int64
-        qpmLimit:
-          type: integer
-          format: int64
-        unlimitedQPM:
-          type: boolean
-        recommendationLimit:
-          type: integer
-          format: int64
-        unlimitedRecommendations:
-          type: boolean
-        userLimit:
-          type: integer
-          format: int64
-        unlimitedUsers:
-          type: boolean
-        passageRetrievalQPMLimit:
-          type: integer
-          format: int64
-        unlimitedPassageRetrievalQPM:
-          type: boolean
-        shouldShowInConsumptionDashboard:
-          type: boolean
-        expirationDate:
-          type: string
-          format: date-time
-        expirationStatus:
-          type: string
-          description: The expiration status indicating whether the license is active, about to expire, or expired.
-          enum:
-          - ACTIVE
-          - SOON_TO_BE_EXPIRED
-          - EXPIRED
-      description: A set of entitlements describing what the organization has access to.
     AllowedScheduleModel:
       type: object
       properties:
@@ -250,6 +188,86 @@ components:
             - WEEKLY
             - MONTHLY
       description: The schedule that is used by the [connector](https://docs.coveo.com/en/2734/).
+    ConnectorInformationModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of connector.
+          enum:
+          - AMAZONS3
+          - BOX_ENTERPRISE2
+          - CATALOG
+          - CONFLUENCE2
+          - CONFLUENCE2_HOSTED
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - FILE
+          - GENERIC_REST
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GRAPHQL
+          - JIRA2
+          - JIRA2_HOSTED
+          - JIVE
+          - JIVE_HOSTED
+          - LITHIUM
+          - KHOROS
+          - MICROSOFT_DYNAMICS
+          - PUSH
+          - RSS
+          - SALESFORCE
+          - SALESFORCE_SITES
+          - SAP
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE2
+          - SHOPIFY
+          - SITECORE
+          - SITEMAP
+          - SLACK
+          - WEB2
+          - YOUTUBE
+          - ZENDESK
+          - ADOBE_EXPERIENCE_MANAGER
+          - BOX
+          - BOX_ENTERPRISE
+          - CONFLUENCE
+          - DROPBOX
+          - GMAIL
+          - GMAIL_DOMAIN_WIDE
+          - SHAREPOINT_ONLINE
+        allowed:
+          type: boolean
+          description: Whether the connector is allowed to execute.
+        sourceVisibilities:
+          uniqueItems: true
+          type: array
+          description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>- `SECURED`: Allowed users only</br>- `SHARED`: Any user'
+          items:
+            type: string
+            description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>- `SECURED`: Allowed users only</br>- `SHARED`: Any user'
+            enum:
+            - PRIVATE
+            - SECURED
+            - SHARED
+        allowedSchedules:
+          type: array
+          description: A set of schedule models that are allowed to refresh the connector.
+          items:
+            $ref: '#/components/schemas/AllowedScheduleModel'
+      description: Information for a connector.
+    MachineLearningModelInformationModel:
+      type: object
+      properties:
+        buildFrequency:
+          type: string
+        numberOfModelsLimit:
+          type: integer
+          format: int32
+        enabled:
+          type: boolean
+      description: The Machine Learning Models configurations.
     LicenseModel:
       type: object
       properties:
@@ -359,86 +377,68 @@ components:
             description: Various properties/configuration settings that apply to the organization.
           description: Various properties/configuration settings that apply to the organization.
       description: The organization license.
-    ConnectorInformationModel:
+    EntitlementModel:
       type: object
       properties:
-        type:
+        id:
           type: string
-          description: The type of connector.
-          enum:
-          - AMAZONS3
-          - BOX_ENTERPRISE2
-          - CATALOG
-          - CONFLUENCE2
-          - CONFLUENCE2_HOSTED
-          - CUSTOM
-          - DATABASE
-          - DROPBOX_FOR_BUSINESS
-          - FILE
-          - GENERIC_REST
-          - GOOGLE_DRIVE_DOMAIN_WIDE
-          - GRAPHQL
-          - JIRA2
-          - JIRA2_HOSTED
-          - JIVE
-          - JIVE_HOSTED
-          - LITHIUM
-          - KHOROS
-          - MICROSOFT_DYNAMICS
-          - PUSH
-          - RSS
-          - SALESFORCE
-          - SALESFORCE_SITES
-          - SAP
-          - SERVICENOW
-          - SHAREPOINT
-          - SHAREPOINT_ONLINE2
-          - SHOPIFY
-          - SITECORE
-          - SITEMAP
-          - SLACK
-          - WEB2
-          - YOUTUBE
-          - ZENDESK
-          - ADOBE_EXPERIENCE_MANAGER
-          - BOX
-          - BOX_ENTERPRISE
-          - CONFLUENCE
-          - DROPBOX
-          - GMAIL
-          - GMAIL_DOMAIN_WIDE
-          - SHAREPOINT_ONLINE
-        allowed:
-          type: boolean
-          description: Whether the connector is allowed to execute.
-        sourceVisibilities:
-          uniqueItems: true
-          type: array
-          description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>- `SECURED`: Allowed users only</br>- `SHARED`: Any user'
-          items:
-            type: string
-            description: 'The visibility level of the connector.</br>**Allowed values:**</br>- `PRIVATE`: Source owner only</br>- `SECURED`: Allowed users only</br>- `SHARED`: Any user'
-            enum:
-            - PRIVATE
-            - SECURED
-            - SHARED
-        allowedSchedules:
-          type: array
-          description: A set of schedule models that are allowed to refresh the connector.
-          items:
-            $ref: '#/components/schemas/AllowedScheduleModel'
-      description: Information for a connector.
-    MachineLearningModelInformationModel:
-      type: object
-      properties:
-        buildFrequency:
+        productId:
           type: string
-        numberOfModelsLimit:
+        pricingUnit:
+          type: string
+        displayName:
+          type: string
+        productName:
+          type: string
+        useCase:
+          type: string
+        status:
+          type: string
+        itemLimit:
           type: integer
-          format: int32
-        enabled:
+          format: int64
+        semanticSearchDocumentLimit:
+          type: integer
+          format: int64
+        semanticSearchQPMLimit:
+          type: integer
+          format: int64
+        lrpmLimit:
+          type: integer
+          format: int64
+        qpmLimit:
+          type: integer
+          format: int64
+        unlimitedQPM:
           type: boolean
-      description: The Machine Learning Models configurations.
+        recommendationLimit:
+          type: integer
+          format: int64
+        unlimitedRecommendations:
+          type: boolean
+        userLimit:
+          type: integer
+          format: int64
+        unlimitedUsers:
+          type: boolean
+        passageRetrievalQPMLimit:
+          type: integer
+          format: int64
+        unlimitedPassageRetrievalQPM:
+          type: boolean
+        shouldShowInConsumptionDashboard:
+          type: boolean
+        expirationDate:
+          type: string
+          format: date-time
+        expirationStatus:
+          type: string
+          description: The expiration status indicating whether the license is active, about to expire, or expired.
+          enum:
+          - ACTIVE
+          - SOON_TO_BE_EXPIRED
+          - EXPIRED
+      description: A set of entitlements describing what the organization has access to.
   securitySchemes:
     oauth2:
       type: oauth2
