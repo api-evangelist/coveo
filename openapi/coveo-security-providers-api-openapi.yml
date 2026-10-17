@@ -453,6 +453,13 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/securityproviders/page_get
 components:
   schemas:
+    SecurityProvider:
+      type: object
+      properties:
+        name:
+          type: string
+        typeName:
+          type: string
     CurrentStatusModel:
       type: object
       properties:
@@ -487,107 +494,27 @@ components:
         totalNumberOfEntities:
           type: integer
           format: int32
-    DataFile:
+    ParameterModel:
       type: object
       properties:
-        sensitive:
-          type: boolean
-        data:
-          type: string
-    RawSecurityProviderConfig:
-      type: object
-      properties:
-        name:
-          type: string
-        userIdentities:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UserIdentity'
-        parameters:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/Parameter'
-        dataFiles:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/DataFile'
-        securityProviders:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/SecurityProvider'
-        indexIdentifier:
-          type: string
-        dbConnectionString:
-          type: string
-        organizationId:
-          type: string
-        operationId:
-          type: string
-        expansionScope:
-          type: string
-          enum:
-          - Single
-          - All
-          - InError
-          - NotUpdated
-        type:
-          type: string
-          enum:
-          - ACTIVE_DIRECTORY2
-          - BOX
-          - CLAIMS
-          - CLAIMS_TO_EMAIL
-          - CONFLUENCE
-          - CONFLUENCE2
-          - CUSTOM
-          - DATABASE
-          - DROPBOX_FOR_BUSINESS
-          - EMAIL
-          - EXPANDED
-          - FILE
-          - GOOGLE_DRIVE_DOMAIN_WIDE
-          - GENERIC_REST
-          - GRAPHQL
-          - JIRA2
-          - JIVE
-          - KHOROS_COMMUNITY
-          - MICROSOFT_DYNAMICS
-          - OFFICE365
-          - SALESFORCE
-          - SERVICENOW
-          - SHAREPOINT
-          - SHAREPOINT_ONLINE
-          - SITECORE
-          - SLACK
-          - ZENDESK
-        nodeTypeName:
-          type: string
-        sourceTypeName:
-          type: string
-        displayName:
-          type: string
-        nodeRequired:
-          type: boolean
-        onPremisesEnabled:
-          type: boolean
-        crawlingModuleId:
-          type: string
-        caseSensitive:
-          type: boolean
-    SecurityProvider:
-      type: object
-      properties:
-        name:
-          type: string
-        typeName:
-          type: string
-    Parameter:
-      type: object
-      properties:
-        sensitive:
-          type: boolean
         value:
           type: string
+        sensitive:
+          type: boolean
+    SecurityProviderStatisticsModel:
+      type: object
+      properties:
+        numberOfEntitiesByState:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        totalNumberOfEntities:
+          type: integer
+          format: int32
+        numberOfEntitiesInError:
+          type: integer
+          format: int32
     SecurityProviderModel:
       type: object
       properties:
@@ -690,6 +617,13 @@ components:
         numberOfEntitiesProcessed:
           type: integer
           format: int32
+    Parameter:
+      type: object
+      properties:
+        sensitive:
+          type: boolean
+        value:
+          type: string
     SecurityProviderReferenceModel:
       type: object
       properties:
@@ -702,19 +636,19 @@ components:
           type: string
         attributes:
           type: object
-    ParameterModel:
+    DataFile:
       type: object
       properties:
-        value:
-          type: string
         sensitive:
           type: boolean
-    UserIdentityModel:
+        data:
+          type: string
+    UserIdentity:
       type: object
       properties:
         name:
           type: string
-        username:
+        userName:
           type: string
         password:
           type: string
@@ -758,20 +692,6 @@ components:
           - ZENDESK
         typeName:
           type: string
-    SecurityProviderStatisticsModel:
-      type: object
-      properties:
-        numberOfEntitiesByState:
-          type: object
-          additionalProperties:
-            type: integer
-            format: int32
-        totalNumberOfEntities:
-          type: integer
-          format: int32
-        numberOfEntitiesInError:
-          type: integer
-          format: int32
     SecurityProviderModelWithStatus:
       type: object
       properties:
@@ -854,6 +774,95 @@ components:
           $ref: '#/components/schemas/LastRefreshOperationModel'
         currentStatus:
           $ref: '#/components/schemas/CurrentStatusModel'
+    RawSecurityProviderConfig:
+      type: object
+      properties:
+        name:
+          type: string
+        userIdentities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UserIdentity'
+        parameters:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Parameter'
+        dataFiles:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DataFile'
+        securityProviders:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SecurityProvider'
+        indexIdentifier:
+          type: string
+        dbConnectionString:
+          type: string
+        organizationId:
+          type: string
+        operationId:
+          type: string
+        expansionScope:
+          type: string
+          enum:
+          - Single
+          - All
+          - InError
+          - NotUpdated
+        type:
+          type: string
+          enum:
+          - ACTIVE_DIRECTORY2
+          - BOX
+          - CLAIMS
+          - CLAIMS_TO_EMAIL
+          - CONFLUENCE
+          - CONFLUENCE2
+          - CUSTOM
+          - DATABASE
+          - DROPBOX_FOR_BUSINESS
+          - EMAIL
+          - EXPANDED
+          - FILE
+          - GOOGLE_DRIVE_DOMAIN_WIDE
+          - GENERIC_REST
+          - GRAPHQL
+          - JIRA2
+          - JIVE
+          - KHOROS_COMMUNITY
+          - MICROSOFT_DYNAMICS
+          - OFFICE365
+          - SALESFORCE
+          - SERVICENOW
+          - SHAREPOINT
+          - SHAREPOINT_ONLINE
+          - SITECORE
+          - SLACK
+          - ZENDESK
+        nodeTypeName:
+          type: string
+        sourceTypeName:
+          type: string
+        displayName:
+          type: string
+        nodeRequired:
+          type: boolean
+        onPremisesEnabled:
+          type: boolean
+        crawlingModuleId:
+          type: string
+        caseSensitive:
+          type: boolean
+    UserIdentityModel:
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
     PageModelSecurityProviderModelWithStatus:
       type: object
       properties:
@@ -867,15 +876,6 @@ components:
         totalPages:
           type: integer
           format: int32
-    UserIdentity:
-      type: object
-      properties:
-        name:
-          type: string
-        userName:
-          type: string
-        password:
-          type: string
   securitySchemes:
     oauth2:
       type: oauth2

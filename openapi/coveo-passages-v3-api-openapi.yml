@@ -71,6 +71,40 @@ paths:
         ```'
 components:
   responses:
+    Forbidden:
+      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 403
+            message: Access denied. API key does not have sufficient privileges.
+            errorCode: FORBIDDEN
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            BadRequest:
+              summary: 'Bad Request (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-bad_request)'
+              value:
+                statusCode: 400
+                message: Invalid JSON format in request body.
+            NoRegisteredEndpoint:
+              summary: 'No Registered Endpoint (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-no_registered_endpoint)'
+              value:
+                statusCode: 400
+                message: No registered endpoint found for this organization.
+                errorCode: NO_REGISTERED_ENDPOINT
+            QueryPipelineInterrupted:
+              summary: 'Query Pipeline Interrupted (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-query_pipeline_interrupted)'
+              value:
+                statusCode: 400
+                message: Failed to evaluate your query as some conditions in your pipeline took too much time.
+                errorCode: QUERY_PIPELINE_INTERRUPTED
     PassageRetrievalUnprocessableEntity:
       description: Unprocessable Entity
       content:
@@ -112,40 +146,6 @@ components:
                 statusCode: 500
                 message: Facet search failed due to internal index issues.
                 errorCode: FACET_SEARCH_FAILURE
-    Forbidden:
-      description: 'Forbidden (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#403-forbidden)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 403
-            message: Access denied. API key does not have sufficient privileges.
-            errorCode: FORBIDDEN
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          examples:
-            BadRequest:
-              summary: 'Bad Request (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-bad_request)'
-              value:
-                statusCode: 400
-                message: Invalid JSON format in request body.
-            NoRegisteredEndpoint:
-              summary: 'No Registered Endpoint (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-no_registered_endpoint)'
-              value:
-                statusCode: 400
-                message: No registered endpoint found for this organization.
-                errorCode: NO_REGISTERED_ENDPOINT
-            QueryPipelineInterrupted:
-              summary: 'Query Pipeline Interrupted (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#400-query_pipeline_interrupted)'
-              value:
-                statusCode: 400
-                message: Failed to evaluate your query as some conditions in your pipeline took too much time.
-                errorCode: QUERY_PIPELINE_INTERRUPTED
     Unauthorized:
       description: 'Unauthorized (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#401-unauthorized)'
       content:
@@ -156,15 +156,6 @@ components:
             statusCode: 401
             message: Invalid access token.
             errorCode: UNAUTHORIZED
-    TooManyRequests:
-      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorMessage'
-          example:
-            statusCode: 429
-            message: Too many requests.
     PassageRetrievalServerUnavailable:
       description: Server unavailable
       content:
@@ -187,7 +178,41 @@ components:
               value:
                 errorCode: INTERNAL_ERROR
                 message: An internal limit on the size of passages was exceeded.
+    TooManyRequests:
+      description: 'Too Many Requests (see: https://docs.coveo.com/en/1471/build-a-search-ui/troubleshoot-query-error-codes#429-too_many_requests)'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          example:
+            statusCode: 429
+            message: Too many requests.
   schemas:
+    Pipeline:
+      type:
+      - string
+      - 'null'
+      description: 'The name of the query pipeline to use for this request (bypassing its conditions, if it has any).
+
+
+        You can pass an empty `pipeline` value to use an empty query pipeline (i.e., `?pipeline=` or `"pipeline": ""`).
+
+
+        If a query does not contain the `pipeline` parameter, the first query pipeline whose conditions are met by the request is used (query pipelines without conditions are not evaluated). Should the request fail to meet the conditions of each evaluated query pipeline, the default query pipeline of the target Coveo Cloud organization is used (bypassing its conditions, if it has any).
+
+
+        **Notes:**
+
+
+        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
+
+        - For reporting purposes, when logging a **Search** usage analytics event for a query, the `queryPipeline` field of that event should be set to the final `pipeline` value used in the query execution. This value is determined from the query response. If no pipeline was specified, it uses the `"default"` value.
+
+
+        See also [Managing Query Pipelines](https://docs.coveo.com/en/1450/).
+
+        '
+      example: CustomerQueryPipeline
     RetrievePassagesResponseV3:
       type: object
       required:
@@ -205,35 +230,6 @@ components:
 
             '
           example: c0857557-5579-4f5e-8958-9befd7d1d4a8
-    ErrorMessage:
-      type: object
-      additionalProperties: true
-      properties:
-        statusCode:
-          type: number
-          example: 404
-        errorCode:
-          type: string
-          example: ORGANIZATION_DOES_NOT_EXIST
-        message:
-          type: string
-          example: The organization does not exist in the search api.
-    PassageDocumentV3:
-      type: object
-      required:
-      - title
-      - primaryid
-      properties:
-        title:
-          type: string
-          example: The Benefits of Solar Energy
-        primaryid:
-          type: string
-          description: 'The primary identifier of the document.
-
-            '
-          example: bDMzdA
-      additionalProperties: true
     RetrievePassagesRequestV3:
       type: object
       required:
@@ -357,31 +353,6 @@ components:
                 **Note**: This information is required when endpoints are behind a proxy.
 
                 '
-    Pipeline:
-      type:
-      - string
-      - 'null'
-      description: 'The name of the query pipeline to use for this request (bypassing its conditions, if it has any).
-
-
-        You can pass an empty `pipeline` value to use an empty query pipeline (i.e., `?pipeline=` or `"pipeline": ""`).
-
-
-        If a query does not contain the `pipeline` parameter, the first query pipeline whose conditions are met by the request is used (query pipelines without conditions are not evaluated). Should the request fail to meet the conditions of each evaluated query pipeline, the default query pipeline of the target Coveo Cloud organization is used (bypassing its conditions, if it has any).
-
-
-        **Notes:**
-
-
-        - This parameter will be overridden if the search request is authenticated by a [search token](https://docs.coveo.com/en/56/) that enforces a specific [`pipeline`](https://docs.coveo.com/en/56/#pipeline-string-optional), or a [`searchHub`](https://docs.coveo.com/en/56/#searchhub-string-optional) that routes queries to a specific `pipeline` via a query pipeline condition.
-
-        - For reporting purposes, when logging a **Search** usage analytics event for a query, the `queryPipeline` field of that event should be set to the final `pipeline` value used in the query execution. This value is determined from the query response. If no pipeline was specified, it uses the `"default"` value.
-
-
-        See also [Managing Query Pipelines](https://docs.coveo.com/en/1450/).
-
-        '
-      example: CustomerQueryPipeline
     PassageV3:
       type: object
       required:
@@ -424,6 +395,35 @@ components:
       - type: array
         items:
           type: string
+    ErrorMessage:
+      type: object
+      additionalProperties: true
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        errorCode:
+          type: string
+          example: ORGANIZATION_DOES_NOT_EXIST
+        message:
+          type: string
+          example: The organization does not exist in the search api.
+    PassageDocumentV3:
+      type: object
+      required:
+      - title
+      - primaryid
+      properties:
+        title:
+          type: string
+          example: The Benefits of Solar Energy
+        primaryid:
+          type: string
+          description: 'The primary identifier of the document.
+
+            '
+          example: bDMzdA
+      additionalProperties: true
   parameters:
     OrganizationIdQuery:
       name: organizationId

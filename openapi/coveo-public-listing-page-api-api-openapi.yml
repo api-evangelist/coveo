@@ -260,7 +260,7 @@ paths:
       x-ui-operation-id: /rest/organizations/paramId/commerce/v2/listings/pages_get
 components:
   schemas:
-    DecimalValueModel:
+    StringValueModel:
       required:
       - value
       type: object
@@ -269,21 +269,9 @@ components:
       - type: object
         properties:
           value:
-            type: number
-            format: double
-    FieldValueModel:
-      required:
-      - type
-      type: object
-      properties:
-        type:
-          type: string
-      description: The value to apply the operator on.
-      example:
-        type: string
-        value: Blue
-      discriminator:
-        propertyName: type
+            maxLength: 255
+            minLength: 0
+            type: string
     MultipleStringValuesModel:
       required:
       - values
@@ -299,235 +287,6 @@ components:
               maxLength: 255
               minLength: 0
               type: string
-    HierarchicMultiValueModel:
-      required:
-      - value
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel'
-      - type: object
-        properties:
-          value:
-            maxLength: 255
-            minLength: 0
-            type: string
-    StringValueModel:
-      required:
-      - value
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel'
-      - type: object
-        properties:
-          value:
-            maxLength: 255
-            minLength: 0
-            type: string
-    MatchingConfigurationModel:
-      required:
-      - url
-      type: object
-      properties:
-        url:
-          maxLength: 1024
-          minLength: 1
-          type: string
-          description: URL associated to a listing configuration used for pattern matching.
-      description: Possible patterns matching values associated to a listing configuration.
-      example:
-      - url: https://sports.barca.group/plp/clothing/pants
-    SeedRelativeValueModel:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/FieldValueModel'
-    QueryFilterModel:
-      required:
-      - fieldName
-      - operator
-      type: object
-      properties:
-        fieldName:
-          pattern: '[a-z][a-z0-9_]*'
-          type: string
-          description: The name of the field to apply the filter on.
-          example: name
-        operator:
-          type: string
-          description: The operator to apply on the field.
-          example: isExactly
-          enum:
-          - isExactly
-          - isExactlyNot
-          - contains
-          - doesNotContain
-          - isAnyOf
-          - isDefined
-          - isNotDefined
-          - isBetween
-          - isGreaterThan
-          - isGreaterThanOrEqualTo
-          - isLessThan
-          - isLessThanOrEqualTo
-        value:
-          oneOf:
-          - $ref: '#/components/schemas/DecimalValueModel'
-          - $ref: '#/components/schemas/HierarchicMultiValueModel'
-          - $ref: '#/components/schemas/InclusiveRangeModel'
-          - $ref: '#/components/schemas/MultipleStringValuesModel'
-          - $ref: '#/components/schemas/SeedRelativeValueModel'
-          - $ref: '#/components/schemas/StringValueModel'
-      description: A list of filters.
-      example:
-      - fieldName: price
-        operator: isExactly
-        value:
-          type: decimal
-          value: 99.99
-      - fieldName: item_count
-        operator: isBetween
-        value:
-          type: range
-          range:
-            from: 1000
-            to: 3000
-    PublicListingPageRequestModel:
-      required:
-      - name
-      - pageRules
-      - patterns
-      - trackingId
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the listing page.
-          format: uuid
-          readOnly: true
-          example: 533bba27-2a7f-18fb-b8ed-ed99c3f92f5c
-        name:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: A unique name for the listing configuration.
-          example: ACME Corp Summer Trends
-        patterns:
-          minItems: 1
-          type: array
-          description: Possible patterns matching values associated to a listing configuration.
-          example:
-          - url: https://sports.barca.group/plp/clothing/pants
-          items:
-            $ref: '#/components/schemas/MatchingConfigurationModel'
-        pageRules:
-          minItems: 1
-          type: array
-          description: List of rules associated to a listing page. Rules are used to determine the page's contents.
-          example:
-          - name: Include ec_category_slug contains canoes-kayaks/kayaks/sports-kayaks
-            locales:
-            - language: en
-              country: US
-              currency: USD
-            filters:
-            - fieldName: ec_category_slug
-              operator: contains
-              value:
-                type: array
-                values:
-                - canoes-kayaks/kayaks/sports-kayaks
-          items:
-            $ref: '#/components/schemas/ListingPageApiPageRuleModel'
-        trackingId:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The unique identifier of the tracking target.
-          example: acmecorporation_ca
-      description: PublicListingPageRequestModel
-    ListingPageApiPageRuleModel:
-      required:
-      - filters
-      - name
-      type: object
-      properties:
-        filters:
-          minItems: 1
-          type: array
-          description: A list of filters.
-          example:
-          - fieldName: price
-            operator: isExactly
-            value:
-              type: decimal
-              value: 99.99
-          - fieldName: item_count
-            operator: isBetween
-            value:
-              type: range
-              range:
-                from: 1000
-                to: 3000
-          items:
-            $ref: '#/components/schemas/QueryFilterModel'
-        locales:
-          uniqueItems: true
-          type: array
-          description: The list of locales the rule applies to. When empty, the rule applies to all locales.
-          example:
-          - language: en
-            country: US
-            currency: USD
-          items:
-            $ref: '#/components/schemas/RuleLocaleModel'
-        name:
-          maxLength: 255
-          minLength: 1
-          type: string
-          description: The name of the rule.
-          example: 'Pin #1 Short Open-Front Sweater for Women/Boost blue surfboards/Hide green t-shirts'
-      description: List of rules associated to a listing page. Rules are used to determine the page's contents.
-      example:
-      - name: Include ec_category_slug contains canoes-kayaks/kayaks/sports-kayaks
-        locales:
-        - language: en
-          country: US
-          currency: USD
-        filters:
-        - fieldName: ec_category_slug
-          operator: contains
-          value:
-            type: array
-            values:
-            - canoes-kayaks/kayaks/sports-kayaks
-    RuleLocaleModel:
-      type: object
-      properties:
-        language:
-          type: string
-          description: An ISO 639-1 language code.
-          example: en
-        country:
-          type: string
-          description: An ISO 3166-1 alpha-2 country code.
-          example: US
-        currency:
-          type: string
-          description: An ISO 4217 currency code.
-          example: USD
-      description: The list of locales the synonym applies to. When empty, the synonym applies to all locales.
-      example:
-      - language: en
-        country: US
-        currency: USD
-    RangeModel:
-      type: object
-      properties:
-        from:
-          type: number
-          format: double
-        to:
-          type: number
-          format: double
     CommercePageModelPublicListingPageResponseModel:
       required:
       - items
@@ -549,6 +308,45 @@ components:
           description: The total number of pages of items available.
           format: int32
       description: Page
+    InclusiveRangeModel:
+      required:
+      - range
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          range:
+            $ref: '#/components/schemas/RangeModel'
+    HierarchicMultiValueModel:
+      required:
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+      - type: object
+        properties:
+          value:
+            maxLength: 255
+            minLength: 0
+            type: string
+    SeedRelativeValueModel:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/FieldValueModel'
+    MatchingConfigurationModel:
+      required:
+      - url
+      type: object
+      properties:
+        url:
+          maxLength: 1024
+          minLength: 1
+          type: string
+          description: URL associated to a listing configuration used for pattern matching.
+      description: Possible patterns matching values associated to a listing configuration.
+      example:
+      - url: https://sports.barca.group/plp/clothing/pants
     PublicListingPageResponseModel:
       required:
       - pageRules
@@ -606,16 +404,218 @@ components:
           format: int64
           readOnly: true
       description: PublicListingPageResponseModel
-    InclusiveRangeModel:
+    RuleLocaleModel:
+      type: object
+      properties:
+        language:
+          type: string
+          description: An ISO 639-1 language code.
+          example: en
+        country:
+          type: string
+          description: An ISO 3166-1 alpha-2 country code.
+          example: US
+        currency:
+          type: string
+          description: An ISO 4217 currency code.
+          example: USD
+      description: The list of locales the synonym applies to. When empty, the synonym applies to all locales.
+      example:
+      - language: en
+        country: US
+        currency: USD
+    ListingPageApiPageRuleModel:
       required:
-      - range
+      - filters
+      - name
+      type: object
+      properties:
+        filters:
+          minItems: 1
+          type: array
+          description: A list of filters.
+          example:
+          - fieldName: price
+            operator: isExactly
+            value:
+              type: decimal
+              value: 99.99
+          - fieldName: item_count
+            operator: isBetween
+            value:
+              type: range
+              range:
+                from: 1000
+                to: 3000
+          items:
+            $ref: '#/components/schemas/QueryFilterModel'
+        locales:
+          uniqueItems: true
+          type: array
+          description: The list of locales the rule applies to. When empty, the rule applies to all locales.
+          example:
+          - language: en
+            country: US
+            currency: USD
+          items:
+            $ref: '#/components/schemas/RuleLocaleModel'
+        name:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The name of the rule.
+          example: 'Pin #1 Short Open-Front Sweater for Women/Boost blue surfboards/Hide green t-shirts'
+      description: List of rules associated to a listing page. Rules are used to determine the page's contents.
+      example:
+      - name: Include ec_category_slug contains canoes-kayaks/kayaks/sports-kayaks
+        locales:
+        - language: en
+          country: US
+          currency: USD
+        filters:
+        - fieldName: ec_category_slug
+          operator: contains
+          value:
+            type: array
+            values:
+            - canoes-kayaks/kayaks/sports-kayaks
+    DecimalValueModel:
+      required:
+      - value
       type: object
       allOf:
       - $ref: '#/components/schemas/FieldValueModel'
       - type: object
         properties:
+          value:
+            type: number
+            format: double
+    PublicListingPageRequestModel:
+      required:
+      - name
+      - pageRules
+      - patterns
+      - trackingId
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the listing page.
+          format: uuid
+          readOnly: true
+          example: 533bba27-2a7f-18fb-b8ed-ed99c3f92f5c
+        name:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: A unique name for the listing configuration.
+          example: ACME Corp Summer Trends
+        patterns:
+          minItems: 1
+          type: array
+          description: Possible patterns matching values associated to a listing configuration.
+          example:
+          - url: https://sports.barca.group/plp/clothing/pants
+          items:
+            $ref: '#/components/schemas/MatchingConfigurationModel'
+        pageRules:
+          minItems: 1
+          type: array
+          description: List of rules associated to a listing page. Rules are used to determine the page's contents.
+          example:
+          - name: Include ec_category_slug contains canoes-kayaks/kayaks/sports-kayaks
+            locales:
+            - language: en
+              country: US
+              currency: USD
+            filters:
+            - fieldName: ec_category_slug
+              operator: contains
+              value:
+                type: array
+                values:
+                - canoes-kayaks/kayaks/sports-kayaks
+          items:
+            $ref: '#/components/schemas/ListingPageApiPageRuleModel'
+        trackingId:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: The unique identifier of the tracking target.
+          example: acmecorporation_ca
+      description: PublicListingPageRequestModel
+    QueryFilterModel:
+      required:
+      - fieldName
+      - operator
+      type: object
+      properties:
+        fieldName:
+          pattern: '[a-z][a-z0-9_]*'
+          type: string
+          description: The name of the field to apply the filter on.
+          example: name
+        operator:
+          type: string
+          description: The operator to apply on the field.
+          example: isExactly
+          enum:
+          - isExactly
+          - isExactlyNot
+          - contains
+          - doesNotContain
+          - isAnyOf
+          - isDefined
+          - isNotDefined
+          - isBetween
+          - isGreaterThan
+          - isGreaterThanOrEqualTo
+          - isLessThan
+          - isLessThanOrEqualTo
+        value:
+          oneOf:
+          - $ref: '#/components/schemas/DecimalValueModel'
+          - $ref: '#/components/schemas/HierarchicMultiValueModel'
+          - $ref: '#/components/schemas/InclusiveRangeModel'
+          - $ref: '#/components/schemas/MultipleStringValuesModel'
+          - $ref: '#/components/schemas/SeedRelativeValueModel'
+          - $ref: '#/components/schemas/StringValueModel'
+      description: A list of filters.
+      example:
+      - fieldName: price
+        operator: isExactly
+        value:
+          type: decimal
+          value: 99.99
+      - fieldName: item_count
+        operator: isBetween
+        value:
+          type: range
           range:
-            $ref: '#/components/schemas/RangeModel'
+            from: 1000
+            to: 3000
+    RangeModel:
+      type: object
+      properties:
+        from:
+          type: number
+          format: double
+        to:
+          type: number
+          format: double
+    FieldValueModel:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+      description: The value to apply the operator on.
+      example:
+        type: string
+        value: Blue
+      discriminator:
+        propertyName: type
   securitySchemes:
     oauth2:
       type: oauth2

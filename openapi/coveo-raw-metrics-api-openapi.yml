@@ -177,26 +177,6 @@ paths:
         - full
 components:
   schemas:
-    RestListOfMetricValues:
-      type: object
-      properties:
-        values:
-          description: The list of daily metric values
-          type: array
-          items:
-            $ref: '#/components/schemas/RestMetricValueforDate'
-      required:
-      - values
-    RestListOfSearchHubMetrics:
-      type: object
-      properties:
-        searchHubs:
-          description: The list of search hubs
-          type: array
-          items:
-            $ref: '#/components/schemas/RestSearchHubMetrics'
-      required:
-      - searchHubs
     RestSearchHubMetrics:
       type: object
       properties:
@@ -241,21 +221,16 @@ components:
       - users
       - staticQueries
       - productListingQueries
-    RestMetricValueforDate:
+    RestListOfMetrics:
       type: object
       properties:
-        date:
-          example: '"2019-01-01"'
-          description: The date for the usage metric value
-          type: string
-        value:
-          example: 123
-          description: The numeric metric value
-          type: integer
-          format: int64
+        metrics:
+          description: The list of metrics
+          type: array
+          items:
+            $ref: '#/components/schemas/RestMetric'
       required:
-      - date
-      - value
+      - metrics
     RestMetric:
       type: object
       properties:
@@ -278,16 +253,41 @@ components:
           format: int32
       required:
       - id
-    RestListOfMetrics:
+    RestListOfSearchHubMetrics:
       type: object
       properties:
-        metrics:
-          description: The list of metrics
+        searchHubs:
+          description: The list of search hubs
           type: array
           items:
-            $ref: '#/components/schemas/RestMetric'
+            $ref: '#/components/schemas/RestSearchHubMetrics'
       required:
-      - metrics
+      - searchHubs
+    RestMetricValueforDate:
+      type: object
+      properties:
+        date:
+          example: '"2019-01-01"'
+          description: The date for the usage metric value
+          type: string
+        value:
+          example: 123
+          description: The numeric metric value
+          type: integer
+          format: int64
+      required:
+      - date
+      - value
+    RestListOfMetricValues:
+      type: object
+      properties:
+        values:
+          description: The list of daily metric values
+          type: array
+          items:
+            $ref: '#/components/schemas/RestMetricValueforDate'
+      required:
+      - values
   securitySchemes:
     oauth2:
       type: oauth2

@@ -316,69 +316,17 @@ paths:
         '404':
           description: Not Found
 components:
-  parameters:
-    order:
-      name: order
-      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
-      in: query
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-    organization-id:
-      name: organizationId
-      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
-      example: mycoveocloudv2organizationg8tp8wu3
-      in: path
-      required: true
-      schema:
-        type: string
-    perPage:
-      name: perPage
-      description: The maximum number of configurations to include per page.
-      in: query
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 20
-    page:
-      name: page
-      description: The 0-based number of the page of configurations to list.
-      in: query
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 100
-    filter:
-      name: filter
-      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
-      example: Store
-      in: query
-      schema:
-        type: string
-    interface-id:
-      name: interfaceId
-      description: The unique identifier of the target search interface.
-      example: 123e4567-e89b-12d3-a456-426614174000
-      in: path
-      required: true
-      schema:
-        type: string
-    projectId:
-      name: projectId
-      description: The id of the project to which the resource belongs.
-      in: query
-      schema:
-        type: string
-    notify:
-      name: notify
-      description: Whether to send an email notification to new search page users.
-      example: false
-      in: query
-      schema:
-        type: boolean
   schemas:
+    search-page-interface-config-project:
+      allOf:
+      - $ref: '#/components/schemas/search-page-interface-config'
+      - type: object
+        properties:
+          projectIds:
+            type: array
+            description: The list of project IDs associated with the search page interface.
+            items:
+              type: string
     search-page-interface-config:
       type: object
       properties:
@@ -609,11 +557,6 @@ components:
                   default: false
       required:
       - name
-    pipelines-status:
-      type: array
-      description: A list containing the pipeline(s) used by the interface.
-      items:
-        $ref: '#/components/schemas/pipeline-status'
     pipeline-status:
       type: object
       description: The status of a pipeline.
@@ -670,6 +613,29 @@ components:
         sharingDomainEnabled:
           type: boolean
           example: true
+    pipelines-status:
+      type: array
+      description: A list containing the pipeline(s) used by the interface.
+      items:
+        $ref: '#/components/schemas/pipeline-status'
+    interface-add-user:
+      type: object
+      properties:
+        users:
+          $ref: '#/components/schemas/interface-user-list'
+        message:
+          type: string
+          description: Message to send as part of email notifications, when `notify` is set to `true`.
+          example: Hey, check out this new search page
+          required: false
+    interface-user-list:
+      type: array
+      description: The list of users that are allowed to access the search interface.
+      example:
+      - alice@example.com
+      - bob@example.com
+      items:
+        type: string
     search-page-interface-config-id:
       type: object
       properties:
@@ -923,34 +889,68 @@ components:
       required:
       - id
       - name
-    search-page-interface-config-project:
-      allOf:
-      - $ref: '#/components/schemas/search-page-interface-config'
-      - type: object
-        properties:
-          projectIds:
-            type: array
-            description: The list of project IDs associated with the search page interface.
-            items:
-              type: string
-    interface-user-list:
-      type: array
-      description: The list of users that are allowed to access the search interface.
-      example:
-      - alice@example.com
-      - bob@example.com
-      items:
+  parameters:
+    projectId:
+      name: projectId
+      description: The id of the project to which the resource belongs.
+      in: query
+      schema:
         type: string
-    interface-add-user:
-      type: object
-      properties:
-        users:
-          $ref: '#/components/schemas/interface-user-list'
-        message:
-          type: string
-          description: Message to send as part of email notifications, when `notify` is set to `true`.
-          example: Hey, check out this new search page
-          required: false
+    filter:
+      name: filter
+      description: A substring that must appear in a search interface configuration name for this configuration to appear in results.
+      example: Store
+      in: query
+      schema:
+        type: string
+    order:
+      name: order
+      description: 'The sort direction of the results.<br />Possible values:<br /> - `asc`: ascending order<br /> - `desc`: descending order'
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    perPage:
+      name: perPage
+      description: The maximum number of configurations to include per page.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 20
+    notify:
+      name: notify
+      description: Whether to send an email notification to new search page users.
+      example: false
+      in: query
+      schema:
+        type: boolean
+    interface-id:
+      name: interfaceId
+      description: The unique identifier of the target search interface.
+      example: 123e4567-e89b-12d3-a456-426614174000
+      in: path
+      required: true
+      schema:
+        type: string
+    organization-id:
+      name: organizationId
+      description: The unique identifier of the target [organization](https://docs.coveo.com/en/185/).
+      example: mycoveocloudv2organizationg8tp8wu3
+      in: path
+      required: true
+      schema:
+        type: string
+    page:
+      name: page
+      description: The 0-based number of the page of configurations to list.
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
   securitySchemes:
     oauth2:
       type: oauth2
